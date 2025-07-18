@@ -1,0 +1,10 @@
+.contenedor-canvas {
+    width: 500px;
+}
+
+.contenedor-graficas {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+}

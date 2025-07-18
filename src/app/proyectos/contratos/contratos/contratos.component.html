@@ -1,0 +1,322 @@
+<section>
+  <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 5px;">
+    <div style="flex-grow: 1; flex-basis: auto;">
+        <!-- <div style="display: flex;  justify-content: center;">
+
+          <label class="labelProyecto" for="proyecto">proyecto</label>
+          <input class="dropdown" list="proyectodata" id="proyecto" name="proyecto" placeholder="Selecciona un proyecto" autocomplete="off" (input)="onSelectionChange($event)"/>
+          <datalist id="proyectodata">
+              <option *ngFor="let proyecto of proyectos">{{proyecto.nombre}}</option>
+          </datalist>
+        </div> -->
+    </div>
+    <div style="flex-grow: 1; flex-basis: auto; display: flex; gap: 5px;">
+      <div style="overflow-x: auto; white-space: nowrap;margin: 0 auto; margin-top: 0px; width: 100%;">
+        <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
+          <thead>
+            <tr>
+              <th style="width: 50%;" scope="col">
+                <select class="select-destajo" 
+                        style="background-color: transparent; border: none; color: #f2f2f2; font-weight: 800;" 
+                        (change)="onSelectionChangeDestajos($event)" 
+                        name="select">
+                  <option class="opcion-destajos" value="Subcontratistas">Subcontratistas</option>
+                  <option class="opcion-destajos" value="Destajo">Destajo</option>
+                </select>
+              </th>
+              <th style="width: 30%;" scope="col">{{nombreDestajo || "Subcontratistas"}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="width: 50%;">
+              <td class="td-0" scope="col">
+                <div class="select-destajo-wrapper">
+                  <input placeholder="Selecciona un dato" [(ngModel)]="contratistaNombre"
+                  style="line-height: normal;" class="select-destajo" list="destajosdata" id="destajos" name="destajos"  autocomplete="off" (input)="onSelectionSeleccionContratista($event)"/>
+                  <datalist id="destajosdata">
+                      <option></option>
+                      <option *ngFor="let contratista of contratistas">{{contratista.razonSocial}}</option>
+                  </datalist>
+              </div>
+              </td>
+              <td class="td-0" scope="col">
+                <select class="select-destajo" (change)="onSelectionChangeSelect($event)" name="select" [(ngModel)]="contratoSeleccionado">
+                  <option></option>
+                  <option *ngFor="let contrato of contratos">{{contrato.numeroDestajoDescripcion}}</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="contenedor-button">
+        <button class="buttons-fn" (click)="Finiquitar()" [disabled]="contratoBloqueado">Finiquitar</button>
+        <button class="buttons-fn" (click)="NewDestajo()">Nuevo</button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px;">
+      <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
+        <thead>
+          <tr>
+            <th class="cabecera1" scope="col">No.</th>
+            <th class="cabecera1" scope="col">Alta</th>
+            <th class="cabecera1" scope="col">% Anticipo</th>
+            <th class="cabecera1" scope="col">% IVA</th>
+            <th class="cabecera1" scope="col">Total de Destajo</th>
+            <th class="cabecera1" scope="col">Inicio</th>
+            <th class="cabecera1" scope="col">termino</th>
+            <th class="cabecera1" scope="col">Finiquito</th>
+            <th class="cabecera1" scope="col">Estatus</th>
+
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+              <td class="td-0" scope="col">1</td>
+              <td class="td-0" scope="col">29/mayo/2019</td>
+              <td class="td-0" scope="col">0.00</td>
+              <td class="td-0" scope="col">0.00</td>
+              <td class="td-0" scope="col">0.00</td>
+              <td class="td-0" scope="col">
+                <input  class="input-fecha"  type="date">
+              </td>
+              <td class="td-0" scope="col">
+                <input class="input-fecha" type="date">
+              </td>
+
+              <td class="td-0" scope="col"></td>
+              <td class="td-0" scope="col">
+                <div class="flex space-x-4 " id="radio-buttons">
+                  <label class="radio-label">
+                    <input type="radio" name="status"  class="form-radio text-black" [checked]="estatusContrato === 0" (change)="onStatusChange($event)"/>
+                    <span>Capturado</span>
+                  </label>
+                  <label class="radio-label">
+                    <input type="radio" name="status"  class="form-radio text-black"  [checked]="estatusContrato === 1" (change)="onStatusChange($event)"/>
+                    <span>Autorizado</span>
+                  </label>
+                  <label class="radio-label">
+                    <input type="radio" name="status"  class="form-radio text-zinc-400" disabled  [checked]="estatusContrato === 2" (change)="onStatusChange($event)"/>
+                    <span class="text-zinc-400">Cerrado</span>
+                  </label>
+                  <label class="radio-label">
+                    <input type="radio" name="status"  class="form-radio text-black"  [checked]="estatusContrato === 3" (change)="onStatusChange($event)"  />
+                    <span>Cancelado</span>
+                  </label>
+                </div>
+              </td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div>
+    
+    <div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px;">
+      <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
+        <thead>
+          <tr>
+            <th class="cabecera1" scope="col" style="width: 2%;">-</th>
+            <th class="cabecera1" scope="col" style="width: 14%;">Codigo</th>
+            <th class="cabecera1" scope="col" style="width: 30%;">Descripcion</th>
+            <th class="cabecera1" scope="col" style="width: 6%;">Unidad</th>
+            <th class="cabecera1" scope="col" style="width: 10%;">Cantidad</th>
+            <th class="cabecera1" scope="col" style="width: 10%;">Importe   </th>
+            <th class="cabecera1" scope="col" style="width: 6%;">Asignado</th>
+            <th class="cabecera1" scope="col" style="width: 6%;">% FA</th>
+            <th class="cabecera1" scope="col" style="width: 6%;">Acum.</th>
+            <th class="cabecera1" scope="col" style="width: 10%;">Importe Des.</th>
+          </tr>
+        </thead>
+      </table>  
+        <div>
+          <tree-view [treeData]="detallesContrato">
+            <ng-template let-detalle>
+              <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
+                <tbody>
+                  <tr>
+                    <ng-template #tooltipContent>
+                      <div style="overflow-y: auto; white-space: nowrap; margin: 0 auto; cursor: pointer; max-height: 100px; width: fit-content;">
+                        <!-- si quieren titulo colocan esto si no no  -->
+                        <!-- <div style="display: flex; justify-content: space-between;  align-items: baseline; color: #ffffff; font-weight: 700; letter-spacing: 2px;" >
+                                    <p>Cantidad</p>
+                        
+                                </div> -->
+                        <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
+                          <thead>
+                            <tr style="position: sticky; top: 0;">
+                              <th style="padding: 0; text-align: center;" scope="col">Destajista</th>
+                              <th style="padding: 0; text-align: center;" scope="col">Contrato</th>
+                              <th style="padding: 0; text-align: center;" scope="col">Procentaje</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let det of destajistaXConcepto">
+                              <td>
+                                {{det.razonSocial}}
+                              </td>
+                              <td>
+                                {{det.numeroDestajo}}
+                              </td>
+                              <td>
+                                {{det.porcentajeDestajoConFormato}}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </ng-template>
+                    <td style="width: 2%; border-right: 1px solid #f2f2f217;" class="cont-drill">
+                      <!-- concepto: precioUnitario.tipoPrecioUnitario ==1 -->
+                      <div class="contenedores" style="display: flex;">
+                        <div *ngIf="detalle.hijos.length > 0">
+                          <button class="button-accion" (click)="expansionDominio(detalle)" style="width: 5px;">
+                            {{ detalle.expandido ? "▼" : "►" }}
+                          </button>
+                        </div>
+                      </div>
+                    <td
+                      style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 14%; padding-left: 0px;"
+                      class="cont-drill">
+                      <input autocomplete="off" type="text" class="" id="input-table" [(ngModel)]="detalle.codigo"
+                        readonly
+                        style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;" [ngbTooltip]="tooltipContent" triggers="dblclick" autoClose="outside" (dblclick)="verDestajistas(detalle)">
+                    </td>
+    
+                    <td
+                      style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 30%; padding-left: 0px;"
+                      class="cont-drill">
+                      <input autocomplete="off" type="text" class="" id="input-table" [(ngModel)]="detalle.descripcion"
+                        readonly
+                        style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;" [ngbTooltip]="tooltipContent" triggers="dblclick" autoClose="outside" (dblclick)="verDestajistas(detalle)">
+                    </td>
+    
+                    <td
+                      style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 6%; padding-left: 0px;"
+                      class="cont-drill">
+                      <input autocomplete="off" type="text" class="" id="input-table" [(ngModel)]="detalle.unidad"
+                        readonly
+                        style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;">
+                    </td>
+    
+                    <td
+                      style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 10%; padding-left: 0px;"
+                      class="cont-drill">
+                      <input autocomplete="off" type="text" class="" id="input-table"
+                        [(ngModel)]="detalle.cantidadConFormato" readonly
+                        style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;">
+                    </td>
+    
+                    <td
+                      style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 10%; padding-left: 0px;"
+                      class="cont-drill">
+                      <input autocomplete="off" type="text" class="" id="input-table"
+                        [(ngModel)]="detalle.importeConFormato" readonly
+                        style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;">
+                    </td>
+                    
+                    <td
+                      style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 6%; padding-left: 0px;"
+                      class="cont-drill" *ngIf="!detalle.porcentajeDestajoEditando"  (click)="habilitarEdicion(detalle)">
+                      <input autocomplete="off" type="text" class="" id="input-table"
+                        [(ngModel)]="detalle.porcentajeDestajoConFormato" readonly
+                        [ngStyle]="{
+                          'background-color':
+                          detalle.porcentajeDestajo <= 0 ? '#FFFFFF' :
+                          detalle.porcentajeDestajo < 100 ? '#C9F5FF' :
+                          detalle.porcentajeDestajo == 100 ? '#C3CFEB' :
+                          detalle.porcentajeDestajo > 100 ? '#cf6b6b' :
+                              ''
+                      }"
+                        style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;">
+                    </td>
+                    <td
+                      style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #e3292917; width: 6%; padding-left: 0px;"
+                      class="cont-drill" *ngIf="detalle.porcentajeDestajoEditando">
+                      <input autocomplete="off" type="text" class="" id="input-table"
+                        [(ngModel)]="detalle.porcentajeDestajo"
+                        [ngStyle]="{
+                          'background-color':
+                          detalle.porcentajeDestajo <= 0 ? '#FFFFFF' :
+                          detalle.porcentajeDestajo < 100 ? '#C9F5FF' :
+                          detalle.porcentajeDestajo == 100 ? '#C3CFEB' :
+                          detalle.porcentajeDestajo > 100 ? '#cf6b6b' :
+                              ''
+                      }"
+                        style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;" (keydown.enter)="asignarPorcentaje(detalle)">
+                    </td>
+                    <td
+                      style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 6%; padding-left: 0px;"
+                      class="cont-drill" *ngIf="!detalle.porcentajeDestajoEditando"  (click)="habilitarEdicion(detalle)">
+                      <input autocomplete="off" type="text" class="" id="input-table"
+                        [(ngModel)]="detalle.factorDestajoConFormato" readonly
+                        [ngStyle]="{
+                          'background-color': 
+                          detalle.factorDestajo <= 0 ? '#FFFFFF' :
+                          detalle.factorDestajo < 100 ? '#C9F5FF' :
+                          detalle.factorDestajo == 100 ? '#C3CFEB' :
+                          detalle.factorDestajo > 100 ? '#cf6b6b' :
+                              ''
+                      }"
+                        style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;">
+                    </td>
+                    <td
+                      style="border-right: 1px solid #ab090917; border-right: 1px solid #f2f2f217; width: 6%; padding-left: 0px;"
+                      class="cont-drill" *ngIf="detalle.porcentajeDestajoEditando">
+                      <input autocomplete="off" type="text" class="" id="input-table"
+                        [(ngModel)]="detalle.factorDestajo"
+                        [ngStyle]="{
+                          'background-color':
+                          detalle.factorDestajo <= 0 ? '#FFFFFF' :
+                          detalle.factorDestajo < 100 ? '#C9F5FF' :
+                          detalle.factorDestajo == 100 ? '#C3CFEB' :
+                          detalle.factorDestajo > 100 ? '#cf6b6b' :
+                              ''
+                      }"
+                        style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;" (keydown.enter)="asignarPorcentaje(detalle)">
+                    </td>
+                    <td
+                      style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 6%; padding-left: 0px;"
+                      class="cont-drill">
+                      <input autocomplete="off" type="text" class="" id="input-table"
+                        [(ngModel)]="detalle.porcentajeDestajoAcumuladoConFormato" readonly
+                        [ngStyle]="{
+                          'background-color':
+                          detalle.porcentajeDestajoAcumulado <= 0 ? '#FFFFFF' :
+                          detalle.porcentajeDestajoAcumulado < 100 ? '#C9F5FF' :
+                          detalle.porcentajeDestajoAcumulado == 100 ? '#C3CFEB' :
+                          detalle.porcentajeDestajoAcumulado > 100 ? '#cf6b6b' :
+                              ''
+                      }"
+                        style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;">
+                    </td>
+                    <td
+                      style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 10%; padding-left: 0px;"
+                      class="cont-drill">
+                      <input autocomplete="off" type="text" class="" id="input-table"
+                        [(ngModel)]="detalle.importeDestajoConFormato" readonly
+                        
+                        style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-template>
+          </tree-view>
+        </div>
+    </div>
+  </div>
+</section>
+
+<div [style.display]="displayCarga" class="contenedor-ventana">
+  <div class="ventana-bloque"></div>
+  <div class="contenedor-spinner">
+    <div class="spinner-border spinner" role="status" style="color: #4EAAC1;">
+      
+    </div>
+    <p style="position: fixed; margin-top: 60px; font-size: 14px; font-weight: 700; letter-spacing: 3px; color: #4EAAC1;">Actualizando.</p>
+  </div>
+</div>

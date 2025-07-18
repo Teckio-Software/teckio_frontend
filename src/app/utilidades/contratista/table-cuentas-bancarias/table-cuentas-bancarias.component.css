@@ -1,0 +1,34 @@
+
+td {
+    border: .5px solid #b4b1b175;
+    padding: 0 10px;
+    height: 5px;
+  }
+  th {
+    background-color: #21416e;
+    height: 1px;
+    color: #f2f2f2;
+    border: 1px solid #4e4c4c54;
+    padding: 0 10px;
+  }
+  .td-0 {
+    padding: 0;
+    background-color: #fffefe;
+    border: .5px solid #ffffff85;
+  }
+
+.btn-add{
+    transition-duration: 0.4s;
+    background-color: #4eaac150;
+    border: none;
+    color: #020202;
+    font-weight: 500;
+    border-radius: 3px;
+    font-size: 16px;
+}
+.btn-add:hover{
+    background-color: #4eaac150; /* Green */
+  color: #4EAAC1 ;
+}
+
+

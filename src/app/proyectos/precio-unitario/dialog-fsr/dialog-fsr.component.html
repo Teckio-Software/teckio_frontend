@@ -1,0 +1,178 @@
+<section>
+  <div class="fixed inset-0 z-10 w-screen overflow-y-auto" (click)="detenerCierre($event)">
+    <div class="content-center sm:flex min-h-full items-cen justify-center p-4 text-center sm:items-center sm:p-0">
+      <!-- Evita que el clic se propague al contenedor padre (overlay) -->
+      <div
+        class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-screen-md"
+        (click)="detenerCierre($event)">
+        <!-- detenerCierre(event: MouseEvent): Método que detiene la propagación del evento de clic cuando se hace clic dentro del contenido del modal, asegurando que el modal no se cierre inadvertidamente. -->
+        <button type="button" class="absolute top-0 right-0 px-4 py-3 text-2xl" (click)="cerrarDialog()">&times;</button>
+        <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+          <div>
+            <div class="text-center mb-4">
+              <h2 class="text-xl font-semibold">Factor Salario Real</h2>
+            </div>
+            <div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px;">
+              <div class="style-encabezado-ac-act">
+                Días no laborales
+              </div>
+              <div style="overflow-y: auto; white-space: nowrap; margin: 0 auto; cursor: pointer; max-height: 150px;">
+                <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
+                  <thead style="position: sticky; top: 0;">
+                    <tr class="bg-zinc-400 text-white">
+                      <th style="width: 30%;">Artículos de ley</th>
+                      <th style="width: 20%;">Código</th>
+                      <th style="width: 30%;">Descripción</th>
+                      <th style="width: 10%;">Días</th>
+                      <th style="width: 10%;">Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+  
+                    <tr *ngFor="let dias of diasConsideradosFsiNoTrabajados">
+                      <td style="width: 30%;">
+                        <input autocomplete="off" type="text" class="bg-[#f2f2f2] w-full border-none" id="input-table" class="w-full bg-transparent"
+                          [(ngModel)]="dias.articulosLey" (keydown.enter)="crearFSIDias(dias)" maxlength="50" [disabled]="existenEstimaciones">
+                      </td>
+                      <td style="width: 20%;">
+                        <input autocomplete="off" type="text" class="bg-[#f2f2f2] w-full border-none" id="input-table" class="w-full bg-transparent"
+                          [(ngModel)]="dias.codigo" (keydown.enter)="crearFSIDias(dias)" maxlength="15" [disabled]="existenEstimaciones">
+                      </td>
+                      <td style="width: 30%;">
+                        <input autocomplete="off" type="text" class="bg-[#f2f2f2] w-full border-none" id="input-table" class="w-full bg-transparent"
+                          [(ngModel)]="dias.descripcion" (keydown.enter)="crearFSIDias(dias)" maxlength="50" [disabled]="existenEstimaciones">
+                      </td>
+                      <td style="width: 10%;">
+                        <input autocomplete="off" type="text" class="bg-[#f2f2f2] w-full border-none" id="input-table" class="w-full bg-transparent"
+                          [(ngModel)]="dias.valor" (keydown.enter)="crearFSIDias(dias)" [disabled]="existenEstimaciones">
+                      </td>
+                      <td *ngIf="dias.id != 0 && !existenEstimaciones">
+                        <button class="button-filt" placement="start" ngbTooltip="Eliminar" triggers="mouseenter:mouseleave"
+                          (click)="EliminarDetFSI(dias)">
+                          <img src="assets/delete.svg" alt="add cotizacion">
+                        </button>
+                      </td>
+                      <td *ngIf="dias.id == 0 || existenEstimaciones" ></td>
+                    </tr>
+  
+                  </tbody>
+                </table>
+              </div>
+              <div class="flex w-full justify-end items-center mb-4">
+                Días no laborales (DNLA):
+                <input autocomplete="off" type="text" class="bg-[#f2f2f2] 
+                       text-center" id="input-table" [(ngModel)]="diasNoLaborales" readonly>
+              </div>
+            </div>
+
+            <div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px;">
+              <div class="style-encabezado-ac-act">
+                Días pagados
+              </div>
+              <div style="overflow-y: auto; white-space: nowrap; margin: 0 auto; cursor: pointer; max-height: 150px;">
+                <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
+                  <thead style="position: sticky; top: 0;">
+                    <tr>
+                      <th style="width: 30%;">Artículos de ley</th>
+                      <th style="width: 20%;">Código</th>
+                      <th style="width: 30%;">Descripción</th>
+                      <th style="width: 10%;">Días</th>
+                      <th style="width: 10%;">Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let dias of diasConsideradosFsiPagados">
+                      <td class="body-table" style="width: 30%;">
+                        <input autocomplete="off" type="text" class="bg-[#f2f2f2] w-full border-none" id="input-table" class="w-full bg-transparent"
+                          [(ngModel)]="dias.articulosLey" (keydown.enter)="crearFSIDias(dias)" maxlength="50" [disabled]="existenEstimaciones">
+                      </td>
+                      <td class="body-table" style="width: 20%;">
+                        <input autocomplete="off" type="text" class="bg-[#f2f2f2] w-full border-none" id="input-table" class="w-full bg-transparent"
+                          [(ngModel)]="dias.codigo" (keydown.enter)="crearFSIDias(dias)" maxlength="15" [disabled]="existenEstimaciones">
+                      </td>
+                      <td class="body-table" style="width: 30%;">
+                        <input autocomplete="off" type="text" class="bg-[#f2f2f2] w-full border-none" id="input-table" class="w-full bg-transparent"
+                          [(ngModel)]="dias.descripcion" (keydown.enter)="crearFSIDias(dias)"maxlength="50" [disabled]="existenEstimaciones">
+                      </td>
+                      <td class="body-table" style="width: 10%;">
+                        <input autocomplete="off" type="text" class="bg-[#f2f2f2] w-full border-none" id="input-table" class="w-full bg-transparent"
+                          [(ngModel)]="dias.valor" (keydown.enter)="crearFSIDias(dias)" [disabled]="existenEstimaciones">
+                      </td>
+                      <td *ngIf="dias.id != 0 && !existenEstimaciones">
+                        <button class="button-filt" placement="start" ngbTooltip="Eliminar" triggers="mouseenter:mouseleave"
+                          (click)="EliminarDetFSI(dias)">
+                          <img src="assets/delete.svg" alt="add cotizacion">
+                        </button>
+                      </td>
+                      <td *ngIf="dias.id == 0 || existenEstimaciones" ></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="flex w-full justify-end items-center mb-4">
+                Días pagados(DP):
+                <input autocomplete="off" type="text" class="bg-[#f2f2f2] w-full border-none" id="input-table"
+                  [(ngModel)]="diasPagados" readonly class="bg-[#f2f2f2] 
+                        text-center">
+              </div>
+            </div>
+            <h2>FSI = DP / (365.25 - DNLA) = {{fsi.fsi}}</h2>
+
+            <div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px;">
+              <div class="style-encabezado-ac-act">
+                Obligaciones patronales
+              </div>
+              <div style="overflow-y: auto; white-space: nowrap; margin: 0 auto; cursor: pointer; max-height: 150px;">
+                <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
+                  <thead style="position: sticky; top: 0;">
+                    <tr>
+                      <th style="width: 30%;">Articulos de ley</th>
+                      <th style="width: 20%;">Código</th>
+                      <th style="width: 30%;">Descripcion</th>
+                      <th style="width: 10%;">Porcentaje</th>
+                      <th style="width: 10%;">Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let detalle of fsrDetalles">
+                      <td class="body-table" style="width: 30%;">
+                        <input autocomplete="off" type="text" class="bg-[#f2f2f2] w-full border-none" id="input-table" class="w-full bg-transparent"
+                          [(ngModel)]="detalle.articulosLey" (keydown.enter)="crearFSRDetalle(detalle)" maxlength="50" [disabled]="existenEstimaciones">
+                      </td>
+                      <td class="body-table" style="width: 20%;">
+                        <input autocomplete="off" type="text" class="bg-[#f2f2f2] w-full border-none" id="input-table" class="w-full bg-transparent"
+                          [(ngModel)]="detalle.codigo" (keydown.enter)="crearFSRDetalle(detalle)" maxlength="15" [disabled]="existenEstimaciones">
+                      </td>
+                      <td class="body-table" style="width: 30%;">
+                        <input autocomplete="off" type="text" class="bg-[#f2f2f2] w-full border-none" id="input-table" class="w-full bg-transparent"
+                          [(ngModel)]="detalle.descripcion" (keydown.enter)="crearFSRDetalle(detalle)" maxlength="50" [disabled]="existenEstimaciones">
+                      </td>
+                      <td class="body-table" style="width: 10%;">
+                        <input autocomplete="off" type="text" class="bg-[#f2f2f2] w-full border-none" id="input-table" class="w-full bg-transparent"
+                          [(ngModel)]="detalle.porcentajeFsrdetalle" (keydown.enter)="crearFSRDetalle(detalle)" [disabled]="existenEstimaciones">
+                      </td>
+                      <td *ngIf="detalle.id != 0 && !existenEstimaciones" >
+                        <button class="button-filt" placement="start" ngbTooltip="Eliminar" triggers="mouseenter:mouseleave"
+                          (click)="EliminarDetFSR(detalle)">
+                          <img src="assets/delete.svg" alt="add cotizacion">
+                        </button>
+                      </td>
+                      <td *ngIf="detalle.id == 0 || existenEstimaciones" ></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="flex w-full justify-end items-center ">
+                Porcentaje de obligaciones patronales (%OP):
+                <input autocomplete="off" type="text" class="bg-[#f2f2f2] w-full border-none" id="input-table"
+                  [(ngModel)]="porcentajePrestaciones" readonly class="bg-[#f2f2f2] 
+                        text-center">
+              </div>
+            </div>
+            <h2>FSR = FSI + %OP = {{fsr.porcentajeFsr}}</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

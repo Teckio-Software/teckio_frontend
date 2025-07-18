@@ -1,0 +1,49 @@
+
+
+
+
+
+
+<mat-dialog-content >
+  <p style="font-size: 14px; font-weight: 700; letter-spacing: 2px;" class="titulo-pop">{{ tituloAccion }}</p>
+  <br />
+  <form [formGroup]="formulario">
+    <mat-grid-list cols="2" rowHeight="80px">
+      <mat-grid-tile>
+        <mat-form-field style="width: 97%;">
+          <mat-label>Razón social</mat-label>
+          <input matInput autocomplete="off" formControlName="razonSocial" />
+          <mat-icon matSuffix>account-box</mat-icon>
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-form-field style="width: 97%;">
+          <mat-label>RFC</mat-label>
+          <input matInput autocomplete="off" formControlName="rfc" />
+          <mat-icon matSuffix>account-box</mat-icon>
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-form-field style="width: 97%;">
+          <mat-label>Sociedad</mat-label>
+          <input matInput autocomplete="off" formControlName="sociedad" />
+          <mat-icon matSuffix>account-box</mat-icon>
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-form-field style="width: 97%;">
+          <mat-label>Estatus</mat-label>
+          <mat-select matInput formControlName="estatus">
+            <mat-option value="1">Activo</mat-option>
+            <mat-option value="0">No activo</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button color="warn" mat-raised-button mat-dialog-close>Cancelar</button>
+    <button color="primary" mat-raised-button mat-dialog-close [disabled]="formulario.invalid" (click)="guardarEmpresa()">{{ botonAccion }}</button>
+</mat-dialog-actions>

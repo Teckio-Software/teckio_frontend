@@ -1,0 +1,79 @@
+<div class="panelOpciones">
+  <table class="tablaPanelOpciones">
+    <th><mat-checkbox #matCheckBoxPanel [checked]="panelActivado" (change)="activaPanelCapturaRapida()">Activar panel de captura rápida</mat-checkbox></th>
+  </table>
+</div>
+<div class="flex-container">
+  <div style="width:25%;" class="divFormulario" *ngIf="panelActivado">
+    <h4>Panel de captura rápida</h4>
+    <form [formGroup]="form">
+      <mat-form-field appearance="outline" class="tableAl100">
+        <mat-label>Descripcion</mat-label>
+        <input formControlName="descripcion" matInput maxlength="200" (keydown.enter)="guardar()"/>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="tableAl100">
+        <mat-label>Observaciones</mat-label>
+        <input formControlName="observaciones" matInput maxlength="200" (keydown.enter)="guardar()"/>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="tableAl100">
+        <mat-label>Nivel</mat-label>
+        <input formControlName="nivel" matInput maxlength="13" type="number" (keydown.enter)="guardar()"/>
+      </mat-form-field>
+        <div>
+          <button mat-flat-button color="warn" style="float: right;" (click)="limpiarFormulario()" >Cancelar</button>
+          <button mat-flat-button color="primary" style="float: right;" (click)="guardar()">Guardar cambios</button>
+        </div>
+    </form>
+  </div>
+  <div [ngClass]="{'panel100': !panelActivado, 'panel75': panelActivado}">
+    <app-listado-generico [listado]="partidass">
+      <ng-container contenido>
+        <h4>Listado de Partidas</h4>
+        <table
+          #table
+          mat-table
+          [dataSource]="partidass"
+          class="mat-elevation-z8">
+          <ng-container matColumnDef="descripcion">
+            <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Descripción</th>
+            <td mat-cell *matCellDef="let element">
+              <input #descripcion matInput class="inputEnTabla" maxlength="200" type="text" [(ngModel)]="element.descripcion" (keyup)="onKeyUp('descripcion', element, descripcion.value)" />
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="observaciones">
+            <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Observaciones</th>
+            <td mat-cell *matCellDef="let element">
+              <input #observaciones matInput class="inputEnTabla" maxlength="200" type="text" [(ngModel)]="element.observaciones" (keyup)="onKeyUp('observaciones', element, observaciones.value)" />
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="nivel">
+            <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Nivel</th>
+            <td mat-cell *matCellDef="let element">
+              <input #nivel matInput class="inputEnTabla" maxlength="200" type="number" [(ngModel)]="element.nivel" (keyup)="onKeyUp('nivel', element, nivel.value)" />
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Acciones</th>
+            <td mat-cell *matCellDef="let element">
+              <button mat-flat-button color="primary"
+                (click)="traerParaEditar(element.id)">editar</button>
+              <button mat-flat-button color="warn"
+                (click)="borrar(element.id)">Borrar</button>
+            </td>
+        </ng-container>
+          <tr mat-header-row *matHeaderRowDef="zvColumnasAMostrar"></tr>
+          <tr mat-row *matRowDef="let row; columns: zvColumnasAMostrar"></tr>
+        </table>
+        <mat-paginator
+          [pageSizeOptions]="[5, 10, 20, 50]"
+          showFirstLastButtons
+          [length]="cantidadTotalRegistros"
+          [pageSize]="cantidadRegistrosAMostrar"
+          class="mat-elevation-z8"
+          (page)="actualizarPaginacion($event)"
+        >
+        </mat-paginator>
+      </ng-container>
+    </app-listado-generico>
+  </div>
+</div>

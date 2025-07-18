@@ -1,0 +1,81 @@
+.project-container{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.labelProyecto {
+  background-color: #4EAAC1;
+  color: #f2f2f2;
+  /* margin-right: -4px; */
+  padding: 1px 20px;
+  border-start-start-radius: 5px;
+  border-end-start-radius: 5px;  
+}
+
+td {
+  border: .5px solid #b4b1b175;
+  padding: 0 10px;
+  height: 5px;
+}
+th {
+  background-color: #21416e;
+  height: 1px;
+  color: #f2f2f2;
+  border: 1px solid #4e4c4c54;
+  padding: 0 10px;
+}
+.td-0 {
+  padding: 0;
+  background-color: #fffefe;
+  border: .5px solid #ffffff85;
+}
+
+.button-filt {
+  border: none;
+  background-color: #4EAAC1;
+  color: #f2f2f2;
+  padding: 2px 10px;
+  border-radius: 3px;
+  text-align: center;
+  margin: 0 10px;
+}
+
+.button-filt:hover {
+  background-color: #002B53;
+}
+
+/* Estilos date picker  */
+ 
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: #f2f2f2 !important;
+  border-radius: 7px;
+  border: none;
+}
+
+::ng-deep .mat-mdc-form-field-flex {
+  height: 27px !important;
+  display: flex !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  padding: 0 20px;
+  border: none;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper.mdc-text-field.ng-tns-c1205077789-0.mdc-text-field--filled  {
+  padding: 0 !important;
+  border-radius: 7px !important;
+  border-bottom: .5 solid #51adc7 !important;
+  border: none !important;
+}
+
+::ng-deep .mat-mdc-unelevated-button.mat-primary {
+  padding: 20px 0 !important;
+  background-color: #51adc7 !important;
+  border-bottom: .5px solid #02020265;
+}
+
+::ng--deep .mat-mdc-raised-button {
+  background-color: #51adc7 !important;
+}

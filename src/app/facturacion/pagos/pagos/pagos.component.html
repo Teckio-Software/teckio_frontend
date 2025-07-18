@@ -1,0 +1,213 @@
+ <!--filtro-->
+ <div class="contenedor-filtro" style="margin: 0 auto; margin-top: 20px; width: 98%; display: flex; justify-content: space-around; padding: 10px;">
+    <div >
+      <div style="display: flex; align-items: center; margin: 0 auto;">
+        <label for="fechainiciovalido" style="margin-right: 3px">Inicio</label>
+
+        <div style="margin-right: 16px; border-radius: 15px; margin-top: -14px;">
+          <div class="fecha">
+
+            <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+            <mat-datepicker #pickerInicio></mat-datepicker>
+            <input class="input-text" matInput [matDatepicker]="pickerInicio" id="fechaInicio" placeholder="Insertar Fecha"/>
+          </div>
+        </div>
+
+        <label for="fechafinvalido">Final</label>
+
+        <div class="fecha" style="margin-top: -14px;">
+          <mat-datepicker-toggle matIconSuffix [for]="pickerFin"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFin>date</mat-datepicker>
+          <input class="input-text" matInput [matDatepicker]="pickerFin" id="fechaFin" placeholder="Insertar Fecha"/>
+        </div>
+
+        <div class="fecha" style="display: flex; align-items: center; margin-left: 40px;">
+            <div>
+              <input class="input-text" matInput #input placeholder="UUID/RFC Receptor/Serie/Folio/OC" />
+            </div>
+        </div>
+    
+        <div style="margin-top: -15px;">
+          <button class="button-primary-buscar" style="margin-top: 15px; margin-left: 40px;">
+            Buscar
+          </button>
+        </div>
+    </div>
+  </div>
+</div>
+
+  <div class="contenedor-tabla">
+    <table class="table table-striped rounded table-hover orden tabla-detalle">
+      <thead style="position: sticky; top: 0px;">
+        <tr>
+          <th class="cabecera" scope="col" style="text-align: center;">Ver</th>
+          <th class="cabecera" scope="col">No. Doc. Pago</th>
+          <th class="cabecera" style="width: 350px;" scope="col">Fecha Contable de Pago</th>
+          <th class="cabecera" scope="col">Moneda</th>
+          <th class="cabecera" scope="col">Importe</th>
+          <th class="cabecera" scope="col">Forma de pago</th>
+          <th class="cabecera" style="text-align: center;" scope="col">Sucursal</th>
+          <th class="cabecera" style="text-align: center;" scope="col">Cargar Complemento de Pago</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="" scope="col" style="text-align: center;"> 
+            <button (click)="mostrarDetalle()" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" class="boton-ver">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#f2f2f2" class="bi bi-arrow-right-square-fill" viewBox="0 0 16 16">
+                <path d="M0 14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2zm4.5-6.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5a.5.5 0 0 1 0-1"/>
+              </svg>
+            </button>
+          </td>
+          <td class="" scope="col">1500000499</td>
+          <td class="" scope="col">01-03-2024 </td>
+          <td class="" scope="col" style="width: 230px;">MXN</td>
+          <td class="" scope="col">$271,047.24</td>
+          <td class="" scope="col">Por definir</td>
+          <td class=" end-text" scope="col">Por definir</td>
+          <td class=" end-text end-text" scope="col" style="text-align: center;">
+              <button  type="button" class="buton-cloud-factura1" data-bs-toggle="modal" data-bs-target="#staticBackdrop1" style="margin: 0 auto;">
+                <svg style="color: #f2f2f2;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-arrow-up-fill" viewBox="0 0 16 16" data-bs-target="#staticBackdrop1">
+                  <path d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2m2.354 5.146a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0z"/>
+                </svg>
+              </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="display: flex; justify-content: center; margin: 10px;">
+    <button class="button-filt">
+      Exportar
+      <svg style="color: #f2f2f2; margin-left: 10px;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cloud-download-fill" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M8 0a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 4.095 0 5.555 0 7.318 0 9.366 1.708 11 3.781 11H7.5V5.5a.5.5 0 0 1 1 0V11h4.188C14.502 11 16 9.57 16 7.773c0-1.636-1.242-2.969-2.834-3.194C12.923 1.999 10.69 0 8 0m-.354 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V11h-1v3.293l-2.146-2.147a.5.5 0 0 0-.708.708z"/>
+      </svg>
+    </button>
+  </div> 
+
+  <!--Card Info-->
+  <!--
+  <div class="offcanvas offcanvas-end contenedor-card" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header" style="display: flex; justify-content: center;">
+      <div class="doc-pago">Número de Documento: 150000499</div>
+      <button (click)="cambiarColor2()" type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="cont-table">
+        <table style="width: 100%; margin-top: -15px;">
+          <thead>
+            <tr>
+              <th class="cabecera" scope="col">RFC Receptor</th>
+              <th class="cabecera" scope="col">OC</th>
+              <th class="cabecera" scope="col">Serie</th>
+              <th class="cabecera" scope="col">Folio</th>
+              <th class="cabecera" scope="col">UUID</th>
+              <th class="cabecera" style="text-align: center;" scope="col" style="text-align: start;">Fecha Facturada</th>
+              <th class="cabecera" style="text-align: start;" scope="col">Fecha Contable Facturada</th>
+              <th class="cabecera" style="text-align: start;" scope="col">No. Doc. Pago</th>
+              <th class="cabecera" style="text-align: start;" scope="col">fecha Contable Pago</th>
+              <th class="cabecera" style="text-align: start;" scope="col">Moneda</th>
+              <th class="cabecera" style="text-align: start;" scope="col">Importe</th>
+              <th class="cabecera" style="text-align: start;" scope="col">Forma de Pago</th>
+              <th class="cabecera" style="text-align: start;" scope="col">Sucursal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="" scope="col">GRE10100KEA</td>
+              <td class="" scope="col">4500012551</td>
+              <td class="" scope="col">CGRE</td>
+              <td class="" scope="col">90779</td>
+              <td class="" scope="col">5CDFED67-050E-4E2A-A0F8-156C8F307CE6</td>
+              <td class="" scope="col">24 Junio 2024 12:31PM</td>
+              <td class="" scope="col">25/01/2024</td>
+              <td class="" scope="col">1500000511</td>
+              <td class="" scope="col">29/02/2024</td>
+              <td class="" scope="col">MXN</td>
+              <td class="" scope="col">$13,340</td>
+              <td class="" scope="col">Por Definir</td>
+              <td class="" scope="col">Por Definir</td>
+            </tr>
+            <tr>
+              <td class="" scope="col">GRE10100KEA</td>
+              <td class="" scope="col">4500004555</td>
+              <td class="" scope="col">CGPV</td>
+              <td class="" scope="col">27731</td>
+              <td class="" scope="col">A171627C-1BDB-405C-BBAA-D90C3D25A57B</td>
+              <td class="" scope="col">24 Junio 2024 5:34PM</td>
+              <td class="" scope="col">26/01/2024</td>
+              <td class="" scope="col">1500000511</td>
+              <td class="" scope="col">29/02/2024</td>
+              <td class="" scope="col">MXN</td>
+              <td class="" scope="col">$8,061.91</td>
+              <td class="" scope="col">Por Definir</td>
+              <td class="" scope="col">Por Definir</td>
+            </tr>
+            <tr>
+              <td class="" scope="col">GRE10100KEA</td>
+              <td class="" scope="col">4500004555</td>
+              <td class="" scope="col">CGRE</td>
+              <td class="" scope="col">90829</td>
+              <td class="" scope="col">7BCAEEEA-4A1E-4713-9309-556A3248A284</td>
+              <td class="" scope="col">26 Junio 2024 11:55PM</td>
+              <td class="" scope="col">27/01/2024</td>
+              <td class="" scope="col">1500000511</td>
+              <td class="" scope="col">29/02/2024</td>
+              <td class="" scope="col">MXN</td>
+              <td class="" scope="col">8,004</td>
+              <td class="" scope="col">Por Definir</td>
+              <td class="" scope="col">Por Definir</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  -->
+
+  <!--  Detalle Pagos-->
+
+  <div class="cont-table" style="width: 98%; margin: 0 auto;" *ngIf="detallePagos">
+    <div class="card-info-detalle">No. Documento de Pago:</div>
+
+    <table style="width: 100%;">
+      <thead>
+        <tr>
+          <th class="cabecera">RFC Emisor</th>
+          <th class="cabecera" scope="col">RFC Receptor</th>
+          <th class="cabecera" scope="col">OC</th>
+          <th class="cabecera" scope="col">Serie</th>
+          <th class="cabecera" scope="col">Folio</th>
+          <th class="cabecera" scope="col">UUID</th>
+          <th class="cabecera" style="text-align: center;" scope="col" style="text-align: start;">Fecha Registro Factura</th>
+          <th class="cabecera" style="text-align: start;" scope="col">Fecha Contable Facturada</th>
+          <th class="cabecera" style="text-align: start;" scope="col">Fecha Contable Pago</th>
+          <th class="cabecera" style="text-align: start;" scope="col">Moneda</th>
+          <th class="cabecera" style="text-align: start;" scope="col">Importe</th>
+          <th class="cabecera" style="text-align: start;" scope="col">Forma de Pago</th>
+          <th class="cabecera" style="text-align: start;" scope="col">Método de Pago</th>
+          <th class="cabecera" style="text-align: start;" scope="col">Sucursal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="" scope="col">GRE10100KEA</td>
+          <td class="" scope="col">GRE10100KEA</td>
+          <td class="" scope="col">4500012551</td>
+          <td class="" scope="col">CGRE</td>
+          <td class="" scope="col">90779</td>
+          <td class="" scope="col">5CDFED67-050E-4E2A-A0F8-156C8F307CE6</td>
+          <td class="" scope="col">24 Junio 2024 12:31PM</td>
+          <td class="" scope="col">25/01/2024</td>
+          <td class="" scope="col">29/02/2024</td>
+          <td class="" scope="col">MXN</td>
+          <td class="" scope="col">$13,340</td>
+          <td class="" scope="col">Por Definir</td>
+          <td class="" scope="col">PUE o PPD</td>
+          <td class="" scope="col">Por Definir</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+

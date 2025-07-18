@@ -1,0 +1,186 @@
+/*-------------------css plazas-----------------*/
+.btn-new {
+  background-color: #4EAAC1;
+  color: #f2f2f2;
+  border: none;
+  border-radius: 3px;
+}
+
+.offcanvas-title {
+  font-weight: 700;
+}
+
+.captura-rapida {
+  width: 85%;
+  height: 300px;
+  position: fixed;
+  margin-top: 94px;
+  border-radius: 0px 15px 15px 0px;
+  backdrop-filter: blur(10px);
+}
+
+.check-tabla {
+  margin-top: -7px;
+}
+
+.contenedor-boolean {
+  display: flex;
+  background-color: blue;
+}
+
+.contenedor-boolean {
+  margin-right: 20px;
+}
+
+.input-span {
+  width: 250px;
+  background-color: #9DB1CA;
+  color: #f2f2f2;
+  padding: 5px 5px;
+  border-radius: 3px 0 0 3px;
+}
+
+.input-receptor {
+  width: 200px;
+  background-color: #E7FDFF;
+}
+
+.contenedor-inputs {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.contenedor-input {
+  margin-top: 10px;
+}
+
+.dropdown1 {
+  border: 1px solid #9db1cad3;
+  border-left: none;
+  padding: 4px;
+  border-radius: 0 3px 3px 0;
+}
+
+
+.cont-input-buscar {
+display: flex;
+justify-content: center;
+margin-bottom: 20px;
+margin-left: 10px;
+}
+
+.input-buscar {
+border: none;
+border-radius: 0px 3px 3px 0;
+padding: 9px 30px;
+background-color: #C9D0D2;
+height: 23px;
+}
+
+.label-buscar {
+color: #f2f2f2;
+background-color: #4EAAC1;
+border-radius: 3x 0 0 3px;
+height: 23px;
+padding: 0  10px;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.label-buscar:hover {
+background-color: #22416E;
+color: #f2f2f2;
+}
+
+.contenedor-tabla {
+  width: 98%;
+  margin: 0 auto;
+  margin-top: 10px;
+}
+
+.contenedor-funciones {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.contenedor-plaza {
+  margin-top: -17px;
+}
+
+.cabecera {
+  background-color: #21416e;
+  padding: 2px;
+  color: #f2f2f2;
+  font-size: 400;
+  border: 1px solid #f2f2f24f;
+}
+
+td {
+  padding: 2px;
+  border: 1px solid #f2f2f24f;
+}
+
+.btn-accion {
+  border: none;
+  background-color: #b9dfe9;
+  border-radius: 3px; 
+  padding: 0 10px;
+  border-radius: 3px;
+}
+
+.btn-accion:hover {
+  background-color: #E7FDFF;
+}
+
+.button-cerrar {
+  margin-top: -40px;
+}
+
+.btn-captura {
+  background-color: #4EAAC1;
+  color: #f2f2f2;
+  padding: 2px;
+  width: 200px;
+  margin-bottom: 20px;
+  margin-right: 10px;
+}
+
+.cancelar:hover {
+  background-color: #B05B5B;
+}
+
+.aceptar:hover {
+  background-color: #002B53;
+}
+
+@media (max-width: 550px) {
+  .input-span {
+    width: 140px;
+  }
+  
+  .input-receptor {
+    width: 70px;
+    background-color: #E7FDFF;
+  }
+
+  .dropdown1 {
+    width: 100px;
+  }
+
+  .dropdown-menu {
+    width: 100px;
+  }
+}
+
+@media (max-width: 422px) {
+  .contenedor-funciones {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .contenedor-plaza {
+    margin: 5px auto;
+  }
+}

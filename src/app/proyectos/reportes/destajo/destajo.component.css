@@ -1,0 +1,50 @@
+ 
+td {
+    border: .5px solid #b4b1b175;
+    padding: 0 10px;
+    height: 5px;
+  }
+  th {
+    background-color: #21416e;
+    height: 1px;
+    color: #f2f2f2;
+    border: 1px solid #4e4c4c54;
+    padding: 0 10px;
+  }
+  .dropdown {
+    max-width: 100%;
+    width: 250px;
+    color: #020202;
+    
+    background-color: #4eaac138;
+    border: none; 
+    font-weight: 500;
+    padding: 5px;
+    /* width: 12vw; */
+    border-radius: 7px;  
+  }
+
+  ::ng-deep .mat-option-css{
+    min-height: 25px !important;
+  }
+  ::ng-deep .mat-mdc-option .mdc-list-item__primary-text {
+    white-space: nowrap !important;
+  }
+  ::ng-deep .mat-pseudo-checkbox-checked::after{
+      opacity: 0 !important;
+  }
+  ::ng-deep .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled):not(.mat-mdc-option-multiple){
+    background-color: #0000000A !important;
+  }
+  ::ng-deep .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text{
+    color: #020202d3 !important;
+  }
+
+  .labelProyecto {
+    background-color: #4EAAC1;
+    color: #f2f2f2;
+    /* margin-right: -4px; */
+    padding: 5px 20px;
+    border-start-start-radius: 5px;
+    border-end-start-radius: 5px;  
+  }

@@ -1,0 +1,115 @@
+  <br>
+  <div>
+    <div class="flex flex-col md:flex-row justify-center gap-2 md:justify-normal   ">
+      
+      <div class="flex justify-center" >
+        <select [(ngModel)]="selectedPeriodo" (ngModelChange)="filtrarDestajo()"
+        style="background-color: #4eaac138; border: none; border-radius: 5px; padding: 1.4px; opacity: 2; height: -webkit-fill-available; ">
+            <option value="0">Selecciona un periodo</option>
+            <option *ngFor="let periodo of periodos" [value]="periodo.id">
+                {{ periodo.descripcionPeriodo }}
+            </option>
+        </select>
+       
+  
+      </div>
+      <div  >
+  
+        <div style="display: flex;  justify-content: center; height: max-content;" class="item gap-2">
+            <input type="text"
+                   placeholder="Selecciona un dato"
+                   [formControl]="contratistaControl"
+                   [matAutocomplete]="auto"
+                   class="dropdown ">
+            <mat-autocomplete  #auto="matAutocomplete" (optionSelected)="selectionChangeContratista($event)">
+  
+                <mat-option class="mat-option-css" style=" font-weight: 500; font-size: 14px; border-radius: 7px;"  *ngFor="let contratista of filteredcontratista | async"  [value]="contratista">{{contratista.razonSocial}}</mat-option>
+            </mat-autocomplete>
+        </div>
+      </div>
+      <div  class="flex justify-center" >
+        <select class="select-destajo w-[260px] rounded-[7px] bg-[#4eaac138]" style="height: -webkit-fill-available;" (change)="onSelectionChangeSelect($event)" name="select" [(ngModel)]="selectedContrato">
+          <option [ngValue]="0"></option>
+          <option [ngValue]="contrato.id" *ngFor="let contrato of contratos">{{contrato.numeroDestajo}}</option>
+        </select>
+      </div>
+    </div>
+    </div>
+
+    <div class="flex justify-end items-end">
+            
+      <div class="flex flex-row bg-white shadow-sm rounded-t-lg p-1 items-end">
+          <div
+            class="flex items-center justify-center flex-shrink-0 h-10 w-10 rounded-xl bg-[#4eaac138] text-[#4eaac1]">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+              </path>
+            </svg>
+          </div>
+          <div class="flex flex-col flex-grow ml-4">
+            <div class="text-sm text-[#6b7280]">Total</div>
+            <div class="font-bold text-base"><span>{{totalConFormato}}</span></div>
+          </div>
+        </div>
+    </div>
+
+  <div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto;" class="overflow-y-auto w-[500px]">
+    
+    <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos mb-0">
+      <thead>
+        <tr>
+          <th scope="col">Descripción</th>
+          <th scope="col">Avance Estimación</th>
+          <th scope="col">Importe Destajo</th>
+          <th scope="col">Importe</th>
+          <th scope="col">% Avance</th>
+          <th scope="col">% Acumulado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of destajos">
+          <td scope="col"><input disabled class="w-full bg-transparent" type="text" 
+            [(ngModel)]="d.descripcion"
+            ></td>
+          <td scope="col">{{d.porcentajeEstimacionConFormato}}</td>
+          <td scope="col">{{d.importeDestajoConFormato}}</td>
+          <td scope="col">{{d.importeConFormato}}</td>
+          <td scope="col">{{d.porcentajePagoConFormato}}</td>
+          <td scope="col">{{d.acumuladoConFormato}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="flex bg-[#ffffff] justify-end rounded-b-[3px]">
+    <div class="flex items-center">
+      {{ getPaginationInfo() }}
+    </div>
+    <nav class="p-2 ">
+      <ul class="flex">
+        <li class="flex items-center">
+          <a class="mx-1 flex h-7 w-7 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-[#2d748d] cursor-pointer"
+            (click)="previousPage()" aria-label="Previous">
+            <span class="material-icons text-sm">keyboard_arrow_left</span>
+          </a>
+        </li>
+        <li *ngFor="let page of visiblePages" class="flex items-center">
+          <a class="mx-1 flex h-7 w-7 items-center justify-center rounded-full hover:bg-[#2d748d] cursor-pointer"
+            [ngClass]="{'bg-colorButton text-[#ffffff] shadow-md' : currentPage === page, 'border border-blue-gray-100 bg-transparent text-blue-gray-500 hover:bg-[#2d748d]': currentPage !== page}"
+            [class.active]="page === currentPage" (click)="goToPage(page)">
+            {{ page }}
+          </a>
+        </li>
+        <li class="flex items-center">
+          <a class="mx-1 flex h-7 w-7 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300 cursor-pointer"
+            (click)="nextPage()" aria-label="Next">
+            <span class="material-icons text-sm">keyboard_arrow_right</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+
+
+  </div>

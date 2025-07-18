@@ -1,0 +1,62 @@
+<section class="m-2">
+  <div class="p-2">
+    <div class="overflow-x-auto shadow-md rounded-lg">
+      <table class="w-full text-sm xs:table-fixed">
+        <thead class="bg-primario text-white">
+          <tr>
+            <th scope="col" class="px-1 py-[2px] xs:w-[75px]">Código</th>
+            <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">
+              Descripción
+            </th>
+            <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">Tipo</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray300">
+          <ng-container *ngFor="let item of cuentasContables">
+            <tr
+              class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              [ngClass]="{ 'change-background-color': item.id == changeColor }"
+              (click)="toggleSubTable(item.id)"
+            >
+              <td class="px-1 py-[2px]">{{ item.codigo }}</td>
+              <td class="px-1 py-[2px]">{{ item.descripcion }}</td>
+              <td class="px-1 py-[2px]">
+                {{ item.tipoCuentaContableDescripcion }}
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- </section>
+
+      <div *ngIf="selectedItem">
+        <table class="table table-striped rounded table-hover">
+          <thead>
+            <tr>
+              <th>Informe de cuenta</th>
+              <th>Tipo de cuenta</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let subItem of selectedItem.subItems">
+              <td>
+                <input class="input-text detalle" type="text" value="{{ subItem.detalle1 }}" />
+            </td>
+              <td class="td-0">
+                  <select class="select-opcion">
+                    <option value="" disabled selected>Tipo de cuenta</option>
+                    <option *ngFor="let option of subItem.options" [value]="option">{{ option }}</option>
+                  </select>
+                </td>
+
+
+            </tr>
+          </tbody>
+        </table>
+
+      </div> -->
+</section>

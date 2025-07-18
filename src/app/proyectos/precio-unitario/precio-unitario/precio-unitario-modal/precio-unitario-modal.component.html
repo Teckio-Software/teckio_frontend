@@ -1,0 +1,435 @@
+<div
+  *ngIf="isOpen"
+  class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center animate-fadeIn"
+>
+  <div
+    class="z-50 bg-gray100 rounded-xl shadow-lg px-6 py-3 w-[80%] h-[90%] relative overflow-auto xs:w-full"
+  >
+    <!-- Botón de cerrar -->
+    <div class="flex justify-end items-center">
+      <button
+        class="text-3xl text-gray500 hover:text-gray700 transition duration-200"
+        (click)="closeModal()"
+      >
+        ×
+      </button>
+    </div>
+
+    <!-- Pestañas -->
+    <div class="w-[95%] mt-1 h-auto z-10">
+      <mat-tab-group
+        class="first-custom-tab-group"
+        animationDuration="0ms"
+        (selectedTabChange)="seleccionarIndex($event)"
+      >
+        <mat-tab class="text-labels z-10" label="Costo Fijo"></mat-tab>
+        <mat-tab class="text-labels z-10" label="Costo Variable"></mat-tab>
+        <mat-tab class="text-labels z-10" label="Costo Operador"></mat-tab>
+      </mat-tab-group>
+    </div>
+
+    <!-- Tab 1: Costo Fijo -->
+    <div *ngIf="selectedIndex === 0" class="mt-4">
+      <div class="py-2 px-72">
+        <div class="flex justify-end mb-2">
+          <div
+            class="flex flex-row bg-white shadow-sm rounded-lg p-1 items-end"
+          >
+            <div
+              class="flex items-center justify-center flex-shrink-0 h-10 w-10 rounded-xl bg-[#4eaac138] text-[#4eaac1]"
+            >
+              <!-- icono -->
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
+            </div>
+            <div class="flex flex-col flex-grow ml-4">
+              <div class="text-sm text-[#6b7280]">Total</div>
+              <div class="font-bold text-base">
+                <span>10,500</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="overflow-x-auto shadow-md rounded-lg">
+          <table class="w-full table-fixed">
+            <thead class="bg-primario text-white">
+              <tr>
+                <th class="px-1 py-[2px] w-[40%]" scope="col">Nombre</th>
+                <th class="px-[2px] py-[2px] w-[60%]" scope="col">Cantidad*</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray300">
+              <tr
+                class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              >
+                <td>
+                  <input
+                    type="text"
+                    class="w-full px-2 py-1"
+                    placeholder="Ingresar PrimerCampo"
+                    value="Inversión"
+                    disabled
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    class="w-full px-2 py-1"
+                    value="900,000.00"
+                  />
+                </td>
+              </tr>
+              <tr
+                class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              >
+                <td>
+                  <input
+                    type="text"
+                    class="w-full px-2 py-1"
+                    placeholder="Ingresar PrimerCampo"
+                    value="Interes anual %"
+                    disabled
+                  />
+                </td>
+                <td>
+                  <input type="text" class="w-full px-2 py-1" value="15.00" />
+                </td>
+              </tr>
+              <tr
+                class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              >
+                <td>
+                  <input
+                    type="text"
+                    class="w-full px-2 py-1"
+                    placeholder="Ingresar PrimerCampo"
+                    value="Horas uso"
+                    disabled
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    class="w-full px-2 py-1"
+                    value="2,400.00"
+                  />
+                </td>
+              </tr>
+              <tr
+                class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              >
+                <td>
+                  <input
+                    type="text"
+                    class="w-full px-2 py-1"
+                    placeholder="Ingresar PrimerCampo"
+                    value="Vida útil"
+                    disabled
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    class="w-full px-2 py-1"
+                    value="12,000.00"
+                  />
+                </td>
+              </tr>
+              <tr
+                class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              >
+                <td>
+                  <input
+                    type="text"
+                    class="w-full px-2 py-1"
+                    placeholder="Ingresar PrimerCampo"
+                    value="Porcentaje reparación"
+                    disabled
+                  />
+                </td>
+                <td>
+                  <input type="text" class="w-full px-2 py-1" value="75.00" />
+                </td>
+              </tr>
+              <tr
+                class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              >
+                <td>
+                  <input
+                    type="text"
+                    class="w-full px-2 py-1"
+                    placeholder="Ingresar PrimerCampo"
+                    value="Porcentaje seguro anual"
+                    disabled
+                  />
+                </td>
+                <td>
+                  <input type="text" class="w-full px-2 py-1" value="2.00" />
+                </td>
+              </tr>
+              <tr
+                class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              >
+                <td>
+                  <input
+                    type="text"
+                    class="w-full px-2 py-1"
+                    placeholder="Ingresar PrimerCampo"
+                    value="Gasto anual"
+                    disabled
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    class="w-full px-2 py-1"
+                    value="6,000.00"
+                  />
+                </td>
+              </tr>
+              <tr
+                class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              >
+                <td>
+                  <input
+                    type="text"
+                    class="w-full px-3 py-1"
+                    placeholder="Ingresar PrimerCampo"
+                    value="Meses de trabajo real"
+                    disabled
+                  />
+                </td>
+                <td>
+                  <input type="text" class="w-full px-2 py-1" value="10" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mt-2 px-72 space-y-1">
+          <p class="text-gray-700 font-semibold">
+            Interes sobre capital:
+            <span class="text-primario"
+              >900,000.00 * 0.15/año / 2,400 hrs = 56.25</span
+            >
+          </p>
+          <p class="text-gray-700 font-semibold">
+            Depreciación:
+            <span class="text-primario">900,000.00 / 12,000hrs = 75.00</span>
+          </p>
+          <p class="text-gray-700 font-semibold">
+            Reparaciones:
+            <span class="text-primario">0.75 * 75 = 56.25</span>
+          </p>
+          <p class="text-gray-700 font-semibold">
+            Seguros:
+            <span class="text-primario"
+              >900,000.00 x 0.02/año / 2,400 horas/año = 7.50</span
+            >
+          </p>
+          <p class="text-gray-700 font-semibold">
+            Gastos anuales:
+            <span class="text-primario"
+              >6,000.00/año / 2,400 horas/año = 2.50</span
+            >
+          </p>
+          <p class="text-gray-700 font-semibold">
+            Suma:
+            <span class="text-primario">197.50</span>
+          </p>
+          <p class="text-gray-700 font-semibold">
+            Factor de Utilización:
+            <span class="text-primario">12/10 meses = 1.20</span>
+          </p>
+          <p class="text-gray-700 font-semibold">
+            Sub total:
+            <span class="text-primario">237.00</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- costo variable -->
+    <div *ngIf="selectedIndex === 1" class="mt-4">
+      <div class="overflow-x-auto shadow-md rounded-lg">
+        <table class="w-full table-fixed text-center xs:text-[8px]">
+          <thead class="bg-primario text-white">
+            <tr>
+              <th class="px-1 py-[2px] w-[10%]" scope="col">Codigo</th>
+              <th class="px-1 py-[2px] w-[25%]" scope="col">Descripción</th>
+              <th class="px-1 py-[2px] w-[10%]" scope="col">Unidad</th>
+              <th class="px-1 py-[2px] w-[10%]" scope="col">Cantidad</th>
+              <th class="px-1 py-[2px] w-[10%]" scope="col">Precio</th>
+              <th class="px-1 py-[2px] w-[15%]" scope="col">Rendimiento</th>
+              <th class="px-1 py-[2px] w-[10%]" scope="col">Tipo</th>
+              <th class="px-1 py-[2px] w-[10%]" scope="col">Importe</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray300">
+            <tr
+              class="font-medium text-gray700 hover:bg-gray200 animation duration-200"
+            >
+              <td>
+                <input
+                  type="text"
+                  class="w-full px-2 py-1 border border-gray-300 rounded"
+                  value="Disel"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="w-full px-2 py-1 border border-gray-300 rounded"
+                  value="Disel"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="w-full px-2 py-1 border border-gray-300 rounded"
+                  value="l"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="w-full px-2 py-1 border border-gray-300 rounded"
+                  value="1"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="w-full px-2 py-1 border border-gray-300 rounded"
+                  value="24.00"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="w-full px-2 py-1 border border-gray-300 rounded"
+                  value="21.00"
+                />
+              </td>
+              <td>
+                <select
+                  class="w-full px-2 py-1 border border-gray-300 rounded"
+                  [value]="1"
+                >
+                  <option value="1">Combustible</option>
+                  <option value="2">Lubricantes</option>
+                  <option value="3">Neumáticos</option>
+                  <option value="4">Piezas especiales</option>
+                  <option value="5">Fletes</option>
+                </select>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="w-full px-2 py-1 border border-gray-300 rounded"
+                  value="504.00"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- costo operador -->
+    <div *ngIf="selectedIndex === 2" class="mt-4">
+      <div class="overflow-x-auto shadow-md rounded-lg">
+        <table class="w-full table-fixed text-center xs:text-[8px]">
+          <thead class="bg-primario text-white">
+            <tr>
+              <th class="px-1 py-[2px] w-[10%]" scope="col">Codigo</th>
+              <th class="px-1 py-[2px] w-[35%]" scope="col">Descripción</th>
+              <th class="px-1 py-[2px] w-[10%]" scope="col">Unidad</th>
+              <th class="px-1 py-[2px] w-[10%]" scope="col">Cantidad</th>
+              <th class="px-1 py-[2px] w-[10%]" scope="col">Precio</th>
+              <th class="px-1 py-[2px] w-[10%]" scope="col">Rendimiento</th>
+              <th class="px-1 py-[2px] w-[10%]" scope="col">Tipo</th>
+              <th class="px-1 py-[2px] w-[10%]" scope="col">Importe</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray300">
+            <tr
+              class="font-medium text-gray700 hover:bg-gray200 animation duration-200"
+            >
+              <td>
+                <input
+                  type="text"
+                  class="w-full px-2 py-1 border border-gray-300 rounded"
+                  value="Opr001"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="w-full px-2 py-1 border border-gray-300 rounded"
+                  value="Operador de motoconformadora"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="w-full px-2 py-1 border border-gray-300 rounded"
+                  value="jor"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="w-full px-2 py-1 border border-gray-300 rounded"
+                  value="1"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="w-full px-2 py-1 border border-gray-300 rounded"
+                  value="2500.00"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="w-full px-2 py-1 border border-gray-300 rounded"
+                  value="8.00"
+                />
+              </td>
+              <td>
+                <select
+                  class="w-full px-2 py-1 border border-gray-300 rounded"
+                  [value]="6"
+                >
+                  <option value="6">Operación</option>
+                </select>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="w-full px-2 py-1 border border-gray-300 rounded"
+                  value="312.50"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

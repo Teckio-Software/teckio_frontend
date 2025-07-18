@@ -1,0 +1,98 @@
+.project-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.td-0 {
+  padding: 0;
+  background-color: #fffefe;
+  border: 0.5px solid #ffffff85;
+}
+
+.button-filt {
+  border: none;
+  background-color: #4eaac1;
+  color: #f2f2f2;
+  padding: 2px 10px;
+  border-radius: 3px;
+  text-align: center;
+  margin: 0 10px;
+}
+
+.labelProyecto {
+  background-color: #4eaac1;
+  color: #f2f2f2;
+  /* margin-right: -4px; */
+  padding: 1px 20px;
+  border-start-start-radius: 5px;
+  border-end-start-radius: 5px;
+}
+
+.dropdown {
+  width: 90%;
+  background-color: #4eaac138;
+  border: none;
+  padding: 1px 4px;
+  /* width: 12vw; */
+  border-radius: 0 3px 3px 0;
+}
+
+/* my-component.component.css */
+::ng-deep
+  .first-custom-tab-group.mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs
+  > .mat-mdc-tab-header
+  .mat-mdc-tab {
+  flex-grow: 0 !important; /* Asegúrate de que solo el primer grupo de pestañas se vea afectado */
+  background-color: #4eaac1 !important; /* Cambia el color de fondo de las pestañas */
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+::ng-deep .first-custom-tab-group .mat-mdc-tab-labels {
+  gap: 2px !important; /* Asegúrate de que no haya espacio entre las pestañas */
+}
+::ng-deep .first-custom-tab-group .mat-mdc-tab:not(.mdc-tab--stacked) {
+  height: 25px !important; /* Cambia la altura de las pestañas */
+}
+::ng-deep .first-custom-tab-group .mdc-tab__text-label {
+  color: #f2f2f2 !important; /* Cambia el color del texto de las pestañas */
+}
+::ng-deep .tooltip {
+  --bs-tooltip-bg: #d6d3d3 !important;
+  --bs-tooltip-color: rgb(0, 0, 0) !important;
+}
+
+.button-filt:hover {
+  background-color: #002b53;
+}
+
+::ng-deep .tooltip {
+  --bs-tooltip-bg: #d6d3d3 !important;
+  --bs-tooltip-color: rgb(0, 0, 0) !important;
+}
+.btn-autorizar {
+  transition-duration: 0.4s;
+  background-color: #4eaac150;
+  border: none;
+  color: #020202;
+  font-weight: 500;
+  border-radius: 3px;
+  font-size: 16px;
+}
+.btn-autorizar:hover {
+  background-color: #4eaac150; /* Green */
+  color: #4eaac1;
+}
+.container-button {
+  display: flex;
+  justify-content: end;
+
+  /* has que el contenedor suba el boton */
+}
+.estilo1 {
+  background-color: #d55d3f38;
+}
+
+.change-background-color {
+  background-color: #b9dfe9;
+}

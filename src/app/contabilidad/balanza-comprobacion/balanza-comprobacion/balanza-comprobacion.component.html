@@ -1,0 +1,161 @@
+<div class="cont-filtro">
+  <div class="cont-filt1">
+    <div class="contenedor-input">
+      <p class="place-holder" style="height: 30px; width: 14vh; display: flex;">Año de inicio</p>
+      <select class="form-select" style="height: 31px;" [(ngModel)]="filtroRangoFecha.anioInicio"
+        (ngModelChange)="cargarPorRangoFecha()">
+        <option *ngFor="let anio of anios" [value]="anio.anio">{{anio.anio}}</option>
+      </select>
+    </div>
+    <div class="contenedor-input">
+      <p class="place-holder" style="height: 30px; width: 14vh;">Mes de inicio</p>
+      <select class="form-select" style="height: 31px;" [(ngModel)]="filtroRangoFecha.mesInicio"
+        (ngModelChange)="cargarPorRangoFecha()">
+        <option *ngFor="let mes of meses" [value]="mes.mes">{{mes.mes}}</option>
+      </select>
+    </div>
+    <!-- --------------- -->
+    <div class="contenedor-input">
+      <p class="place-holder" style="height: 30px; width: 14vh;">Año de termino</p>
+      <select class="form-select" style="height: 31px;" [(ngModel)]="filtroRangoFecha.anioTermino"
+        (ngModelChange)="cargarPorRangoFecha()">
+        <option *ngFor="let anio of anios" [value]="anio.anio">{{anio.anio}}</option>
+      </select>
+    </div>
+
+    <div class="contenedor-input">
+      <p class="place-holder" style="height: 30px; width: 14vh;">Mes de termino</p>
+      <select class="form-select" style="height: 31px;" [(ngModel)]="filtroRangoFecha.mesTermino"
+        (ngModelChange)="cargarPorRangoFecha()">
+        <option *ngFor="let mes of meses" [value]="mes.mes">{{mes.mes}}</option>
+      </select>
+    </div>
+  </div>
+  <!-- --------------- -->
+  <div class="cont-filt2">
+    <div class="contenedor-input2" style="margin-right: 10px;">
+      <p class="place-holder" style="height: 30px; width: 16vh;">Seleccione un año</p>
+      <select class="form-select" style="height: 31px;" [(ngModel)]="filtroPeriodo.anio"
+        (ngModelChange)="cargarPorPeriodo()">
+        <option *ngFor="let anio of anios" [value]="anio.anio">{{anio.anio}}</option>
+      </select>
+    </div>
+    <div class="contenedor-input2" style="margin-right: 10px;">
+      <p class="place-holder" style="height: 30px; width: 16vh;">Seleccione un mes</p>
+      <select class="form-select" style="height: 31px;" [(ngModel)]="filtroPeriodo.mes"
+        (ngModelChange)="cargarPorPeriodo()">
+        <option *ngFor="let mes of meses" [value]="mes.mes">{{mes.mes}}</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="cont-arbol" style="margin-top: 30px;">
+  <table class="table table-striped table-hover titulo-arbol">
+    <thead>
+      <th style="width: 7%;" class="cabecera">-</th>
+      <th style="width: 19%;" class="cabecera">Código</th>
+      <th style="width: 22%;" class="cabecera">Descripción</th>
+      <th style="width: 22%;" class="cabecera">Saldo inicial</th>
+      <th style="width: 8.7%;" class="cabecera">Debe</th>
+      <th style="width: 8.7%;" class="cabecera">Haber</th>
+      <th class="cabecera">Saldo final</th>
+    </thead>
+  </table>
+
+  <tree-view [treeData]="balanzas">
+    <ng-template let-balanza>
+      <table class="table table-striped table-hover table-arbol">
+        <tbody>
+          <tr [ngClass]="{
+              nivel1: balanza.nivel == 1,
+              nivel2: balanza.nivel == 2,
+              nivel3: balanza.nivel == 3,
+              nivel4: balanza.nivel == 4,
+              nivel5: balanza.nivel == 5,
+              nivel6: balanza.nivel == 6,
+              nivel7: balanza.nivel == 7
+              }">
+            <td style="width: 7%; border-right: 1px solid #f2f2f217;" class="cont-drill" [ngClass]="{
+              nivel1Margen: balanza.nivel == 1,
+              nivel2Margen: balanza.nivel == 2,
+              nivel3Margen: balanza.nivel == 3,
+              nivel4Margen: balanza.nivel == 4,
+              nivel5Margen: balanza.nivel == 5,
+              nivel6Margen: balanza.nivel == 6,
+              nivel7Margen: balanza.nivel == 7
+            }" (click)="seleccionarFila(balanza)" >
+              <div class="contenedores" style="display: flex;">
+                <div *ngIf="balanza.hijos.length > 0">
+                  <button (click)="expansionDominio(balanza)" style="font-size: 12px;" class="button-drill" *ngIf="balanza.nivel <= 7"
+                  [ngClass]="{
+                    colorButton1: balanza.nivel == 1,
+                    colorButton2: balanza.nivel == 2,
+                    colorButton3: balanza.nivel == 3,
+                    colorButton4: balanza.nivel == 4,
+                    colorButton5: balanza.nivel == 5,
+                    colorButton6: balanza.nivel == 6,
+                    colorButton7: balanza.nivel == 7
+                  }"
+                  >
+                    {{ balanza.expandido ? "▼" : "►" }}
+                  </button>
+                </div>
+                <div *ngIf="balanza.hijos.length <= 0"
+                class="buttonNull" style="font-size: 12px;"
+                [ngClass]="{
+                  button1null: balanza.nivel == 1,
+                  button2null: balanza.nivel == 2,
+                  button3null: balanza.nivel == 3,
+                  button4null: balanza.nivel == 4,
+                  button5null: balanza.nivel == 5,
+                  button6null: balanza.nivel == 6,
+                  button7null: balanza.nivel == 7
+                }"
+                >
+                  - 
+                </div> 
+              </div>
+            </td>
+            <td style="border-right: 1px solid #3f3e3e17; width: 19%; border-right: 1px solid #f2f2f217;"
+              class="cont-drill">
+              {{ balanza.cuentaContableCodigo }}
+            </td>
+            <td style="border-right: 1px solid #3f3e3e17; width: 22%; border-right: 1px solid #f2f2f217;"
+              class="cont-drill">
+              {{ balanza.cuentaContableDescripcion }}
+            </td>
+            <td style="border-right: 1px solid #3f3e3e17; width: 22%; border-right: 1px solid #f2f2f217"
+              class="cont-drill">
+              {{ balanza.saldoInicial }}
+            </td>
+            <td style="border-right: 1px solid #3f3e3e17; width: 8.7%; border-right: 1px solid #f2f2f217"
+              class="cont-drill">
+              {{ balanza.debe }}
+            </td>
+            <td style="border-right: 1px solid #3f3e3e17; width: 8.7%; border-right: 1px solid #f2f2f217"
+              class="cont-drill">
+              {{ balanza.haber }}
+            </td>
+            <td class="cont-drill" style="border-right: 1px solid #f2f2f217">
+              {{ balanza.saldoFinal }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-template>
+  </tree-view>
+
+  <table class="table table-striped table-hover titulo-arbol2">
+    <thead>
+      <th style="width: 7%;" class="cabecera2"></th>
+      <th style="width: 19%;" class="cabecera2"></th>
+      <th style="width: 22%;" class="cabecera2"></th>
+      <th style="width: 22%;" class="cabecera2">Saldo Inicial: 0</th>
+      <th style="width: 8.7%;" class="cabecera2">Debe: {{debe}}</th>
+      <th style="width: 8.7%;" class="cabecera2">Haber: {{haber}}</th>
+      <th style="width: 13.7%;" class="cabecera2">Saldo Final: 0</th>
+      <th></th>
+    </thead>
+  </table>
+</div>

@@ -1,0 +1,123 @@
+<div class="fixed inset-0 z-10 w-screen overflow-y-auto" (click)="cerrar()">
+  <div class="content-center sm:flex min-h-full items-cen justify-center p-4 text-center sm:items-center sm:p-0">
+    <!-- Evita que el clic se propague al contenedor padre (overlay) -->
+
+    <div
+      class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-7xl"
+      (click)="detenerCierre($event)">
+      <!-- detenerCierre(event: MouseEvent): Método que detiene la propagación del evento de clic cuando se hace clic dentro del contenido del modal, asegurando que el modal no se cierre inadvertidamente. -->
+      <div class="m-2 flex justify-between">
+        <h2 class="font-normal tracking-[2px] leading-8  text-base">Nueva Requisición</h2>
+        <button type="button" class=" leading-none absolute top-0 right-0 px-4 py-3 text-2xl"
+          (click)="cerrar()">&times;</button>
+
+      </div>
+      <div class="bg-white px-4 pb-4 sm:p-2 sm:pb-4">
+        <div>
+          <form action="" method="post" [formGroup]="form">
+            <div class="cont-input">
+              <label class="form-label" for="idCuentaContable" >Residente</label>
+              <input type="text" formControlName="residente" class="form-control">
+            </div>
+            <div class="cont-input" style=" display: flex; flex-direction: column;">
+              <label class="form-label">Observaciones</label>
+              <textarea formControlName="observaciones" class="form-control" rows="2" style="resize: none;"></textarea>
+            </div>
+    
+          </form>
+          <div
+            style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px; margin-top: 15px;">
+            <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
+              <thead>
+                <tr>
+                  <th class="cabecera1" scope="col">Detalles</th>
+                  <th class="cabecera1" scope="col">Descripción</th>
+                  <th class="cabecera1" scope="col">Unidad</th>
+                  <th class="cabecera1" scope="col">Tipo Insumo</th>
+                  <th class="cabecera1" scope="col">Costo Unitario</th>
+                  <th class="cabecera1" scope="col">C. Presupuestada</th>
+                  <th class="cabecera1" scope="col">Cantidad</th>
+                  <!-- <th class="cabecera1" scope="col">Solicita</th> -->
+                  <th class="cabecera1" scope="col">Fecha de Entrega</th>
+                  <th class="cabecera1" scope="col">Observaciones</th>
+                  <th class="cabecera1" scope="col">Acciones</th>
+    
+                </tr>
+              </thead>
+              
+              <tbody>
+                <tr *ngFor="let insumo of listaInsumosCrear">
+                  <td scope="col">
+                    <button (click)="verDetalleInsumo(insumo.idInsumo)">Detalles</button>
+                  </td>
+                  <td scope="col">
+                    <input class="dropdown" list="insumodata" id="insumo" name="insumo" [(ngModel)]="insumo.descripcion"
+                      autocomplete="off" (keydown.enter)="agregarNuevoInsumo()" (input)="informacionInsumo($event)" />
+                    <datalist id="insumodata">
+                      <option *ngFor="let insumo of explocionInsumosparaRequisicion">{{insumo.descripcion}}</option>
+                    </datalist>
+                  </td>
+                  <td scope="col">
+                    <input autocomplete="off" autocomplete="off" class="form-contrtrol dropdown1" type="text"
+                      placeholder="Buscar" style="margin: 5px;" data-bs-toggle="dropdown"
+                      (keydown.enter)="agregarNuevoInsumo()" [(ngModel)]="insumo.unidad">
+                  </td>
+                  <td scope="col">
+                    <select [(ngModel)]="insumo.idTipoInsumo" [disabled]="insumo.idInsumo > 0">
+                      <option *ngFor="let tipoInsumo of tipoInsumos" [ngValue]="tipoInsumo.id"  >{{tipoInsumo.descripcion}}</option>
+                    </select>
+                  </td>
+                  <td scope="col">
+                    <input autocomplete="off" autocomplete="off" class="form-contrtrol dropdown1" type="text"
+                      placeholder="Buscar" style="margin: 5px;" data-bs-toggle="dropdown"
+                      (keydown.enter)="agregarNuevoInsumo()" [(ngModel)]="insumo.cUnitario" disabled>
+                  </td>
+                  <td scope="col">
+                    <input autocomplete="off" autocomplete="off" class="form-contrtrol dropdown1" type="text"
+                      placeholder="Buscar" style="margin: 5px;" data-bs-toggle="dropdown"
+                      (keydown.enter)="agregarNuevoInsumo()" [(ngModel)]="insumo.cPresupuestada" disabled>
+                  </td>
+                  <td scope="col">
+                    <input autocomplete="off" autocomplete="off" class="form-contrtrol dropdown1" type="number"
+                      placeholder="Buscar" style="margin: 5px;" data-bs-toggle="dropdown" 
+                      (keydown.enter)="agregarNuevoInsumo()" [(ngModel)]="insumo.cantidad">
+                  </td>
+                  <!-- <td scope="col">
+                    <input autocomplete="off" autocomplete="off" class="form-contrtrol dropdown1" type="text"
+                      placeholder="Buscar" style="margin: 5px;" data-bs-toggle="dropdown"
+                      (keydown.enter)="agregarNuevoInsumo()" [(ngModel)]="insumo.personaIniciales">
+                  </td> -->
+                  <td scope="col">
+                    <input type="date" style="margin: 5px;" min="1900-01-01" max="9999-01-01"
+                      (keydown.enter)="agregarNuevoInsumo()" [(ngModel)]="insumo.fechaEntrega">
+                  </td>
+                  <td scope="col">
+                    <input autocomplete="off" autocomplete="off" class="form-contrtrol dropdown1" type="text"
+                      placeholder="Buscar" style="margin: 5px;" data-bs-toggle="dropdown"
+                      (keydown.enter)="agregarNuevoInsumo()" [(ngModel)]="insumo.observaciones">
+                  </td>
+                  <td scope="col">
+    
+                    <button class="button-filt" placement="start" ngbTooltip="Eliminar" triggers="mouseenter:mouseleave"
+                      (click)="EliminarListaInsumosXRequisicion(insumo.descripcion, insumo.unidad, insumo.personaIniciales)">
+                      <img src="assets/delete.svg" alt="add cotizacion">
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-2 py-2 sm:flex sm:flex-row-reverse sm:px-6 sm:gap-4">
+        <button
+          class="bg-[#51aec7] hover:bg-[#002B53] text-[#f2f2f2]  py-2 px-4 rounded-sm mr-2 mt-3  inline-flex w-full justify-center shadow-sm ring-1 ring-inset  sm:mt-0 sm:w-auto"
+          (click)="guardarRequisicion()">Aceptar</button>
+        <button
+          class="mt-3 inline-flex w-full justify-center rounded-sm bg-[#51aec7] text-[#f2f2f2] px-3 py-2 text-sm shadow-sm ring-1 ring-inset  hover:bg-[#B05B5B] sm:mt-0 sm:w-auto  "
+          (click)="cerrar()">Cancelar</button>
+      </div>
+
+    </div>
+  </div>
+</div>

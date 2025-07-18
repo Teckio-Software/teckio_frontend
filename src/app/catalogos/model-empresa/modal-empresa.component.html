@@ -1,0 +1,186 @@
+
+
+<h2 mat-dialog-title>{{ tituloAccion }} Empresa</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="formularioEmpresa">
+    <mat-grid-list cols="4" rowHeight="80px">
+      <mat-grid-tile>
+        <mat-form-field appearance="fill">
+          <mat-label>Fecha de Creación</mat-label>
+          <input matInput autocomplete="off" formControlName="anio" />
+          <mat-icon matSuffix>account-box</mat-icon>
+        </mat-form-field>
+      </mat-grid-tile>
+    </mat-grid-list>
+
+    <mat-grid-list cols="2" rowHeight="80px">
+      <mat-grid-tile>
+        <mat-form-field appearance="fill">
+          <mat-label>Compañía</mat-label>
+          <input matInput autocomplete="off" formControlName="nombre" />
+          <mat-icon matSuffix>account-box</mat-icon>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="fill">
+          <mat-label>Descripción</mat-label>
+          <input matInput autocomplete="off" formControlName="descripcion" />
+          <mat-icon matSuffix>account-box</mat-icon>
+        </mat-form-field>
+      </mat-grid-tile>
+    </mat-grid-list>
+
+    <mat-grid-list cols="4" rowHeight="80px">
+      <mat-grid-tile>
+        <mat-form-field appearance="fill">
+          <mat-label>RFC</mat-label>
+          <input matInput autocomplete="off" formControlName="rfc" />
+          <mat-icon matSuffix>account-box</mat-icon>
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-form-field appearance="fill">
+          <mat-label>País</mat-label>
+          <input matInput autocomplete="off" formControlName="pais" />
+          <mat-icon matSuffix>account-box</mat-icon>
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-form-field appearance="fill">
+          <mat-label>Estado</mat-label>
+          <input matInput autocomplete="off" formControlName="estado" />
+          <mat-icon matSuffix>account-box</mat-icon>
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-form-field appearance="fill">
+          <mat-label>Código Postal</mat-label>
+          <input matInput autocomplete="off" formControlName="cp" />
+          <mat-icon matSuffix>account-box</mat-icon>
+        </mat-form-field>
+      </mat-grid-tile>
+    </mat-grid-list>
+
+    <mat-grid-list cols="3" rowHeight="80px">
+        <mat-grid-tile>
+          <mat-form-field appearance="fill">
+            <mat-label>Colonia</mat-label>
+            <input matInput autocomplete="off" formControlName="colonia" />
+            <mat-icon matSuffix>account-box</mat-icon>
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <mat-form-field appearance="fill">
+            <mat-label>Municipio</mat-label>
+            <input matInput autocomplete="off" formControlName="municipio" />
+            <mat-icon matSuffix>account-box</mat-icon>
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <mat-form-field appearance="fill">
+            <mat-label>Localidad</mat-label>
+            <input matInput autocomplete="off" formControlName="localidad" />
+            <mat-icon matSuffix>account-box</mat-icon>
+          </mat-form-field>
+        </mat-grid-tile>
+      </mat-grid-list>
+
+      <mat-grid-list cols="1" rowHeight="80px">
+        <mat-grid-tile>
+          <mat-form-field appearance="fill">
+            <mat-label>Dirección</mat-label>
+            <input matInput autocomplete="off" formControlName="direccion" />
+            <mat-icon matSuffix>account-box</mat-icon>
+          </mat-form-field>
+        </mat-grid-tile>
+      </mat-grid-list>
+
+      <mat-grid-list cols="4" rowHeight="80px">
+        <mat-grid-tile>
+          <mat-form-field appearance="fill">
+            <mat-label>No. Ext.</mat-label>
+            <input matInput autocomplete="off" formControlName="noExt" />
+            <mat-icon matSuffix>account-box</mat-icon>
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <mat-form-field appearance="fill">
+            <mat-label>No. Int</mat-label>
+            <input matInput autocomplete="off" formControlName="noInt" />
+            <mat-icon matSuffix>account-box</mat-icon>
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-form-field appearance="fill">
+              <mat-label>Teléfono</mat-label>
+              <input matInput autocomplete="off" formControlName="telefono" />
+              <mat-icon matSuffix>account-box</mat-icon>
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile>
+            <mat-form-field appearance="fill">
+              <mat-label>Télefono Ventas</mat-label>
+              <input matInput autocomplete="off" formControlName="telefonoVenta" />
+              <mat-icon matSuffix>account-box</mat-icon>
+            </mat-form-field>
+          </mat-grid-tile>
+      </mat-grid-list>
+
+      <mat-grid-list cols="2" rowHeight="80px">
+        <mat-grid-tile>
+          <mat-form-field appearance="fill">
+            <mat-label>Referencia</mat-label>
+            <input matInput autocomplete="off" formControlName="referencia" />
+            <mat-icon matSuffix>account-box</mat-icon>
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <mat-form-field appearance="fill">
+            <mat-label>Correo</mat-label>
+            <input matInput autocomplete="off" formControlName="email" />
+            <mat-icon matSuffix>account-box</mat-icon>
+          </mat-form-field>
+        </mat-grid-tile>
+      </mat-grid-list>
+
+      <mat-grid-list cols="2" rowHeight="80px">
+        <mat-grid-tile>
+            <mat-form-field appearance="fill">
+              <mat-label>Corporativo</mat-label>
+              <mat-select formControlName="idCorporativo">
+                <mat-option *ngFor="let item of listaCorporativos" [value]="item.id">
+                    {{item.nombre}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile>
+            <mat-form-field appearance="fill">
+              <mat-label>Estatus</mat-label>
+              <mat-select formControlName="estatus">
+                <mat-option value="1">Activo</mat-option>
+                <mat-option value="0">No Activo</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-grid-tile>
+      </mat-grid-list>
+
+
+
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-raised-button mat-dialog-close color="warn">Cancelar</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="formularioEmpresa.invalid"
+    (click)="guardarEditar_Empresa()"
+  >
+    {{ botonAccion }}
+  </button>
+</mat-dialog-actions>

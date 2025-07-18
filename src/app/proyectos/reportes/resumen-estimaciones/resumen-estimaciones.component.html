@@ -1,0 +1,101 @@
+<div class="flex justify-between">
+  <div>
+    <mat-form-field style="margin-left: 10px; margin-top: 20px;">
+      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+        <input matStartDate formControlName="start" placeholder="Fecha Inicial">
+        <input matEndDate formControlName="end" placeholder="Fecha Final">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker>
+        <mat-date-range-picker-actions>
+          <button mat-button matDateRangePickerCancel>Cancelar</button>
+          <button mat-button matDateRangePickerCancel (click)="limpiarFiltro()">Limpiar</button>
+          <button mat-raised-button color="primary" (click)="clickButtonFiltro()" matDateRangePickerApply>Filtrar</button>
+        </mat-date-range-picker-actions>
+      </mat-date-range-picker>
+    </mat-form-field>
+  </div>
+  
+  <div class="flex justify-end items-end">
+              
+    <div class="flex flex-row bg-white shadow-sm rounded-t-lg p-1 items-end">
+        <div
+          class="flex items-center justify-center flex-shrink-0 h-10 w-10 rounded-xl bg-[#4eaac138] text-[#4eaac1]">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+            </path>
+          </svg>
+        </div>
+        <div class="flex flex-col flex-grow ml-4">
+          <div class="text-sm text-[#6b7280]">Total</div>
+          <div class="font-bold text-base"><span>{{totalConFormato}}</span></div>
+        </div>
+      </div>
+  </div>
+</div>
+
+
+<div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto;" class="overflow-y-auto w-[500px]">
+    
+    <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos mb-0">
+      <thead>
+        <tr>
+          <th scope="col">Número</th>
+          <th scope="col">Periodo</th>
+          <th scope="col">Avance</th>
+          <th scope="col">Importe</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of periodos" (click)="VerDetalles(p.id)" [ngClass]="{'change-background-color' : p.id == changeColor}">
+          <td scope="col" >{{p.numeroPeriodo}}</td>
+          <td scope="col">{{p.descripcionPeriodo}}</td>
+          <td scope="col">{{p.avanceConFormato}}</td>
+          <td scope="col">{{p.importeConFormato}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="flex bg-[#ffffff] justify-end rounded-b-[3px]">
+    <div class="flex items-center">
+      {{ getPaginationInfo() }}
+    </div>
+    <nav class="p-2 ">
+      <ul class="flex">
+        <li class="flex items-center">
+          <a class="mx-1 flex h-7 w-7 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-[#2d748d] cursor-pointer"
+            (click)="previousPage()" aria-label="Previous">
+            <span class="material-icons text-sm">keyboard_arrow_left</span>
+          </a>
+        </li>
+        <li *ngFor="let page of visiblePages" class="flex items-center">
+          <a class="mx-1 flex h-7 w-7 items-center justify-center rounded-full hover:bg-[#2d748d] cursor-pointer"
+            [ngClass]="{'bg-colorButton text-[#ffffff] shadow-md' : currentPage === page, 'border border-blue-gray-100 bg-transparent text-blue-gray-500 hover:bg-[#2d748d]': currentPage !== page}"
+            [class.active]="page === currentPage" (click)="goToPage(page)">
+            {{ page }}
+          </a>
+        </li>
+        <li class="flex items-center">
+          <a class="mx-1 flex h-7 w-7 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300 cursor-pointer"
+            (click)="nextPage()" aria-label="Next">
+            <span class="material-icons text-sm">keyboard_arrow_right</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+
+
+
+
+
+ 
+
+
+
+  </div>
+ <section>
+  <app-table-estimaciones *ngIf="ocultarTablaDetalles" [estimaciones]="estimaciones" ></app-table-estimaciones>
+ </section>

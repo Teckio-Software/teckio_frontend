@@ -1,0 +1,13 @@
+
+
+
+<!-- Para saber si un usuario esta autorizado a dicho componente -->
+<ng-content *ngIf="!zfEstaAutorizadoPermiso()" select="[zvNoAutorizado]"></ng-content>
+<ng-content *ngIf="zfEstaAutorizadoPermiso()" select="[zvAutorizado]"></ng-content>
+
+<ng-content *ngIf="!zfEstaAutorizado()" select="[zvNoAutorizadoRol]"></ng-content>
+<ng-content *ngIf="zfEstaAutorizado()" select="[zvAutorizadoRol]"></ng-content>
+
+<ng-content *ngIf="!estaAutorizadoPermisos()" select="[noAutorizadoPantalla]"></ng-content>
+<ng-content *ngIf="estaAutorizadoPermisos()" select="[autorizadoPantalla]"></ng-content>
+

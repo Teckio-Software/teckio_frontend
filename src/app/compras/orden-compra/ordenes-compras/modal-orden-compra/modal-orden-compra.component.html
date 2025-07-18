@@ -1,0 +1,278 @@
+<div
+  *ngIf="isOpen"
+  class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center animate-fadeIn"
+>
+  <div
+    class="z-50 bg-gray100 rounded-xl shadow-lg px-6 py-3 w-[50%] h-[90%] relative overflow-auto xs:w-full"
+  >
+    <div class="flex justify-end items-center">
+      <button
+        class="text-3xl text-gray500 hover:text-gray700 transition 200ms"
+        (click)="closeModal()"
+      >
+        ×
+      </button>
+    </div>
+
+    <div class="text-gray700">
+      <!-- Header container -->
+      <div class="">
+        <!-- Empresa datos -->
+        <div class="rounded-lg p-2 w-full shadow-sm">
+          <div class="flex gap-1">
+            <p class="font-medium text-md w-46 m-0 xs:text-xs">
+              Orden de compra:
+            </p>
+            <p class="m-0 xs:text-xs">
+              {{ ordenCompra.noOrdenCompra }}
+            </p>
+          </div>
+        </div>
+        <div class="rounded-lg p-2 w-full shadow-sm mt-2">
+          <div class="flex gap-2">
+            <p class="font-medium text-md w-10 m-0 xs:text-xs">Fecha:</p>
+            <p class="m-0 xs:text-xs">
+              {{ ordenCompra.fechaRegistro }}
+            </p>
+          </div>
+        </div>
+        <!-- Empresa datos end-->
+      </div>
+      <!-- Header container end-->
+
+      <!-- Second container -->
+      <div class="flex gap-1 mt-2">
+        <!-- Contratista datos  -->
+        <div class="rounded-lg p-2 basis-full shadow-sm">
+          <div class="flex gap-5">
+            <div class="flex gap-1 items-center">
+              <p class="font-medium text-md m-0 xs:text-xs">Empresa:</p>
+              <p class="m-0 xs:text-xs">Grupo Teckio SA de CV</p>
+            </div>
+            <div class="flex gap-1">
+              <p class="font-medium text-md m-0 xs:text-xs">Ciudad:</p>
+              <p class="m-0 xs:text-xs">Metepec</p>
+            </div>
+            <div class="flex gap-1">
+              <p class="font-medium text-md m-0 xs:text-xs">RFC:</p>
+              <p class="m-0 xs:text-xs">XAXX010101000</p>
+            </div>
+            <div class="flex gap-1">
+              <p class="font-medium text-md m-0 xs:text-xs">C.P.:</p>
+              <p class="m-0 xs:text-xs">12345</p>
+            </div>
+          </div>
+
+          <div class="flex gap-1">
+            <p class="font-medium text-md m-0 xs:text-xs">Domicilio:</p>
+            <p class="m-0 xs:text-xs">{{ contratista.telefono }}</p>
+          </div>
+        </div>
+
+        <!-- Contratista datos  end -->
+      </div>
+      <!-- Second container end-->
+
+      <!-- Second container -->
+      <div class="flex gap-1 mt-2">
+        <!-- Contratista datos  -->
+        <div class="rounded-lg p-2 w-full shadow-sm">
+          <div class="flex gap-5">
+            <div class="flex gap-1 items-center">
+              <p class="font-medium text-md m-0 xs:text-xs">Contratista:</p>
+              <p class="m-0 xs:text-xs">{{ contratista.razonSocial }}</p>
+            </div>
+            <div class="flex gap-1">
+              <p class="font-medium text-md m-0 xs:text-xs">Ciudad:</p>
+              <p class="m-0 xs:text-xs">{{ contratista.municipio }}</p>
+            </div>
+            <div class="flex gap-1">
+              <p class="font-medium text-md m-0 xs:text-xs">RFC:</p>
+              <p class="m-0 xs:text-xs">{{ contratista.rfc }}</p>
+            </div>
+            <div class="flex gap-1">
+              <p class="font-medium text-md m-0 xs:text-xs">C.P.:</p>
+              <p class="m-0 xs:text-xs">{{ contratista.codigoPostal }}</p>
+            </div>
+          </div>
+
+          <div class="flex gap-1">
+            <p class="font-medium text-md m-0 xs:text-xs">Domicilio:</p>
+            <p class="m-0 xs:text-xs">{{ contratista.domicilio }}</p>
+          </div>
+        </div>
+
+        <!-- Contratista datos  end -->
+      </div>
+      <!-- Second container end-->
+
+      <!-- Project Table -->
+      <div class="rounded-lg shadow-md overflow-hidden mt-4">
+        <table class="w-full">
+          <thead class="bg-primario text-white rounded-lg px-1 py-[2px]">
+            <tr class="xs:text-[12px]">
+              <th class="px-3 text-left">Proyecto</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+            >
+              <td scope="col" class="px-3">
+                {{ proyecto.codigoProyecto }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Project Table -->
+
+      <!-- Insumos Table -->
+      <div class="rounded-lg shadow-md overflow-hidden mt-4">
+        <table class="w-full">
+          <thead class="bg-primario text-white rounded-lg px-1 py-[2px]">
+            <tr class="xs:text-[12px]">
+              <th class="text-center">Código</th>
+              <th class="text-left">Descripción</th>
+              <th class="text-center">Unidad</th>
+              <th class="text-center">Cantidad</th>
+              <th class="text-center">P.U.</th>
+              <th class="text-center">Importe</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let ins of insumosXordencompras"
+              class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+            >
+              <td scope="col" class="text-center">{{ ins.codigo }}</td>
+              <td scope="col" class="text-left">
+                <input
+                  readonly
+                  autocomplete="off"
+                  type="text"
+                  class="bg-transparent w-[90%]"
+                  value="{{ ins.descripcion }}"
+                />
+              </td>
+              <td scope="col" class="text-center">{{ ins.unidad }}</td>
+              <td scope="col" class="text-center">
+                {{ ins.cantidadConFormato }}
+              </td>
+              <td scope="col" class="text-center">
+                {{ ins.precioUnitarioConFormato }}
+              </td>
+              <td scope="col" class="text-center">
+                {{ ins.importeSinIvaConFormato }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Insumos Table -->
+
+      <!-- Footer -->
+      <div class="grid grid-rows-3 grid-flow-col gap-2 mt-4">
+        <!-- Observaciones -->
+        <div class="rounded-lg shadow-md p-2 row-span-3">
+          <p class="font-bold m-0 xs:text-xs">Observaciones</p>
+          <p class="xs:text-xs">{{ ordenCompra.observaciones }}</p>
+        </div>
+        <!-- Observaciones end-->
+
+        <!-- Amount -->
+        <div
+          class="rounded-lg shadow-md h-full px-2 pt-0 pb-0 row-span-3 col-span-1"
+        >
+          <div class="flex justify-between">
+            <p class="font-medium text-md w-30 m-0 xs:text-xs">
+              Monto de la orden
+            </p>
+            <p class="m-0 xs:text-xs">{{ totalConFormato }}</p>
+          </div>
+          <div class="flex justify-between">
+            <p class="font-medium text-md w-30 m-0 xs:text-xs">
+              Amortización antic.
+            </p>
+            <p class="m-0 xs:text-xs">0.00</p>
+          </div>
+          <div class="flex justify-between">
+            <p class="font-medium text-md w-30 m-0 xs:text-xs">
+              Fondo de garantía
+            </p>
+            <p class="m-0 xs:text-xs">0.00</p>
+          </div>
+          <div class="flex justify-between">
+            <p class="font-medium text-md w-20 m-0 xs:text-xs">Subtotal</p>
+            <p class="m-0 xs:text-xs">{{ subtotalConFormato }}</p>
+          </div>
+          <div class="flex justify-between">
+            <p class="font-medium text-md w-20 m-0 xs:text-xs">IVA%</p>
+            <div class="flex gap-2">
+              <p class="m-0 xs:text-xs">16.00</p>
+              <p class="m-0 xs:text-xs">{{ ivaConFormato }}</p>
+            </div>
+          </div>
+          <div class="flex justify-between">
+            <p class="font-bold text-md w-30 xs:text-xs">TOTAL</p>
+            <p class="xs:text-xs">{{ totalConFormato }}</p>
+          </div>
+        </div>
+        <!-- Amount end -->
+      </div>
+      <!-- Footer end-->
+      <!-- Amount with letter -->
+      <div class="rounded-lg shadow-md p-2 mt-2">
+        <p class="text-sm m-0 xs:text-xs font-bold align-middle">
+          {{ totalEnLetras }}
+          <!-- (DIECHIOCHO MIL SETECIENTOS TREINTA Y TRES PESOS 27/100 MN) -->
+        </p>
+      </div>
+      <!-- Amount with letter end-->
+      <!-- Legal representative-->
+      <!-- Project Table -->
+      <div class="rounded-lg shadow-md overflow-hidden mt-2">
+        <table class="w-full">
+          <thead class="bg-primario text-white rounded-lg px-1 py-[2px]">
+            <tr class="xs:text-[12px]">
+              <th class="px-3 text-left">Elaboró</th>
+              <th class="px-3 text-left">Revisó</th>
+              <th class="px-3 text-left">Autorizó</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+            >
+              <td scope="col" class="px-3">
+                {{ proyecto.codigoProyecto }}
+              </td>
+              <td scope="col" class="px-3">
+                {{ proyecto.codigoProyecto }}
+              </td>
+              <td scope="col" class="px-3">
+                {{ proyecto.codigoProyecto }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Project Table -->
+      <!-- Legal representative end-->
+
+      <div class="flex justify-end mt-2">
+        <button
+          (click)="generarPdf()"
+          class="flex items-center gap-3 text-white py-2 px-6 rounded-lg font-medium bg-colorButton hover:bg-colorButtonHover transition 200ms xs:text-xs"
+        >
+          Descargar
+          <img
+            class="w-8 h-8 xs:w-5 xs:h-5"
+            src="../../../../../assets/pdf_icon.svg"
+            alt="icono pdf"
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

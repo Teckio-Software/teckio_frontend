@@ -1,0 +1,40 @@
+
+
+
+
+
+
+<div class="cont-formulario">
+  <h2 class="titular" mat-dialog-title style="text-align: center;">Nuevo Rol</h2>
+  <div>
+    <br />
+    <form [formGroup]="formulario" class="formulario">
+      <table style="align-content: center;">
+        <tr>
+          <th>
+            <div appearance="outline" class="cont-input">
+              <mat-label>Nombre del rol</mat-label>
+              <input matInput autocomplete="off" formControlName="nombre" placeholder="Nombre del rol"/>
+              <mat-icon matSuffix>account-box</mat-icon>
+            </div>
+          </th>
+          <th>
+            <div class="cont-empresas" style="width: 300px;">
+              <mat-label>Empresa</mat-label>
+              <mat-select formControlName="idEmpresa">
+                <mat-option *ngFor="let empresa of empresas" [value]="empresa.id">
+                  {{ empresa.nombreComercial }}
+                </mat-option>
+              </mat-select>
+            </div>
+          </th>
+        </tr>
+      </table>
+    </form>
+  </div>
+
+  <mat-dialog-actions align="end" class="end">
+    <button mat-raised-button mat-dialog-close  class="button-cancelar">Cancelar</button>
+    <button mat-raised-button  (click)="guardarEditar()" class="button-aceptar">{{ botonAccion }}</button>
+  </mat-dialog-actions>
+</div>

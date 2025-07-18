@@ -1,0 +1,80 @@
+<section >
+  <div class="fixed inset-0 z-10 w-screen overflow-y-auto" (click)="cerrarDialog()">
+    <div class="content-center sm:flex min-h-full items-cen justify-center p-4 text-center sm:items-center sm:p-0">
+      <!-- Evita que el clic se propague al contenedor padre (overlay) -->
+      <div
+        class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl"
+        (click)="detenerCierre($event)">
+        <!-- detenerCierre(event: MouseEvent): Método que detiene la propagación del evento de clic cuando se hace clic dentro del contenido del modal, asegurando que el modal no se cierre inadvertidamente. -->
+        <div class="m-2 flex justify-between">
+          <h2 class="font-normal tracking-[2px] leading-8  text-base">Nuevo usuario corporativo</h2>
+          <button type="button" class=" leading-none absolute top-0 right-0 px-4 py-3 text-2xl"
+            (click)="cerrarDialog()">&times;</button>
+        </div>
+        <div class="bg-white px-4 pb-4 pt-4 sm:p-6 sm:pb-4">
+          <div>
+            <div class="container">
+              <div class="modal-body">
+                <form [formGroup]="form">
+
+                  <div class="flex flex-col gap-4">
+                    <div class="grid grid-cols-3">
+                      <div style=" display: flex; flex-direction: column;">
+                        <label class="label-1" id="inputGroup-sizing-sm">Nombre</label>
+                        <input formControlName="nombre" type="text" class="input-1" aria-describedby="inputGroup-sizing-sm">
+                      </div>
+                      <div style=" display: flex; flex-direction: column;">
+                        <label class="label-1" id="inputGroup-sizing-sm">Apellido paterno</label>
+                        <input formControlName="apaterno" type="text" class="input-1"
+                          aria-describedby="inputGroup-sizing-sm">
+                      </div>
+                      <div style=" display: flex; flex-direction: column;">
+                        <label class="label-1" id="inputGroup-sizing-sm">Apellido materno</label>
+                        <input formControlName="amaterno" type="text" class="input-1"
+                          aria-describedby="inputGroup-sizing-sm">
+                      </div>
+                    </div>
+                    <div class="grid grid-cols-2">
+                      <div style=" display: flex; flex-direction: column;">
+                        <label class="label-1" id="inputGroup-sizing-sm">Correo electrónico</label>
+                        <input formControlName="correoElectronico" type="text" class="input-1"
+                          aria-describedby="inputGroup-sizing-sm">
+                      </div>
+                      <div style=" display: flex; flex-direction: column;">
+                        <label class="label-1" id="inputGroup-sizing-sm">Nombre de usuario</label>
+                        <input formControlName="usuario" type="text" class="input-1"
+                          aria-describedby="inputGroup-sizing-sm">
+                      </div>
+                    </div>
+                    <div class="grid grid-cols-2" *ngIf="!esActualiza">
+                      <div style=" display: flex; flex-direction: column;">
+                        <label class="label-1" id="inputGroup-sizing-sm">Contraseña</label>
+                        <input formControlName="contrasenia" type="password" class="input-1"
+                          aria-describedby="inputGroup-sizing-sm">
+                      </div>
+                      <div style=" display: flex; flex-direction: column;">
+                        <label class="label-1" id="inputGroup-sizing-sm">Corfirma contraseña</label>
+                        <input formControlName="confirmaContrasenia" type="password" class="input-1"
+                          aria-describedby="inputGroup-sizing-sm">
+                      </div>
+                    </div>
+
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-2 py-2 sm:flex sm:flex-row-reverse sm:px-6 sm:gap-4">
+          <button
+            class="bg-[#51aec7] hover:bg-[#002B53] text-[#f2f2f2]  py-2 px-4 rounded-sm mr-2 mt-3  inline-flex w-full justify-center shadow-sm ring-1 ring-inset  sm:mt-0 sm:w-auto"
+            (click)="guardarEditar()">Aceptar</button>
+          <button
+            class="mt-3 inline-flex w-full justify-center rounded-sm bg-[#51aec7] text-[#f2f2f2] px-3 py-2 text-sm shadow-sm ring-1 ring-inset  hover:bg-[#B05B5B] sm:mt-0 sm:w-auto  "
+            (click)="cerrarDialog()">Cancelar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>

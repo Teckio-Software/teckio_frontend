@@ -1,0 +1,91 @@
+<div class="grid grid-cols-2 gap-4">
+  <div class="item flex w-full">
+    <label class="labelProyecto" for="cuenta">Cuenta Bancaria</label>
+    <input class="dropdown" list="cuentadata" id="cuenta" name="cuenta" placeholder="Selecciona una cuenta bancaria"
+      autocomplete="off" (input)="SeleccionarCuenta($event)" />
+    <datalist id="cuentadata">
+      <option *ngFor="let cuenta of cuentaBE">{{cuenta.numeroCuenta}}</option>
+    </datalist>
+  </div>
+  <div class="item flex w-full" *ngIf="cuentaSeleccionada">
+    <div class="item" style="width: 100%;">
+      <button class="bg-colorButton text-[#f2f2f2] rounded-sm hover:bg-hoverButton" type="button"
+        (click)="abrirModalMovimientoBancario()">Nuevo Movimiento Bancario</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="cuentaSeleccionada">
+  <mat-form-field style="margin-left: 10px; margin-top: 20px;">
+    <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+      <input matStartDate formControlName="start" placeholder="Fecha Inicial">
+      <input matEndDate formControlName="end" placeholder="Fecha Final">
+    </mat-date-range-input>
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker>
+      <mat-date-range-picker-actions>
+        <button mat-button matDateRangePickerCancel>Cancelar</button>
+        <button mat-button matDateRangePickerCancel (click)="limpiarFiltro()">Limpiar</button>
+        <button mat-raised-button color="primary" (click)="clickButtonFiltro()" matDateRangePickerApply>Filtrar</button>
+      </mat-date-range-picker-actions>
+    </mat-date-range-picker>
+  </mat-form-field>
+</div>
+
+<div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px;" *ngIf="cuentaSeleccionada">
+  <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
+    <thead>
+      <tr>
+        <th class="cabecera1" scope="col">No. Movimiento</th>
+        <th class="cabecera1" scope="col">Folio</th>
+        <th class="cabecera1" scope="col">Fecha Alta</th>
+        <th class="cabecera1" scope="col">Fecha Aplicacón </th>
+        <th class="cabecera1" scope="col">Fecha Cobro</th>
+        <th class="cabecera1" scope="col">Modalida</th>
+        <th class="cabecera1" scope="col">Deposito</th>
+        <th class="cabecera1" scope="col">Retiro</th>
+        <th class="cabecera1" scope="col">Saldo</th>
+        <th class="cabecera1" scope="col">Moneda</th>
+        <th class="cabecera1" scope="col">Tipo Cambio</th>
+        <th class="cabecera1" scope="col">Concepto</th>
+        <th class="cabecera1" scope="col">Beneficiario</th>
+        <th class="cabecera1" scope="col">Estatus</th>
+        <th class="cabecera1" scope="col">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let mb of moviminestosbancarios">
+        <td class="td-0" scope="col" >{{mb.noMovimientoBancario}}</td>
+        <td class="td-0" scope="col" >{{mb.folio}}</td>
+        <td class="td-0" scope="col" >{{mb.fechaAlta | date:"dd-MM-yyyy" }}</td>
+        <td class="td-0" scope="col" >{{mb.fechaAplicacion | date:"dd-MM-yyyy" }}</td>
+        <td class="td-0" scope="col" >{{mb.fechaCobra | date:"dd-MM-yyyy" }}</td>
+        <td class="td-0" scope="col" >{{mb.descripcionModalidad}}</td>
+        <td class="td-0" scope="col" >{{mb.tipoDeposito == 1 ? mb.montoTotal : ""}}</td>
+        <td class="td-0" scope="col" >{{mb.tipoDeposito == 2 ? mb.montoTotal : ""}}</td>
+        <td class="td-0" scope="col" >{{mb.saldo}}</td>
+        <td class="td-0" scope="col" >{{mb.descripcionMoneda}}</td>
+        <td class="td-0" scope="col" >{{mb.tipoCambio}}</td>
+        <td class="td-0" scope="col" >{{mb.concepto}}</td>
+        <td class="td-0" scope="col" >{{mb.beneficiario}}</td>
+        <td class="td-0" scope="col" >{{mb.descripcionEstatus}}</td>
+        <td class="td-0" scope="col" >
+          <div class="flex" *ngIf="mb.estatus != 2">
+            <div class="col">
+              <button class="button-filt" *ngIf="mb.estatus != 1" (click)="autorizarMovimientoBancario(mb.id)">Autorizar</button>
+            </div>
+            <div class="col">
+              <Button class="button-filt" *ngIf="mb.estatus == 0" (click)="cancelarMovimientoBancario(mb.id)">Cancelar</Button>
+            </div>
+            <div class="col">
+              <Button class="button-filt" *ngIf="mb.estatus == 1 && (mb.idPoliza == 0 || mb.idPoliza == null)" (click)="generarPoliza(mb.id)">Generar Poliza</Button>
+            </div>
+            <div class="col">
+              <Button class="button-filt" *ngIf="mb.idPoliza > 0" (click)="eliminarPoliza(mb.id)">Eliminar Poliza</Button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div> 

@@ -1,0 +1,189 @@
+.cabecera {
+  background-color: #21416e;
+  border: solid 2px #f1f6f8;
+  color: #B5DCE0;
+}
+
+.none {
+  border: solid 2px #f1f6f8;
+  background-color: #bee2e6 ;
+}
+
+.orden {
+  -webkit-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+  -moz-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+  box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+}
+
+.orden-compra {
+  position: relative;
+  width: 95.7%;
+  opacity: 95%;
+}
+
+.tabla-detalle {
+  margin-top: 90px;
+}
+
+.selected {
+  border: solid 2px #f1f6f8;
+  background-color: rgb(232, 66, 11);
+}
+
+/* ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
+
+/* .container-tablas {
+  width: 77%;
+  margin:  auto;
+  height: 100vh;
+ } */
+
+ .cabecera {
+   padding: 2px;
+   background-color: #21416e;
+   border: 1px solid #f1f6f8;
+   color: #f2f2f2;
+ }
+
+ td {
+   padding: 2px;
+ }
+
+ .none {
+   border: solid 1px #f1f6f8;
+   background-color: rgb(249, 254, 255) ;
+ }
+
+ .cont-table {
+   width: 100%;
+ }
+
+ .table {
+   -webkit-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+   -moz-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+   box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+   width: 100%;
+ }
+
+ .formulario {
+   display: flex;
+   justify-content: center;
+ }
+
+ .shadow-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+  border-radius: 3px;
+  background-color: #b9dfe9;
+  margin-right: 10px;
+  font-weight: 500;
+  height: 25px;
+ }
+
+ .shadow-form:hover {
+  background-color: #4EAAC1;
+  color: #f2f2f2;
+ }
+
+ .btn-new-usuario {
+  border: none;
+  background-color: #b9dfe9;
+  border-radius: 3px;
+  font-weight: 500;
+  height: 25px;
+ }
+
+ .btn-new-usuario:hover {
+  background-color: #4EAAC1;
+  color: #f2f2f2;
+ }
+
+ .cont-formulario {
+   width: 500px;
+ }
+
+ /*Botones tablas*/
+ .card-info-action {
+   background-color: #00a7e9;
+   color: #f2feff;
+   padding: 5px;
+   border-radius: 10px 10px 0 0;
+   border: 1px solid #fff;
+   width: 50px;
+ }
+
+ .card-info-title {
+   background-color: #00a7e9;
+   color: #f2feff;
+   padding: 5px;
+   border-radius: 10px 10px 0 0;
+   border: 1px solid #fff;
+ }
+
+ .card-info-action:hover {
+   background-color: #2ac3ff;
+   color: #f2feff;
+   padding: 5px;
+   border-radius: 10px 10px 0 0;
+   border: 1px solid #fff;
+   width: 50px;
+ }
+
+ .button-entradas {
+   background-color: #00a7e9;
+   color: #f2feff;
+   padding: 5px;
+   border-radius: 10px 10px 0 0;
+   width: 170px;
+   height: 36px;
+   border: 1px solid #f2feff;
+ }
+
+ .button-acciones {
+  border: none;
+  padding: 0 15px;
+  background-color: #4eaac142;
+  border-radius: 3px;
+ }
+
+ .button-acciones:hover {
+  background-color: #4EAAC1;
+ }
+
+
+ .button-entradas:hover {
+   background-color: #2ac3ff;
+   color: #ffffff;
+ }
+
+ .button-primary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  padding: 2px 30px;
+  border-radius: 7px;
+  background-color: #4EAAC1;
+  color: #f2f2f2;
+  margin: 10px;
+}
+
+
+/* //////////////////////////////////////////////////// Diseño de kuri ////////////////////////////////////////////////////////////////////////////////////// */
+
+#input-table {
+  border: 0;
+  background-color: #f2feff00;
+}
+
+#input-table:hover {
+  border: 0;
+  background-color: #7a7a7a1a;
+}
+
+#select-table{
+  border: 0;
+  background-color: #f2feff00;
+}

@@ -1,0 +1,27 @@
+::ng-deep .SweetAlert2ConfirmButtonWarning{
+    box-shadow: none !important;
+    width: 100% !important;
+    background-color: #bba90c53 !important;
+    border: none !important;
+    color: #fff !important;
+    margin: 0px !important;
+    border-width: none !important;
+    box-sizing: none !important;
+  }
+  
+  
+  
+  ::ng-deep .swal2-actions{
+    width: 100% !important;
+  }
+  ::ng-deep .swal2-popup{
+    padding: 0px !important;
+  }
+  ::ng-deep .swal2-image{
+    padding: 8px !important;
+    margin: auto !important;
+  }
+  
+    ::ng-deep .swal2-html-container{
+    margin: .3rem 1.6rem .3rem !important;
+  }

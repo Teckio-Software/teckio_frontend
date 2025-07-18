@@ -1,0 +1,81 @@
+
+
+<div>
+  <div class="cont-button-empresas">
+    <select class="empresa-select" aria-label="Default select example" [(ngModel)]="selectedCorporativo" (ngModelChange)="obtenerEmpresa($event)">
+      <option value="0">-- Seleccione corporativo --</option>
+      <option *ngFor="let corporativo of listaCorporativos"  [value]="corporativo.id">{{corporativo.nombre}}</option>
+    </select>
+    <!---input buscar empresa-->
+    <div class="cont-input-buscar" appearance="outline">
+      <label class="label-buscar">Buscar</label>
+      <input class="input-buscar" #inputBuscarEmpresa (keyup)="aplicarFiltroTabla(inputBuscarEmpresa.value)" />
+    </div>
+  </div>
+
+  <div class="flex " >
+    <button class="bg-[#51aec7] hover:bg-hoverButton titular items-center bg-custom-bg flex font-bold tracking-wider m-0 text-center">
+      <p class=" text-[#f2f2f2] titular bg-custom-bg w-52  font-bold tracking-wider  m-0 text-center" (click)="openModalNuevaEmpresa()">Nueva empresa</p>
+      <img src="assets/add.svg" alt="">
+    </button>
+  </div>
+  <div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px;">
+    <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pago m-0">
+      <thead>
+        <tr>
+          <th scope="col">Razón social</th>
+          <th scope="col">RFC</th>
+          <th scope="col">Sociedad</th>
+          <th scope="col">Fecha de registro</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let empresa of paginatedempresas">
+          <td style="width: 20%;">{{ empresa.nombreComercial }}</td>
+          <td style="width: 20%;">{{ empresa.rfc }}</td>
+          <td style="width: 20%;">{{ empresa.sociedad }}</td>
+          <td style="width: 20%;">{{ empresa.fechaRegistro | date:"dd/MM/yyyy" }}</td>
+          <td style="width: 20%;"><button (click)="openModalEditarEmpresa(empresa)"><mat-icon matSuffix>edit</mat-icon></button></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="flex bg-[#ffffff] justify-end rounded-b-[3px]">
+      <div class="flex items-center"> {{ getPaginationInfo() }} </div>
+      <nav class="p-2 ">
+        <ul class="flex">
+          <li class="flex items-center">
+            <a class="mx-1 flex h-7 w-7 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-[#2d748d] cursor-pointer"
+              (click)="previousPage()" aria-label="Previous">
+              <span class="material-icons text-sm">keyboard_arrow_left</span>
+            </a>
+          </li>
+          <li *ngFor="let page of visiblePages" class="flex items-center">
+            <a class="mx-1 flex h-7 w-7 items-center justify-center rounded-full hover:bg-[#2d748d] cursor-pointer"
+              [ngClass]="{'bg-colorButton text-[#ffffff] shadow-md' : currentPage === page, 'border border-blue-gray-100 bg-transparent text-blue-gray-500 hover:bg-[#2d748d]': currentPage !== page}"
+              [class.active]="page === currentPage" (click)="goToPage(page)">
+              {{ page }}
+            </a>
+          </li>
+          <li class="flex items-center">
+            <a class="mx-1 flex h-7 w-7 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300 cursor-pointer"
+              (click)="nextPage()" aria-label="Next">
+              <span class="material-icons text-sm">keyboard_arrow_right</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,527 @@
+<section>
+  <div>
+    <div class="flex justify-between">
+      <div class="flex items-end mb-1 mt-1">
+        <button
+          (click)="nuevaValidacion()"
+          class="flex align-items-center rounded-md bg-colorButton transition-colors delay-75 hover:bg-colorButtonHover font-light text-white p-1"
+        >
+          <p
+            class="text-[#f2f2f2] titular bg-custom-bg w-52 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
+          >
+            Nueva validación
+          </p>
+          <img src="assets/add.svg" alt="" />
+        </button>
+      </div>
+      <!-- <div class="flex items-end">
+        <button (click)="descargarConceptos()"
+          class="bg-[#51aec7] hover:bg-hoverButton    titular items-center bg-custom-bg flex  font-bold tracking-wider  m-0 text-center"
+          >
+          <p class="  text-[#f2f2f2] titular bg-custom-bg w-52  font-bold tracking-wider  m-0 text-center">
+            Descargar Conceptos</p>
+          <img src="assets/add.svg" alt="">
+        </button>
+      </div> -->
+
+      <div class="w-full flex justify-end">
+        <div
+          class="flex justify-center items-start gap-2 bg-[#b9dfe9] p-1 mt-2 text-center text-base font-medium rounded-md"
+        >
+          <select
+            class="border-none rounded-sm bg-[#ffffff] text-[#020202d3] font-medium p-1"
+            [(ngModel)]="estatusFactura"
+            (change)="fitrarFacturas()"
+          >
+            <option [value]="0">Todas</option>
+            <option [value]="1">Válido</option>
+            <option [value]="2">No válido</option>
+            <option [value]="3">Cancelado</option>
+          </select>
+
+          <input
+            type="date"
+            min="1900-01-01"
+            max="9999-01-01"
+            [(ngModel)]="fechafiltro"
+            (change)="fitrarFacturas()"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto shadow-md rounded-lg w-full m-auto">
+      <table class="w-full">
+        <thead class="bg-primario text-white">
+          <tr>
+            <th scope="col" class="px-1 py-[2px]">CRP</th>
+            <th scope="col" class="px-[2px] py-[2px]">Serie</th>
+            <th scope="col" class="px-[2px] py-[2px]">Folio</th>
+            <th scope="col" class="px-[2px] py-[2px]">UUID</th>
+            <th scope="col" class="px-[2px] py-[2px] text-center">Receptor</th>
+            <th scope="col" class="px-[2px] py-[2px]">Fecha Validación</th>
+            <th scope="col" class="px-[2px] py-[2px]">Estatus</th>
+            <th scope="col" class="px-[2px] py-[2px]">Total</th>
+            <th scope="col" class="px-[2px] py-[2px]">Moneda</th>
+            <th scope="col" class="px-[2px] py-[2px]">Tipo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+            *ngFor="let factura of paginatedFacturas"
+          >
+            <td class="crp">
+              <div class="flex justify-center">
+                <button
+                  class="input-group-text"
+                  class="contenedor-box"
+                  ngbTooltip="Sin complemento de pago"
+                  placement="end"
+                  triggers="mouseenter:mouseleave"
+                  *ngIf="factura.metodoPago == 'PPD'"
+                >
+                  <button class="semaforo off"></button>
+                  <button class="semaforo rojo"></button>
+                </button>
+                <button
+                  class="input-group-text"
+                  class="contenedor-box"
+                  *ngIf="factura.metodoPago == 'PUE'"
+                  ngbTooltip="Con complemento de pago"
+                  placement="end"
+                  triggers="mouseenter:mouseleave"
+                >
+                  <button class="semaforo verde"></button>
+                  <button class="semaforo off"></button>
+                </button>
+              </div>
+            </td>
+            <td class="Serie tabla377">{{ factura.serieCfdi }}</td>
+            <td class="Folio tabla377">{{ factura.folioCfdi }}</td>
+            <td class="uuid tabla377">{{ factura.uuid }}</td>
+            <td class="receptor end-text">{{ factura.rfcReceptor }}</td>
+            <td class="validacion end-text">
+              {{ factura.fechaValidacion | date : "dd/MM/yyyy" }}
+            </td>
+            <td class="estatus end-text" style="text-align: center">
+              <button
+                class="btn-status"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasBottom"
+                (click)="detallesFactura(factura)"
+              >
+                <i>
+                  <svg
+                    [ngClass]="{
+                      estilo2: factura.estatus == 2,
+                      estilo1: factura.estatus == 1,
+                      estilo3: factura.estatus == 3
+                    }"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-check-circle-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+                    />
+                  </svg>
+                </i>
+              </button>
+            </td>
+            <td class="total end-text">
+              {{ factura.total | currency : factura.moneda }}
+            </td>
+            <td class="moneda end-text">{{ factura.monedaSat }}</td>
+            <td class="tipo end-ext" (click)="verDetalles(factura)">
+              {{
+                factura.tipo == 1
+                  ? "Ingreso"
+                  : factura.tipo == 2
+                  ? "Egreso"
+                  : factura.tipo == 5
+                  ? "Pago"
+                  : factura.tipo == 4
+                  ? "Traslado"
+                  : ""
+              }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="flex bg-[#ffffff] justify-end rounded-b-[3px]">
+        <div class="flex items-center">
+          {{ getPaginationInfo() }}
+        </div>
+        <nav class="p-2">
+          <ul class="flex">
+            <li class="flex items-center">
+              <a
+                class="mx-1 flex h-7 w-7 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-[#2d748d] cursor-pointer"
+                (click)="previousPage()"
+                aria-label="Previous"
+              >
+                <span class="material-icons text-sm">keyboard_arrow_left</span>
+              </a>
+            </li>
+            <li *ngFor="let page of visiblePages" class="flex items-center">
+              <a
+                class="mx-1 flex h-7 w-7 items-center justify-center rounded-full hover:bg-[#2d748d] cursor-pointer"
+                [ngClass]="{
+                  'bg-colorButton text-[#ffffff] shadow-md':
+                    currentPage === page,
+                  'border border-blue-gray-100 bg-transparent text-blue-gray-500 hover:bg-[#2d748d]':
+                    currentPage !== page
+                }"
+                [class.active]="page === currentPage"
+                (click)="goToPage(page)"
+              >
+                {{ page }}
+              </a>
+            </li>
+            <li class="flex items-center">
+              <a
+                class="mx-1 flex h-7 w-7 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300 cursor-pointer"
+                (click)="nextPage()"
+                aria-label="Next"
+              >
+                <span class="material-icons text-sm">keyboard_arrow_right</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <div *ngIf="isTableDetalles">
+      <app-factura-detalle
+        *appRecarga="appRecarga"
+        [IdFactura]="idFactura"
+      ></app-factura-detalle>
+    </div>
+    <div *ngIf="isTableComplemento">
+      <app-factura-complemento-pago
+        *appRecarga="appRecarga"
+        [IdFactura]="idFactura"
+      ></app-factura-complemento-pago>
+    </div>
+  </div>
+</section>
+
+<div
+  class="offcanvas offcanvas-end"
+  tabindex="-1"
+  id="offcanvasBottom"
+  data-bs-backdrop="static"
+  aria-labelledby="offcanvasBottomLabel"
+  style="
+    height: 600px;
+    width: 500px;
+    margin-top: 200px;
+    border-radius: 7px 0 0 7px;
+  "
+>
+  <div class="offcanvas-header">
+    <div
+      style="
+        border-bottom: 2px solid #020202;
+        margin-bottom: 5px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        font-weight: 700;
+      "
+    >
+      Factura
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="offcanvas"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="table-scroll-x">
+      <table
+        style="width: 85%; margin: 0 auto"
+        class="table rounded table-striped table-hover"
+      >
+        <thead>
+          <tr>
+            <th class="cabecera">Serie</th>
+            <th class="cabecera">Folio</th>
+            <th class="cabecera">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ factura.serieCfdi }}</td>
+            <td>{{ factura.folioCfdi }}</td>
+            <td>{{ factura.total | currency : factura.monedaSat }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="offcanvas-body" style="margin-top: 2px">
+    <div class="infoRS">
+      <ul class="list-group">
+        <li class="list-group-item">
+          Razón social:
+          <p>{{ detalleFactura.razonSocial }}</p>
+        </li>
+      </ul>
+    </div>
+    <div class="oc-2">
+      <div class="info1">
+        <ul class="list-group">
+          <li class="list-group-item">
+            RFC:
+            <p>{{ factura.rfcEmisor }}</p>
+          </li>
+          <li class="list-group-item">
+            Timbrado:
+            <p>{{ factura.fechaTimbrado | date : "dd/MM/yyyy" }}</p>
+          </li>
+          <li class="list-group-item">
+            Registro:
+            <p>{{ factura.fechaValidacion | date : "dd/MM/yyyy" }}</p>
+          </li>
+          <li class="list-group-item">
+            Tipo:
+            <p>{{ factura.tipo == 2 ? "Egreso" : "" }}</p>
+          </li>
+          <li class="list-group-item">
+            Estatus:
+            <p>{{ factura.estatus ? "VÁLIDO" : "NO VÁLIDO" }}</p>
+          </li>
+        </ul>
+      </div>
+      <div class="info1">
+        <ul class="list-group">
+          <li class="list-group-item">
+            <span>Subtotal:</span>
+            <p>{{ factura.subtotal | currency }}</p>
+          </li>
+          <li class="list-group-item">
+            <span>Descuento:</span>
+            <p>{{ factura.descuento | currency }}</p>
+          </li>
+          <li class="list-group-item">
+            <span>Total IVA:</span>
+            <p>{{ detalleFactura.totalIVA | currency }}</p>
+          </li>
+          <li class="list-group-item">
+            <span>Total ISR:</span>
+            <p>{{ detalleFactura.totalISR | currency }}</p>
+          </li>
+          <li class="list-group-item">
+            <span>Impuestos locales:</span>
+            <p>{{ detalleFactura.impuestosLocales | currency }}</p>
+          </li>
+          <li class="list-group-item">
+            <span>Total</span>
+            <p>{{ factura.total | currency : factura.moneda }}</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div>
+      <!-- Botones de descarga de archivos -->
+      <div class="oc-3">
+        <div
+          class="download bg-colorButton text-[#f2f2f2] rounded-sm hover:bg-hoverButton"
+          (click)="descargaXml('xml')"
+        >
+          <label for="miArchivo" class="custom-input-label">XML</label>
+          <svg
+            style="color: #f2f2f2; margin-left: 10px"
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            fill="currentColor"
+            class="bi bi-cloud-download-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8 0a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 4.095 0 5.555 0 7.318 0 9.366 1.708 11 3.781 11H7.5V5.5a.5.5 0 0 1 1 0V11h4.188C14.502 11 16 9.57 16 7.773c0-1.636-1.242-2.969-2.834-3.194C12.923 1.999 10.69 0 8 0m-.354 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V11h-1v3.293l-2.146-2.147a.5.5 0 0 0-.708.708z"
+            />
+          </svg>
+        </div>
+
+        <!----------------------------------------------------------------------download pdf-------------------------------------------------------------->
+        <div
+          class="download bg-colorButton text-[#f2f2f2] rounded-sm hover:bg-hoverButton"
+          (click)="descargaFacturaPdf()"
+        >
+          <label for="miArchivoFacturaPdf" class="custom-input-label"
+            >PDF</label
+          >
+          <svg
+            style="color: #f2f2f2; margin-left: 10px"
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            fill="currentColor"
+            class="bi bi-cloud-download-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8 0a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 4.095 0 5.555 0 7.318 0 9.366 1.708 11 3.781 11H7.5V5.5a.5.5 0 0 1 1 0V11h4.188C14.502 11 16 9.57 16 7.773c0-1.636-1.242-2.969-2.834-3.194C12.923 1.999 10.69 0 8 0m-.354 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V11h-1v3.293l-2.146-2.147a.5.5 0 0 0-.708.708z"
+            />
+          </svg>
+        </div>
+
+        <!---------------------------------------------------------------------------------------------------------Download acuse-------------------------------------------------------------->
+        <div
+          class="download bg-colorButton text-[#f2f2f2] rounded-sm hover:bg-hoverButton"
+          (click)="descargaAcusePdf()"
+        >
+          <label for="miArchivoAcusePdf" class="custom-input-label"
+            >ACUSE</label
+          >
+          <svg
+            (click)="descargaAcusePdf()"
+            style="color: #f2f2f2; margin-left: 10px"
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            fill="currentColor"
+            class="bi bi-cloud-download-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8 0a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 4.095 0 5.555 0 7.318 0 9.366 1.708 11 3.781 11H7.5V5.5a.5.5 0 0 1 1 0V11h4.188C14.502 11 16 9.57 16 7.773c0-1.636-1.242-2.969-2.834-3.194C12.923 1.999 10.69 0 8 0m-.354 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V11h-1v3.293l-2.146-2.147a.5.5 0 0 0-.708.708z"
+            />
+          </svg>
+        </div>
+      </div>
+
+      <div *ngIf="detalleFactura.complementosPagos.length > 0">
+        <hr *ngIf="factura.metodoPago === 'PPD'" />
+
+        <div *ngIf="factura.metodoPago === 'PPD'">
+          <p>Complemento de pago</p>
+        </div>
+
+        <div class="table-scroll-x" *ngIf="factura.metodoPago === 'PPD'">
+          <table
+            style="width: 85%; margin: 0 auto"
+            class="table rounded table-striped table-hover"
+          >
+            <thead>
+              <tr>
+                <th class="cabecera">Serie</th>
+                <th class="cabecera">Folio</th>
+                <th class="cabecera">Uuid</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let CP of detalleFactura.complementosPagos">
+                <td>{{ CP.serie }}</td>
+                <td>{{ CP.folio }}</td>
+                <td>{{ CP.uuid }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #dialogNuevaFactura>
+  <div
+    class="fixed inset-0 z-10 w-screen overflow-y-auto"
+    (click)="limpiarCargarFactura()"
+  >
+    <div
+      class="content-center sm:flex min-h-full items-cen justify-center p-4 text-center sm:items-center sm:p-0"
+    >
+      <!-- Evita que el clic se propague al contenedor padre (overlay) -->
+
+      <div
+        class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl"
+        (click)="detenerCierre($event)"
+      >
+        <!-- detenerCierre(event: MouseEvent): Método que detiene la propagación del evento de clic cuando se hace clic dentro del contenido del modal, asegurando que el modal no se cierre inadvertidamente. -->
+        <div class="m-2 flex justify-between">
+          <h2 class="font-normal tracking-[2px] leading-8 text-base">
+            Nueva Validación
+          </h2>
+          <button
+            type="button"
+            class="leading-none absolute top-0 right-0 px-4 py-3 text-2xl"
+            (click)="limpiarCargarFactura()"
+          >
+            &times;
+          </button>
+        </div>
+        <div class="bg-white px-4 pb-4 sm:p-2 sm:pb-4">
+          <div>
+            <div
+              style="
+                overflow-x: auto;
+                white-space: nowrap;
+                width: 100%;
+                margin: 0 auto;
+                margin-top: 0px;
+                margin-top: 15px;
+              "
+            >
+              <div class="input-group mb-3">
+                <input
+                  type="file"
+                  class="form-control"
+                  id="inputGroupFile02"
+                  multiple
+                  (change)="onFileChangeFactura($event)"
+                />
+                <label class="input-group-text" for="inputGroupFile02">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    fill="currentColor"
+                    class="bi bi-upload"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"
+                      style="margin-left: 10px"
+                    />
+                    <path
+                      d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"
+                    />
+                  </svg>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bg-gray-50 px-2 py-2 sm:flex sm:flex-row-reverse sm:px-6 sm:gap-4"
+        >
+          <button
+            class="bg-[#51aec7] hover:bg-[#002B53] text-[#f2f2f2] py-2 px-4 rounded-sm mr-2 mt-3 inline-flex w-full justify-center shadow-sm ring-1 ring-inset sm:mt-0 sm:w-auto"
+            (click)="cargarFactura()"
+          >
+            Aceptar
+          </button>
+          <button
+            class="mt-3 inline-flex w-full justify-center rounded-sm bg-[#51aec7] text-[#f2f2f2] px-3 py-2 text-sm shadow-sm ring-1 ring-inset hover:bg-[#B05B5B] sm:mt-0 sm:w-auto"
+            (click)="limpiarCargarFactura()"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

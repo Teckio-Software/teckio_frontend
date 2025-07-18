@@ -1,0 +1,228 @@
+.cabecera {
+  background-color: #fff;
+  border: solid 2px #f1f6f8;
+  color: #b5dce0;
+  font-size: 12px;
+  letter-spacing: 2px;
+  font-weight: 300;
+}
+
+.none {
+  border: solid 2px #f1f6f8;
+  background-color: #bee2e6;
+  padding: 2px;
+}
+
+.orden-compra {
+  position: relative;
+  width: 95.7%;
+  opacity: 95%;
+}
+
+.tabla-detalle {
+  margin-top: 90px;
+}
+
+.selected {
+  background-color: #b9dfe9;
+}
+
+.fila-seleccionada {
+  background-color: lightblue; /* Cambia este color por el que desees */
+  background-color: #7a79794b;
+}
+
+/* //////////////////////////////////////////////////// Diseño de kuri ////////////////////////////////////////////////////////////////////////////////////// */
+
+#input-table {
+  border: 0;
+  background-color: #f2feff00;
+}
+
+#input-table:hover {
+  border: 0;
+  background-color: #7a7a7a1a;
+}
+
+#select-table {
+  border: 0;
+  background-color: #f2feff00;
+}
+
+/* //////////////////////////////////////////////////// Diseño de fer ////////////////////////////////////////////////////////////////////////////////////// */
+
+.container-tablas {
+  width: 77%;
+  margin: auto;
+}
+
+.cabecera {
+  padding: 2px;
+  background-color: #fff;
+  border: 1px solid #f1f6f8;
+  color: #000;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.none {
+  border: solid 1px #f1f6f8;
+  background-color: rgb(249, 254, 255);
+}
+
+.cont-table1 {
+  width: 50%;
+  background-color: #ffff;
+  padding: 5px;
+  border-radius: 3px;
+  margin: 0 auto;
+  margin-top: 10px;
+}
+
+.cont-table2 {
+  width: 270px;
+  background-color: #ffff;
+  padding: 5px;
+  border-radius: 3px;
+  margin: 5px;
+}
+
+.cont-table3 {
+  width: 300px;
+  background-color: #ffff;
+  padding: 5px;
+  border-radius: 3px;
+  margin: 5px;
+}
+
+.formulario {
+  display: flex;
+  justify-content: center;
+}
+
+.shadow-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+  border-radius: 3px;
+  background-color: #b9dfe9;
+  margin-right: 10px;
+  font-weight: 500;
+}
+
+.shadow-form:hover {
+  background-color: #4eaac1;
+  color: #f2f2f2;
+}
+
+.selected {
+  background-color: #b9dfe9;
+}
+
+.cont-formulario {
+  width: 500px;
+}
+
+/*Botones tablas*/
+.card-info-action {
+  background-color: #00a7e9;
+  color: #f2feff;
+  padding: 5px;
+  border-radius: 10px 10px 0 0;
+  border: 1px solid #fff;
+  width: 50px;
+}
+
+.card-info-title {
+  background-color: #00a7e9;
+  color: #f2feff;
+  padding: 5px;
+  border-radius: 10px 10px 0 0;
+  border: 1px solid #fff;
+}
+
+.card-info-action:hover {
+  background-color: #2ac3ff;
+  color: #f2feff;
+  padding: 5px;
+  border-radius: 10px 10px 0 0;
+  border: 1px solid #fff;
+  width: 50px;
+}
+
+.button-entradas {
+  background-color: #00a7e9;
+  color: #f2feff;
+  padding: 5px;
+  border-radius: 10px 10px 0 0;
+  width: 170px;
+  height: 36px;
+  border: 1px solid #f2feff;
+}
+
+.button-entradas:hover {
+  background-color: #2ac3ff;
+  color: #ffffff;
+}
+
+.button-primary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  padding: 2px 30px;
+  border-radius: 7px;
+  background-color: #4eaac1;
+  color: #f2f2f2;
+  margin: 10px;
+}
+
+.button-primary:hover {
+  background-color: #22416e;
+}
+
+.table {
+  padding: 0;
+}
+
+.btn-rol {
+  background-color: #4eaac1;
+  color: #f2f2f2;
+  border-radius: 3px;
+  border: none;
+  padding: 0 20px;
+  height: 20px;
+}
+
+.btn-rol:hover {
+  background-color: #22416e;
+}
+
+.form-control {
+  padding: 0px;
+}
+
+.titular-tabla {
+  border-bottom: 1px solid #b9dfe9;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.tooltipTabla {
+  border: none;
+  background-color: #b9dfe900;
+}
+
+.my-custom-class {
+  background-color: #22406e2a;
+}
+
+.card-fade-tailwind {
+  @apply opacity-0 scale-95 transition-all duration-300 ease-in-out;
+}
+.card-fade-tailwind.show {
+  @apply opacity-100 scale-100;
+}

@@ -1,0 +1,78 @@
+
+<button type="button" class="input-text btn-val" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-top: 10px; padding:0 10px;">Nuevo Banco</button>
+<div class="filtro-2">
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+      aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Nueva Cuenta Bancaria</h1>
+            <button type="button" class="btn-close" #btnCloseNuevaValidacion data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="form">
+            <div class="" style=" display: flex; flex-direction: column;">
+                <label class="label-1" id="inputGroup-sizing-sm">Número de Cuenta</label>
+                <input formControlName="numerocuenta" type="text" class="input-1"
+                  aria-describedby="inputGroup-sizing-sm">
+              </div>
+              <div class="" style=" display: flex; flex-direction: column;">
+                <label class="label-1" id="inputGroup-sizing-sm">Cuenta Clabe</label>
+                <input formControlName="cuentaclabe" type="text" class="input-1"
+                  aria-describedby="inputGroup-sizing-sm">
+              </div>
+            </form>
+          </div>
+        
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn button-primary" data-bs-dismiss="modal" (click)="crearCuentaBancaria()">Aceptar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div
+    style="width: 70%; background-color: #b9dfe9; margin: 0 auto; margin-bottom: -10px; margin-top: 10px; text-align: center; font-size: 16px; font-weight: 500; border-radius: 30px 30px 0px 0px;">
+    <p>Cuentas Bancarias</p>
+</div>
+<div class="contenedor-tabla"
+    style="overflow-x: auto; white-space: nowrap; width: 95%; margin: 0 auto; margin-top: 0px;">
+    <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
+        <thead>
+            <tr>
+                <th class="cabecera1" scope="col">Numero de Cuenta</th>
+                <th class="cabecera1" scope="col">Cuenta Clabe</th>
+                <th class="cabecera1" scope="col">Nombre del Banco</th>
+                <th class="cabecera1" scope="col" style="text-align: center;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let cuentabancaria of cuentasBancarias">
+                <td class="" scope="col">{{ cuentabancaria.numerocuenta }}</td>
+                <td class="" scope="col">{{ cuentabancaria.cuentaclabe }}</td>
+                <td class="" scope="col">{{ cuentabancaria.nombrebanco }}</td>
+                <td scope="col" style="width: 230px;">
+                    <div class="contenedor-acciones" style=" display: flex; justify-content: center;">
+                        <button type="button" class="button-cloud-factura" (click)="obtenerinfoCuentaBancaria(cuentabancaria)"
+                            data-bs-toggle="modal" data-bs-target="#staticBackdrop" >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor"
+                                class="bi bi-cloud-upload-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M8 0a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 4.095 0 5.555 0 7.318 0 9.366 1.708 11 3.781 11H7.5V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11h4.188C14.502 11 16 9.57 16 7.773c0-1.636-1.242-2.969-2.834-3.194C12.923 1.999 10.69 0 8 0m-.5 14.5V11h1v3.5a.5.5 0 0 1-1 0" />
+                            </svg>
+                        </button>
+                        <button  class="button-cloud-factura" (click)="eliminarCuentaBancaria(cuentabancaria.id)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5" />
+                            </svg>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

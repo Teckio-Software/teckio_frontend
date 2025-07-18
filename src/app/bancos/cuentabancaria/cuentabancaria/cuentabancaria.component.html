@@ -1,0 +1,13 @@
+<section>
+  <div class="flex " >
+    <button (click)="abrirModalCBEmpresa()"
+      class="bg-[#51aec7] hover:bg-hoverButton   titular items-center bg-custom-bg flex  font-bold tracking-wider  m-0 text-center"
+      >
+      <p class=" text-[#f2f2f2] titular bg-custom-bg w-52  font-bold tracking-wider  m-0 text-center">
+        Nueva cuenta bancaria</p>
+      <img src="assets/add.svg" alt="">
+    </button>
+  </div>
+
+  <app-cuentas-bancarias-contratista *appRecarga="appRefrescar" [IdEmpresaInput]="selectedEmpresa"></app-cuentas-bancarias-contratista>
+</section>

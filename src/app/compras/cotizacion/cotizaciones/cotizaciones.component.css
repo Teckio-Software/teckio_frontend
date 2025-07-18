@@ -1,0 +1,50 @@
+.test {
+  padding: 3px 10px;
+}
+
+.td-0 {
+  padding: 0;
+  background-color: #fffefe;
+  border: 0.5px solid #ffffff85;
+}
+
+/* .button-filt {
+    border: none;
+    background-color: #4EAAC1;
+    color: #f2f2f2;
+    padding: 2px;
+    border-radius: 3px;
+    text-align: center;
+    margin: 10px;
+  } */
+
+.button-filt {
+  border: none;
+  background-color: #c70000;
+  color: #f2f2f2;
+  padding: 2px 10px;
+  border-radius: 3px;
+  text-align: center;
+  margin: 0 10px;
+}
+
+::ng-deep .tooltip {
+  --bs-tooltip-bg: #d6d3d3 !important;
+  --bs-tooltip-color: rgb(0, 0, 0) !important;
+}
+
+.style-encabezado-ac-act {
+  background-color: #4eaac138 !important;
+  color: #767676 !important;
+  text-align: center !important;
+  height: 34px !important;
+  font-weight: 500 !important;
+}
+
+.estilo1 {
+  background-color: rgb(208, 52, 52);
+}
+
+.estilo2 {
+  background-color: rgb(189, 234, 188);
+}

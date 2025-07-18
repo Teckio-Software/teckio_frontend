@@ -1,0 +1,122 @@
+<div>
+    <div style="display: flex; justify-content: center; margin-top: 10px;">
+        <button class="btn-new" type="button" data-bs-toggle="offcanvas" data-bs-target="#claveProducto" aria-controls="offcanvasExample">
+          Agregar clave de producto
+        </button>
+    </div>
+
+    <!---input buscar Clave-->
+    <br>
+    <div class="cont-input-buscar" appearance="outline">
+      <label class="label-buscar">División</label>
+      <input class="input-buscar" onkeyup="this.value = this.value.toLowerCase()" matInput (keyup)="aplicarFiltroTabla($event)" #input />
+    </div>
+    <!--Vista de claves de producto-->
+    <div  class="contenedor-tabla">
+        <table class="table table-striped rounded table-hover">
+          <thead>
+            <tr>
+              <th class="cabecera" scope="col">Clave de producto</th>
+              <th class="cabecera" scope="col">División</th>
+              <th class="cabecera" scope="col">Cuenta contable</th>
+              <th class="cabecera" scope="col">Nombre</th>
+              <th class="cabecera" scope="col">Permitido</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let clave of clavesProdDivsion">
+              <td class="body-table" style="width: 10%;">
+                <input type="text" class="form-control form-control-sm" id="input-table" [(ngModel)]="clave.claveProd" readonly>
+              </td>
+              <td class="body-table" style="width: 20%;">
+                <input type="text" class="form-control form-control-sm" id="input-table" [(ngModel)]="clave.nombreDivision" readonly>
+              </td>
+              <td class="body-table" style="width: 30%;">
+                <input type="text" class="form-control form-control-sm" id="input-table" [(ngModel)]="clave.nombreCuentaContable" readonly>
+              </td>
+              <td class="body-table" style="width: 40%;">
+                <input type="text" class="form-control form-control-sm" id="input-table" [(ngModel)]="clave.nombreClave" readonly>
+              </td>
+              <td class="none">
+                <div class="form-check form-switch" style="padding: 0px auto; margin: 0 10px; width: 10%;">
+                  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked
+                      [(ngModel)]="clave.permitido" >
+                  <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+
+  <!--Formulario agregar Clave de producto-->
+  <div class="offcanvas offcanvas-start captura-rapida" tabindex="-1" id="claveProducto" aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas-header">
+      <h3 class="offcanvas-title" id="offcanvasExampleLabel">Nueva Clave de producto</h3>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <form [formGroup]="form">
+        <div class="contenedor-inputs">
+          <div class="cont-acciones contenedor-input"
+            style="margin-top: 10px; margin-bottom: 10px;">
+            <div class="" style="display: flex;">
+              <div class=" input-span">División</div>
+              <input class=" input-receptor" formControlName="idDivision" id="myInput" type="text" placeholder="División"
+                data-bs-toggle="dropdown" (click)="pruebaCont()" (keyup)="filtrarDivision($event)"
+                [(ngModel)]="nombreDivision">
+              <ul class="dropdown-menu">
+                <li *ngIf="dropdown" style="max-height: 200px; overflow-y: auto; white-space: nowrap;">
+                  <option class="option-hover" *ngFor="let division of divisiones" [value]="division.id"
+                    (click)="cambiarDivision(division)">{{division.nombre}}
+                  </option>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="contenedor-input" style="display: flex; margin-top: 10px;">
+            <div class=" input-span">Clave de producto</div>
+            <input class="form-contrtrol dropdown1 input-receptor" formControlName="idClaveProd" id="myInput" type="text"
+              placeholder="Clave de producto" data-bs-toggle="dropdown" (click)="pruebaCont()" (keyup)="filtrarClave($event)"
+              [(ngModel)]="nombreClave">
+            <ul class="dropdown-menu">
+              <li *ngIf="dropdown" style="max-height: 200px; overflow-y: auto; white-space: nowrap;">
+                <option class="option-hover" *ngFor="let clave of clavesProdSAT" [value]="clave.id"
+                  (click)="cambiarClave(clave)">{{clave.nombre}}
+                </option>
+              </li>
+            </ul>
+          </div>
+          <div class="contenedor-input" style="display: flex;">
+            <div class="labelProyecto1 input-span">Cuenta Contable</div>
+            <input class="form-contrtrol dropdown1 input-receptor" formControlName="idCuentaContable" id="myInput" type="text"
+              placeholder="Cuenta contable" data-bs-toggle="dropdown" (click)="pruebaCont()" (keyup)="filtrarCuenta($event)"
+              [(ngModel)]="nombreCuenta">
+            <ul class="dropdown-menu">
+              <li *ngIf="dropdown" style="max-height: 200px; overflow-y: auto; white-space: nowrap;">
+                <option class="option-hover" *ngFor="let cuenta of cuentasContables" [value]="cuenta.id"
+                  (click)="cambiarCuenta(cuenta)">{{cuenta.nombre}}
+                </option>
+              </li>
+            </ul>
+          </div>
+          <div class="contenedor-check contenedor-input">
+            <p class="input-span">Permitido</p>
+            <div class="form-check form-switch form-check-reverse action-check input-receptor">
+              <input class="form-check-input" type="checkbox" id="flexSwitchCheckReverse"
+                style="text-align: start; margin-top: 10px;" formControlName="permitido">
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  
+    <div class="button-cerrar" style="display: flex;justify-content: center;">
+      <button class="btn btn-captura cancelar" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+        Cerrar
+      </button>
+      <button class="btn btn-captura aceptar" type="button" data-bs-toggle="offcanvas" data-bs-dismiss="modal" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample" (click)="guardar()">
+        Guardar
+      </button>
+    </div>
+  </div>

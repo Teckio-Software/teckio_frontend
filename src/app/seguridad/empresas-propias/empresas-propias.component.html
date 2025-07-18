@@ -1,0 +1,12 @@
+
+
+
+
+<div style="display: flex; justify-content: center; align-items: center; margin-bottom: -9px; margin-top: -7px;" class="cont-acciones">
+  <!-- <button type="button" class=" btn-new" data-bs-target="#staticCreate" data-bs-toggle="modal">Nuevo proyecto base</button> -->
+  <p class="" style="margin-top: 12px; margin-right: 5px;">Empresa: </p>
+  <select style="width: 10%;" class="select-proyect" aria-label="" [(ngModel)]="selectedEmpresa"
+    (ngModelChange)="actualizar()">
+      <option *ngFor="let empresa of empresasPertenecientes" [value]="empresa.id">{{ empresa.nombreComercial }}</option>
+  </select>
+</div>

@@ -1,0 +1,103 @@
+.project-container{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.item{
+  flex-grow: 1;
+  flex-basis: content;
+}
+
+
+.dropdown {
+  width: 90%;
+   background-color: #4eaac138;
+  border: none; 
+  padding: 1px 4px;
+  /* width: 12vw; */
+  border-radius: 0 3px 3px 0;  
+}
+.labelProyecto {
+  background-color: #4EAAC1;
+  color: #f2f2f2;
+  /* margin-right: -4px; */
+  padding: 1px 20px;
+  border-start-start-radius: 5px;
+  border-end-start-radius: 5px;  
+}
+.button-add-requisicion{
+  background-color : #51aec7;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  width: 2fr;
+  
+}
+
+
+td {
+  border: .5px solid #b4b1b175;
+  padding: 0 10px;
+  height: 5px;
+}
+th {
+  background-color: #21416e;
+  height: 1px;
+  color: #f2f2f2;
+  border: 1px solid #4e4c4c54;
+  padding: 0 10px;
+}
+.td-0 {
+  padding: 0;
+  background-color: #fffefe;
+  border: .5px solid #ffffff85;
+}
+
+
+/* my-component.component.css */
+::ng-deep .first-custom-tab-group.mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs > .mat-mdc-tab-header .mat-mdc-tab{
+  flex-grow: 0 !important; /* Asegúrate de que solo el primer grupo de pestañas se vea afectado */
+  background-color: #4EAAC1 !important; /* Cambia el color de fondo de las pestañas */
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+::ng-deep .first-custom-tab-group .mat-mdc-tab-labels{
+  gap: 2px !important; /* Asegúrate de que no haya espacio entre las pestañas */
+}
+::ng-deep .first-custom-tab-group  .mat-mdc-tab:not(.mdc-tab--stacked){
+  height: 25px !important; /* Cambia la altura de las pestañas */
+}
+::ng-deep .first-custom-tab-group .mdc-tab__text-label {
+  color: #f2f2f2 !important; /* Cambia el color del texto de las pestañas */
+}
+::ng-deep .tooltip {
+  --bs-tooltip-bg: #d6d3d3 !important;
+  --bs-tooltip-color: rgb(0, 0, 0) !important;
+}
+
+.buttons{
+  background-color : #51aec7;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  width: 2fr;
+  
+}
+
+.button-filt {
+  border: none;
+  background-color: #4EAAC1;
+  color: #f2f2f2;
+  padding: 2px 10px;
+  border-radius: 3px;
+  text-align: center;
+  margin: 0 10px;
+}
+
+.button-filt:hover {
+  background-color: #002B53;
+}
+
+select:invalid { color: gray; }
+
+

@@ -1,0 +1,80 @@
+<!-- Panel de Captura Ajustes -->
+<ng-template #dialogDevolucionPrestamos>
+    <div class="fixed inset-0 z-10 w-screen overflow-y-auto" (click)="limpiarFormularioNuevaEntrada()">
+        <div class="content-center sm:flex min-h-full items-cen justify-center p-4 text-center sm:items-center sm:p-0">
+            <!-- Evita que el clic se propague al contenedor padre (overlay) -->
+
+            <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl"
+                (click)="detenerCierre($event)">
+                <!-- detenerCierre(event: MouseEvent): Método que detiene la propagación del evento de clic cuando se hace clic dentro del contenido del modal, asegurando que el modal no se cierre inadvertidamente. -->
+                <div class="m-2 flex justify-between">
+                    <h2 class="font-normal tracking-[2px] leading-8  text-base">Devolución de prestamos</h2>
+                    <button type="button" class=" leading-none absolute top-0 right-0 px-4 py-3 text-2xl"
+                        (click)="limpiarFormularioNuevaEntrada()">&times;</button>
+
+                </div>
+                <div class="bg-white px-4 pb-4 sm:p-2 sm:pb-4">
+                    <div>
+                        <form [formGroup]="form">
+                            <div class="mb-3">
+                                <label class="block text-sm font-medium text-gray-700" for="almacen">Almacén</label>
+                                <select class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500
+               focus:border-indigo-500 sm:text-sm" (change)="onAlmacenSelectionChange($event)"
+                                    formControlName="almacen">
+                                    <option class="text-gray-700" value="" disabled selected hidden>Selecciona un
+                                        almacén..</option>
+                                    <option *ngFor="let opcion of almacenes" [ngValue]="opcion.id">
+                                        {{ opcion.almacenNombre }}
+                                    </option>
+                                </select>
+                            </div>
+                            <label class="block text-sm font-medium text-gray-700">Observaciones</label>
+                            <textarea
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                placeholder="Observaciones" formControlName="observaciones" class="form-control"
+                                rows="2" style="resize: none;"></textarea>
+                        </form>
+                        <div
+                            style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px; margin-top: 15px;">
+                            <table
+                                class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
+                                <thead>
+                                    <tr>
+                                        <th class="cabecera1" scope="col">Persona recibio</th>
+                                        <th class="cabecera1" scope="col">Descripcion</th>
+                                        <th class="cabecera1" scope="col">Unidad</th>
+                                        <th class="cabecera1" scope="col">Cantidad</th>
+                                        <th class="cabecera1" scope="col">Acciones</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let insumos of insumossalidaalmacen">
+                                        <td class="" scope="col">{{insumos.personaRecibio}}
+                                        </td>
+                                        <td class="" scope="col">{{insumos.descripcioninsumo}}
+                                        </td>
+                                        <td class="" scope="col">{{insumos.unidadinsumo}}
+                                        </td>
+                                        <td class="" scope="col">{{insumos.cantidadPorSalir}}
+                                        </td>
+                                        <td class="" scope="col"><button (click)="EliminarListaInsumos(insumos.id)">Eliminar</button>
+                                        </td>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-2 py-2 sm:flex sm:flex-row-reverse sm:px-6 sm:gap-4">
+                    <button
+                        class="bg-[#51aec7] hover:bg-[#002B53] text-[#f2f2f2]  py-2 px-4 rounded-sm mr-2 mt-3  inline-flex w-full justify-center shadow-sm ring-1 ring-inset  sm:mt-0 sm:w-auto"
+                        (click)="guardarNuevaEntrada()">Aceptar</button>
+                    <button
+                        class="mt-3 inline-flex w-full justify-center rounded-sm bg-[#51aec7] text-[#f2f2f2] px-3 py-2 text-sm shadow-sm ring-1 ring-inset  hover:bg-[#B05B5B] sm:mt-0 sm:w-auto  "
+                        (click)="limpiarFormularioNuevaEntrada()">Cancelar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</ng-template>

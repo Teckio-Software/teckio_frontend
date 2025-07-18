@@ -1,0 +1,78 @@
+<div class="grid grid-cols-2 gap-4">
+  <div class="flex mt-2 mb-2 gap-1" *ngIf="proyectoSeleccionado">
+    <label
+      class="rounded-l-md bg-colorButton text-gray100 px-1 py-1 xs:text-[10px]"
+      for="almacen"
+      >Almacen</label
+    >
+    <input
+      class="xs:text-[10px] xs:w-[130px]"
+      list="almacendata"
+      id="almacen"
+      name="almacen"
+      placeholder="Selecciona un almacén"
+      autocomplete="off"
+      (input)="cargarInsumos($event)"
+    />
+    <datalist id="almacendata">
+      <option *ngFor="let almacen of almacenes">
+        {{ almacen.almacenNombre }}
+      </option>
+    </datalist>
+  </div>
+</div>
+
+<div class="overflow-x-auto shadow-md rounded-lg max-h-[500px] mt-2">
+  <table class="w-full text-sm">
+    <thead class="bg-primario text-white">
+      <tr>
+        <th class="px-1 py-[2px] xs:w-[75px]">Código</th>
+        <th class="px-2 py-[2px] xs:w-[70px]">Descripción</th>
+        <th class="px-2 py-[2px] xs:w-[70px]">Unidad</th>
+        <th class="px-2 py-[2px] xs:w-[70px]">Cantidad Disponible</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-300">
+      <!-- <tr *ngIf="insumosExistentes.length === 0">
+        <td colspan="4" class="text-center text-gray-700 font-medium py-2">
+          No hay insumos registrados.
+        </td>
+      </tr> -->
+      <tr
+        *ngFor="let IE of insumosExistentes"
+        (click)="verDetalles(IE.idInsumo)"
+        class="font-medium text-gray-700 hover:bg-gray-200 transition-colors duration-200 xs:text-[8px]"
+      >
+        <td
+          class="px-1 py-1"
+          [ngClass]="{ 'change-background-color': IE.idInsumo === changeColor }"
+        >
+          {{ IE.codigo }}
+        </td>
+        <td
+          class="px-1 py-1"
+          [ngClass]="{ 'change-background-color': IE.idInsumo === changeColor }"
+        >
+          {{ IE.descripcion }}
+        </td>
+        <td
+          class="px-1 py-1"
+          [ngClass]="{ 'change-background-color': IE.idInsumo === changeColor }"
+        >
+          {{ IE.unidad }}
+        </td>
+        <td class="px-1 py-1" [ngClass]="{ estilo1: IE.esDisponible }">
+          {{ IE.cantidadInsumos }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="viewDetalles">
+  <app-detalles-existencia
+    *appRecarga="appRegarga"
+    [idInsumoInput]="idInsumo"
+    [idAlmacenInput]="idAlmacen"
+  ></app-detalles-existencia>
+</div>

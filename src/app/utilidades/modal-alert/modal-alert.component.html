@@ -1,0 +1,26 @@
+  <div class="fixed inset-0 z-10 w-screen overflow-y-auto" (click)="cerrar()">
+    <div class="content-center sm:flex min-h-full items-cen justify-center p-4 text-center sm:items-center sm:p-0">
+    <!-- Evita que el clic se propague al contenedor padre (overlay) -->
+      <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 pr-10 pl-10" (click)="detenerCierre($event)">
+        <!-- detenerCierre(event: MouseEvent): Método que detiene la propagación del evento de clic cuando se hace clic dentro del contenido del modal, asegurando que el modal no se cierre inadvertidamente. -->
+        <div class="bg-white px-2 pb-2 pt-2 sm:p-6 sm:pb-4">
+          <div class="flex flex-col justify-center items-center gap-2">
+            <ng-container *ngIf="data.titulo; else imagen">
+              <h1 class="dialog-title">{{ data.titulo }}</h1>
+            </ng-container>
+            <ng-template #imagen>
+              <img src="assets/exclamation-square-fill.svg" alt="Imagen" class="dialog-image mb-2" style="width: 40px;  height: 40px;">
+            </ng-template>
+            <p class="dialog-message pt-2" >{{ data.mensaje }}</p>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-1 py-1 sm:flex sm:flex-row-reverse sm:gap-4 justify-center">
+          <button class="bg-[#51aec7] hover:bg-[#002B53] text-[#f2f2f2]  py-1 px-4 rounded-sm mr-2 mt-1  inline-flex w-full justify-center shadow-sm ring-1 ring-inset  sm:mt-0 sm:w-auto" (click)="ejecutarFuncionAceptar()">Aceptar</button>
+          <button class="mt-1 inline-flex w-full justify-center rounded-sm bg-[#51aec7] text-[#f2f2f2] px-3 py-1 text-sm shadow-sm ring-1 ring-inset  hover:bg-[#B05B5B] sm:mt-0 sm:w-auto  " (click)="cerrar()">Cancelar</button>
+        </div>
+      
+      </div>
+    </div>
+  </div>
+
+  

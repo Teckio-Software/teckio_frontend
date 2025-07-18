@@ -1,0 +1,158 @@
+/* .cabecera {
+  background-color: #00161F;
+  border: solid 2px #f1f6f8;
+  color: #B5DCE0;
+}
+
+.none {
+  border: solid 2px #f1f6f8;
+  background-color: #bee2e6 ;
+}
+
+.orden {
+  -webkit-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+  -moz-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+  box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+}
+
+.orden-compra {
+  position: relative;
+  width: 95.7%;
+  opacity: 95%;
+  top: 10%;
+  overflow: hidden;
+}
+
+.tabla-detalle {
+  margin-top: 90px;
+}
+
+.selected {
+  border: solid 2px #f1f6f8;
+  background-color: rgb(232, 66, 11);
+} */
+
+/* //////////////////////////////////////////////////// Diseño de fer ////////////////////////////////////////////////////////////////////////////////////// */
+
+.cont-empresas {
+  background-color: #b5dce02d;
+  padding: 5px;
+  border-radius: 7px;
+}
+
+.cont-input {
+  display: flex;
+  justify-content: end;
+  margin-bottom: 10px;
+  background-color: #b5dce02d;
+  padding: 5px;
+  border-radius: 7px;
+  height: 55px;
+  margin-top: 10px;
+}
+
+.cont-input input {
+  text-align: center;
+  margin-left: 10px;
+  border-radius: 7px;
+  border: none;
+}
+
+
+estilos .cont-input input {
+  text-align: center;
+  margin-left: 10px;
+  border-radius: 7px;
+  border: none;
+}
+
+.cabecera {
+  background-color: #093446;
+  border: solid 1px #f1f6f8;
+  color: #B5DCE0;
+}
+
+.none {
+  border: solid 1px #f1f6f8;
+}
+
+.orden {
+  -webkit-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+  -moz-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+  box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+}
+
+.orden-compra {
+  position: relative;
+  width: 95.7%;
+  opacity: 95%;
+  top: 10%;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.tabla-detalle {
+  margin-top: 90px;
+}
+
+.selected {
+  background-color: #2ac3ff;
+}
+
+.crearRolEmpresa {
+  display: flex;
+  background-color: #f2f2f2;
+  padding: 0 20px;
+}
+
+/*--------------------Formulario-------------------*/
+.formulario {
+  display: flex;
+  justify-content: center;
+}
+
+.end {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  width: 80%;
+}
+
+/*-------------------Botones------------------------*/
+.button-cancelar {
+  border: none;
+  border-radius: 7px;
+  padding: 5px;
+  width: 150px;
+  color: #00161F;
+  margin: 0 10px;
+}
+
+.button-cancelar:hover {
+  background-color: #ff2a2a;
+  border: none;
+  border-radius: 7px;
+  padding: 5px;
+  width: 150px;
+  color: #f2f2f2;
+  margin: 0 10px;
+}
+
+.button-aceptar {
+  border: none;
+  border-radius: 7px;
+  padding: 5px;
+  width: 150px;
+  color: #00161F;
+  margin: 0 10px;
+}
+
+.button-aceptar:hover {
+  background-color: #2ac3ff;
+  border: none;
+  border-radius: 7px;
+  padding: 5px;
+  width: 150px;
+  color: #f2f2f2;
+  margin: 0 10px;
+}

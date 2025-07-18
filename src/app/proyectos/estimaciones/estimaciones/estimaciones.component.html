@@ -1,0 +1,1245 @@
+<mat-tab-group
+  class="first-custom-tab-group"
+  animationDuration="0ms"
+  (selectedTabChange)="yourFn($event)"
+  [selectedIndex]="selectedIndex"
+>
+  <mat-tab label="Avance de obra">
+    <div *ngIf="selectedIndex === 0">
+      <section class="contenedor-section">
+        <div
+          class="cont-acciones"
+          style="display: flex; justify-content: center; align-items: center"
+        >
+          <div class="contenedor-selecp">
+            <!-- <div style="flex-wrap: wrap;">
+
+                      <label class="labelProyecto1">Proyecto</label>
+                      <input autocomplete="off" autocomplete="off" class="form-contrtrol dropdown1" id="myInput"
+                          type="text" placeholder="Buscar" (keyup)="filtrarProyecto($event)" data-bs-toggle="dropdown"
+                          [(ngModel)]="nombreProyecto" />
+                      <ul class="dropdown-menu">
+                          <li class="lista">
+                              <option class="option-hover" *ngFor="let proyecto of proyectos" [value]="proyecto.id"
+                                  (click)="cambiarProyecto(proyecto)">
+                                  {{ proyecto.nombre }}
+                              </option>
+                          </li>
+                      </ul>
+                  </div> -->
+            <div>
+              <select
+                [(ngModel)]="selectedPeriodo"
+                (ngModelChange)="cargarEstimaciones()"
+                style="
+                  background-color: #4eaac138;
+                  border: none;
+                  border-radius: 5px;
+                  padding: 1.4px;
+                  opacity: 2;
+                "
+              >
+                <option value="0">Selecciona un periodo</option>
+                <option *ngFor="let periodo of periodos" [value]="periodo.id">
+                  {{ periodo.descripcionPeriodo }}
+                </option>
+              </select>
+            </div>
+            <!-- type="button" class="btn-close" aria-label="Close" " -->
+            <div>
+              <button
+                *ngIf="periodo?.esCerrada === false"
+                type="button"
+                class="custom-button p-1"
+                placement="bottom"
+                ngbTooltip="Eliminar último periodo"
+                triggers="mouseenter:mouseleave"
+                (click)="abrirDialogo()"
+              >
+                <img src="assets/borrar.svg" alt="" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div
+            class="inputs-data"
+            *ngIf="selectedPeriodo == 0 && selectedProyecto != 0"
+          >
+            <input
+              type="date"
+              value="2017-01-01"
+              [(ngModel)]="nuevoPeriodo.fechaInicio"
+            />
+            <input
+              type="date"
+              value="2017-01-01"
+              [(ngModel)]="nuevoPeriodo.fechaTermino"
+            />
+            <div class="button-container">
+              <button
+                (click)="crearPeriodo()"
+                class="button bg-colorButton hover:bg-hoverButton text-[#f2f2f2]"
+                [disabled]="isLoading || isButtonDisabled"
+              >
+                Nuevo Periodo
+                <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+              </button>
+            </div>
+            <div class="alert-container" *ngIf="alertMessage">
+              <ngb-alert [type]="alertType" [dismissible]="false">
+                {{ alertMessage }}
+              </ngb-alert>
+            </div>
+          </div>
+
+          <div class="contenedor-inputsc" *ngIf="selectedPeriodo != 0">
+            <div class="inputs-data">
+              <input
+                type="date"
+                value="2017-01-01"
+                [(ngModel)]="nuevoPeriodo.fechaInicio"
+              />
+              <input
+                type="date"
+                value="2017-01-01"
+                [(ngModel)]="nuevoPeriodo.fechaTermino"
+              />
+
+              <div class="button-container">
+                <button
+                  (click)="crearPeriodo()"
+                  class="button bg-colorButton hover:bg-hoverButton text-[#f2f2f2]"
+                  [disabled]="isLoading || isButtonDisabled"
+                >
+                  Nuevo Periodo
+                  <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+                </button>
+              </div>
+
+              <div class="alert-container" *ngIf="alertMessage">
+                <ngb-alert [type]="alertType" [dismissible]="false">
+                  {{ alertMessage }}
+                </ngb-alert>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: center">
+              <fieldset
+                class="contenedor-inputc"
+                style="
+                  border: 1px solid #f2f2f2;
+                  border-radius: 5px;
+                  width: min-content;
+                  padding: 1rem;
+                  gap: 10px;
+                "
+              >
+                <div>
+                  <!-- <fieldset style="border: 1px solid #f2f2f2; border-radius: 5px; padding: 10px;"> -->
+                  <legend class="legend">Subtotal</legend>
+
+                  <input
+                    class="input-field border-2"
+                    type="text"
+                    placeholder="0"
+                    disabled
+                    [(ngModel)]="totalEstimacionesConFormato"
+                  />
+                  <!-- </fieldset> -->
+                  <!-- <h1>subtotal</h1> -->
+                </div>
+                <div>
+                  <!-- <fieldset style="border: 1px solid #f2f2f2; border-radius: 5px; padding: 10px;"> -->
+                  <legend class="legend">IVA</legend>
+
+                  <input
+                    class="input-field border-2"
+                    type="text"
+                    placeholder="0"
+                    disabled
+                    [(ngModel)]="ivaEstimacionesConFormato"
+                  />
+                  <!-- </fieldset> -->
+                  <!-- <h1>IVA</h1> -->
+                </div>
+                <div>
+                  <!-- <fieldset style="border: 1px solid #f2f2f2; border-radius: 5px; padding: 10px;"> -->
+                  <legend class="legend">Total</legend>
+
+                  <input
+                    class="input-field border-2"
+                    type="text"
+                    placeholder="0"
+                    disabled
+                    [(ngModel)]="totalEstimacionesConIvaConFormato"
+                  />
+                  <!-- </fieldset> -->
+                  <!-- <h1>total</h1> -->
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+
+        <div
+          style="
+            overflow-x: auto;
+            white-space: nowrap;
+            width: 95%;
+            margin: 0 auto;
+            margin-top: 10px;
+          "
+        >
+          <table
+            class="table-striped table-hover titulo-arbol2"
+            class="resizable-container"
+            style="height: 0px"
+          >
+            <thead>
+              <tr>
+                <th colspan="6" class="style-encabezado-ac-act"></th>
+                <th colspan="3" class="style-encabezado-ac-act">Anterior</th>
+                <th colspan="3" class="style-encabezado-ac-act" s>Actual</th>
+                <th colspan="3" class="style-encabezado-ac-act">Acumulado</th>
+              </tr>
+            </thead>
+
+            <thead>
+              <th class="cabecera" style="width: 2%">-</th>
+              <th class="cabecera" style="width: 8%">Código</th>
+              <th class="cabecera" style="width: 18%">Descripción</th>
+              <th class="cabecera" style="width: 6%">Unidad</th>
+              <th class="cabecera" style="width: 6%">Cantidad</th>
+              <th class="cabecera" style="width: 6%">Importe</th>
+              <th class="cabecera" style="width: 6%">Avance</th>
+              <th class="cabecera" style="width: 6%">%</th>
+              <th class="cabecera" style="width: 6%">Importe</th>
+              <th class="cabecera" style="width: 6%">Avance</th>
+              <th class="cabecera" style="width: 6%">%</th>
+              <th class="cabecera" style="width: 6%">Importe</th>
+              <th class="cabecera" style="width: 6%">Avance</th>
+              <th class="cabecera" style="width: 6%">%</th>
+              <th class="cabecera" style="width: 6%">Importe</th>
+            </thead>
+          </table>
+          <div
+            style="
+              overflow-y: auto;
+              white-space: nowrap;
+              height: 60vh;
+              margin: 0 auto;
+            "
+            class="floating-window"
+            class="resizable-container"
+          >
+            <tree-view [treeData]="estimaciones">
+              <ng-template let-estimacion>
+                <table class="table-striped table-hover table-arbol">
+                  <tbody>
+                    <tr>
+                      <ng-template #tooltipContent>
+                        <div
+                          style="
+                            overflow-y: auto;
+                            white-space: nowrap;
+                            margin: 0 auto;
+                            cursor: pointer;
+                            max-height: 100px;
+                            width: fit-content;
+                          "
+                        >
+                          <!-- si quieren titulo colocan esto si no no  -->
+                          <!-- <div style="display: flex; justify-content: space-between;  align-items: baseline; color: #ffffff; font-weight: 700; letter-spacing: 2px;" >
+                                  <p>Cantidad</p>
+
+                              </div> -->
+                          <table
+                            class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos"
+                          >
+                            <thead>
+                              <tr style="position: sticky; top: 0">
+                                <th
+                                  style="padding: 0; text-align: center"
+                                  scope="col"
+                                >
+                                  Periodo
+                                </th>
+                                <th
+                                  style="padding: 0; text-align: center"
+                                  scope="col"
+                                >
+                                  Avance
+                                </th>
+                                <th
+                                  style="padding: 0; text-align: center"
+                                  scope="col"
+                                >
+                                  Importe
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr
+                                *ngFor="
+                                  let periodoEstimacion of periodosXEstimacion
+                                "
+                              >
+                                <td>
+                                  {{ periodoEstimacion.descripcionPeriodo }}
+                                </td>
+                                <td>
+                                  {{ periodoEstimacion.avanceConFormato }}
+                                </td>
+                                <td>
+                                  {{ periodoEstimacion.importeConFormato }}
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </ng-template>
+                      <td
+                        style="width: 2%; border-right: 1px solid #f2f2f217"
+                        class="cont-drill"
+                      >
+                        <!-- concepto: precioUnitario.tipoPrecioUnitario ==1 -->
+                        <div class="contenedores" style="display: flex">
+                          <div *ngIf="estimacion.hijos.length > 0">
+                            <button
+                              class="button-accion"
+                              (click)="expansionDominio(estimacion)"
+                              style="width: 5px"
+                            >
+                              {{ estimacion.expandido ? "▼" : "►" }}
+                            </button>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 8%;
+                          padding-left: 0px;
+                        "
+                        class="cont-drill"
+
+                        (dblclick)="obtenerPeriodosXEstimacion(estimacion)"
+                      [ngbTooltip]="tooltipContent"
+                      triggers="dblclick"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class=""
+                          id="input-table"
+                          [(ngModel)]="estimacion.codigo"
+                          readonly
+                          style="
+                            background-color: rgba(0, 0, 0, 0.164);
+                            border: none;
+                            border-radius: 3px;
+                            width: 100%;
+                          "
+                        />
+                      </td>
+
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 18%;
+                          padding-left: 0px;
+                        "
+                        class="cont-drill"
+                        (dblclick)="obtenerPeriodosXEstimacion(estimacion)"
+                      [ngbTooltip]="tooltipContent"
+                      triggers="dblclick"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class=""
+                          id="input-table"
+                          [(ngModel)]="estimacion.descripcion"
+                          readonly
+                          style="
+                            background-color: rgba(0, 0, 0, 0.164);
+                            border: none;
+                            border-radius: 3px;
+                            width: 100%;
+                          "
+                        />
+                      </td>
+
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 6%;
+                          padding-left: 0px;
+                        "
+                        class="cont-drill"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class=""
+                          id="input-table"
+                          [(ngModel)]="estimacion.unidad"
+                          readonly
+                          style="
+                            background-color: rgba(0, 0, 0, 0.164);
+                            border: none;
+                            border-radius: 3px;
+                            width: 100%;
+                          "
+                        />
+                      </td>
+
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 6%;
+                          padding-left: 0px;
+                        "
+                        class="cont-drill"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class=""
+                          id="input-table"
+                          [(ngModel)]="estimacion.cantidadConFormato"
+                          readonly
+                          style="
+                            background-color: rgba(0, 0, 0, 0.164);
+                            border: none;
+                            border-radius: 3px;
+                            width: 100%;
+                          "
+                        />
+                      </td>
+
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 6%;
+                          padding-left: 0px;
+                        "
+                        class="cont-drill"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class=""
+                          id="input-table"
+                          [(ngModel)]="estimacion.importeConFormato"
+                          readonly
+                          style="
+                            background-color: rgba(0, 0, 0, 0.164);
+                            border: none;
+                            border-radius: 3px;
+                            width: 100%;
+                          "
+                        />
+                      </td>
+
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 6%;
+                          padding-left: 0px;
+                        "
+                        class="cont-drill"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class=""
+                          id="input-table"
+                          [(ngModel)]="
+                            estimacion.cantidadAvanceAcumuladoConFormato
+                          "
+                          readonly
+                          style="
+                            background-color: rgba(0, 0, 0, 0.164);
+                            border: none;
+                            border-radius: 3px;
+                            width: 100%;
+                          "
+                        />
+                      </td>
+
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 6%;
+                          padding-left: 0px;
+                        "
+                        class="cont-drill"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class=""
+                          id="input-table"
+                          [(ngModel)]="
+                            estimacion.porcentajeAvanceAcumuladoConFormato
+                          "
+                          readonly
+                          style="
+                            background-color: rgba(0, 0, 0, 0.164);
+                            border: none;
+                            border-radius: 3px;
+                            width: 100%;
+                          "
+                        />
+                      </td>
+
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 6%;
+                          padding-left: 0px;
+                        "
+                        class="cont-drill"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class=""
+                          id="input-table"
+                          [(ngModel)]="
+                            estimacion.importeDeAvanceAcumuladoConFormato
+                          "
+                          readonly
+                          style="border: none; border-radius: 3px; width: 100%"
+                        />
+                      </td>
+
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 6%;
+                          padding-left: 0px;
+                        "
+                        *ngIf="
+                          estimacion.tipoPrecioUnitario == 1 &&
+                          estimacion.cantidadAvanceEditando
+                        "
+                        class="cont-drill"
+                        (dblclick)="VerGeneradores(estimacion)"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class=""
+                          id="input-table"
+                          [(ngModel)]="estimacion.cantidadAvance"
+                          (keydown.enter)="asignarCantidad(estimacion)"
+                          style="border: none; border-radius: 3px; width: 100%"
+                          [ngStyle]="{
+                            'background-color':
+                              estimacion.porcentajeTotal == 0
+                                ? '#FFFFFF'
+                                : estimacion.porcentajeTotal == 100
+                                ? '#C3CFEB'
+                                : estimacion.porcentajeTotal > 0
+                                ? '#C9F5FF'
+                                : ''
+                          }"
+                        />
+                      </td>
+
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 6%;
+                          padding-left: 0px;
+                        "
+                        *ngIf="
+                          estimacion.tipoPrecioUnitario == 1 &&
+                          !estimacion.cantidadAvanceEditando
+                        "
+                        class="cont-drill"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class=""
+                          id="input-table"
+                          [(ngModel)]="estimacion.cantidadAvanceConFormato"
+                          readonly
+                          (click)="habilitarEdicionAvance(estimacion)"
+                          style="border: none; border-radius: 3px; width: 100%"
+                          [ngStyle]="{
+                            'background-color':
+                              estimacion.porcentajeTotal == 0
+                                ? '#FFFFFF'
+                                : estimacion.porcentajeTotal == 100
+                                ? '#C3CFEB'
+                                : estimacion.porcentajeTotal > 0
+                                ? '#C9F5FF'
+                                : ''
+                          }"
+                        />
+                      </td>
+
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 6%;
+                          padding-left: 0px;
+                        "
+                        *ngIf="estimacion.tipoPrecioUnitario == 0"
+                        class="cont-drill"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class=""
+                          id="input-table"
+                          [(ngModel)]="estimacion.cantidadAvanceConFormato"
+                          readonly
+                          style="border: none; border-radius: 3px; width: 100%"
+                          [ngStyle]="{
+                            'background-color':
+                              estimacion.porcentajeTotal == 0
+                                ? '#FFFFFF'
+                                : estimacion.porcentajeTotal == 100
+                                ? '#C3CFEB'
+                                : estimacion.porcentajeTotal > 0
+                                ? '#C9F5FF'
+                                : ''
+                          }"
+                        />
+                      </td>
+
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 6%;
+                          padding-left: 0px;
+                        "
+                        *ngIf="
+                          estimacion.tipoPrecioUnitario == 1 &&
+                          estimacion.porcentajeAvanceEditando
+                        "
+                        class="cont-drill"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class=""
+                          id="input-table"
+                          [(ngModel)]="estimacion.porcentajeAvance"
+                          (keydown.enter)="asignarPorcentaje(estimacion)"
+                          style="border: none; border-radius: 3px; width: 100%"
+                          [ngStyle]="{
+                            'background-color':
+                              estimacion.porcentajeTotal == 0
+                                ? '#FFFFFF'
+                                : estimacion.porcentajeTotal == 100
+                                ? '#C3CFEB'
+                                : estimacion.porcentajeTotal > 0
+                                ? '#C9F5FF'
+                                : ''
+                          }"
+                        />
+                      </td>
+
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 6%;
+                          padding-left: 0px;
+                        "
+                        *ngIf="
+                          estimacion.tipoPrecioUnitario == 1 &&
+                          !estimacion.porcentajeAvanceEditando
+                        "
+                        class="cont-drill"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class=""
+                          id="input-table"
+                          [(ngModel)]="estimacion.porcentajeAvanceConFormato"
+                          readonly
+                          (click)="habilitarEdicionAvance(estimacion)"
+                          style="border: none; border-radius: 3px; width: 100%"
+                          [ngStyle]="{
+                            'background-color':
+                              estimacion.porcentajeTotal == 0
+                                ? '#FFFFFF'
+                                : estimacion.porcentajeTotal == 100
+                                ? '#C3CFEB'
+                                : estimacion.porcentajeTotal > 0
+                                ? '#C9F5FF'
+                                : ''
+                          }"
+                        />
+                      </td>
+
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 6%;
+                          padding-left: 0px;
+                        "
+                        *ngIf="estimacion.tipoPrecioUnitario == 0"
+                        class="cont-drill"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class=""
+                          id="input-table"
+                          [(ngModel)]="estimacion.porcentajeAvanceConFormato"
+                          readonly
+                          style="border: none; border-radius: 3px; width: 100%"
+                          [ngStyle]="{
+                            'background-color':
+                              estimacion.porcentajeTotal == 0
+                                ? '#FFFFFF'
+                                : estimacion.porcentajeTotal == 100
+                                ? '#C3CFEB'
+                                : estimacion.porcentajeTotal > 0
+                                ? '#C9F5FF'
+                                : ''
+                          }"
+                        />
+                      </td>
+
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 6%;
+                          padding-left: 0px;
+                        "
+                        class="cont-drill"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class=""
+                          id="input-table"
+                          [(ngModel)]="estimacion.importeDeAvanceConFormato"
+                          readonly
+                          style="border: none; border-radius: 3px; width: 100%"
+                          [ngStyle]="{
+                            'background-color':
+                              estimacion.porcentajeTotal == 0
+                                ? '#FFFFFF'
+                                : estimacion.porcentajeTotal == 100
+                                ? '#C3CFEB'
+                                : estimacion.porcentajeTotal > 0
+                                ? '#C9F5FF'
+                                : ''
+                          }"
+                        />
+                      </td>
+
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 6%;
+                          padding-left: 0px;
+                        "
+                        class="cont-drill"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class=""
+                          id="input-table"
+                          [(ngModel)]="estimacion.cantidadAvanceTotalConFormato"
+                          readonly
+                          style="border: none; border-radius: 3px; width: 100%"
+                          [ngStyle]="{
+                            'background-color':
+                              estimacion.porcentajeTotal == 0
+                                ? '#FFFFFF'
+                                : estimacion.porcentajeTotal > 100
+                                ? '#cf6b6b'
+                                : estimacion.porcentajeTotal == 100
+                                ? '#C3CFEB'
+                                : estimacion.porcentajeTotal > 0
+                                ? '#C9F5FF'
+                                : ''
+                          }"
+                        />
+                      </td>
+
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 6%;
+                          padding-left: 0px;
+                        "
+                        class="cont-drill"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class=""
+                          id="input-table"
+                          [(ngModel)]="estimacion.porcentajeTotalConFormato"
+                          readonly
+                          style="border: none; border-radius: 3px; width: 100%"
+                          [ngStyle]="{
+                            'background-color':
+                              estimacion.porcentajeTotal == 0
+                                ? '#FFFFFF'
+                                : estimacion.porcentajeTotal > 100
+                                ? '#cf6b6b'
+                                : estimacion.porcentajeTotal == 100
+                                ? '#C3CFEB'
+                                : estimacion.porcentajeTotal > 0
+                                ? '#C9F5FF'
+                                : ''
+                          }"
+                        />
+                      </td>
+
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 6%;
+                          padding-left: 0px;
+                        "
+                        class="cont-drill"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class=""
+                          id="input-table"
+                          [(ngModel)]="estimacion.importeTotalConFormato"
+                          readonly
+                          style="border: none; border-radius: 3px; width: 100%"
+                          [ngStyle]="{
+                            'background-color':
+                              estimacion.porcentajeTotal == 0
+                                ? '#FFFFFF'
+                                : estimacion.porcentajeTotal > 100
+                                ? '#cf6b6b'
+                                : estimacion.porcentajeTotal == 100
+                                ? '#C3CFEB'
+                                : estimacion.porcentajeTotal > 0
+                                ? '#C9F5FF'
+                                : ''
+                          }"
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </ng-template>
+            </tree-view>
+          </div>
+        </div>
+      </section>
+      <div class="w-[95%] ml-[2.4%]">
+        <div class="cont-tabla" style="margin-top: 9px">
+          <table class="table-striped table-hover titulo-arbol3">
+            <thead>
+              <tr>
+                <th
+                  class="cabecera"
+                  scope="col"
+                  style="width: 10%"
+                  *ngIf="
+                    esKg == true ||
+                    esTon == true ||
+                    esM == true ||
+                    esM2 == true ||
+                    esM3 == true ||
+                    esPza == true
+                  "
+                >
+                  Codigo
+                </th>
+                <th
+                  class="cabecera"
+                  scope="col"
+                  style="width: 10%"
+                  *ngIf="
+                    esKg == true ||
+                    esTon == true ||
+                    esM == true ||
+                    esM2 == true ||
+                    esM3 == true ||
+                    esPza == true
+                  "
+                >
+                  EjeX
+                </th>
+                <th
+                  class="cabecera"
+                  scope="col"
+                  style="width: 10%"
+                  *ngIf="
+                    esKg == true ||
+                    esTon == true ||
+                    esM == true ||
+                    esM2 == true ||
+                    esM3 == true ||
+                    esPza == true
+                  "
+                >
+                  EjeY
+                </th>
+                <th
+                  class="cabecera"
+                  scope="col"
+                  style="width: 10%"
+                  *ngIf="
+                    esKg == true ||
+                    esTon == true ||
+                    esM == true ||
+                    esM2 == true ||
+                    esM3 == true ||
+                    esPza == true
+                  "
+                >
+                  Nivel
+                </th>
+                <th
+                  class="cabecera"
+                  scope="col"
+                  style="width: 10%"
+                  *ngIf="
+                    esKg == true ||
+                    esTon == true ||
+                    esM == true ||
+                    esM2 == true ||
+                    esM3 == true ||
+                    esPza == true
+                  "
+                >
+                  Cantidad
+                </th>
+                <th
+                  class="cabecera"
+                  scope="col"
+                  style="width: 10%"
+                  *ngIf="
+                    esKg == true ||
+                    esTon == true ||
+                    esM == true ||
+                    esM2 == true ||
+                    esM3 == true ||
+                    esPza == true
+                  "
+                >
+                  Cantidad Referencia
+                </th>
+                <th
+                  class="cabecera"
+                  scope="col"
+                  style="width: 10%"
+                  *ngIf="esKg == true || esTon == true"
+                >
+                  Peso
+                </th>
+                <th
+                  class="cabecera"
+                  scope="col"
+                  style="width: 10%"
+                  *ngIf="esM == true || esM2 == true || esM3 == true"
+                >
+                  Largo
+                </th>
+                <th
+                  class="cabecera"
+                  scope="col"
+                  style="width: 10%"
+                  *ngIf="esM2 == true || esM3 == true"
+                >
+                  Ancho
+                </th>
+                <th
+                  class="cabecera"
+                  scope="col"
+                  style="width: 10%"
+                  *ngIf="esM3 == true"
+                >
+                  Alto
+                </th>
+                <th
+                  class="cabecera"
+                  scope="col"
+                  style="width: 10%"
+                  *ngIf="
+                    esKg == true ||
+                    esTon == true ||
+                    esM == true ||
+                    esM2 == true ||
+                    esM3 == true ||
+                    esPza == true
+                  "
+                >
+                  Total
+                </th>
+                <th
+                  class="cabecera"
+                  scope="col"
+                  style="width: 10%"
+                  *ngIf="
+                    esKg == true ||
+                    esTon == true ||
+                    esM == true ||
+                    esM2 == true ||
+                    esM3 == true ||
+                    esPza == true
+                  "
+                >
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody
+              *ngIf="
+                esKg == true ||
+                esTon == true ||
+                esM == true ||
+                esM2 == true ||
+                esM3 == true ||
+                esPza
+              "
+            >
+              <tr *ngFor="let generador of generadoresXEstimacion">
+                <td class="body-table" style="width: 10%">
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    id="input-table"
+                    [(ngModel)]="generador.codigo"
+                    (keydown.enter)="crearGenerador(generador)"
+                    [readonly]="false"
+                    style="
+                      border: none;
+                      border-radius: 3px;
+                      width: 100%;
+                      background-color: rgba(0, 0, 0, 0.164);
+                    "
+                    maxlength="20"
+                  />
+                </td>
+                <td class="body-table" style="width: 10%">
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    id="input-table"
+                    [(ngModel)]="generador.ejeX"
+                    (keydown.enter)="crearGenerador(generador)"
+                    [readonly]="false"
+                    maxlength="20"
+                    style="
+                      border: 0.5px solid #ffffff4d;
+                      border: none;
+                      border-radius: 3px;
+                      width: 100%;
+                      background-color: rgba(0, 0, 0, 0.164);
+                    "
+                  />
+                </td>
+                <td class="body-table" style="width: 10%">
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    id="input-table"
+                    [(ngModel)]="generador.ejeY"
+                    (keydown.enter)="crearGenerador(generador)"
+                    [readonly]="false"
+                    maxlength="20"
+                    style="
+                      border: 0.5px solid #ffffff4d;
+                      border-radius: 3px;
+                      width: 100%;
+                      background-color: rgba(0, 0, 0, 0.164);
+                    "
+                  />
+                </td>
+
+                <td class="body-table" style="width: 10%">
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    id="input-table"
+                    [(ngModel)]="generador.ejeZ"
+                    (keydown.enter)="crearGenerador(generador)"
+                    [readonly]="false"
+                    maxlength="20"
+                    style="
+                      border: 0.5px solid #ffffff4d;
+                      border-radius: 3px;
+                      width: 100%;
+                      background-color: rgba(0, 0, 0, 0.164);
+                    "
+                  />
+                </td>
+
+                <td class="body-table" style="width: 10%">
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    id="input-table"
+                    [(ngModel)]="generador.cantidad"
+                    (keydown.enter)="crearGenerador(generador)"
+                    [readonly]="false"
+                    style="
+                      border: 0.5px solid #ffffff4d;
+                      border-radius: 3px;
+                      width: 100%;
+                      background-color: rgba(0, 0, 0, 0.164);
+                    "
+                  />
+                </td>
+                <td class="body-table" style="width: 10%">
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    id="input-table"
+                    [(ngModel)]="generador.cantidadReferencia"
+                    [readonly]="true"
+                    style="
+                      border: 0.5px solid #ffffff4d;
+                      border-radius: 3px;
+                      width: 100%;
+                      background-color: rgba(0, 0, 0, 0.164);
+                    "
+                  />
+                </td>
+
+                <td
+                  class="body-table"
+                  style="width: 10%"
+                  *ngIf="esPza == false"
+                >
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    id="input-table"
+                    [(ngModel)]="generador.x"
+                    (keydown.enter)="crearGenerador(generador)"
+                    [readonly]="false"
+                    style="
+                      border: 0.5px solid #ffffff4d;
+                      border-radius: 3px;
+                      width: 100%;
+                      background-color: rgba(0, 0, 0, 0.164);
+                    "
+                  />
+                </td>
+
+                <td
+                  class="body-table"
+                  style="width: 10%"
+                  *ngIf="esM2 == true || esM3 == true"
+                >
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    id="input-table"
+                    [(ngModel)]="generador.y"
+                    (keydown.enter)="crearGenerador(generador)"
+                    [readonly]="false"
+                    style="
+                      border: 0.5px solid #ffffff4d;
+                      border-radius: 3px;
+                      width: 100%;
+                      background-color: rgba(0, 0, 0, 0.164);
+                    "
+                  />
+                </td>
+
+                <td class="body-table" style="width: 10%" *ngIf="esM3 == true">
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    id="input-table"
+                    [(ngModel)]="generador.z"
+                    (keydown.enter)="crearGenerador(generador)"
+                    [readonly]="false"
+                    style="
+                      border: 0.5px solid #ffffff4d;
+                      border-radius: 3px;
+                      width: 100%;
+                      background-color: rgba(0, 0, 0, 0.164);
+                    "
+                  />
+                </td>
+
+                <td class="body-table" style="width: 10%">
+                  {{ generador.cantidadTotal }}
+                </td>
+
+                <td
+                  class="body-table"
+                  style="width: 10%; align-items: center"
+                  *ngIf="generador.id != 0"
+                >
+                  <button
+                    type="button"
+                    class="button-importar"
+                    data-bs-toggle="modal"
+                    (click)="eliminarGenerador(generador)"
+                    [disabled]="false"
+                  >
+                    Eliminar
+                  </button>
+                </td>
+
+                <td
+                  class="body-table"
+                  style="width: 10%; align-items: center"
+                  *ngIf="generador.id == 0"
+                ></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+
+  <mat-tab label="Resumen de estimaciones">
+    <div *ngIf="selectedIndex === 1">
+      <div
+        style="
+          overflow-x: auto;
+          white-space: nowrap;
+          width: 95%;
+          margin: 0 auto;
+          margin-top: 10px;
+        "
+      >
+        <app-resumen-estimaciones
+          *appRecarga="appRecarga"
+          (total)="actualizaTotal($event)"
+        ></app-resumen-estimaciones>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>

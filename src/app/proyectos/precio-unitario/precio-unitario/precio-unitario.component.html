@@ -1,0 +1,2734 @@
+<div [ngClass]="{ grid: isGrid, flex1: !isGrid }">
+  <!---Contenedor 1---->
+  <div class="contenedor1" style="width: 100%" *ngIf="contenedorPresupuesto">
+    <!----boton versión 1-->
+    <div
+      class="cont-acciones"
+      style="display: flex; justify-content: center; align-items: center"
+      *ngIf="mostrarBotones"
+    >
+      <div class="">
+        <div class="flex justify-center gap-2">
+          <button
+            class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
+            (click)="openDialogFSR()"
+          >
+            FSR
+          </button>
+          <button
+            class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
+            (click)="openDialogExpInsumos()"
+          >
+            Explosión de insumos
+          </button>
+          <button
+            class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
+            (click)="recalcularPresupuesto()"
+          >
+            Recalcular
+          </button>
+          <button
+            class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
+            (click)="indirectos()"
+          >
+            Indirectos
+          </button>
+          <button
+            class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
+            (click)="nuevaImportacionPresupuesto()"
+          >
+            Importar Excel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div
+      class="flex flex-col items-center justify-center gap-2 md:flex-row md:justify-between md:items-end w-[95%] ml-[2.4%]">
+      <div class="flex items-end w-full ">
+        <textarea #testInput [(ngModel)]="descripcionPrecioUnitario" (keydown.enter)="editarDesdeTextArea()"
+          style="width: 100%; display: none;" rows="2" class="resize-none p-1 text-md bg-white rounded-t-lg border"
+          placeholder="Descripcion.."></textarea>
+      </div>
+      <div class="flex flex-row bg-white shadow-md rounded-t-lg p-1 items-end">
+        <div class="flex items-center justify-center flex-shrink-0 h-10 w-10 rounded-xl bg-[#4eaac138] text-[#4eaac1]">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+            </path>
+          </svg>
+        </div>
+        <div class="flex flex-col flex-grow ml-4">
+          <div class="text-md text-[#6b7280]">Total</div>
+          <div class="font-bold text-base"><span>{{totalConFormato}}</span></div>
+        </div>
+      </div>
+    </div> -->
+
+    <div
+      class="flex flex-col justify-between gap-2 md:flex-row md:justify-between w-[95%] ml-[2.4%]"
+    >
+      <div *ngIf="!mostrarBotones" class="w-full">
+        <div
+          class="cont-acciones p-3"
+          style="display: flex; justify-content: center; align-items: center"
+        >
+          <div class="">
+            <div class="flex justify-center gap-2">
+              <button
+                class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
+                (click)="openDialogFSR()"
+              >
+                FSR
+              </button>
+              <button
+                class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
+                (click)="openDialogExpInsumos()"
+              >
+                Explosión de insumos
+              </button>
+              <button
+                class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
+                (click)="recalcularPresupuesto()"
+              >
+                Recalcular
+              </button>
+              <button
+                class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
+                (click)="indirectos()"
+              >
+                Indirectos
+              </button>
+              <button
+                class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
+                (click)="nuevaImportacionPresupuesto()"
+              >
+                Importar archivo
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex-1 md:w-100%">
+        <div class="flex items-end w-full">
+          <textarea
+            #testInput
+            [(ngModel)]="descripcionPrecioUnitario"
+            (keydown.enter)="editarDesdeTextArea()"
+            style="width: 100%; display: none"
+            rows="2"
+            class="resize-none p-1 text-sm bg-white rounded-t-lg border"
+            placeholder="Descripcion.."
+          ></textarea>
+        </div>
+      </div>
+      <div class="flex-2">
+        <div
+          class="flex flex-row bg-white shadow-sm rounded-t-lg p-1 items-end"
+        >
+          <div
+            class="flex items-center justify-center flex-shrink-0 h-10 w-10 rounded-xl bg-[#4eaac138] text-[#4eaac1]"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+          </div>
+          <div class="flex flex-col flex-grow ml-4">
+            <div class="text-sm text-[#6b7280]">Total</div>
+            <div class="font-bold text-base">
+              <span>{{ totalConFormato }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <table
+        class="table-striped table-hover overflow-x-auto w-[95%] ml-[2.4%]"
+      >
+        <thead class="bg-primario text-white">
+          <th class="cabecera" style="width: 4%">-</th>
+          <th class="cabecera" style="width: 14%">Código</th>
+          <th class="cabecera" style="width: 42%">Descripción</th>
+          <th class="cabecera" style="width: 8%">Unidad</th>
+          <th class="cabecera" style="width: 8%">Cantidad</th>
+          <th class="cabecera" style="width: 8%">Costo Directo</th>
+          <th class="cabecera" style="width: 8%">P. U.</th>
+          <th class="cabecera" style="width: 8%">Total</th>
+        </thead>
+      </table>
+    </div>
+    <!---------------------------Esquema de árbol tamaño 1---------------------------->
+    <div
+      style="
+        overflow-y: auto;
+        white-space: nowrap;
+        margin: 0 auto;
+        cursor: pointer;
+      "
+      class="floating-window"
+      class="resizable-container"
+      (mousedown)="onMouseDown($event)"
+      (mouseup)="onMouseUp()"
+      [ngClass]="{
+        'change-height-table': esquemaArbol2,
+        'change-height-table1': !esquemaArbol2
+      }"
+    >
+      <tree-view [treeData]="preciosUnitarios">
+        <ng-template let-precioUnitario>
+          <table class="table-striped table-hover table-arbol">
+            <tbody>
+              <tr
+                [ngClass]="{'change-background-color': precioUnitario.esDetalle == true,
+                              'colorNivel1' :precioUnitario.nivel <= 1 && !precioUnitario.esDetalle,
+                              'colorNivel2' :precioUnitario.nivel == 2 && !precioUnitario.esDetalle,
+                              'colorNivel3' :precioUnitario.nivel == 3 && !precioUnitario.esDetalle,
+                              'colorNivel4' :precioUnitario.nivel == 4 && !precioUnitario.esDetalle,
+                              'colorNivel5' :precioUnitario.nivel == 5 && !precioUnitario.esDetalle,
+                              'colorNivel6' :precioUnitario.nivel == 6 && !precioUnitario.esDetalle,
+                              'colorNivel7' :precioUnitario.nivel == 7 && !precioUnitario.esDetalle,
+                            }"
+                [draggable]="true"
+                (dragstart)="dragStart($event, precioUnitario)"
+                (dragover)="dragOver($event)"
+                (drop)="drop($event, precioUnitario)"
+                class="font-medium text-gray700"
+              >
+                <td
+                  style="width: 4%; border-right: 1px solid #f2f2f217"
+                  class="cont-drill"
+                  (click)="seleccionar(precioUnitario)"
+                >
+                  <div class="contenedores" style="display: flex">
+                    <div *ngIf="precioUnitario.hijos.length > 0">
+                      <mat-icon
+                        class="test"
+                        (click)="expansionDominio(precioUnitario)"
+                      >
+                        {{
+                          precioUnitario.expandido
+                            ? " expand_more"
+                            : "chevron_right"
+                        }}
+                      </mat-icon>
+                    </div>
+                    <div *ngIf="precioUnitario.hijos.length == 0">
+                      <button class="button-accion" style="width: 5px"></button>
+                    </div>
+                    <div>
+                      <tr>
+                        <td
+                          style="width: 5%; border-right: 1px solid #f2f2f217"
+                          class="cont-drill"
+                        >
+                          <div>
+                            <button
+                              *ngIf="
+                                precioUnitario.id != 0 &&
+                                seEstaCopiando == false &&
+                                !existenEstimaciones
+                              "
+                              class="inline-flex items-center p-1 text-md font-medium text-center text-gray-900 rounded-lg"
+                              type="button"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                            >
+                              <svg
+                                class="w-3 h-3"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor"
+                                viewBox="0 0 4 15"
+                              >
+                                <path
+                                  d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"
+                                />
+                              </svg>
+                            </button>
+                            <ul
+                              *ngIf="seEstaCopiando == false"
+                              class="cursor-pointer dropdown-menu text-sm text-[#000000DE] dark:text-gray-200"
+                            >
+                              <li class="cursor-pointer">
+                                <a
+                                  (click)="
+                                    crearPartidaAlMismoNivel(precioUnitario)
+                                  "
+                                  *ngIf="precioUnitario.tipoPrecioUnitario == 0"
+                                  class="cursor-auto dropdown-item block px-4 py-2 hover:bg-gray-100 hover:bg-[#4eaac154] hover:text-[#000000DE]"
+                                  >Mismo nivel
+                                </a>
+                              </li>
+                              <li class="cursor-pointer">
+                                <a
+                                  (click)="crearSubPartida(precioUnitario)"
+                                  class="dropdown-item block px-4 py-2 hover:bg-[#4eaac154] hover:text-[#000000DE]"
+                                >
+                                  Subnivel
+                                </a>
+                              </li>
+                              <li class="cursor-pointer">
+                                <a
+                                  (click)="crearConcepto(precioUnitario)"
+                                  class="dropdown-item block px-4 py-2 hover:bg-[#4eaac154] hover:text-[#000000DE]"
+                                >
+                                  Concepto
+                                </a>
+                              </li>
+                              <li class="cursor-pointer">
+                                <a
+                                  (click)="eliminarPU(precioUnitario)"
+                                  class="dropdown-item block px-4 py-2 hover:bg-[#4eaac154] hover:text-[#000000DE]"
+                                >
+                                  Eliminar
+                                </a>
+                              </li>
+                              <li class="cursor-pointer">
+                                <a
+                                  (click)="importar(precioUnitario)"
+                                  class="dropdown-item block px-4 py-2 hover:bg-[#4eaac154] hover:text-[#000000DE]"
+                                >
+                                  Importar
+                                </a>
+                              </li>
+                              <li class="cursor-pointer">
+                                <a
+                                  (click)="
+                                    importarConceptoDesdeArmado(precioUnitario)
+                                  "
+                                  *ngIf="precioUnitario.tipoPrecioUnitario == 0"
+                                  class="dropdown-item block px-4 py-2 hover:bg-[#4eaac154] hover:text-[#000000DE]"
+                                >
+                                  Importar de PU
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+                    </div>
+                    <div>
+                      <tr>
+                        <td class="flex justify-center items-center">
+                          <button
+                            class="w-[27px] bg-[#6db1c4a8] hover:bg-[#53AFC8] rounded-sm"
+                            (click)="IndirectosXConcepto(precioUnitario)"
+                            ngbTooltip="Nuevo costo indirecto"
+                            placement="right"
+                            triggers="mouseenter:mouseleave"
+                          >
+                            <img
+                              class="p-[3px]"
+                              src="../../../../assets/ci.svg"
+                              alt=""
+                            />
+                          </button>
+                        </td>
+                      </tr>
+                    </div>
+                  </div>
+                </td>
+                <!-- <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 13%; padding-left: 0px;"
+                  class="cont-drill" (click)="seleccionar(precioUnitario)" *ngIf="precioUnitario.nivel < 2">
+                  <input autocomplete="off" type="text" class="bg-transparent" id="input-table" [(ngModel)]="precioUnitario.codigo"
+                    (keydown.enter)="crear(precioUnitario)" [readonly]="existenEstimaciones"
+                    style="border: .5px solid #ffffff4d; border-radius: 3px; width: 100%;">
+                </td>
+                <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 13%; padding-left: 4px;"
+                  class="cont-drill" (click)="seleccionar(precioUnitario)" *ngIf="precioUnitario.nivel == 2">
+                  <input autocomplete="off" type="text" class="bg-transparent" id="input-table" [(ngModel)]="precioUnitario.codigo"
+                    (keydown.enter)="crear(precioUnitario)" [readonly]="existenEstimaciones"
+                    style=" border: .5px solid #ffffff4d; border-radius: 3px; width: 100%;">
+                </td>
+                <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 13%; padding-left: 8px;"
+                  class="cont-drill" (click)="seleccionar(precioUnitario)" *ngIf="precioUnitario.nivel == 3">
+                  <input autocomplete="off" type="text" class="bg-transparent" id="input-table" [(ngModel)]="precioUnitario.codigo"
+                    (keydown.enter)="crear(precioUnitario)" [readonly]="existenEstimaciones"
+                    style="border: .5px solid #ffffff4d; border-radius: 3px; width: 100%;">
+                </td>
+                <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 13%; padding-left: 12px;"
+                  class="cont-drill" (click)="seleccionar(precioUnitario)" *ngIf="precioUnitario.nivel == 4">
+                  <input autocomplete="off" type="text" class="bg-transparent" id="input-table" [(ngModel)]="precioUnitario.codigo"
+                    (keydown.enter)="crear(precioUnitario)" [readonly]="existenEstimaciones"
+                    style=" border: .5px solid #ffffff4d; border-radius: 3px; width: 100%;">
+                </td>
+                <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 13%; padding-left: 16px;"
+                  class="cont-drill" (click)="seleccionar(precioUnitario)" *ngIf="precioUnitario.nivel == 5">
+                  <input autocomplete="off" type="text" class="bg-transparent" id="input-table" [(ngModel)]="precioUnitario.codigo"
+                    (keydown.enter)="crear(precioUnitario)" [readonly]="existenEstimaciones"
+                    style="border: .5px solid #ffffff4d; border-radius: 3px; width: 100%;">
+                </td>
+                <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 13%; padding-left: 20px;"
+                  class="cont-drill" (click)="seleccionar(precioUnitario)" *ngIf="precioUnitario.nivel == 6">
+                  <input autocomplete="off" type="text" class="bg-transparent" id="input-table" [(ngModel)]="precioUnitario.codigo"
+                    (keydown.enter)="crear(precioUnitario)" [readonly]="existenEstimaciones"
+                    style="border: .5px solid #ffffff4d; border-radius: 3px; width: 100%;">
+                </td>
+                <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 13%; padding-left: 24px;"
+                  class="cont-drill" (click)="seleccionar(precioUnitario)" *ngIf="precioUnitario.nivel == 7">
+                  <input autocomplete="off" type="text" class="bg-transparent" id="input-table" [(ngModel)]="precioUnitario.codigo"
+                    (keydown.enter)="crear(precioUnitario)" [readonly]="existenEstimaciones"
+                    style="border: .5px solid #ffffff4d; border-radius: 3px; width: 100%;">
+                </td> -->
+                <td
+                  style="
+                    border-right: 1px solid #3f3e3e17;
+                    border-right: 1px solid #f2f2f217;
+                    width: 13%;
+                    padding-left: 0px;
+                  "
+                  class="cont-drill"
+                  (click)="seleccionar(precioUnitario)"
+                  *ngIf="
+                    precioUnitario.tipoPrecioUnitario == 1 &&
+                    precioUnitario.id == 0
+                  "
+                >
+                  <input
+                    autocomplete="off"
+                    class="form-contrtrol dropdown2"
+                    id="myInput"
+                    type="text"
+                    style="margin: 5px"
+                    [(ngModel)]="precioUnitario.codigo"
+                    data-bs-toggle="dropdown"
+                    (keyup)="filtrarConcepto($event)"
+                    (keydown.enter)="crear(precioUnitario)"
+                    [readonly]="existenEstimaciones"
+                    style="
+                      border: 0.5px solid #ffffff4d;
+                      border-radius: 3px;
+                      width: 100%;
+                      background-color: rgba(0, 0, 0, 0.164);
+                    "
+                  />
+                  <ul
+                    class="dropdown-menu"
+                    style="z-index: 9999; position: absolute"
+                  >
+                    <li style="overflow-y: scroll; height: 150px">
+                      <option
+                        class="option-hover"
+                        *ngFor="let concepto of conceptos"
+                        [value]="concepto.id"
+                        (click)="seleccionarConcepto(concepto)"
+                      >
+                        {{ concepto.codigo }}
+                      </option>
+                    </li>
+                  </ul>
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid #3f3e3e17;
+                    border-right: 1px solid #f2f2f217;
+                    width: 13%;
+                    padding-left: 0px;
+                  "
+                  class="cont-drill"
+                  (click)="seleccionar(precioUnitario)"
+                  *ngIf="precioUnitario.tipoPrecioUnitario == 0"
+                >
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    class="bg-transparent"
+                    id="input-table"
+                    [(ngModel)]="precioUnitario.codigo"
+                    (keydown.enter)="crear(precioUnitario)"
+                    [readonly]="existenEstimaciones"
+                    style="
+                      border: 0.5px solid #ffffff4d;
+                      border-radius: 3px;
+                      width: 100%;
+                    "
+                  />
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid #3f3e3e17;
+                    border-right: 1px solid #f2f2f217;
+                    width: 13%;
+                    padding-left: 0px;
+                  "
+                  class="cont-drill"
+                  (click)="seleccionar(precioUnitario)"
+                  *ngIf="
+                    precioUnitario.id != 0 &&
+                    precioUnitario.tipoPrecioUnitario == 1
+                  "
+                >
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    class="bg-transparent"
+                    id="input-table"
+                    [(ngModel)]="precioUnitario.codigo"
+                    (keydown.enter)="crear(precioUnitario)"
+                    [readonly]="existenEstimaciones"
+                    style="
+                      border: 0.5px solid #ffffff4d;
+                      border-radius: 3px;
+                      width: 100%;
+                    "
+                  />
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid #3f3e3e17;
+                    border-right: 1px solid #f2f2f217;
+                    width: 42%;
+                  "
+                  class="cont-drill"
+                  (click)="seleccionar(precioUnitario)"
+                >
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    class="bg-transparent"
+                    id="input-table"
+                    [(ngModel)]="precioUnitario.descripcion"
+                    (keydown.enter)="crear(precioUnitario)"
+                    (dblclick)="desplegarCampoEdicion(precioUnitario)"
+                    [readonly]="existenEstimaciones"
+                    style="
+                      border: 0.5px solid #ffffff4d;
+                      border-radius: 3px;
+                      width: 100%;
+                    "
+                  />
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid #3f3e3e17;
+                    border-right: 1px solid #f2f2f217;
+                    width: 8%;
+                  "
+                  class="cont-drill"
+                  (click)="seleccionar(precioUnitario)"
+                  *ngIf="precioUnitario.tipoPrecioUnitario == 0"
+                ></td>
+                <td
+                  style="
+                    border-right: 1px solid #3f3e3e17;
+                    border-right: 1px solid #f2f2f217;
+                    width: 8%;
+                  "
+                  class="cont-drill"
+                  (click)="seleccionar(precioUnitario)"
+                  *ngIf="precioUnitario.tipoPrecioUnitario == 1"
+                  (keydown.enter)="crear(precioUnitario)"
+                >
+                  <select
+                    aria-label=".form-select-sm example"
+                    id="select-table"
+                    class="input-table"
+                    [disabled]="existenEstimaciones"
+                    [(ngModel)]="precioUnitario.unidad"
+                    (ngModelChange)="crear(precioUnitario)"
+                    style="
+                      background-color: rgba(0, 0, 0, 0.041);
+                      border: 0.5px solid #ffffff79;
+                      border-radius: 3px;
+                      width: 100%;
+                    "
+                  >
+                    <option [ngValue]="precioUnitario.unidad">
+                      {{ precioUnitario.unidad }}
+                    </option>
+                    <option value="M">M.</option>
+                    <option value="M2">M2</option>
+                    <option value="M3">M3</option>
+                    <option value="Jor">Jor.</option>
+                    <option value="Litro">Litro</option>
+                    <option value="Galón">Galón</option>
+                    <option value="Pt">Pt</option>
+                    <option value="Bulto">Bulto</option>
+                    <option value="Kg">Kg.</option>
+                    <option value="Ton">Ton.</option>
+                    <option value="Hora">Hora</option>
+                    <option value="Pza">Pza.</option>
+                    <option value="Millar">Millar</option>
+                    <option value="Lote">Lote</option>
+                    <option value="Her">%(mdo)</option>
+                    <!-- <option [ngValue]="U" *ngFor="let U of Unidades">{{U}}</option> -->
+                  </select>
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid #3f3e3e17;
+                    border-right: 1px solid #f2f2f217;
+                    width: 8%;
+                  "
+                  class="cont-drill"
+                  (click)="seleccionar(precioUnitario)"
+                  *ngIf="precioUnitario.tipoPrecioUnitario == 0"
+                ></td>
+                <td
+                  style="
+                    border-right: 1px solid #3f3e3e17;
+                    border-right: 1px solid #f2f2f217;
+                    width: 8%;
+                  "
+                  class="cont-drill"
+                  (click)="seleccionar(precioUnitario)"
+                  *ngIf="
+                    precioUnitario.tipoPrecioUnitario == 1 &&
+                    !precioUnitario.cantidadEditado
+                  "
+                >
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    class="input-table bg-transparent"
+                    id="input-table"
+                    [(ngModel)]="precioUnitario.cantidadConFormato"
+                    style="
+                      border: none;
+                      border-radius: 3px;
+                      width: 100%;
+                      text-align: right;
+                    "
+                    readonly
+                  />
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid #3f3e3e17;
+                    border-right: 1px solid #f2f2f217;
+                    width: 8%;
+                  "
+                  class="cont-drill"
+                  (click)="seleccionar(precioUnitario)"
+                  *ngIf="
+                    precioUnitario.tipoPrecioUnitario == 1 &&
+                    precioUnitario.cantidadEditado
+                  "
+                  (keydown.enter)="crear(precioUnitario)"
+                >
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    class="input-table bg-transparent"
+                    id="input-table"
+                    [(ngModel)]="precioUnitario.cantidad"
+                    [readonly]="existenEstimaciones"
+                    style="
+                      border: 0.5px solid #ffffff4d;
+                      border-radius: 3px;
+                      width: 100%;
+                      text-align: right;
+                    "
+                  />
+                </td>
+
+                <td
+                  style="
+                    border-right: 1px solid #3f3e3e17;
+                    border-right: 1px solid #f2f2f217;
+                    width: 8%;
+                  "
+                  class="cont-drill"
+                  (click)="seleccionar(precioUnitario)"
+                  *ngIf="precioUnitario.tipoPrecioUnitario == 0"
+                ></td>
+                <td
+                  style="
+                    border-right: 1px solid #3f3e3e17;
+                    border-right: 1px solid #f2f2f217;
+                    width: 8%;
+                  "
+                  class="cont-drill"
+                  (click)="seleccionar(precioUnitario)"
+                  *ngIf="precioUnitario.tipoPrecioUnitario == 1"
+                >
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    class="input-table bg-transparent"
+                    id="input-table"
+                    [(ngModel)]="precioUnitario.costoUnitarioConFormato"
+                    id="displayName"
+                    style="
+                      border: 0.5px solid #ffffff4d;
+                      border-radius: 3px;
+                      width: 100%;
+                      text-align: right;
+                    "
+                    readonly
+                  />
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid #3f3e3e17;
+                    border-right: 1px solid #f2f2f217;
+                    width: 8%;
+                  "
+                  class="cont-drill"
+                  (click)="seleccionar(precioUnitario)"
+                  *ngIf="precioUnitario.tipoPrecioUnitario == 0"
+                ></td>
+                <td
+                  style="
+                    border-right: 1px solid #3f3e3e17;
+                    border-right: 1px solid #f2f2f217;
+                    width: 8%;
+                  "
+                  class="cont-drill"
+                  (click)="seleccionar(precioUnitario)"
+                  *ngIf="precioUnitario.tipoPrecioUnitario == 1"
+                  (click)="cargarDetallesXIdPrecioUnitario(precioUnitario)"
+                >
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    class="input-table bg-transparent"
+                    id="input-table"
+                    [(ngModel)]="precioUnitario.precioUnitarioConFormato"
+                    id="displayName"
+                    style="
+                      border: 0.5px solid #ffffff4d;
+                      border-radius: 3px;
+                      width: 100%;
+                      text-align: right;
+                    "
+                    readonly
+                  />
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid #3f3e3e17;
+                    border-right: 1px solid #f2f2f217;
+                    width: 8%;
+                  "
+                  class="cont-drill"
+                  (click)="seleccionar(precioUnitario)"
+                  (click)="cargarDetallesXIdPrecioUnitario(precioUnitario)"
+                >
+                  <input
+                    autocomplete="off"
+                    type="text"
+                    class="input-table bg-transparent"
+                    id="input-table"
+                    [(ngModel)]="precioUnitario.importeConFormato"
+                    id="displayName"
+                    style="
+                      border: 0.5px solid #ffffff4d;
+                      border-radius: 3px;
+                      width: 100%;
+                      text-align: right;
+                    "
+                    readonly
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </ng-template>
+      </tree-view>
+    </div>
+
+    <div
+      class="cont-tabla-center"
+      style="margin-top: 5px"
+      *ngIf="esquemaArbol2"
+    >
+      <table class="w-full">
+        <thead class="bg-primario text-white">
+          <tr>
+            <th class="px-1 py-[2px]" scope="col">Descripción</th>
+            <th class="px-[2px] py-[2px] text-center" scope="col">Unidad</th>
+            <th class="px-[2px] py-[2px] text-end" scope="col">Cantidad</th>
+            <th class="px-[2px] py-[2px] text-end" scope="col">Costo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let desglosado of desglosados"
+            class="font-medium text-gray700"
+          >
+            <td class="body-table" style="width: 25%">
+              <input
+                autocomplete="off"
+                type="text"
+                class="bg-transparent"
+                [(ngModel)]="desglosado.descripcion"
+                (click)="cargarRegistroDelDesglose(desglosado)"
+                style="
+                  border: 0.5px solid #ffffff4d;
+                  border-radius: 3px;
+                  width: 100%;
+                "
+                readonly
+              />
+            </td>
+            <td style="width: 25%">
+              <input
+                autocomplete="off"
+                type="text"
+                class="bg-transparent text-center"
+                [(ngModel)]="desglosado.unidad"
+                (click)="cargarRegistroDelDesglose(desglosado)"
+                style="
+                  border: 0.5px solid #ffffff4d;
+                  border-radius: 3px;
+                  width: 100%;
+                "
+                readonly
+              />
+            </td>
+            <td class="body-table" style="width: 25%">
+              <input
+                autocomplete="off"
+                type="text"
+                class="bg-transparent"
+                [(ngModel)]="desglosado.cantidadConFormato"
+                (click)="cargarRegistroDelDesglose(desglosado)"
+                style="
+                  border: 0.5px solid #ffffff4d;
+                  border-radius: 3px;
+                  width: 100%;
+                  text-align: right;
+                "
+                readonly
+              />
+            </td>
+            <td class="body-table" style="width: 25%">
+              <input
+                autocomplete="off"
+                type="text"
+                class="bg-transparent"
+                [(ngModel)]="desglosado.costoConFormato"
+                (click)="cargarRegistroDelDesglose(desglosado)"
+                style="
+                  border: 0.5px solid #ffffff4d;
+                  border-radius: 3px;
+                  width: 100%;
+                  text-align: right;
+                "
+                readonly
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="w-[95%] ml-[2.4%] mt-1 h-auto z-10" *ngIf="pestanas">
+      <mat-tab-group
+        class="first-custom-tab-group"
+        animationDuration="0ms"
+        (selectedTabChange)="yourFn($event)"
+        [selectedIndex]="selectedIndex"
+      >
+        <mat-tab class="text-labels z-10" label="PU"> </mat-tab>
+        <mat-tab
+          class="z-10"
+          *ngIf="
+            esKg == true ||
+            esTon == true ||
+            esM == true ||
+            esM2 == true ||
+            esM3 == true ||
+            esPza == true
+          "
+          label="Generador"
+        >
+          <div *ngIf="selectedIndex === 1"></div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+
+    <div class="w-[95%] ml-[2.4%]" *ngIf="selectedIndex === 0 && esquemaArbol3">
+      <div
+        class="flex justify-start max-w-sm bg-white rounded-lg my-2"
+        x-data="{ search: '' }"
+      >
+        <div class="w-full">
+          <input
+            (keyup)="filtrarArmados($event)"
+            type="search"
+            #inputFiltrado
+            class="w-full px-4 py-1 text-[#1f2937] rounded-full focus:outline-none"
+            placeholder="Buscar"
+            x-model="search"
+          />
+        </div>
+        <div>
+          <button
+            disabled
+            type="submit"
+            class="flex items-center bg-[#4EAAC1] justify-center w-7 h-7 text-white rounded-r-lg"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <table class="w-full">
+        <thead class="bg-primario text-white">
+          <tr>
+            <th class="px-1 py-[2px]" scope="col" style="width: 2%">C/S</th>
+            <!-- <th class="cabecera" scope="col" style="width: 2%;">-</th> -->
+            <th class="cabecera" scope="col" style="width: 15%">Código</th>
+            <th class="cabecera" scope="col" style="width: 30%">Descripcion</th>
+            <th class="cabecera" scope="col" style="width: 5%">Unidad</th>
+            <th class="cabecera" scope="col" style="width: 10%">Cantidad</th>
+            <th class="cabecera" scope="col" style="width: 10%">Costo Base</th>
+            <th class="cabecera" scope="col" style="width: 10%">
+              Costo Unitario
+            </th>
+            <th class="cabecera" scope="col" style="width: 8%">Importe</th>
+            <th class="cabecera" scope="col" style="width: 5%">Tipo</th>
+            <th class="cabecera" scope="col" style="width: 5%">Familia</th>
+            <!-- <th class="cabecera" scope="col" style="width: 5%;">Acciones</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let detalle of detalles | slice : inicio : termino"
+            (click)="seleccionarPUDetalles(detalle)"
+            [ngClass]="{
+              'change-background-color':
+                detalle.id == detalleSeleccionado.id && detalle.id != 0
+            }"
+            class="font-medium text-gray700"
+          >
+            <td class="body-table" style="width: 2%">
+              <div *ngIf="detalle.id != 0 && !existenEstimaciones">
+                <button
+                  class="inline-flex items-center p-1 text-md font-medium text-center text-gray-900 rounded-lg"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <svg
+                    class="w-3 h-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 4 15"
+                  >
+                    <path
+                      d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"
+                    />
+                  </svg>
+                </button>
+                <ul
+                  class="cursor-pointer dropdown-menu text-sm text-[#000000DE] dark:text-gray-200"
+                >
+                  <li class="cursor-pointer">
+                    <a
+                      (click)="partirPUDetalle(detalle)"
+                      class="cursor-auto dropdown-item block px-4 py-2 hover:bg-gray-100 hover:bg-[#4eaac154] hover:text-[#000000DE]"
+                    >
+                      Partir
+                    </a>
+                  </li>
+                  <li class="cursor-pointer">
+                    <a
+                      (click)="eliminarPUDetalle(detalle)"
+                      class="dropdown-item block px-4 py-2 hover:bg-[#4eaac154] hover:text-[#000000DE]"
+                    >
+                      Eliminar
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <!-- <td class="body-table" style="width: 2%;" *ngIf="detalle.id != 0">
+              +
+            </td>
+            <td class="body-table" style="width: 2%;" *ngIf="detalle.id == 0">
+              <input width="100%" type="checkbox" id="flexCheckChecked"  checked [(ngModel)]="detalle.esCompuesto"
+                (ngModelChange)="volverCero(detalle)"
+                style=" border: .5px solid #ffffff4d; border: none; border-radius: 3px;">
+            </td> -->
+
+            <td class="body-table" style="width: 15%">
+              <input
+                autocomplete="off"
+                class="form-contrtrol dropdown2"
+                id="myInput"
+                type="text"
+                style="margin: 5px"
+                [(ngModel)]="detalle.codigo"
+                data-bs-toggle="dropdown"
+                (click)="pruebaCont2(detalle)"
+                (keyup)="filtrarInsumo($event)"
+                (keydown.enter)="crearDetalle(detalle)"
+                [readonly]="existenEstimaciones"
+                style="
+                  border: 0.5px solid #ffffff4d;
+                  border-radius: 3px;
+                  width: 100%;
+                  background-color: rgba(0, 0, 0, 0.164);
+                "
+              />
+              <ul
+                class="dropdown-menu"
+                style="z-index: 9999; position: absolute"
+              >
+                <li *ngIf="dropdown2" style="overflow-y: scroll; height: 60px">
+                  <option
+                    class="option-hover"
+                    *ngFor="let insumo of insumos"
+                    [value]="insumo.id"
+                    (click)="seleccionarInsumo(insumo)"
+                  >
+                    {{ insumo.codigo }} || {{ insumo.descripcion }}
+                  </option>
+                </li>
+              </ul>
+            </td>
+            <td class="body-table" style="width: 30%">
+              <input
+                autocomplete="off"
+                width="100%"
+                type="text"
+                id="input-table"
+                [(ngModel)]="detalle.descripcion"
+                (keydown.enter)="crearDetalle(detalle)"
+                [readonly]="existenEstimaciones"
+                style="
+                  border: 0.5px solid #ffffff4d;
+                  border-radius: 3px;
+                  width: 100%;
+                  background-color: rgba(0, 0, 0, 0.164);
+                "
+              />
+            </td>
+            <td class="body-table" style="width: 5%">
+              <select
+                aria-label=".form-select-sm example"
+                id="select-table"
+                class="bg-transparent"
+                style="width: 100%"
+                [(ngModel)]="detalle.unidad"
+                (ngModelChange)="crearDetalle(detalle)"
+                [disabled]="existenEstimaciones"
+                style="
+                  border: 0.5px solid #ffffff4d;
+                  border: none;
+                  background-color: rgba(0, 0, 0, 0.164);
+                "
+              >
+                <option [ngValue]="detalle.unidad">
+                  {{ detalle.unidad }}
+                </option>
+                <option value="M">M.</option>
+                <option value="M2">M2.</option>
+                <option value="M3">M3.</option>
+                <option value="Jor">Jor.</option>
+                <option value="Litro">Litro</option>
+                <option value="Galón">Galón</option>
+                <option value="Pt">Pt</option>
+                <option value="Bulto">Bulto</option>
+                <option value="Kg">Kg.</option>
+                <option value="Ton">Ton.</option>
+                <option value="Hora">Hora</option>
+                <option value="Pza">Pza.</option>
+                <option value="Millar">Millar</option>
+                <option value="Lote">Lote</option>
+                <option value="Her">%(mdo)</option>
+                <!-- <option [ngValue]="U" *ngFor="let U of Unidades">{{U}}</option> -->
+              </select>
+
+              <!-- <input autocomplete="off" width="100%" type="text" class="" id="input-table" [(ngModel)]="detalle.unidad"
+                            (keydown.enter)="crearDetalle(detalle)"
+                            style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;"> -->
+            </td>
+
+            <td class="body-table" style="width: 10%">
+              <input
+                autocomplete="off"
+                type="text"
+                class=""
+                id="input-table"
+                [(ngModel)]="detalle.cantidadConFormato"
+                (contextmenu)="onRightClick($event, detalle)"
+                *ngIf="!detalle.cantidadEditado"
+                (keydown.enter)="crearDetalle(detalle)"
+                style="
+                  background-color: rgba(0, 0, 0, 0.164);
+                  border: none;
+                  border-radius: 3px;
+                  width: 100%;
+                  text-align: right;
+                "
+                readonly
+              />
+              <input
+                autocomplete="off"
+                type="text"
+                class=""
+                id="input-table"
+                [(ngModel)]="detalle.cantidad"
+                *ngIf="detalle.cantidadEditado"
+                [ngbTooltip]="tooltipContent"
+                triggers="dblclick"
+                autoClose="outside"
+                (keydown.enter)="crearDetalle(detalle)"
+                (click)="guardarRegistro(detalle)"
+                [readonly]="existenEstimaciones"
+                style="
+                  background-color: rgba(0, 0, 0, 0.164);
+                  border: none;
+                  border-radius: 3px;
+                  width: 100%;
+                  text-align: right;
+                "
+              />
+              <ng-template #tooltipContent>
+                <div class="p-2">
+                  <div class="flex gap-2 pb-3">
+                    <button
+                      (click)="selectRendimiento()"
+                      type="button"
+                      class="button-importar"
+                    >
+                      Rendimiento
+                    </button>
+                    <button
+                      (click)="selectOperaciones()"
+                      type="button"
+                      class="button-importar"
+                      *ngIf="detalle.id != 0"
+                    >
+                      Operaciones
+                    </button>
+                  </div>
+                  <div *ngIf="isRendimineto">
+                    <table
+                      class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos"
+                    >
+                      <thead>
+                        <tr>
+                          <th
+                            style="padding: 0; text-align: center"
+                            scope="col"
+                          >
+                            Cantidad
+                          </th>
+                          <th
+                            style="padding: 0; text-align: center"
+                            scope="col"
+                          >
+                            Rendimiento
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngIf="esAsignarDetalleRendimiento"
+                          ngFor="let detalleRendimiento of detallesRendimiento"
+                        >
+                          <td>
+                            <input
+                              style="padding: 0; text-align: center"
+                              (ngModelChange)="asignarCantidad($event)"
+                              [(ngModel)]="selectedCantidad"
+                              (keydown.enter)="
+                                asignarCantidadDetalleRendimiento()
+                              "
+                              [readonly]="existenEstimaciones"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              style="padding: 0; text-align: center"
+                              (ngModelChange)="asignarRendimiento($event)"
+                              [(ngModel)]="selectedRendimiento"
+                              (keydown.enter)="
+                                asignarCantidadDetalleRendimiento()
+                              "
+                              [readonly]="existenEstimaciones"
+                            />
+                          </td>
+                        </tr>
+                        <tr *ngIf="!esAsignarDetalleRendimiento">
+                          <td>
+                            <input
+                              style="padding: 0; text-align: center"
+                              (click)="visibleAsignarCantidadRendimiento()"
+                              [(ngModel)]="selectedCantidadConFormato"
+                              readonly
+                            />
+                          </td>
+                          <td>
+                            <input
+                              style="padding: 0; text-align: center"
+                              (click)="visibleAsignarCantidadRendimiento()"
+                              [(ngModel)]="selectedRendimientoConFormato"
+                              readonly
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div *ngIf="isOpereciones">
+                    <div
+                      style="
+                        overflow-y: auto;
+                        white-space: nowrap;
+                        margin: 0 auto;
+                        cursor: pointer;
+                        max-height: 200px;
+                      "
+                    >
+                      <table>
+                        <thead class="bg-primario">
+                          <tr>
+                            <th
+                              style="
+                                padding: 0;
+                                text-align: center;
+                                position: sticky;
+                                top: 0;
+                              "
+                              scope="col"
+                            >
+                              Descripción
+                            </th>
+                            <th
+                              style="
+                                padding: 0;
+                                text-align: center;
+                                position: sticky;
+                                top: 0;
+                              "
+                              scope="col"
+                            >
+                              Operación
+                            </th>
+                            <th
+                              style="
+                                padding: 0;
+                                text-align: center;
+                                position: sticky;
+                                top: 0;
+                              "
+                              scope="col"
+                            >
+                              Resultado
+                            </th>
+                            <th
+                              style="
+                                padding: 0;
+                                text-align: center;
+                                position: sticky;
+                                top: 0;
+                              "
+                              scope="col"
+                            >
+                              Accion
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let operacion of operaciones">
+                            <td>
+                              <input
+                                style="padding: 0; text-align: center"
+                                [(ngModel)]="operacion.descripcion"
+                                (keydown.enter)="
+                                  crearOperacionDetalle(operacion)
+                                "
+                                [readonly]="existenEstimaciones"
+                              />
+                            </td>
+                            <td>
+                              <input
+                                style="padding: 0; text-align: center"
+                                [(ngModel)]="operacion.operacion"
+                                (keydown.enter)="
+                                  crearOperacionDetalle(operacion)
+                                "
+                                [readonly]="existenEstimaciones"
+                              />
+                            </td>
+                            <td>
+                              <input
+                                style="padding: 0; text-align: center"
+                                readonly
+                                [(ngModel)]="operacion.resultado"
+                                (keydown.enter)="
+                                  crearOperacionDetalle(operacion)
+                                "
+                              />
+                            </td>
+                            <td *ngIf="operacion.id != 0">
+                              <button
+                                class="button-filt w-full"
+                                placement="start"
+                                ngbTooltip="Eliminar"
+                                triggers="mouseenter:mouseleave"
+                                [disabled]="existenEstimaciones"
+                                (click)="EliminarOperacion(operacion)"
+                              >
+                                <img
+                                  src="assets/delete.svg"
+                                  alt="add cotizacion"
+                                />
+                              </button>
+                            </td>
+                            <td *ngIf="operacion.id == 0"></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </td>
+
+            <td
+              class="body-table"
+              style="width: 10%"
+              *ngIf="
+                !detalle.esCompuesto &&
+                detalle.idTipoInsumo != 10001 &&
+                !detalle.costoUnitarioEditado &&
+                detalle.idTipoInsumo != 10007
+              "
+            >
+              <input
+                autocomplete="off"
+                type="text"
+                id="input-table"
+                [(ngModel)]="detalle.costoBaseConFormato"
+                readonly
+                style="
+                  border: 0.5px solid #ffffff4d;
+                  border-radius: 3px;
+                  width: 100%;
+                  background-color: rgba(0, 0, 0, 0.164);
+                  text-align: right;
+                "
+              />
+            </td>
+
+            <td
+              class="body-table"
+              style="width: 10%"
+              *ngIf="
+                !detalle.esCompuesto &&
+                detalle.idTipoInsumo != 10001 &&
+                detalle.costoUnitarioEditado &&
+                detalle.idTipoInsumo != 10007
+              "
+            >
+              <input
+                autocomplete="off"
+                type="text"
+                id="input-table"
+                [(ngModel)]="detalle.costoBase"
+                (keydown.enter)="crearDetalle(detalle)"
+                [readonly]="existenEstimaciones"
+                style="
+                  border: 0.5px solid #ffffff4d;
+                  border: none;
+                  border-radius: 3px;
+                  width: 100%;
+                  background-color: rgba(180, 12, 12, 0.164);
+                  text-align: right;
+                "
+              />
+            </td>
+
+            <td class="body-table" style="width: 10%">
+              <input
+                autocomplete="off"
+                type="text"
+                id="input-table"
+                [(ngModel)]="detalle.costoUnitarioConFormato"
+                readonly
+                style="
+                  border: 0.5px solid #ffffff4d;
+                  border-radius: 3px;
+                  width: 100%;
+                  background-color: rgba(0, 0, 0, 0.164);
+                  text-align: right;
+                "
+              />
+            </td>
+
+            <td
+              class="body-table"
+              [ngClass]="{
+                'text-green-700': detalle.idTipoInsumo == 10001,
+                'text-orange-500': detalle.idTipoInsumo == 10007
+              }"
+              *ngIf="
+                detalle.idTipoInsumo == 10001 || detalle.idTipoInsumo == 10007
+              "
+            >
+              <input
+                autocomplete="off"
+                type="text"
+                id="input-table"
+                [(ngModel)]="detalle.costoUnitarioConFormato"
+                readonly
+                (click)="abrirModalCostoHorario(detalle)"
+                style="
+                  border: 0.5px solid #ffffff4d;
+                  border-radius: 3px;
+                  width: 100%;
+                  background-color: rgba(0, 0, 0, 0.164);
+                  text-align: right;
+                "
+              />
+            </td>
+
+            <td
+              class="body-table"
+              style="width: 10%; color: blue"
+              *ngIf="detalle.esCompuesto"
+              (click)="cargarDetallesXPrecioUnitarioDetalle(detalle)"
+            >
+              <input
+                autocomplete="off"
+                type="text"
+                id="input-table"
+                [(ngModel)]="detalle.costoUnitarioConFormato"
+                readonly
+                style="
+                  border: 0.5px solid #ffffff4d;
+                  border-radius: 3px;
+                  width: 100%;
+                  background-color: rgba(0, 0, 0, 0.164);
+                  text-align: right;
+                "
+              />
+            </td>
+
+            <td *ngIf="detalle.id == 0" class="body-table" style="width: 8%">
+              <input
+                autocomplete="off"
+                type="text"
+                id="input-table"
+                [(ngModel)]="detalle.importeConFormato"
+                readonly
+                style="
+                  border: 0.5px solid #ffffff4d;
+                  border-radius: 3px;
+                  width: 100%;
+                  background-color: rgba(0, 0, 0, 0.164);
+                  text-align: right;
+                "
+              />
+            </td>
+            <td *ngIf="detalle.id != 0" class="body-table" style="width: 8%">
+              <input
+                autocomplete="off"
+                type="text"
+                class=""
+                id="input-table"
+                [(ngModel)]="detalle.importeConFormato"
+                *ngIf="!detalle.cantidadEditado"
+                style="
+                  background-color: rgba(0, 0, 0, 0.164);
+                  border: none;
+                  border-radius: 3px;
+                  width: 100%;
+                  text-align: right;
+                "
+                readonly
+              />
+              <input
+                autocomplete="off"
+                type="text"
+                class=""
+                id="input-table"
+                [(ngModel)]="detalle.importe"
+                *ngIf="detalle.cantidadEditado"
+                (keydown.enter)="editarDetalleImporte(detalle)"
+                [readonly]="existenEstimaciones"
+                style="
+                  background-color: rgba(0, 0, 0, 0.164);
+                  border: none;
+                  border-radius: 3px;
+                  width: 100%;
+                  text-align: right;
+                "
+              />
+            </td>
+
+            <td class="body-table" style="width: 5%">
+              <select
+                aria-label=".form-select-sm example"
+                class="bg-transparent"
+                id="select-table"
+                style="width: 100%"
+                [disabled]="existenEstimaciones"
+                [(ngModel)]="detalle.idTipoInsumo"
+                (ngModelChange)="crearDetalle(detalle)"
+                style="
+                  border: 0.5px solid #ffffff4d;
+                  border: none;
+                  border-radius: 3px;
+                "
+              >
+                <option value="0"></option>
+                <option *ngFor="let tipo of tiposInsumos" [value]="tipo.id">
+                  {{ tipo.descripcion }}
+                </option>
+              </select>
+            </td>
+            <td class="body-table" style="width: 5%">
+              <select
+                aria-label=".form-select-sm example"
+                class="bg-transparent"
+                id="select-table"
+                style="width: 100%"
+                [disabled]="existenEstimaciones"
+                [(ngModel)]="detalle.idFamiliaInsumo"
+                (ngModelChange)="crearDetalle(detalle)"
+                style="border: none; border-radius: 3px"
+              >
+                <option value="0"></option>
+                <option
+                  *ngFor="let familia of familiasInsumos"
+                  [value]="familia.id"
+                >
+                  {{ familia.descripcion }}
+                </option>
+              </select>
+            </td>
+
+            <!-- <td class="body-table" style="width: 10%; align-items: center;" *ngIf="detalle.id != 0">
+              <div class="flex">
+                <button type="button" class="button-importar" (click)="eliminarPUDetalle(detalle)">Eliminar</button>
+                <button type="button" class="button-importar" (click)="partirPUDetalle(detalle)">Partir</button>
+              </div>
+            </td>
+
+            <td class="body-table" style="width: 10%; align-items: center;" *ngIf="detalle.id == 0"></td> -->
+          </tr>
+        </tbody>
+      </table>
+      <mat-paginator
+        [length]="detalles.length"
+        [pageSize]="10"
+        aria-label="Select page"
+        (page)="cambiarPagina($event)"
+        #paginadoBase
+      >
+      </mat-paginator>
+    </div>
+
+    <!--Tabla 4-->
+    <div class="flex items-end w-[95%] ml-[2.4%]">
+      <textarea
+        #InputOperacionGenerador
+        [(ngModel)]="operacionGenerador"
+        (keydown.enter)="editarCantidadGenerador()"
+        style="width: 100%; display: none"
+        rows="2"
+        class="resize-none p-1 text-sm bg-white rounded-t-lg border"
+        placeholder="Operacion.."
+      ></textarea>
+    </div>
+
+    <div class="w-[95%] ml-[2.4%]" *ngIf="selectedIndex === 1 && esquemaArbol3">
+      <div class="cont-tabla" style="margin-top: 9px">
+        <table class="w-full">
+          <thead class="bg-primario text-white">
+            <tr class="">
+              <th
+                class="cabecera"
+                scope="col"
+                style="width: 10%"
+                *ngIf="
+                  esKg == true ||
+                  esTon == true ||
+                  esM == true ||
+                  esM2 == true ||
+                  esM3 == true ||
+                  esPza == true
+                "
+              >
+                Codigo
+              </th>
+              <th
+                class="cabecera"
+                scope="col"
+                style="width: 10%"
+                *ngIf="
+                  esKg == true ||
+                  esTon == true ||
+                  esM == true ||
+                  esM2 == true ||
+                  esM3 == true ||
+                  esPza == true
+                "
+              >
+                EjeX
+              </th>
+              <th
+                class="cabecera"
+                scope="col"
+                style="width: 10%"
+                *ngIf="
+                  esKg == true ||
+                  esTon == true ||
+                  esM == true ||
+                  esM2 == true ||
+                  esM3 == true ||
+                  esPza == true
+                "
+              >
+                EjeY
+              </th>
+              <th
+                class="cabecera"
+                scope="col"
+                style="width: 10%"
+                *ngIf="
+                  esKg == true ||
+                  esTon == true ||
+                  esM == true ||
+                  esM2 == true ||
+                  esM3 == true ||
+                  esPza == true
+                "
+              >
+                Nivel
+              </th>
+              <th
+                class="cabecera"
+                scope="col"
+                style="width: 10%"
+                *ngIf="
+                  esKg == true ||
+                  esTon == true ||
+                  esM == true ||
+                  esM2 == true ||
+                  esM3 == true ||
+                  esPza == true
+                "
+              >
+                Cantidad
+              </th>
+              <th
+                class="cabecera"
+                scope="col"
+                style="width: 10%"
+                *ngIf="esKg == true || esTon == true"
+              >
+                Peso
+              </th>
+              <th
+                class="cabecera"
+                scope="col"
+                style="width: 10%"
+                *ngIf="esM == true || esM2 == true || esM3 == true"
+              >
+                Largo
+              </th>
+              <th
+                class="cabecera"
+                scope="col"
+                style="width: 10%"
+                *ngIf="esM2 == true || esM3 == true"
+              >
+                Ancho
+              </th>
+              <th
+                class="cabecera"
+                scope="col"
+                style="width: 10%"
+                *ngIf="esM3 == true"
+              >
+                Alto
+              </th>
+              <th
+                class="cabecera"
+                scope="col"
+                style="width: 10%"
+                *ngIf="
+                  esKg == true ||
+                  esTon == true ||
+                  esM == true ||
+                  esM2 == true ||
+                  esM3 == true ||
+                  esPza == true
+                "
+              >
+                Total
+              </th>
+              <th
+                class="cabecera"
+                scope="col"
+                style="width: 10%"
+                *ngIf="
+                  esKg == true ||
+                  esTon == true ||
+                  esM == true ||
+                  esM2 == true ||
+                  esM3 == true ||
+                  esPza == true
+                "
+              >
+                Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            *ngIf="
+              esKg == true ||
+              esTon == true ||
+              esM == true ||
+              esM2 == true ||
+              esM3 == true ||
+              esPza
+            "
+          >
+            <tr
+              *ngFor="let generador of generadores"
+              class="font-medium text-gray700"
+            >
+              <td class="body-table" style="width: 10%">
+                <input
+                  autocomplete="off"
+                  type="text"
+                  id="input-table"
+                  [(ngModel)]="generador.codigo"
+                  (keydown.enter)="crearGenerador(generador)"
+                  [readonly]="existenEstimaciones"
+                  style="
+                    border: none;
+                    border-radius: 3px;
+                    width: 100%;
+                    background-color: rgba(0, 0, 0, 0.164);
+                  "
+                  maxlength="20"
+                />
+              </td>
+              <td class="body-table" style="width: 10%">
+                <input
+                  autocomplete="off"
+                  type="text"
+                  id="input-table"
+                  [(ngModel)]="generador.ejeX"
+                  (keydown.enter)="crearGenerador(generador)"
+                  [readonly]="existenEstimaciones"
+                  maxlength="20"
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border: none;
+                    border-radius: 3px;
+                    width: 100%;
+                    background-color: rgba(0, 0, 0, 0.164);
+                  "
+                />
+              </td>
+              <td class="body-table" style="width: 10%">
+                <input
+                  autocomplete="off"
+                  type="text"
+                  id="input-table"
+                  [(ngModel)]="generador.ejeY"
+                  (keydown.enter)="crearGenerador(generador)"
+                  [readonly]="existenEstimaciones"
+                  maxlength="20"
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                    background-color: rgba(0, 0, 0, 0.164);
+                  "
+                />
+              </td>
+
+              <td class="body-table" style="width: 10%">
+                <input
+                  autocomplete="off"
+                  type="text"
+                  id="input-table"
+                  [(ngModel)]="generador.ejeZ"
+                  (keydown.enter)="crearGenerador(generador)"
+                  [readonly]="existenEstimaciones"
+                  maxlength="20"
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                    background-color: rgba(0, 0, 0, 0.164);
+                  "
+                />
+              </td>
+
+              <td class="body-table" style="width: 10%">
+                <input
+                  autocomplete="off"
+                  type="text"
+                  id="input-table"
+                  [(ngModel)]="generador.cantidad"
+                  (keydown.enter)="crearGenerador(generador)"
+                  [readonly]="existenEstimaciones"
+                  (dblclick)="abrirOperacionCantidadGenerador(generador)"
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                    background-color: rgba(0, 0, 0, 0.164);
+                  "
+                />
+              </td>
+
+              <td class="body-table" style="width: 10%" *ngIf="esPza == false">
+                <input
+                  autocomplete="off"
+                  type="text"
+                  id="input-table"
+                  [(ngModel)]="generador.x"
+                  (keydown.enter)="crearGenerador(generador)"
+                  [readonly]="existenEstimaciones"
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                    background-color: rgba(0, 0, 0, 0.164);
+                  "
+                />
+              </td>
+
+              <td
+                class="body-table"
+                style="width: 10%"
+                *ngIf="esM2 == true || esM3 == true"
+              >
+                <input
+                  autocomplete="off"
+                  type="text"
+                  id="input-table"
+                  [(ngModel)]="generador.y"
+                  (keydown.enter)="crearGenerador(generador)"
+                  [readonly]="existenEstimaciones"
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                    background-color: rgba(0, 0, 0, 0.164);
+                  "
+                />
+              </td>
+
+              <td class="body-table" style="width: 10%" *ngIf="esM3 == true">
+                <input
+                  autocomplete="off"
+                  type="text"
+                  id="input-table"
+                  [(ngModel)]="generador.z"
+                  (keydown.enter)="crearGenerador(generador)"
+                  [readonly]="existenEstimaciones"
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                    background-color: rgba(0, 0, 0, 0.164);
+                  "
+                />
+              </td>
+
+              <td class="body-table" style="width: 10%">
+                {{ generador.cantidadTotal }}
+              </td>
+
+              <td
+                class="body-table"
+                style="width: 10%; align-items: center"
+                *ngIf="generador.id != 0"
+              >
+                <button
+                  type="button"
+                  class="button-importar"
+                  data-bs-toggle="modal"
+                  (click)="eliminarGenerador(generador)"
+                  [disabled]="existenEstimaciones"
+                >
+                  Eliminar
+                </button>
+              </td>
+
+              <td
+                class="body-table"
+                style="width: 10%; align-items: center"
+                *ngIf="generador.id == 0"
+              ></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!--Contenedor Tabla Explosion de Insumos-->
+  <div *ngIf="contenedorExplosionInsumo">
+    <app-dialog-explosion-insumos
+      *appRecarga="appRecarga"
+      (recalcular)="recalcular($event)"
+    ></app-dialog-explosion-insumos>
+  </div>
+
+  <!---------------------------Tabla Muestra Detalle------------------------------>
+
+  <!--Tabla 3-->
+
+  <!---Contenedor 2---->
+  <div class="contenedor2" *ngIf="contenedor2">
+    <div *ngIf="seEstaCopiando">
+      <div
+        class="cont-acciones"
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin: 10px 25px;
+        "
+      >
+        <div class="">
+          <label class="labelProyecto1">Proyecto</label>
+          <input
+            autocomplete="off"
+            class="form-contrtrol dropdown1"
+            id="myInput"
+            type="text"
+            placeholder="Buscar"
+            style="margin: 5px"
+            data-bs-toggle="dropdown"
+            (click)="pruebaCont()"
+            (keyup)="filtrarProyecto($event)"
+            [(ngModel)]="nombreProyectoCopia"
+          />
+          <ul class="dropdown-menu">
+            <li *ngIf="dropdown">
+              <option
+                class="option-hover"
+                *ngFor="let proyecto of proyectos"
+                [value]="proyecto.id"
+                (click)="cambiarProyectoCopia(proyecto)"
+              >
+                {{ proyecto.nombre }}
+              </option>
+            </li>
+          </ul>
+          <button class="button1" (click)="importarDatos()">Importar</button>
+        </div>
+
+        <div>
+          <button class="buttoncerrar" (click)="setDisplayFlex()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="currentColor"
+              class="bi bi-x"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div
+        (mousedown)="onMouseDown($event)"
+        (mouseup)="onMouseUp()"
+        (mousemove)="onMouseMove($event)"
+      >
+        <table
+          class="table table-striped table-hover titulo-arbol2"
+          class="w-[95%] ml-[2.4%]"
+        >
+          <thead>
+            <th class="cabecera" style="width: 4.5%">-</th>
+            <th
+              class="cabecera"
+              style="width: 1%"
+              *ngIf="seEstaCopiandoConcepto == true"
+            >
+              *
+            </th>
+            <th class="cabecera" style="width: 10%">Código</th>
+            <th class="cabecera" style="width: 18.5%">Descripción</th>
+            <th class="cabecera" style="width: 8%">Unidad</th>
+            <th class="cabecera" style="width: 8%">Cantidad</th>
+            <th class="cabecera" style="width: 10%">P. U.</th>
+            <th class="cabecera" style="width: 10%">Total</th>
+          </thead>
+        </table>
+        <div
+          style="
+            overflow-y: auto;
+            white-space: nowrap;
+            margin: 0 auto;
+            cursor: pointer;
+          "
+          class="floating-window"
+          class="resizable-container"
+          [ngClass]="{
+            'change-height-table': esquemaArbol5,
+            'change-height-table1': !esquemaArbol5
+          }"
+        >
+          <tree-view [treeData]="preciosUnitariosParaCopiar">
+            <ng-template let-precioUnitarioParaCopiar>
+              <table class="table-striped table-hover table-arbol">
+                <tbody>
+                  <tr>
+                    <td
+                      style="width: 4.5%; border-right: 1px solid #f2f2f217"
+                      class="cont-drill"
+                    >
+                      <!-- concepto: precioUnitario.tipoPrecioUnitario ==1 -->
+                      <div class="contenedores" style="display: flex">
+                        <div *ngIf="precioUnitarioParaCopiar.hijos.length > 0">
+                          <mat-icon
+                            class="test"
+                            (click)="expansionDominio(precioUnitarioParaCopiar)"
+                            *ngIf="precioUnitarioParaCopiar.nivel <= 7"
+                          >
+                            {{
+                              precioUnitarioParaCopiar.expandido
+                                ? " expand_more"
+                                : "chevron_right"
+                            }}
+                          </mat-icon>
+
+                          <!-- <button class="button-accion" (click)="expansionDominio(precioUnitarioParaCopiar)"
+                            *ngIf="precioUnitarioParaCopiar.nivel <= 7">
+                            {{ precioUnitarioParaCopiar.expandido ? "▼" : "►" }}
+                          </button> -->
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      style="
+                        border-right: 1px solid #3f3e3e17;
+                        border-right: 1px solid #f2f2f217;
+                        width: 1%;
+                      "
+                      *ngIf="seEstaCopiandoConcepto == true"
+                      class="cont-drill"
+                    >
+                      <input
+                        autocomplete="off"
+                        type="checkbox"
+                        id="flexCheckChecked"
+                        checked
+                        [(ngModel)]="precioUnitarioParaCopiar.seleccionado"
+                        (ngModelChange)="
+                          seleccionarHijos(precioUnitarioParaCopiar)
+                        "
+                      />
+                    </td>
+
+                    <td
+                      style="
+                        border-right: 1px solid #3f3e3e17;
+                        border-right: 1px solid #f2f2f217;
+                        width: 10%;
+                      "
+                      class="cont-drill"
+                    >
+                      <input
+                        autocomplete="off"
+                        type="text"
+                        class="input-table bg-transparent"
+                        id="input-table"
+                        [(ngModel)]="precioUnitarioParaCopiar.codigo"
+                        id="displayName"
+                        style="
+                          border: 0.5px solid #ffffff4d;
+                          border-radius: 3px;
+                          width: 100%;
+                        "
+                        readonly
+                      />
+                    </td>
+
+                    <td
+                      style="
+                        border-right: 1px solid #3f3e3e17;
+                        border-right: 1px solid #f2f2f217;
+                        width: 18.5%;
+                      "
+                      class="cont-drill"
+                    >
+                      <input
+                        autocomplete="off"
+                        type="text"
+                        class="input-table bg-transparent"
+                        id="input-table"
+                        [(ngModel)]="precioUnitarioParaCopiar.descripcion"
+                        id="displayName"
+                        style="
+                          border: 0.5px solid #ffffff4d;
+                          border-radius: 3px;
+                          width: 100%;
+                        "
+                        readonly
+                      />
+                    </td>
+
+                    <td
+                      style="
+                        border-right: 1px solid #3f3e3e17;
+                        border-right: 1px solid #f2f2f217;
+                        width: 8%;
+                      "
+                      class="cont-drill"
+                    >
+                      <input
+                        autocomplete="off"
+                        type="text"
+                        class="input-table bg-transparent"
+                        id="input-table"
+                        [(ngModel)]="precioUnitarioParaCopiar.unidad"
+                        id="displayName"
+                        style="
+                          border: 0.5px solid #ffffff4d;
+                          border-radius: 3px;
+                          width: 100%;
+                        "
+                        readonly
+                      />
+                    </td>
+
+                    <td
+                      style="
+                        border-right: 1px solid #3f3e3e17;
+                        border-right: 1px solid #f2f2f217;
+                        width: 8%;
+                      "
+                      class="cont-drill"
+                    >
+                      <input
+                        autocomplete="off"
+                        type="text"
+                        class="input-table bg-transparent"
+                        id="input-table"
+                        [(ngModel)]="
+                          precioUnitarioParaCopiar.cantidadConFormato
+                        "
+                        id="displayName"
+                        style="
+                          border: 0.5px solid #ffffff4d;
+                          border-radius: 3px;
+                          width: 100%;
+                        "
+                        readonly
+                      />
+                    </td>
+
+                    <td
+                      *ngIf="!precioUnitarioParaCopiar.tipoPrecioUnitario"
+                      style="
+                        border-right: 1px solid #3f3e3e17;
+                        border-right: 1px solid #f2f2f217;
+                        width: 10%;
+                      "
+                      class="cont-drill"
+                    >
+                      <input
+                        autocomplete="off"
+                        type="text"
+                        class="input-table bg-transparent"
+                        id="input-table"
+                        [(ngModel)]="
+                          precioUnitarioParaCopiar.precioUnitarioConFormato
+                        "
+                        id="displayName"
+                        style="
+                          border: 0.5px solid #ffffff4d;
+                          border-radius: 3px;
+                          width: 100%;
+                        "
+                        readonly
+                      />
+                      <div style="position: absolute"></div>
+                    </td>
+
+                    <td
+                      *ngIf="precioUnitarioParaCopiar.tipoPrecioUnitario"
+                      style="
+                        border-right: 1px solid #3f3e3e17;
+                        border-right: 1px solid #f2f2f217;
+                        width: 10%;
+                        color: blue;
+                      "
+                      class="cont-drill"
+                      (click)="
+                        cargarDetallesXIdPrecioUnitarioCopia1(
+                          precioUnitarioParaCopiar
+                        )
+                      "
+                    >
+                      <input
+                        autocomplete="off"
+                        type="text"
+                        class="input-table bg-transparent"
+                        id="input-table"
+                        [(ngModel)]="
+                          precioUnitarioParaCopiar.precioUnitarioConFormato
+                        "
+                        id="displayName"
+                        style="
+                          border: 0.5px solid #ffffff4d;
+                          border-radius: 3px;
+                          width: 100%;
+                        "
+                        readonly
+                      />
+                      <div style="position: absolute"></div>
+                    </td>
+
+                    <td
+                      style="
+                        border-right: 1px solid #3f3e3e17;
+                        border-right: 1px solid #f2f2f217;
+                        width: 10%;
+                      "
+                      class="cont-drill"
+                    >
+                      <input
+                        autocomplete="off"
+                        type="text"
+                        class="input-table bg-transparent"
+                        id="input-table"
+                        [(ngModel)]="precioUnitarioParaCopiar.importeConFormato"
+                        id="displayName"
+                        style="
+                          border: 0.5px solid #ffffff4d;
+                          border-radius: 3px;
+                          width: 100%;
+                        "
+                        readonly
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-template>
+          </tree-view>
+        </div>
+      </div>
+
+      <!---------------------------Tabla Muestra Detalle------------------------------>
+      <div
+        class="cont-tabla-center"
+        style="margin-top: 5px"
+        *ngIf="seSeleccinaCopia == true"
+      >
+        <table>
+          <thead class="bg-primario">
+            <tr>
+              <th class="cabecera" scope="col" style="width: 25%">
+                Descripción
+              </th>
+              <th class="cabecera" scope="col" style="width: 25%">Unidad</th>
+              <th class="cabecera" scope="col" style="width: 25%">Cantidad</th>
+              <th class="cabecera" scope="col" style="width: 25%">Costo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let desglosado of desglosadosCopia"
+              class="font-medium text-gray700"
+            >
+              <td
+                class="body-table"
+                style="width: 25%"
+                (click)="cargarRegistroDelDesglose(desglosado)"
+              >
+                <input
+                  autocomplete="off"
+                  type="text"
+                  class="bg-transparent"
+                  [(ngModel)]="desglosado.descripcion"
+                  (click)="cargarRegistroDelDesglose(desglosado)"
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                  "
+                  readonly
+                />
+              </td>
+              <td
+                class="body-table"
+                style="width: 25%"
+                (click)="cargarRegistroDelDesglose(desglosado)"
+              >
+                <input
+                  autocomplete="off"
+                  type="text"
+                  class="bg-transparent"
+                  [(ngModel)]="desglosado.unidad"
+                  (click)="cargarRegistroDelDesglose(desglosado)"
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                  "
+                  readonly
+                />
+              </td>
+              <td
+                class="body-table"
+                style="width: 25%"
+                (click)="cargarRegistroDelDesglose(desglosado)"
+              >
+                <input
+                  autocomplete="off"
+                  type="text"
+                  class="bg-transparent"
+                  [(ngModel)]="desglosado.cantidadConFormato"
+                  (click)="cargarRegistroDelDesglose(desglosado)"
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                  "
+                  readonly
+                />
+              </td>
+              <td
+                class="body-table"
+                style="width: 25%"
+                (click)="cargarRegistroDelDesglose(desglosado)"
+              >
+                <input
+                  autocomplete="off"
+                  type="text"
+                  class="bg-transparent"
+                  [(ngModel)]="desglosado.costoConFormato"
+                  (click)="cargarRegistroDelDesglose(desglosado)"
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                  "
+                  readonly
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!--Tabla 3-->
+      <div
+        class="cont-tabla"
+        style="margin-top: 10px"
+        *ngIf="seSeleccinaCopia == true"
+      >
+        <div class="contenedor-filttro" style="margin-bottom: 5px">
+          <label for="input-table" class="icon-search">
+            <svg
+              style="color: #f3f3f3"
+              class="icon-search"
+              xmlns="http://www.w3.org/2000/svg"
+              width="17"
+              height="17"
+              fill="currentColor"
+              class="bi bi-search"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
+              />
+            </svg>
+          </label>
+          <input
+            autocomplete="off"
+            type="text"
+            class="input-table input-buscar"
+            id="input-table"
+            (keyup)="filtrarArmadosCopia($event)"
+            #inputFiltradoCopia
+          />
+        </div>
+        <div class="flex items-end w-full">
+          <textarea
+            #descripcionInput
+            [(ngModel)]="detalleDescripcionPrecioUnitario"
+            style="width: 100%; display: none"
+            rows="2"
+            class="resize-none p-1 text-sm bg-white rounded-t-lg border"
+            disabled
+            placeholder="Descripcion.."
+          ></textarea>
+        </div>
+        <table class="table-striped table-hover titulo-arbol3">
+          <thead class="bg-primario text-white">
+            <tr>
+              <th class="cabecera" scope="col" style="width: 2%">C/S</th>
+              <th
+                class="cabecera"
+                scope="col"
+                style="width: 1%"
+                *ngIf="seEstaCopiandoArmado == true"
+              >
+                *
+              </th>
+              <th class="cabecera" scope="col" style="width: 10%">Código</th>
+              <th class="cabecera" scope="col" style="width: 34%">
+                Descripcion
+              </th>
+              <th class="cabecera" scope="col" style="width: 8%">Unidad</th>
+              <th class="cabecera" scope="col" style="width: 10%">Cantidad</th>
+              <th class="cabecera" scope="col" style="width: 15%">Costo</th>
+              <th class="cabecera" scope="col" style="width: 15%">Importe</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="font-medium text-gray700"
+              *ngFor="
+                let detalle of detallesCopia
+                  | slice : inicioCopia : terminoCopia
+              "
+            >
+              <td
+                class="body-table"
+                style="width: 2%"
+                *ngIf="detalle.id != 0"
+                (click)="cargarDetallesXPrecioUnitarioDetalle(detalle)"
+              >
+                +
+              </td>
+
+              <td
+                style="
+                  border-right: 1px solid #3f3e3e17;
+                  border-right: 1px solid #f2f2f217;
+                  width: 1%;
+                "
+                *ngIf="seEstaCopiandoArmado == true"
+                class="cont-drill"
+              >
+                <input
+                  autocomplete="off"
+                  type="checkbox"
+                  id="flexCheckChecked"
+                  checked
+                  [(ngModel)]="detalle.seleccionado"
+                />
+              </td>
+
+              <td class="body-table" style="width: 10%">
+                <input
+                  autocomplete="off"
+                  type="text"
+                  class="input-table bg-transparent"
+                  id="input-table"
+                  [(ngModel)]="detalle.codigo"
+                  id="displayName"
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                  "
+                  readonly
+                />
+              </td>
+
+              <td class="body-table" style="width: 34%">
+                <input
+                  autocomplete="off"
+                  type="text"
+                  class="input-table bg-transparent"
+                  id="input-table"
+                  (dblclick)="desplegarCampoDescripcion(detalle)"
+                  [(ngModel)]="detalle.descripcion"
+                  id="displayName"
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                  "
+                  readonly
+                />
+              </td>
+
+              <td class="body-table" style="width: 8%">
+                <input
+                  autocomplete="off"
+                  type="text"
+                  class="input-table bg-transparent"
+                  id="input-table"
+                  [(ngModel)]="detalle.unidad"
+                  id="displayName"
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                  "
+                  readonly
+                />
+              </td>
+
+              <td class="body-table" style="width: 10%">
+                <input
+                  autocomplete="off"
+                  type="text"
+                  class="input-table bg-transparent"
+                  id="input-table"
+                  [(ngModel)]="detalle.cantidadConFormato"
+                  id="displayName"
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                  "
+                  readonly
+                />
+              </td>
+
+              <td
+                class="body-table"
+                style="width: 10%"
+                *ngIf="!detalle.esCompuesto"
+              >
+                <input
+                  autocomplete="off"
+                  type="text"
+                  class="input-table bg-transparent"
+                  id="input-table"
+                  [(ngModel)]="detalle.costoUnitarioConFormato"
+                  id="displayName"
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                  "
+                  readonly
+                />
+              </td>
+
+              <td
+                class="body-table"
+                style="width: 15%; color: blue"
+                *ngIf="detalle.esCompuesto"
+              >
+                <input
+                  autocomplete="off"
+                  type="text"
+                  class="input-table bg-transparent"
+                  id="input-table"
+                  [(ngModel)]="detalle.costoUnitarioConFormato"
+                  id="displayName"
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                  "
+                  readonly
+                />
+              </td>
+
+              <td class="body-table" style="width: 15%">
+                <input
+                  autocomplete="off"
+                  type="text"
+                  class="input-table bg-transparent"
+                  id="input-table"
+                  [(ngModel)]="detalle.importeConFormato"
+                  id="displayName"
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                  "
+                  readonly
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <mat-paginator
+          [length]="detallesCopia.length"
+          [pageSize]="10"
+          aria-label="Select page"
+          #paginadoCopia
+          (page)="cambiarPaginaCopia($event)"
+        >
+        </mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div [style.display]="displayCarga" class="contenedor-ventana">
+  <div class="ventana-bloque"></div>
+  <div class="contenedor-spinner">
+    <div
+      class="spinner-border spinner"
+      role="status"
+      style="color: #4eaac1"
+    ></div>
+    <p
+      style="
+        position: fixed;
+        margin-top: 60px;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        color: #4eaac1;
+      "
+    >
+      Actualizando.
+    </p>
+  </div>
+</div>
+
+<ng-template #dialogPresupuestoExcel>
+  <section>
+    <div
+      class="fixed inset-0 z-10 w-screen overflow-y-auto"
+      (click)="limpiarCargarExcel()"
+    >
+      <div
+        class="content-center sm:flex min-h-full items-center justify-center p-4 text-center sm:p-0"
+      >
+        <div
+          class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl"
+          (click)="detenerCierre($event)"
+        >
+          <!-- header -->
+          <div class="flex justify-between items-center border-b px-4 py-3">
+            <h2 class="font-semibold text-gray-800 tracking-wider text-lg">
+              Importar archivo
+            </h2>
+            <button
+              type="button"
+              class="leading-none text-2xl px-3 py-1 text-gray-500 hover:text-gray-700"
+              (click)="limpiarCargarExcel()"
+            >
+              &times;
+            </button>
+          </div>
+
+          <!-- input de archivos -->
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div class="mb-4">
+              <div
+                class="overflow-x-auto whitespace-nowrap w-full mx-auto mt-4"
+              >
+                <div class="flex items-center justify-center">
+                  <div
+                    class="inline-flex w-full max-w-lg items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-6"
+                  >
+                    <input
+                      type="file"
+                      id="inputGroupFile02"
+                      multiple
+                      class="sr-only"
+                      (change)="onFileChangeFactura($event)"
+                    />
+                    <label
+                      for="inputGroupFile02"
+                      class="cursor-pointer flex items-center space-x-2 text-gray-600 hover:text-gray-800"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="w-6 h-6"
+                        fill="currentColor"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"
+                        />
+                        <path
+                          d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"
+                        />
+                      </svg>
+                      <span class="text-sm font-medium"
+                        >Seleccionar archivos</span
+                      >
+                    </label>
+                  </div>
+                </div>
+                <p
+                  *ngIf="selectedFileName"
+                  class="mt-2 text-gray-700 text-sm text-center"
+                >
+                  Archivo seleccionado:
+                  <span class="font-semibold">{{ selectedFileName }}</span>
+                </p>
+                <p
+                  *ngIf="mensajeModal"
+                  class="mt-2 text-red-700 text-sm text-center"
+                >
+                  {{ mensajeModal }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- botones -->
+          <div class="bg-gray-50 px-4 py-3 flex justify-end gap-2">
+            <button
+              class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
+              (click)="cargarPresupuestoExcel()"
+            >
+              Importar Excel
+            </button>
+            <button
+              class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
+              (click)="cargarPresupuestoOpus()"
+            >
+              Importar Opus
+            </button>
+            <button
+              class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
+              (click)="limpiarCargarExcel()"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ng-template>
+
+<div *ngIf="isOpenModal">
+  <app-precio-unitario-modal
+    [isOpen]="isOpenModal"
+    (close)="closeModal()"
+    [detalle]="detalle"
+  >
+  </app-precio-unitario-modal>
+</div>

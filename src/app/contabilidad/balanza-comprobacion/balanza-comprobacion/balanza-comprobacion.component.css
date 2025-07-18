@@ -1,0 +1,441 @@
+/*--------------filtrado--------------*/
+
+.cont-filtro {
+  background-color: #115a9f27;
+  width: 90%;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  border-radius: 7px;
+  margin-top: 20px;
+}
+
+.contenedor-input {
+  display: flex;
+  align-items: center;
+  margin-left: 5px;
+}
+
+.contenedor-input2 {
+  display: flex;
+  align-items: center;
+}
+
+.cont-filt1 {
+  display: flex;
+  justify-content: center;
+}
+
+.form-select {
+  width: 80px;
+}
+
+.cont-filt2 {
+  display: flex;
+  justify-content: center;
+  margin-top: -10px;
+  margin-right: 10px;
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: nowrap;
+  background-color: white;
+}
+
+.flex-container > .divFormulario {
+  /* background-color: #f1f1f1; */
+  background-color: white;
+  margin: 5px;
+  text-align: center;
+  line-height: 50%;
+  font-size: 30px;
+  border: 1px solid;
+}
+
+.flex-container > .divTabla {
+  /* background-color: #f1f1f1; */
+  background-color: white;
+  margin: 5px;
+  text-align: center;
+  line-height: 50%;
+  font-size: 30px;
+}
+
+h4{
+  background-color: rgb(180, 199, 231);
+  padding: 15px;
+  color:#f1f1f1;
+}
+
+.panelOpciones{
+  padding: 0px;
+  background-color: white;
+}
+
+.tablaPanelOpciones{
+  background-color: white;
+  border: none;
+  width: 100%;
+  text-align: left;
+}
+
+.tablaPanelOpciones > th{
+  background-color: white;
+  border: none;
+  width: 20%;
+  text-align: left;
+}
+
+.panel100{
+  width: 100%;
+  background-color: white;
+  margin: 5px;
+  text-align: center;
+  line-height: 50%;
+  font-size: 30px;
+}
+
+.panel75 {
+  width: 75%;
+  background-color: white;
+  margin: 5px;
+  text-align: center;
+  line-height: 50%;
+  font-size: 30px;
+}
+
+.inputEnTabla{
+  min-height: 46px;
+  width: 100%;
+  border: none;
+}
+
+.TextboxPopup{
+  width: 99%;
+  background-color: white;
+  margin: 5px;
+  /* text-align: center; */
+  line-height: 50%;
+}
+
+.botonesFormulario {
+  float: right;
+  right: 3%;
+
+}
+
+.example-tree-invisible {
+  display: none;
+}
+
+.example-tree ul,
+.example-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+
+.contenedorNivelT {
+  margin: 0 auto;
+}
+
+.cont-infoN {
+  align-items: center;
+  margin-right: 10px;
+}
+
+.cont-infoN p {
+  font-family: 14px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.niveles-info {
+  width: 40px;
+  height:40px;
+  border-radius: 7px;
+}
+/*--------Opción 2----------*/
+.nivel1{
+  background-color: #ebebeb;
+  color: white;
+}
+.nivel2{
+  background-color: #D4E3F0;
+}
+.nivel3{
+  background-color: #D4E3F0;
+  color: white;
+}
+.nivel4{
+  background-color: #D4E3F0;
+}
+.nivel5{
+  background-color: #D4E3F0;
+  color: white;
+}
+.nivel6{
+  background-color: #D4E3F0;
+  color: white;
+}
+.nivel7{
+  background-color: #D4E3F0;
+  color: black;
+}
+
+.nivel1Margen{
+  padding-left: 0.1%;
+}
+.nivel2Margen{
+  padding-left: 0.6%;
+}
+.nivel3Margen{
+  padding-left: 1.1%;
+}
+.nivel4Margen{
+  padding-left: 1.6%;
+}
+.nivel5Margen{
+  padding-left: 2.1%;
+}
+.nivel6Margen{
+  padding-left: 2.6%;
+}
+.nivel7Margen{
+  padding-left: 3.1%;
+}
+
+.button-drill {
+  border: none;
+  width: 40px;
+  border-radius: 1.5px;
+  background-color: #0202022d;
+  color: #575050;
+}
+
+.button-drill:hover {
+  background-color: #f2f2f2bd;
+}
+
+.colorButton1 {
+  margin-left: 3px;
+}
+
+.colorButton2 {
+  margin-left: 3px;
+}
+
+.colorButton3 {
+  margin-left: 3px;
+}
+
+.colorButton4 {
+  margin-left: 3px;
+}
+
+.colorButton5 {
+  margin-left: 3px;
+}
+
+.colorButton6 {
+  margin-left: 3px;
+}
+
+.buttonNull {
+  text-align: center;
+  border: none;
+  width: 40px;
+  border-radius: 1.5px;
+  background-color: #0202022d;
+}
+
+.button1null {
+  margin-left: 3px;
+}
+
+.button2null {
+  margin-left: 3px;
+}
+
+.button3null {
+  margin-left: 3px;
+}
+
+.button5null {
+  margin-left: 3px;
+}
+
+.button6null {
+  margin-left: 3px;
+}
+
+.table {
+  width: 70%;
+  margin: 0 auto;
+}
+
+.table-padre {
+  background-color: #f5fcff;
+  border-bottom: solid 2px #32b3eb;
+}
+
+.table-hijo {
+  border-bottom: solid 2px #eb3832;
+}
+
+.table-hijo2 {
+  background-color: #c0d4db;
+  border-bottom: solid 2px #32eb85;
+}
+
+ul {
+list-style: none;
+}
+
+.desplegar {
+  color: #000000;
+  border-radius: 7px;
+  border: none;
+  position: relative;
+  border-bottom: #c0d4db00;
+}
+
+.desplegar:hover {
+  border-bottom: 1px solid #32b3eb;
+}
+
+.expand-collapse {
+  cursor: pointer;
+}
+
+/*-----------------Tabla con esquema de árbol----------------*/
+.none {
+  display: none;
+}
+
+.filaSeleccionada {
+  background-color: #8fc4dd; 
+}
+
+
+.cabecera {
+  background-color: #7A8DA8;
+  color: #f2f2f2;
+  padding: 2px;
+  font-size: 14px;
+}
+
+.cabecera2 {
+  background-color: #7A8DA8;
+  color: #f2f2f2;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  padding: 2px;
+}
+
+.cont-drill {
+  border: 1px solid #d3d1d1c2;
+  border-bottom: 1px solid #d3d1d1c2;
+  padding: 2px;
+}
+
+.button-accion {
+  display: flex;
+  justify-content: center;
+  border: none;
+  margin-left: 5px;
+  padding: 0 10px;
+  width: 30px;
+  height: 20px;
+  background-color: #f2f2f267;
+  border-radius: 1px;
+}
+
+.button-accion:hover {
+  background-color: #0084fffa;
+  border-radius: 1px;
+}
+
+.cont-arbol {
+  width: 95%;
+  white-space: nowrap;
+  margin: 0 auto;
+  overflow: auto;
+  height: 70vh;
+}
+
+.table-arbol {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.place-holder {
+  background-color: #7A8DA8;
+  padding: 8px;
+  margin-top: 10px;
+  color: #f2f2f2;
+  border-radius: 7px 0 0 7px;
+}
+
+.form-select {
+  border-radius: 0 7px 7px 0;
+  padding: 5px;
+  margin-bottom: 2px;
+}
+
+.titulo-arbol {
+  width: 100%;
+  position: sticky;
+  top: 0;
+}
+
+.titulo-arbol2 {
+  width: 100%;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+
+@media screen and (max-width: 1475px){
+  .cont-arbol {
+    width: 95%;
+    white-space: nowrap;
+    margin: 0 auto;
+    overflow: auto;
+    height: 70vh;
+  }
+
+  .titulo-arbol {
+    width: 1475px;
+  }
+
+  .titulo-arbol2 {
+    width: 1475px;
+  }
+
+  .table-arbol {
+    width: 1475px;
+  }
+}
+
+@media screen and (max-width: 945px) {
+  .cont-filt1 {
+    display:grid;
+    justify-content: center;
+    grid-template-columns: 1fr 1fr;
+    margin: 10px;
+  }
+  .contenedor-input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30vh;
+    margin: 0 auto;
+  }
+  .contenedor-input2 {
+    margin-top: 10px;
+  }
+}

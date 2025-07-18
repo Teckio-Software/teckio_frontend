@@ -1,0 +1,29 @@
+
+
+
+
+
+
+<mat-dialog-content #dialog>
+  <p class="titular-contraseña" style="font-size: 14px; font-weight: 700; letter-spacing: 2px;">Resetear contraseña</p>
+  <br />
+  <form [formGroup]="formulario" class="contenedor-inputs">
+          <div class="contenedor-input" *ngIf="datosUsuario != null">
+            <label class="label-1">Contraseña</label>
+            <input class="input-1" matInput autocomplete="off" formControlName="contrasenia" placeholder="Contraseña" />
+            <mat-icon matSuffix>account-box</mat-icon>
+          </div>
+          <div class="contenedor-input" *ngIf="datosUsuario != null">
+            <label class="label-1">Confirmar contraseña</label>
+            <input class="input-1" matInput autocomplete="off" formControlName="confirmaContrasenia" placeholder="Corfirma contraseña" />
+            <mat-icon matSuffix>account-box</mat-icon>
+          </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-dialog-close class="btn-modal cancelar">Cancelar</button>
+    <button class="btn-modal guardar"
+    (click)="cambiarContrasenia()">Guardar</button>
+</mat-dialog-actions>
+

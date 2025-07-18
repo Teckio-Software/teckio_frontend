@@ -1,0 +1,274 @@
+.titularEmpresas {
+    background-color: #d3d9e2;
+    padding: 0px 10px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    width: 200px;
+    text-align: center;
+    margin-top: 10px;
+    margin-left: 15px;
+    border-radius: 3px;
+  }
+
+.button-newEmpresa {
+    background-color: #4EAAC1;
+    color: #f2f2f2;
+    border: none;
+    border-radius: 3px;
+}
+
+
+.button-newEmpresa:hover {
+    background-color: #22416E;
+}
+
+.cont-button-empresas {
+    display: flex;
+    justify-content: center;
+    margin-bottom: -13px;
+    border-radius: 30px;
+    margin-top: 10px;
+}
+
+.btn-guardar {
+    background-color: #6ed5fd;
+    color: #f2f2f2;
+}
+
+.btn-guardar:hover {
+    background-color: #2ac3ff;
+}
+
+.button-accion {
+    border: none;
+    background-color: #4eaac12c;
+    padding: 2px 10px;
+    margin-left: 10px;
+    border-radius: 3px;
+}
+
+.button-accion1 {
+    border: none;
+    background-color: #706b6b38;
+    padding: 2px 10px;
+    margin-left: 10px;
+    border-radius: 3px;
+    color: #21416e;
+}
+
+.button-accion1:hover {
+    border: none;
+    background-color: #4EAAC1;
+    padding: 2px 10px;
+    margin-left: 10px;
+    border-radius: 3px;
+    color: #21416e;
+}
+
+.button-edit:hover {
+   background-color: #4EAAC1;
+}
+
+/*-------inputs------*/
+.cont-input-buscar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    margin-left: 10px;
+}
+
+.input-buscar {
+    border: none;
+    border-radius: 0px 7px 7px 0;
+    padding: 9px 30px;
+    background-color: #C9D0D2;
+    height: 23px;
+}
+
+.label-buscar {
+    color: #f2f2f2;
+    background-color: #4EAAC1;
+    border-radius: 7px 0 0 7px;
+    height: 23px;
+    padding: 0  10px;
+}
+
+.label-buscar:hover {
+    background-color: #22416E;
+    color: #f2f2f2;
+}
+
+.empresa-select {
+    width: 200px;
+    height: 23px;
+    margin-right: 10px;
+    border: none;
+    background-color: #4EAAC1;
+    border-radius: 3px;
+    color: #f2f2f2;
+}
+
+.button-captura {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    margin-bottom: 10px;
+    margin-left: 3px;
+    border: none;
+    border-radius: 3px;
+    background-color: #4EAAC1;
+    color: #f2f2f2;
+  }
+
+  .cancelar:hover {
+    background-color: #B05B5B;
+  }
+  
+  .aceptar:hover {
+    background-color: #22416E;
+  }
+
+/*-------Tabla-------*/
+.cont-tables {
+    width: 95%;
+    margin: 0 auto;
+}
+
+.cont-table {
+    width: 95%;
+    margin: 0 auto;
+    white-space: nowrap;
+}
+
+.cabecera {
+    background-color: #21416e;
+    border: solid 1px #f2f2f2a4;
+    color: #f2f2f2;
+    font-weight: 400;
+    padding: 0;
+}
+
+.body-table {
+    border: solid 1px #f2f2f2a4;
+    background-color: #f2f2f248;
+    padding: 1px;
+}
+
+.paginator {
+    background-color: #b5dce000;
+    height: 0pc;
+}
+
+
+
+/*-----PopUp------*/
+.modal-content {
+    background-color: #ffff;
+    margin: 0 auto;
+}
+
+.contenedor-inputs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+}
+
+.modal-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.input-group-text {
+    width: 130px;
+    background-color: #51aec7;
+    color: #f2f2f2;
+}
+
+.input-group-text1 {
+    width: 200px;
+}
+
+.input-group {
+    margin: 10px 5px;
+}
+
+.form-control {
+    margin: 0 5px;
+}
+
+.contenedor-input {
+    display: flex;
+    flex-direction: column;
+}
+
+.label-1 {
+    border-bottom: 2px solid #b9dfe9;
+    margin-right: 5px;
+    border-radius: 3px;
+    margin-bottom: 3px;
+    width: 270px;
+}
+
+.input-1 {
+  width: 270px;
+  border: none;
+  margin-right: 5px;
+  border-radius: 3px;
+  padding: 2px;
+  background-color:  #d3d9e263;
+}
+
+/*----------Responsive Design----------*/
+@media screen and (max-width: 665px) {
+    .cont-table {
+        width: 95%;
+        white-space: nowrap;
+        margin: 0 auto;
+        overflow: auto;
+    }
+
+    .titular-table {
+        width: 729px;
+    }
+}
+
+@media screen and (max-width: 551px) {
+    .cont-button-empresas {
+        margin-top: -30px;
+    }
+
+    .input-buscar {
+        width: 100px;
+    }
+}
+
+@media screen and (max-width: 992px) {
+   .modal-body {
+    grid-template-columns: 1fr;
+   }
+}
+
+@media screen and (max-width: 581) {
+    .cont-button-empresas {
+        margin-top: 150px;
+    }
+}
+
+
+td {
+    border: .5px solid #b4b1b175;
+    padding: 0 10px;  
+    height: 5px;
+  }
+  th {
+    background-color: #21416e;
+    height: 1px;
+    color: #f2f2f2;
+    border: 1px solid #4e4c4c54;
+    padding: 0 10px;
+  }
+  
+

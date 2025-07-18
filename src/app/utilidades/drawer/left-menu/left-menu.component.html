@@ -1,0 +1,151 @@
+<div
+  [style.width.px]="sideNavState ? 209 : 65"
+  *ngIf="!isMobile || (isMobile && sideNavState)"
+  [@onSideNavChange]="sideNavState ? 'open' : 'close'"
+>
+  <div fxLayout="column" fxLayoutGap="10px" style="height: 100%">
+    <div class="user_menu">
+      <mat-nav-list class="test">
+        <div
+          class="flex justify-center"
+          fxLayout="row"
+          fxLayoutAlign="end center"
+        >
+          <div *ngIf="sideNavState">
+            <span [@animateText]="linkText ? 'show' : 'hide'">
+              <a href="">
+                <img
+                  class="object-contain h-9 p-[0.3rem]"
+                  src="assets/Recurso 7.png"
+                  alt=""
+                />
+              </a>
+            </span>
+            <div
+              class="xs:text-center xs:mt-2 xs:text-xs sm:hidden md:hidden lg:hidden"
+            >
+              <p class="xs:font-bold text-gray700">Bienvenido</p>
+              <p class="text-gray700">
+                {{ zvSeguridadService.zfObtenerCampoJwt("email") }}
+              </p>
+            </div>
+          </div>
+          <div class="flex justify-center items-center" *ngIf="!sideNavState">
+            <a href="">
+              <button
+                class="transition transform ease-in-out duration-500 p-[10px] rounded-full"
+              >
+                <img
+                  style="width: 25px; height: 25px"
+                  src="assets/teckio.svg"
+                  alt=""
+                />
+              </button>
+            </a>
+          </div>
+        </div>
+      </mat-nav-list>
+
+      <mat-divider></mat-divider>
+    </div>
+
+    <!-- Menú -->
+    <div>
+      <mat-nav-list>
+        <div>
+          <ng-container *ngFor="let page of pagesFiltradas">
+            <button
+              [disabled]="isLoading"
+              mat-list-item
+              (click)="toggleNestedPages(page)"
+            >
+              <div class="flex justify-between items-center">
+                <ng-container *ngIf="page.imageUrl; else iconTemplate">
+                  <img
+                    class="w-8 h-8"
+                    [src]="page.imageUrl"
+                    alt="{{ page.name }}"
+                    [ngbTooltip]="sideNavState ? '' : 'Menu ' + page?.name"
+                    triggers="mouseenter:mouseleave"
+                    container="body"
+                    placement="end"
+                  />
+                </ng-container>
+                <ng-template #iconTemplate>
+                  <mat-icon class="pr-1 bg-primario">{{ page.icon }}</mat-icon>
+                </ng-template>
+                <div
+                  class="text-gray400 flex w-full justify-between text-xs items-center"
+                >
+                  <div [@animateText]="linkText ? 'show' : 'hide'" class="pl-1">
+                    {{ page.name }}
+                  </div>
+                  <div [@animateText]="linkText ? 'show' : 'hide'">
+                    <mat-icon>
+                      {{ page.expanded ? "expand_less" : "expand_more" }}
+                    </mat-icon>
+                  </div>
+                </div>
+              </div>
+            </button>
+            <!-- Lista anidada -->
+            <ng-container *ngIf="page.nestedPages && page.expanded">
+              <button
+                [disabled]="isLoading"
+                (click)="title(nestedPage)"
+                mat-list-item
+                *ngFor="let nestedPage of page.nestedPages"
+                [routerLink]="nestedPage.link"
+              >
+                <div class="flex items-center">
+                  <ng-container
+                    *ngIf="nestedPage.imageUrl; else nestedIconTemplate"
+                  >
+                    <img
+                      [ngbTooltip]="sideNavState ? '' : nestedPage?.name"
+                      triggers="mouseenter:mouseleave"
+                      container="body"
+                      placement="end"
+                      [src]="nestedPage.imageUrl"
+                      alt="{{ nestedPage.name }}"
+                      class="w-8 h-8 pr-1"
+                    />
+                  </ng-container>
+                  <ng-template #nestedIconTemplate>
+                    <mat-icon
+                      class="pr-1 bg-primario"
+                      [ngbTooltip]="sideNavState ? '' : nestedPage?.name"
+                      triggers="mouseenter:mouseleave"
+                      container="body"
+                      placement="end"
+                      >{{ nestedPage?.icon }}</mat-icon
+                    >
+                  </ng-template>
+                  <span
+                    class="text-gray400 text-xs pl-[5px]"
+                    [@animateText]="linkText ? 'show' : 'hide'"
+                    >{{ nestedPage.name }}</span
+                  >
+                </div>
+              </button>
+            </ng-container>
+            <!-- Lista anidada end -->
+          </ng-container>
+        </div>
+      </mat-nav-list>
+    </div>
+    <!-- Menú end -->
+  </div>
+</div>
+
+<!-- <div *ngIf="!isLoading">
+  <ng-lottie
+    [styles]="{ width: '60px', height: '300px' }"
+    [options]="{
+      path: 'assets/dots.json',
+      renderer: 'svg',
+      loop: true,
+      autoplay: true
+    }"
+  ></ng-lottie>
+</div> -->

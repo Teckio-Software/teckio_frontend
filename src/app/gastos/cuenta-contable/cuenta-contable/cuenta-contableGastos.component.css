@@ -1,0 +1,153 @@
+/*--------------Estilos División------------*/
+
+.btn-new {
+  background-color: #4EAAC1;
+  color: #f2f2f2;
+  border: none;
+  border-radius: 3px;
+}
+
+.captura-rapida {
+  width: 96%;
+  height: 320px;
+  position: fixed;
+  margin-top: 94px;
+  border-radius: 0px 15px 15px 0px;
+  backdrop-filter: blur(10px);
+}
+
+.offcanvas-title {
+  font-weight: 700;
+}
+
+.contenedor-boolean {
+  display: flex;
+  background-color: blue;
+}
+
+.contenedor-boolean {
+  margin-right: 20px;
+}
+
+.input-span {
+  width: 200px;
+  height: 30px;
+  background-color: #9DB1CA;
+  color: #f2f2f2;
+  padding: 0px;
+  border-radius: 3px 0 0 3px;
+  padding: 0 5px;
+}
+
+.input-group {
+ margin: 5px;
+}
+
+.input-receptor {
+  background-color: #E7FDFF;
+  border: 1px solid #9db1ca93;
+  border-radius: 3px;
+  height: 30px;
+  
+}
+
+.contenedor-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.contenedor-input {
+  display: flex;
+  justify-content: center;
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+
+.contenedor-check {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.action-check {
+  display: flex;
+  justify-content: center;
+  height: 30px;
+  margin-top: -10px;
+  border-radius: 0 3px 3px 0;
+  border: 1px solid #9db1ca93;
+}
+
+.check-tabla {
+  padding: 0;
+  margin-top: -7px;
+}
+
+.contenedor-tabla {
+  width: 95%;
+  margin:10px auto;
+}
+
+.cabecera {
+  background-color: #21416e;
+  padding: 2px;
+  color: #f2f2f2;
+  font-size: 400;
+  border: 1px solid #f2f2f24f;
+}
+
+td {
+  padding: 2px;
+  border: 1px solid #f2f2f24f;
+}
+
+.btn-accion {
+  border: none;
+  background-color: #51adc748;
+  border-radius: 3px;
+  margin-right: 10px;
+  padding: 0 10px;
+}
+
+.btn-accion:hover {
+  background-color: #51aec7;
+}
+
+.btn-captura {
+  background-color: #4EAAC1;
+  color: #f2f2f2;
+  margin-bottom: 10px;
+  padding: 0px;
+  margin-right: 10px;
+  width: 150px;
+}
+
+.cancelar:hover {
+  background-color: #B05B5B;
+}
+
+.aceptar:hover {
+  background-color: #002B53;
+}
+
+.input-agrupador {
+  display: flex;
+}
+
+@media (max-width: 722px) {
+  .contenedor-inputs {
+    grid-template-columns: 1fr;
+  }
+
+  .contenedor-check {
+    margin-left: 5px;
+    margin-bottom: -10px;
+  }
+
+  .input-span {
+    width: 177px;
+  }
+}
+

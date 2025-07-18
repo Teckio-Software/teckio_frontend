@@ -1,0 +1,341 @@
+
+<!---->
+<nav color="primary" class="menu" style="display: none;">
+  <span style="margin-right: 50px;">
+    <a routerLink="">
+      <img class="img-teckio" src="../../assets/teckio.svg" alt="">
+    </a>
+  </span>
+
+  <div class="cont-buttons">
+    <!--
+      <mat-menu #appMenu="matMenu">
+        <button class="button-menu" mat-menu-item [matMenuTriggerFor]="menuCatalogos"></button>
+      </mat-menu>
+    -->
+
+      <button class="button-menu" [matMenuTriggerFor]="menuProyecto">Presupuesto</button>
+
+      <button class="button-menu">Avance de obra</button>
+
+      <button class="button-menu">Estimaciones</button>
+
+      <button class="button-menu" [matMenuTriggerFor]="menuContabilidad">Contabilidad</button>
+
+      <button class="button-menu" [matMenuTriggerFor]="menuInventario">Inventario</button>
+
+      <button class="button-menu" [matMenuTriggerFor]="menuCompras">Compras</button>
+
+      <button class="button-menu" [matMenuTriggerFor]="menuFacturas">Proveedores</button>
+
+      <button class="button-menu" [matMenuTriggerFor]="menuCatalogos">Catálogos</button>
+
+      <!-- <button class="button-menu" [matMenuTriggerFor]="menuProyecto">Presupuesto</button>
+      <button class="button-menu" [matMenuTriggerFor]="menuProyecto">Proyecto</button> -->
+
+    <button class="button-menu" [matMenuTriggerFor]="menuBancos">Bancos</button>
+
+    <app-autorizado [zvRol]="'Administrador'">
+      <ng-container zvAutorizadoRol>
+        <button class="button-menu" [matMenuTriggerFor]="menuUsuario">Usuario</button>
+      </ng-container>
+    </app-autorizado>
+  </div>
+
+  <div>
+
+
+    <app-autorizado [zvRol]="'Administrador'" style="margin-left: 50px;">
+      <ng-container zvAutorizadoRol>
+        <button class="button-menu1" [matMenuTriggerFor]="menuUsuario"><img src="../../assets/user.svg" alt=""></button>
+      </ng-container>
+    </app-autorizado>
+    <app-autorizado class="contenedor-usuario" class="nameNone13">
+      <ng-container zvAutorizado>
+        <span class="user-name">Usuario: {{zvSeguridadService.zfObtenerCampoJwt('email')}}</span>
+        <a class="Logout" (click)="zvSeguridadService.zfLogOut()">Salir</a>
+      </ng-container>
+      <ng-container zvNoAutorizado>
+        <a class="button-login" routerLink="login">Iniciar</a>
+      </ng-container>
+    </app-autorizado>
+  </div>
+
+
+  <mat-menu #menuCatalogos="matMenu" style="background-color: #020202;">
+    <!-- <a mat-menu-item routerLink="empresa"><mat-icon> business</mat-icon> Empresa</a> -->
+    <a mat-menu-item routerLink="empresas"><mat-icon> business</mat-icon> Empresas</a>
+    <a mat-menu-item routerLink="corporativo"><mat-icon> business</mat-icon> Corporativo</a>
+    <a mat-menu-item routerLink="tipoinsumo"><mat-icon>blur_circular</mat-icon> Tipo de insumo</a>
+    <a mat-menu-item routerLink="familia"><mat-icon>blur_linear</mat-icon> Familia</a>
+    <a mat-menu-item routerLink="insumo"><mat-icon>blur_on</mat-icon> Insumo</a>
+    <a mat-menu-item routerLink="concepto"><mat-icon>grain</mat-icon> Concepto</a>
+    <!-- <a mat-menu-item routerLink="partida">Partida</a> -->
+    <a mat-menu-item routerLink="especialidad"><mat-icon>group_work</mat-icon> Especialidad</a>
+    <a mat-menu-item routerLink="contratista"><mat-icon>supervised_user_circle</mat-icon> Contratista</a>
+  </mat-menu>
+
+  <mat-menu class="menu-catalogos" #menuContabilidad="matMenu">
+    <a mat-menu-item routerLink="rubro"><mat-icon>assignment_turned_in</mat-icon> Rubro</a>
+    <a mat-menu-item routerLink="tipopoliza"><mat-icon>dns</mat-icon> Tipos de poliza</a>
+    <a mat-menu-item routerLink="cuentacontable"><mat-icon>filter_frames</mat-icon> Cuenta contable</a>
+    <a mat-menu-item routerLink="cliente"><mat-icon>supervised_user_circle</mat-icon> Clientes</a>
+    <a mat-menu-item routerLink="poliza"><mat-icon>reorder</mat-icon> Polizas</a>
+    <a mat-menu-item routerLink="balanza"><mat-icon>business</mat-icon> Balanza de comprobacion</a>
+  </mat-menu>
+
+  <mat-menu #menuInventario="matMenu">
+    <a mat-menu-item routerLink="almacen"><mat-icon> local_convenience_store</mat-icon> Almacén</a>
+    <a mat-menu-item routerLink="almacenentrada"><mat-icon>add_circle_outline</mat-icon> Entrada a almacén</a>
+    <a mat-menu-item routerLink="existencia"><mat-icon>receipt</mat-icon> Existencia en almacén</a>
+    <a mat-menu-item routerLink="almacensalida"><mat-icon>remove_circle_outline</mat-icon> Salida de almacén</a>
+  </mat-menu>
+
+  <mat-menu #menuProyecto="matMenu">
+    <a mat-menu-item routerLink="proyecto">Proyectos</a>
+    <a mat-menu-item routerLink="explosioninsumos">Explosión de Insumos</a>
+    <a mat-menu-item routerLink="preciounitario">Precio unitario</a>
+    <a mat-menu-item routerLink="programacionestimada">Programacion Estimada</a>
+  </mat-menu>
+
+  <mat-menu #menuBancos="matMenu">
+    <a mat-menu-item routerLink="movimientobancario"><mat-icon>account_balance_wallet</mat-icon> Movimiento bancario</a>
+  </mat-menu>
+
+  <mat-menu #menuUsuario="matMenu">
+    <a mat-menu-item routerLink="menu-empresa"><mat-icon>person</mat-icon> Menus</a>
+    <a mat-menu-item routerLink="rol-multiempresa"><mat-icon>person</mat-icon> Roles</a>
+    <a mat-menu-item routerLink="usuario-multiempresa-filtrado"><mat-icon>person</mat-icon> Usuarios por empresa</a>
+    <a mat-menu-item routerLink="usuario-multiempresa"><mat-icon>person</mat-icon> Usuarios por corporativo</a>
+  </mat-menu>
+
+  <mat-menu #menuCompras="matMenu">
+    <a mat-menu-item routerLink="requisicion"><mat-icon>queue</mat-icon> Requisiciones</a>
+    <a mat-menu-item routerLink="cotizacion"><mat-icon>add_shopping_cart</mat-icon> Cotizaciones</a>
+    <a mat-menu-item routerLink="ordencompra"><mat-icon>store</mat-icon> Ordenes de compra</a>
+    <a mat-menu-item routerLink="compradirecta"><mat-icon>shop</mat-icon> Compras directas</a>
+  </mat-menu>
+
+  <mat-menu #menuFacturas="matMenu">
+    <a mat-menu-item routerLink="facturas"><mat-icon>shop</mat-icon> Facturas</a>
+    <a mat-menu-item routerLink="orden-compra-ws"><mat-icon>shop</mat-icon> Orden de compra</a>
+  </mat-menu>
+</nav>
+
+<!--menú dispositivos móviles-->
+
+<nav class="navbar  menu-movil">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#"> <img class="img-teckio" src="../../assets/teckio.svg" alt=""> </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+      <div class="offcanvas-header">
+        <img class="img-teckio" src="../../assets/teckio.svg" alt="">
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="navbar-nav justify-content-end">
+          <li class="nav-item">
+
+          </li>
+          <li class="nav-item">
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                catálogos
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" routerLink="empresas" href="#">Empresa</a></li>
+                <li><a class="dropdown-item" routerLink="corporativo" href="#">Corporativo</a></li>
+                <li><a class="dropdown-item" routerLink="tipoinsumo" href="#">Tipo de insumo</a></li>
+                <li><a class="dropdown-item" routerLink="familia" routerLink="famiia" href="#">Familia</a></li>
+                <li><a class="dropdown-item" routerLink="insumo" href="#">Insumo</a></li>
+                <li><a class="dropdown-item" routerLink="concepto" href="#">Concepto</a></li>
+                <li><a class="dropdown-item" routerLink="especialidad" href="#">Especialidad</a></li>
+                <li><a class="dropdown-item" routerLink="contrtista" href="#">Contratista</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Contabilidad
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" routerLink="rubro" href="#">Rubro</a></li>
+                <li><a class="dropdown-item" routerLink="tipopoliza" href="#">Tipos de Poliza</a></li>
+                <li><a class="dropdown-item" routerLink="cuentacontable" href="#">Cuenta Contable</a></li>
+                <li><a class="dropdown-item" routerLink="cliente" href="#">Clientes</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Inventario
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" routerLink="almacen" href="#">Almacén</a></li>
+                <li><a class="dropdown-item" routerLink="almacenentrada" href="#">Entrada a almacén</a></li>
+                <li><a class="dropdown-item" routerLink="existencia" href="#">Existencia en almacén</a></li>
+                <li><a class="dropdown-item" routerLink="almacensalida" href="#">Salida de almacén</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Compras
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" routerLink="requisicion" href="#">Requisiciones</a></li>
+                <li><a class="dropdown-item" routerLink="cotizacion" href="#">Cotizaciones</a></li>
+                <li><a class="dropdown-item" routerLink="ordencompra" href="#">Ordenes de compra</a></li>
+                <li><a class="dropdown-item" routerLink="compradirecta" href="#">Compras directas</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Proveedores
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" routerLink="facturas" href="#">Facturas</a></li>
+                <li><a class="dropdown-item" routerLink="orden-compra-ws" href="#">Orden de compra</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Proyecto
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" routerLink="proyecto" href="#">Proyectos</a></li>
+                <li><a class="dropdown-item" routerLink="explosioninsumos" href="#">Explosión de insumos</a></li>
+                <li><a class="dropdown-item" routerLink="preciounitario" href="#">Precio unitario</a></li>
+                <li><a class="dropdown-item" routerLink="programacionestimada" href="#">Programación Estimada</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Bancos
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" routerLink="movimientobancario" href="#">Movimiento Bancario </a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+
+        <app-autorizado>
+          <ng-container zvAutorizado style="display: flex;">
+            <img src="../../assets/user.svg" alt="">
+            <span class="user-name">Usuario: {{zvSeguridadService.zfObtenerCampoJwt('email')}}</span>
+            <a class="Logout" (click)="zvSeguridadService.zfLogOut()">Salir</a>
+          </ng-container>
+          <ng-container zvNoAutorizado>
+            <a class="button-login" routerLink="login">Login</a>
+          </ng-container>
+        </app-autorizado>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+
+
+<!--Menú-->
+<div class="contenedor-menu">
+  <div>
+    <a routerLink="">
+      <img class="img-teckio" src="../../assets/teckio.svg" alt="">
+    </a>
+  </div>
+
+  <div class="menus">
+    <button class="button-menu-icon" (click)="mostrarCatalogoMenu()">Catálogos</button>
+    <button class="button-menu-icon" (click)="mostrarCatalogoContabilidad()">Contabilidad</button>
+    <button class="button-menu-icon" (click)="mostrarMenuInventario()">Inventario</button>
+    <button class="button-menu-icon" (click)="cerrarCompras()">Compras</button>
+    <button class="button-menu-icon" (click)="cerrarProveedores()">Proveedores</button>
+    <button class="button-menu-icon" (click)="cerrarPresupuesto()">Presupuesto</button>
+  </div>
+
+  <div>
+    <app-autorizado [zvRol]="'Administrador'" style="margin-left: 50px;">
+      <ng-container zvAutorizadoRol>
+        <button class="button-menu1" [matMenuTriggerFor]="menuUsuario"><img src="../../assets/user.svg" alt=""></button>
+      </ng-container>
+    </app-autorizado>
+    <app-autorizado class="contenedor-usuario" class="nameNone13">
+      <ng-container zvAutorizado>
+        <span class="user-name">Usuario: {{zvSeguridadService.zfObtenerCampoJwt('email')}}</span>
+        <a class="Logout" (click)="zvSeguridadService.zfLogOut()">Salir</a>
+      </ng-container>
+      <ng-container zvNoAutorizado>
+        <a class="button-login" routerLink="login">Iniciar</a>
+      </ng-container>
+    </app-autorizado>
+  </div>
+</div>
+
+<div class="contenedor-links" *ngIf="catalogosMenu">
+  <a (click)="mostrarCatalogoMenu()" routerLink="empresas" class="contenedor-icono"><img class="icono-ui" src="../../assets/empresas.svg" alt=""> Empresa</a>
+  <a (click)="mostrarCatalogoMenu()" routerLink="corporativo" class="contenedor-icono"><img class="icono-ui" src="../../assets/corporativos.svg" alt=""> Corporativo</a>
+  <a (click)="mostrarCatalogoMenu()" routerLink="tipoinsumo" class="contenedor-icono"><img class="icono-ui" src="../../assets/insumos.svg" alt=""> Tipo de insumo</a>
+  <a (click)="mostrarCatalogoMenu()" routerLink="familia" class="contenedor-icono"><img class="icono-ui" src="../../assets/familias.svg" alt="">Familia</a>
+  <a (click)="mostrarCatalogoMenu()" routerLink="insumo" class="contenedor-icono"><img class="icono-ui" src="../../assets/insumosimple.svg" alt=""> Insumo</a>
+  <a (click)="mostrarCatalogoMenu()" routerLink="concepto" class="contenedor-icono"><img class="icono-ui" src="../../assets/conceptos.svg" alt=""> Concepto</a>
+  <!-- <a mat-menu-item routerLink="partida">Partida</a> -->
+  <a (click)="mostrarCatalogoMenu()" routerLink="especialidad" class="contenedor-icono"><img class="icono-ui" src="../../assets/especialidad.svg" alt=""> Especialidad</a>
+  <a (click)="mostrarCatalogoMenu()" routerLink="contratista"  class="contenedor-icono"><img class="icono-ui" src="../../assets/contratista.svg"  alt=""> Contratista</a>
+</div>
+
+<div class="contenedor-links" *ngIf="catalogosContabilidad">
+  <a (click)="mostrarCatalogoContabilidad()" routerLink="rubro"    class="contenedor-icono"><img class="icono-ui" src="../../assets/rubro.svg" alt="">Rubro</a>
+  <a (click)="mostrarCatalogoContabilidad()" routerLink="tipopoliza" class="contenedor-icono"><img class="icono-ui" src="../../assets/Poliza.svg" alt="">Tipos de poliza</a>
+  <a (click)="mostrarCatalogoContabilidad()" routerLink="cuentacontable"  class="contenedor-icono"><img class="icono-ui" src="../../assets/cuentaContable.svg" alt="">Cuenta Contable</a>
+  <a (click)="mostrarCatalogoContabilidad()" routerLink="cliente"     class="contenedor-icono"><img class="icono-ui" src="../../assets/clientes.svg" alt="">Clientes</a>
+  <a (click)="mostrarCatalogoContabilidad()" routerLink="poliza"      class="contenedor-icono"><img class="icono-ui" src="../../assets/polizas.svg" alt="">Polizas</a>
+  <a (click)="mostrarCatalogoContabilidad()" routerLink="balanza"    class="contenedor-icono"><img class="icono-ui" src="../../assets/balanza.svg" alt="">Balanza de comprobación</a>
+</div>
+
+<div class="contenedor-links" *ngIf="menuInventario2">
+  <a (click)="mostrarMenuInventario()" routerLink="almacen"         class="contenedor-icono"><img class="icono-ui" src="../../assets/almacen.svg" alt="">Almacén</a>
+  <a (click)="mostrarMenuInventario()" routerLink="almacenentrada"  class="contenedor-icono"><img class="icono-ui" src="../../assets/entrada.svg" alt="">Entrada de almacén</a>
+  <a (click)="mostrarMenuInventario()" routerLink="existencia"      class="contenedor-icono"><img class="icono-ui" src="../../assets/existencias.svg" alt="">Existencia en almacén</a>
+  <a (click)="mostrarMenuInventario()" routerLink="almacensalida"   class="contenedor-icono"><img class="icono-ui" src="../../assets/salida.svg" alt="">Salida de almacén</a>
+</div>
+
+<div class="contenedor-links" *ngIf="menuCompras2">
+  <a (click)="cerrarCompras()" routerLink="requisiciones"    class="contenedor-icono"><img class="icono-ui" src="../../assets/requisicion.svg" alt="">Requisiciones</a>
+  <a (click)="cerrarCompras()" routerLink="cotizacion"       class="contenedor-icono"><img class="icono-ui" src="../../assets/cotizaciones.svg" alt="">Cotizaciones</a>
+  <a (click)="cerrarCompras()" routerLink="ordencompra"      class="contenedor-icono"><img class="icono-ui" src="../../assets/ordencompra.svg" alt="">Ordenes de compra</a>
+  <a (click)="cerrarCompras()" routerLink="compradirecta"    class="contenedor-icono"><img class="icono-ui" src="../../assets/comprasdirectas.svg" alt="">Compras directas</a>
+</div>
+
+<div class="contenedor-links" *ngIf="menuProveedores">
+  <a (click)="cerrarProveedores()" routerLink="facturas"    class="contenedor-icono"><img class="icono-ui" src="../../assets/facturas.svg" alt="">Facturas</a>
+  <a (click)="cerrarProveedores()" routerLink="orden-compra-ws"       class="contenedor-icono"><img class="icono-ui" src="../../assets/ordencompra.svg" alt="">Orden de compra </a>
+</div>
+
+<div class="contenedor-links" *ngIf="menuPresupuesto">
+  <a (click)="cerrarPresupuesto()" routerLink="proyecto" class="contenedor-icono"><img class="icono-ui" src="../../assets/proyectos.svg" alt="">Proyectos</a>
+  <a (click)="cerrarPresupuesto()" routerLink="explosioninsumos" class="contenedor-icono"><img class="icono-ui" src="../../assets/explosiondeinsumos.svg" alt="">Explosión de insumos</a>
+  <a (click)="cerrarPresupuesto()" routerLink="preciounitario" class="contenedor-icono"><img class="icono-ui" src="../../assets/preciounitario.svg" alt="">Precio unitario</a>
+  <a (click)="cerrarPresupuesto()" routerLink="programacionestimada" class="contenedor-icono"><img class="icono-ui" src="../../assets/estimada.svg" alt="">Programación estimada</a>
+</div>
+
+<!--
+<mat-menu #menuFacturas="matMenu">
+  <a mat-menu-item routerLink="facturas"><mat-icon>shop</mat-icon> Facturas</a>
+  <a mat-menu-item routerLink="orden-compra-ws"><mat-icon>shop</mat-icon> Orden de compra</a>
+</mat-menu>
+-->
+

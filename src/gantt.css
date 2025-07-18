@@ -1,0 +1,676 @@
+/* /////////////////// GANTT CHART  ////////////////////// */
+
+/* ////////////////////task-list.module.css//////////////////// */
+.taskListRoot {
+    position: relative;
+    border-left: #e6e4e4 1px solid;
+  }
+  
+  .taskListHorizontalScroll {
+    overflow-x: scroll;
+  }
+  
+  .taskListHorizontalScroll::-webkit-scrollbar {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+  
+  .taskListHorizontalScroll::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+  
+  .taskListHorizontalScroll::-webkit-scrollbar-thumb {
+    border: 6px solid transparent;
+    background: rgba(0, 0, 0, 0.2);
+    background: var(--palette-black-alpha-20, rgba(0, 0, 0, 0.2));
+    border-radius: 10px;
+    background-clip: padding-box;
+  }
+  
+  .taskListHorizontalScroll::-webkit-scrollbar-thumb:hover {
+    border: 4px solid transparent;
+    background: rgba(0, 0, 0, 0.3);
+    background: var(--palette-black-alpha-30, rgba(0, 0, 0, 0.3));
+    background-clip: padding-box;
+  }
+  
+  .taskListResizer {
+    position: absolute;
+    top: 0;
+    right: -5px;
+    height: 100%;
+    width: 10px;
+    cursor: ew-resize;
+    user-select: none;
+  }
+  
+  .taskListResizer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 4px;
+    height: 100%;
+    width: 2px;
+    background-color: #e5e5e5;
+  }
+  
+  .horizontalContainer {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  .tableWrapper {
+    position: relative;
+  }
+  
+  .scrollToTop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+  }
+  
+  .scrollToBottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  /* //////////////////////////////////////////////////////// */
+
+/* ////////////////////task-list-table-row.module.css//////////////////// */
+
+.taskListTableRow {
+    position: relative;
+    display: table-row;
+    text-overflow: ellipsis;
+  }
+  
+  .lighten {
+    background-color: #eeeeff;
+  }
+  
+  .cut {
+    opacity: 0.3;
+  }
+  
+  .taskListCell {
+    box-sizing: border-box;
+    display: table-cell;
+    vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 5px;
+  }
+  
+  .dropAfter {
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    color: transparent;
+  }
+  
+  .dropAfterLighten {
+    color: #6666ff;
+  }
+  
+  .dropAfter::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    background-color: currentColor;
+  }
+  
+  .dropAfter::after {
+    content: "";
+    flex: 1;
+    height: 3px;
+    background-color: currentColor;
+  }
+/* ///////////////////////////////////////////////////////   */
+
+
+/* ////////// task-list-header.module.css ////////////////////// */
+
+
+.ganttTable {
+    display: table;
+    border-bottom: #e6e4e4 1px solid;
+    border-top: #e6e4e4 1px solid;
+  }
+  
+  .ganttTable_Header {
+    display: table-row;
+    list-style: none;
+  }
+  
+  .ganttTable_HeaderSeparator {
+    border-right: 1px solid rgb(196, 196, 196);
+    opacity: 1;
+    margin-left: -2px;
+  }
+  
+  .ganttTable_HeaderItem {
+    position: relative;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding-left: 5px;
+    padding-right: 5px;
+    display: table-cell;
+    vertical-align: -webkit-baseline-middle;
+    vertical-align: middle;
+  }
+  
+  .resizer {
+    position: absolute;
+    top: 0;
+    right: -5px;
+    height: 100%;
+    width: 10px;
+    cursor: ew-resize;
+    user-select: none;
+  }
+
+/* ///////////////////////////////////////////////////////   */
+
+
+/* ////////// title-column.module ////////////////////// */
+.taskListNameWrapper {
+    display: flex;
+    align-items: center;
+  }
+  
+  .dragging {
+    opacity: 0.5;
+  }
+  
+  .taskListExpander {
+    opacity: 0.9;
+    font-size: 18px;
+    user-select: none;
+    cursor: pointer;
+  }
+  
+  .taskListEmptyExpander {
+    user-select: none;
+    cursor: default;
+  }
+  
+  .taskName {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+/* /////////////////////////////////////edit-column.module.css//////////////////////////   */
+
+.button {
+    margin: 0;
+    padding: 5px;
+    border: none;
+    outline: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 20px;
+  }
+
+/* ///////////////////////////////////////////////////////   */
+
+
+/* /////////////////////////////////////delete-column.module////////////////////////// */
+
+
+.button {
+    margin: 0;
+    padding: 5px;
+    border: none;
+    outline: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+
+
+/* ///////////////////////////////////////////////////////   */
+
+/* /////////////////////////add-column.module  ////////////////////// */
+.button {
+    margin: 0;
+    padding: 5px;
+    border: none;
+    outline: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+  }
+/* /////////////////////////   */
+
+
+/* ///////////////////////task-list.module////////////////// */
+
+
+.barLabel {
+    fill: #fff;
+    text-anchor: middle;
+    font-weight: lighter;
+    dominant-baseline: central;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    pointer-events: none;
+  }
+  
+  .barLabelOutside {
+    fill: #555;
+    text-anchor: start;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    pointer-events: none;
+  }
+/* ////////////////////////       */
+
+
+/* /////////////////////////project.module////////////////////////// */
+
+
+.projectWrapper {
+    cursor: pointer;
+    outline: none;
+  }
+  
+  .projectBackground {
+    user-select: none;
+    opacity: 0.6;
+  }
+  
+  .projectTop {
+    user-select: none;
+  }
+
+  /* ////////////////////////////////////// */
+
+
+  /* ///////////////////////////milestone.module/////////////////////// */
+  .milestoneWrapper {
+    cursor: pointer;
+    outline: none;
+  }
+  
+  .milestoneBackground {
+    user-select: none;
+  }
+
+  /* ////////////////////////////////////// */
+
+  /* ////////////////bar.module.css///////////////////// */
+
+  .barWrapper {
+    cursor: pointer;
+    outline: none;
+  }
+  
+  .barWrapper:hover .barHandle {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  .barHandle {
+    fill: #ddd;
+    cursor: ew-resize;
+    opacity: 0;
+    visibility: hidden;
+  }
+  
+  .barBackground {
+    user-select: none;
+    stroke-width: 0;
+  }
+
+  /* ///////////////////////////////////////////// */
+
+
+
+  /* ///////////////////////////bar-relation-handle.module.css/////////////////////// */
+
+  .barRelationHandleWrapper:hover .barRelationHandle, .barRelationHandle.barRelationHandle_drawMode {
+    opacity: 1;
+  }
+  
+  .barRelationHandle {
+    fill: #ddd;
+    stroke: #333;
+    cursor: pointer;
+    opacity: 0;
+  }
+
+    /* ////////////////////////////////////// */
+
+    /* /////////////////////////vertical-scroll.module////////////////////////// */
+
+
+    .scroll {
+        overflow: hidden auto;
+        width: 1rem;
+        flex-shrink: 0;
+        /*firefox*/
+        scrollbar-width: thin;
+      }
+      .scroll::-webkit-scrollbar {
+        width: 1.1rem;
+        height: 1.1rem;
+      }
+      .scroll::-webkit-scrollbar-corner {
+        background: transparent;
+      }
+      .scroll::-webkit-scrollbar-thumb {
+        border: 6px solid transparent;
+        background: rgba(0, 0, 0, 0.2);
+        background: var(--palette-black-alpha-20, rgba(0, 0, 0, 0.2));
+        border-radius: 10px;
+        background-clip: padding-box;
+      }
+      .scroll::-webkit-scrollbar-thumb:hover {
+        border: 4px solid transparent;
+        background: rgba(0, 0, 0, 0.3);
+        background: var(--palette-black-alpha-30, rgba(0, 0, 0, 0.3));
+        background-clip: padding-box;
+      }
+
+      
+        /* ////////////////////////////////////// */
+
+        /* //////////////////tooltip.module.css/////////////////////// */
+
+        .tooltipDefaultContainer {
+            background: #fff;
+            padding: 12px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+          }
+          
+          .tooltipDefaultContainerParagraph {
+            font-size: 12px;
+            margin-bottom: 6px;
+            color: #666;
+          }
+          
+          .tooltipDetailsContainer {
+            position: absolute;
+            display: flex;
+            flex-shrink: 0;
+            pointer-events: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+          }
+          
+          .tooltipDetailsContainerHidden {
+            visibility: hidden;
+            position: absolute;
+            display: flex;
+            pointer-events: none;
+          }
+
+          /* //////////////////////////////////////////////////// */
+
+
+          /* ////////////////////////////relation-line.module////////////////////////// */
+          .relationLine {
+            stroke: grey;
+            stroke-width: 2;
+            stroke-dasharray: 4;
+          }
+            /* //////////////////////////////////////////////////// */          
+            /* //////////////////////////fix-dependency-position.module.css/////////////////////// */
+            .hoverVisibleWrapper:hover .wrapper {
+                display: initial;
+              }
+              
+              .wrapper {
+                cursor: pointer;
+              }
+              
+              .wrapper:hover .mainPath {
+                filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, .7));
+              }
+              
+              .mainPath {
+                fill: none;
+                stroke-width: 1.5px;
+              }
+              
+              .clickZone {
+                fill: transparent;
+                stroke: transparent;
+              }
+/* ///////////////////////////////////////////////                */
+/* /////////////////////////////////////bar-fix-width.module.css////////////////////////// */
+
+.hoverVisibleWrapper:hover .wrapper {
+    display: initial;
+  }
+  
+  .wrapper {
+    cursor: pointer;
+  }
+  
+  .wrapper:hover .mainPath {
+    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, .7));
+  }
+  
+  .mainPath {
+    fill: none;
+    stroke-width: 1.5px;
+  }
+  
+  .clickZone {
+    fill: transparent;
+    stroke: transparent;
+  }
+/* ///////////////////////////////////////////////                */  
+
+
+/* /////////////////////arrow.module//////////////////// */
+
+.arrow_clickable {
+    cursor: pointer;
+  }
+  
+  .arrow_clickable:hover .mainPath {
+    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, .7));
+  }
+  
+  .mainPath {
+    fill: none;
+    stroke-width: 1.5px;
+  }
+  
+  .clickZone {
+    fill: none;
+    stroke: transparent;
+    stroke-width: 8px;
+  }
+/* ///////////////////////////////////////////////                */  
+
+
+/* /////////////////////////gantt.module.css/////////////////////// */
+
+.ganttVerticalContainer {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    font-size: 0;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .ganttVerticalContainer::-webkit-scrollbar {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+  
+  .ganttVerticalContainer::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+  
+  .ganttVerticalContainer::-webkit-scrollbar-thumb {
+    border: 6px solid transparent;
+    background: rgba(0, 0, 0, 0.2);
+    background: var(--palette-black-alpha-20, rgba(0, 0, 0, 0.2));
+    border-radius: 10px;
+    background-clip: padding-box;
+  }
+  
+  .ganttVerticalContainer::-webkit-scrollbar-thumb:hover {
+    border: 4px solid transparent;
+    background: rgba(0, 0, 0, 0.3);
+    background: var(--palette-black-alpha-30, rgba(0, 0, 0, 0.3));
+    background-clip: padding-box;
+  }
+  
+  .horizontalContainer {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  .wrapper {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    outline: none;
+    position: relative;
+  }
+
+    /* ///////////////////////////////////////////////                */
+
+    /* /////////////////////////menu-option.module.css/////////////////////// */
+    .menuOption {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        background-color: #fff;
+        cursor: pointer;
+        padding: 5px;
+      }
+      
+      .menuOption:hover {
+        background-color: #eeeeee;
+      }
+      
+      .icon {
+        width: 30px;
+      }
+      
+      .label {
+        flex: 1;
+      }
+/* /////////////////////////////////////////
+
+///////////////////////////calendar.module////////////////////////////////////*/
+
+.calendarBottomText {
+    text-anchor: middle;
+    fill: #333;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    pointer-events: none;
+  }
+  
+  .calendarTopTick {
+    stroke: #e6e4e4;
+  }
+  
+  .calendarTopText {
+    text-anchor: middle;
+    fill: #555;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    pointer-events: none;
+  }
+  
+  .calendarHeader {
+    fill: #ffffff;
+    stroke: #e0e0e0;
+    stroke-width: 1.4;
+  }
+
+  /* //////////////////////////////////////// */
+
+
+
+  
+    .th0 {
+      background-color: #B3B4B4 !important;
+      /* height: 1px !important; */
+      color: #000000 !important;
+      border: 1px solid #ffffff !important; 
+      padding: 0 10px   !important;
+      font-weight: 500 !important;
+    }
+
+        .th01 {
+      background-color: #7C7C7C !important;
+      /* height: 1px !important; */
+      color: #f2f2f2 !important;
+      border: 1px solid #ffffff !important; 
+      padding: 0 10px   !important;
+    }
+    
+    
+    .titulo-total {
+      text-align: left; /* Alinea el texto a la izquierda */
+      white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    }
+
+
+    .input-container input {
+      border: none;
+      box-sizing: border-box;
+      outline: 0;
+
+      padding: .75rem;
+      position: relative;
+      width: 100%;
+  }
+/*   
+  input[type="date"]::-webkit-calendar-picker-indicator {
+      background: transparent;
+      bottom: 0;
+      color: transparent;
+      cursor: pointer;
+      height: auto;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: auto;
+  } */

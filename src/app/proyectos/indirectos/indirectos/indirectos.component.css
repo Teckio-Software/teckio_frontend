@@ -1,0 +1,98 @@
+
+td {
+    border: .5px solid #b4b1b175;
+    padding: 0 10px;
+    height: 5px;
+  }
+  th {
+    background-color: #21416e;
+    height: 1px;
+    color: #f2f2f2;
+    border: 1px solid #4e4c4c54;
+    padding: 0 10px;
+  }
+
+  .cont-drill {
+    border-right: 1px solid #f2f2f2b2;
+    padding: 1px ;
+  }
+  
+  .body-table {
+    padding: 1px;
+    border: 1px solid #f2f2f2b2;
+  }
+  
+  .button-accion {
+    display: flex;
+    justify-content: center;
+    border: none;
+    margin-left: 5px;
+    padding: 0 10px;
+    width: 30px;
+    height: 20px;
+    background-color: #f2f2f267;
+    border-radius: 1px;
+  }
+
+  .table-arbol {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .change-background-color {
+    background-color: #ADE4EF; 
+  }
+  
+  /* colores en los Niveles*/
+  
+  .colorNivel1{
+    background-color: #8ca2af;
+    border: 1px solid #ffff; 
+  }
+  .colorNivel2{
+    background-color: #b4ccda;
+    border: 1px solid #ffff; 
+  }
+  .colorNivel3{
+    background-color: #bcdac6;
+    border: 1px solid #ffff; 
+  }
+  .colorNivel4{
+    background-color: #dac5bc;
+    border: 1px solid #ffff; 
+  }
+  .colorNivel5{
+    background-color: #cfdabc;
+    border: 1px solid #ffff; 
+  }
+  .colorNivel6{
+    background-color: #fceeda;
+    border: 1px solid #ffff; 
+  }
+  .colorNivel7{
+    background-color: #fffdf8;
+    border: 1px solid #ffff; 
+  }
+
+  .paddingNivel1{
+    padding-left: 0px;
+  }
+  .paddingNivel2{
+    padding-left: 4px;
+  }
+  .paddingNivel3{
+    padding-left: 8px;
+  }
+  .paddingNivel4{
+    padding-left: 12px;
+  }
+  .paddingNivel5{
+    padding-left: 16px;
+  }
+  .paddingNivel6{
+    padding-left: 20px;
+  }
+  .paddingNivel7{
+    padding-left: 24px;
+  }
+  

@@ -1,0 +1,27 @@
+<div
+  class="overflow-x-auto shadow-md rounded-lg whitespace-nowrap w-full m-auto mt-4"
+>
+  <table class="w-full">
+    <thead class="bg-primario text-white">
+      <tr>
+        <th class="px-1 py-[2px]" scope="col">Documento Relacionado</th>
+        <th class="px-[2px] py-[2px]" scope="col">Impuesto Saldo Insoluto</th>
+        <th class="px-[2px] py-[2px]" scope="col">Impuesto Saldo Anterior</th>
+        <th scope="col" class="px-[2px] py-[2px]">Impuesto Pagado</th>
+        <th scope="col" class="px-[2px] py-[2px]">Num. Parcialidad</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+        *ngFor="let complemento of complementoPagos"
+      >
+        <td>{{ complemento.uuid }}</td>
+        <td>{{ complemento.impuestoSaldoInsoluto }}</td>
+        <td>{{ complemento.impuestoSaldoAnterior }}</td>
+        <td>{{ complemento.impuestoPagado }}</td>
+        <td>{{ complemento.numeroParcialidades }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

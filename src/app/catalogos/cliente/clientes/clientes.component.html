@@ -1,0 +1,112 @@
+<section class="m-2">
+  <div class="flex">
+    <button
+      (click)="abrirModalCliente()"
+      class="flex align-items-center rounded-md bg-colorButton transition-colors delay-75 hover:bg-colorButtonHover font-light text-white p-1"
+    >
+      <p
+        class="text-[#f2f2f2] titular bg-custom-bg w-52 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
+      >
+        Nuevo cliente
+      </p>
+      <img src="assets/add.svg" alt="" />
+    </button>
+  </div>
+  <div
+    style="
+      overflow-x: auto;
+      white-space: nowrap;
+      width: 100%;
+      margin: 0 auto;
+      margin-top: 0px;
+    "
+    *ngIf="existenClientes"
+  >
+    <table
+      class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos"
+    >
+      <thead>
+        <tr>
+          <th class="cabecera1" scope="col">Razon Social</th>
+          <th class="cabecera1" scope="col">RFC</th>
+          <th class="cabecera1" scope="col">Correo Electrónico</th>
+          <th class="cabecera1" scope="col">Teléfono</th>
+          <th class="cabecera1" scope="col">Representante Legal</th>
+          <th class="cabecera1" scope="col">Domicilio</th>
+          <th class="cabecera1" scope="col">Número Exterior</th>
+          <th class="cabecera1" scope="col">Colonia</th>
+          <th class="cabecera1" scope="col">Municipio</th>
+          <th class="cabecera1" scope="col">Codigo Postal</th>
+          <th class="cabecera1" scope="col">Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let cliente of clientes"
+          [ngClass]="{ 'change-background-color': cliente.id === changeColor }"
+          (click)="VerCuentasBancariaCliente(cliente.id)"
+        >
+          <td class="td-0" scope="col">{{ cliente.razonSocial }}</td>
+          <td class="td-0" scope="col">{{ cliente.rfc }}</td>
+          <td class="td-0" scope="col">{{ cliente.email }}</td>
+          <td class="td-0" scope="col">{{ cliente.telefono }}</td>
+          <td class="td-0" scope="col">{{ cliente.representanteLegal }}</td>
+          <td class="td-0" scope="col">{{ cliente.domicilio }}</td>
+          <td class="td-0" scope="col">{{ cliente.noExterior }}</td>
+          <td class="td-0" scope="col">{{ cliente.colonia }}</td>
+          <td class="td-0" scope="col">{{ cliente.municipio }}</td>
+          <td class="td-0" scope="col">{{ cliente.codigoPostal }}</td>
+          <td class="td-0" scope="col">
+            <div class="flex gap-2">
+              <button
+                (click)="NuevaCuentaBancariaClientes(cliente.id)"
+                ngbTooltip="Nueva Cuenta Bancaria"
+                placement="top"
+                triggers="mouseenter:mouseleave"
+                class="bg-[#51aec7] hover:bg-hoverButton h-auto titular items-center bg-custom-bg flex font-bold tracking-wider m-0 text-center"
+              >
+                <img src="assets/add.svg" alt="" />
+              </button>
+              <button
+                (click)="abrirModalCCCliente(cliente)"
+                ngbTooltip="Asignar Cuenta Contable"
+                placement="top"
+                triggers="mouseenter:mouseleave"
+                class="bg-[#51aec7] hover:bg-hoverButton h-auto titular items-center bg-custom-bg flex font-bold tracking-wider m-0 text-center"
+              >
+                <img src="assets/add.svg" alt="" />
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="m-2" *ngIf="clienteSeleccionado">
+  <mat-tab-group
+    class="first-custom-tab-group"
+    animationDuration="0ms"
+    (selectedTabChange)="yourFn($event)"
+    [selectedIndex]="selectedIndex"
+  >
+    <mat-tab label="Cuentas Bancarias">
+      <div>
+        <app-cuentas-bancarias-contratista
+          *appRecarga="appRecarga"
+          [IdClienteInput]="idCliente"
+          [IdEmpresaInput]="selectedEmpresa"
+        ></app-cuentas-bancarias-contratista>
+      </div>
+    </mat-tab>
+    <mat-tab label="Cuentas contables">
+      <div *ngIf="selectedIndex === 1">
+        <app-table-cuentas-contables
+          *appRecarga="appRecarga"
+          [IdClienteInput]="idCliente"
+        ></app-table-cuentas-contables>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</section>

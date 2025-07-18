@@ -1,0 +1,18 @@
+<ng-template #treeTemplate let-nodes>
+    <div>
+      <div *ngFor="let item of nodes">
+        <div *ngTemplateOutlet="nodeTemplate; context: { $implicit: item }">
+        </div>
+        <div *ngIf="item.hijos && item.hijos.length > 0 && item.expandido">
+          <div *ngTemplateOutlet="
+              treeTemplate;
+              context: { $implicit: item.hijos }
+            "></div>
+        </div>
+      </div>
+    </div>
+</ng-template>
+  
+<div *ngIf="treeData">
+  <div *ngTemplateOutlet="treeTemplate; context: { $implicit: treeData }"></div>
+</div>

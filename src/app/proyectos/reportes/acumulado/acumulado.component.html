@@ -1,0 +1,101 @@
+<div>
+  <div class="flex flex-col md:flex-row justify-center gap-2 md:justify-normal   ">
+    <!-- <div>
+      <div style="display: flex;  justify-content: center; height: max-content;" class="item gap-2">
+        <input type="text" placeholder="Selecciona un dato" [formControl]="contratistaControl" [matAutocomplete]="auto"
+          class="dropdown ">
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectionChangeContratista($event)">
+
+          <mat-option class="mat-option-css" style=" font-weight: 500; font-size: 14px; border-radius: 7px;"
+            *ngFor="let contratista of filteredcontratista | async"
+            [value]="contratista">{{contratista.razonSocial}}</mat-option>
+        </mat-autocomplete>
+      </div>
+    </div> -->
+    <div class="flex justify-center">
+      <select class="select-destajo w-[260px] rounded-[7px] bg-[#4eaac138]" style="height: -webkit-fill-available;"
+        (change)="onSelectionChangeSelect($event)" name="select" [(ngModel)]="selectedContrato">
+        <option [ngValue]="0">Todos</option>
+        <option [ngValue]="contrato.id" *ngFor="let contrato of contratos">{{contrato.numeroDestajo}}</option>
+      </select>
+    </div>
+  </div>
+</div>
+<section class="flex w-full" *ngIf="objetoAcumulado.destajos.length > 0">
+  <div style=" overflow-x: auto; white-space: nowrap; width: 55%; margin: 0 auto;">
+    <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
+      <thead>
+        <tr>
+          <th colspan="5" class="style-encabezado-ac-act">Descripción conceptos</th>
+        </tr>
+      </thead>
+      <thead>
+        <tr>
+          <th>Descripción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let acumulado of objetoAcumulado.destajos">
+          <td scope="col"> <input class="w-full bg-transparent" type="text"
+              [ngModel]="acumulado.descripcion"
+              disabled></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="overflow-x: scroll; white-space: nowrap; width: 70%; margin: 0 auto; margin-top: 0px;" class="flex">
+    <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos" *ngFor="let periodo of objetoAcumulado.periodos"> 
+      <thead>
+        <tr>
+          <th colspan="5" class="style-encabezado-ac-act">
+            <div class="flex justify-between">
+              <div class="items-center">
+                {{periodo.descripcionPeriodo}}
+              </div>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <thead>
+        <tr style="overflow-x: auto; white-space: nowrap;">
+          <th class="cabecera1" scope="col">Avance</th>
+          <th class="cabecera1" scope="col">Importe</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let detalle of periodo.detalles">
+            <td>
+              {{detalle.avanceConFormato}}
+            </td>
+            <td>
+              {{detalle.importeConFormato}}
+            </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style=" overflow-x: auto; white-space: nowrap; width: 15%; margin: 0 auto;">
+    <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
+      <thead>
+        <tr>
+          <th colspan="5" class="style-encabezado-ac-act">Importe Total</th>
+        </tr>
+      </thead>
+      <thead>
+        <tr>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let importe of objetoAcumulado.destajos">
+          <td scope="col">
+            <input type="text" class="w-full bg-transparent" [ngModel]="importe.importeConFormato" disabled>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</section>

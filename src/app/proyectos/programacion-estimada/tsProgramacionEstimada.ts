@@ -1,0 +1,32 @@
+export interface programacionEstimadaDTO{
+    id: number;
+    idProyecto: number;
+    esSabado: boolean;
+    esDomingo: boolean;
+    noSerie: number;
+    idPrecioUnitario: number;
+    cantidad: number;
+    tipoPrecioUnitario: number;
+    inicio: Date;
+    inicioParaGantt: number;
+    termino: Date;
+    terminoParaGantt: number;
+    idPredecesora: number | string;
+    diasTranscurridos: number;
+    nivel: number;
+    idPadre: number;
+    predecesor: string;
+    idConcepto: number;
+    codigo: string;
+    descripcion: string;
+    unidad: string;
+    costoUnitario: number;
+    importe: number;
+    progreso: number;
+    comando: number;
+    expandido: boolean;
+    numerado: number;
+    diasComando: number;
+    sucesoras: number[];
+    hijos: programacionEstimadaDTO[];
+}

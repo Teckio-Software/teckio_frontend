@@ -1,0 +1,32 @@
+<div>
+  <div style="display: flex; justify-content: center;">
+    <button class="button-generar" (click)="generarNivel()">Generar Nivel</button>
+    <!-- <button class="button-generar" style="margin-left: 10px;" (click)="guardarNivel(3)">Guardar Nivel</button> -->
+    <button class="button-generar" style="margin-left: 10px;" (click)="guardarNivel()">Guardar Nivel</button>
+  </div>
+
+  <div *ngFor="let nivel of niveles; let i = index" class="contenedor-niveles">
+    <div style="display: flex;">
+      <h2>Nivel {{ i + 1 }}</h2>
+      <ul style="display: flex;">
+        <li *ngFor="let usuario of nivel" style="margin-left: 20px;" class="contenedor-agregar">
+          {{ usuario.nombre }}
+          <button (click)="eliminarUsuario(usuario, i)" class="button-agregar">Eliminar</button>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <h3>Autorizadores Disponibles para Agregar</h3>
+      <ul style="display: flex;">
+        <li *ngFor="let usuario of usuariosDisponibles" class="contenedor-agregar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+          </svg>
+          {{ usuario.nombre }}
+          <button (click)="agregarUsuario(usuario, i)" class="button-agregar">Agregar</button>
+        </li>
+      </ul>
+      <button (click)="eliminarNivel(i)" class="btn-borrar">Borrar Nivel</button>
+    </div>
+  </div>
+</div>

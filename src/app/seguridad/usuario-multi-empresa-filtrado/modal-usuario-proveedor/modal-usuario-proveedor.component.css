@@ -1,0 +1,92 @@
+
+
+
+.cont-empresas {
+    background-color: #b5dce02d;
+    padding: 5px;
+    border-radius: 7px;
+  }
+  
+  .cont-input {
+    display: flex;
+    justify-content: end;
+    margin-bottom: 10px;
+    background-color: #b5dce02d;
+    padding: 5px;
+    border-radius: 7px;
+    height: 55px;
+    margin-top: 10px;
+  }
+  
+  .cont-input input {
+    text-align: center;
+    margin-left: 10px;
+    border-radius: 7px;
+    border: none;
+  }
+  
+  
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #093446;
+    width: 98%;
+    height: 80px;
+    margin: 10px auto;
+    padding: 0 20px;
+    border-radius: 7px;
+    -webkit-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+    -moz-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+    box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+    position: static;
+  }
+  
+  .img-teckio {
+    width: 170px;
+  }
+  
+  .button-menu {
+    background-color: #093446;
+      margin-left: 20px;
+      -webkit-box-shadow: 0px 4px 5px 0px rgba(171, 216, 222, 0.32);
+      -moz-box-shadow: 0px 4px 5px 0px rgba(171, 216, 222, 0.32);
+      box-shadow: 0px 4px 5px 0px rgba(171, 216, 222, 0.32);
+      padding: 5px;
+      border-radius: 7px;
+      text-decoration: none;
+      color: #ABD8DE;
+      border: none;
+  }
+  
+  .button-menu:hover{
+      background-color: #2ac3ff;
+      color: #00161F;
+  }
+  
+  .user-name {
+    color: #f2f2f2;
+    margin-right: 10px;
+  }
+  
+  .Logout {
+    color: #f2f2f2;
+    text-decoration: none;
+      padding: 5px;
+  }
+  
+  .Logout:hover {
+    background-color: #2ac3ff;
+    border-radius: 7px;
+  }
+  
+  .button-login {
+    text-decoration:  none;
+    color: #ABD8DE;
+    margin-left: 10px;
+  }
+  
+  .button-login:hover {
+    color:#2ac3ff ;
+  }
+  

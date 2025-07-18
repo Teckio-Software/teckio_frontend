@@ -1,0 +1,35 @@
+ 
+td {
+    border: .5px solid #b4b1b175;
+    padding: 0 10px;
+    height: 5px;
+  }
+  th {
+    background-color: #21416e;
+    height: 1px;
+    color: #f2f2f2;
+    border: 1px solid #4e4c4c54;
+    padding: 0 10px;
+  }
+  .dropdown {
+    max-width: 100%;
+    width: 250px;
+    color: #020202;
+    
+    background-color: #4eaac138;
+    border: none; 
+    font-weight: 500;
+    padding: 5px;
+    /* width: 12vw; */
+    border-radius: 7px;  
+  }
+
+  .change-background-color {
+  background-color: #b9dfe9; 
+}
+
+
+.change-background-color td {
+  background-color: inherit;
+}
+  

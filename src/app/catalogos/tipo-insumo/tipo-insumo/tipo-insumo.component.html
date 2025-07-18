@@ -1,0 +1,37 @@
+<section class="flex flex-col">
+  <div class="flex justify-end">
+    <button class="bg-colorButton text-[#f2f2f2] rounded-sm hover:bg-hoverButton" (click)="openDialogNewInsumo()">Nuevo
+      Insumo</button>
+  </div>
+  <div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px;">
+    <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
+      <thead>
+        <tr>
+          <th scope="col">Descripción</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tipoInsumo of tiposDeInsumo | slice:inicioCopia:terminoCopia">
+          <td>
+            <input type="text" class="bg-transparent w-full" [(ngModel)]="tipoInsumo.descripcion"
+              (keydown.enter)="editar(tipoInsumo)">
+          </td>
+          <td>
+            <div class="flex justify-center m-0.5">
+
+              <button ngbTooltip="Eliminar" placement="end" triggers="mouseenter:mouseleave"
+                class="drop-shadow-md bg-[#4eaac138] hover:bg-[#B05B5B] py-0 px-[5px] rounded-sm"
+                (click)="abrirDialogo(tipoInsumo.id)">
+                <img src="assets/trash3-fill.svg" alt="">
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <mat-paginator [length]="tiposDeInsumo.length" [pageSize]="20" aria-label="Select page"
+    (page)="cambiarPaginaCopia($event)">
+  </mat-paginator>
+  </div>
+</section>

@@ -1,0 +1,143 @@
+<div
+  class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center animate-fadeIn"
+  *ngIf="isOpen"
+>
+  <div
+    class="z-50 bg-gray100 rounded-xl shadow-lg px-6 py-3 w-[50%] h-[90%] relative overflow-auto xs:w-full"
+  >
+    <div class="flex justify-end items-center">
+      <button
+        class="text-3xl text-gray500 hover:text-gray700 transition 200ms"
+        (click)="closeModal()"
+      >
+        ×
+      </button>
+    </div>
+
+    <div class="text-gray700">
+      <!-- Header container -->
+      <div class="rounded-lg p-2 w-full shadow-sm">
+        <div class="flex gap-1">
+          <p class="font-medium text-md w-20 m-0 xs:text-xs">Poliza No.:</p>
+          <p class="m-0 xs:text-xs">{{ poliza.folio }}</p>
+        </div>
+      </div>
+
+      <div class="rounded-lg p-2 w-full shadow-sm">
+        <div class="flex gap-1">
+          <p class="font-medium text-md w-20 m-0 xs:text-xs">Concepto:</p>
+          <p class="m-0 xs:text-xs">{{ poliza.concepto }}</p>
+        </div>
+      </div>
+
+      <div class="rounded-lg p-2 w-full shadow-sm mt-4">
+        <div class="flex gap-1">
+          <p class="font-medium text-md w-20 m-0 xs:text-xs">Fecha:</p>
+          <p class="m-0 xs:text-xs">{{ poliza.fechaPoliza }}</p>
+        </div>
+      </div>
+
+      <!-- Header container end-->
+
+      <!-- Insumos Table -->
+      <div class="rounded-lg shadow-md overflow-hidden mt-4">
+        <table class="w-full">
+          <thead class="bg-primario text-white rounded-lg px-1 py-[2px]">
+            <tr class="xs:text-[12px]">
+              <th class="px-2">Cuenta contable</th>
+              <th class="text-left">Descripción</th>
+              <th class="text-center">Cargo</th>
+              <th class="text-center">Abono</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let p of polizasDetalles"
+              class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+            >
+              <td scope="col" class="px-2">
+                <input
+                  value="{{ p.cuentaContableCodigo }}"
+                  readonly
+                  autocomplete="off"
+                  type="text"
+                  class="bg-transparent w-[90%]"
+                />
+              </td>
+              <td scope="col">
+                <input
+                  value="{{ p.concepto }}"
+                  readonly
+                  autocomplete="off"
+                  type="text"
+                  class="bg-transparent w-[90%]"
+                />
+              </td>
+              <td scope="col" class="text-center">
+                {{ p.debe }}
+              </td>
+              <td scope="col" class="text-center">{{ p.haber }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Insumos Table -->
+
+      <!-- Footer -->
+      <div class="mt-4">
+        <!-- Observaciones -->
+        <div class="rounded-lg shadow-md p-2">
+          <div class="flex gap-8 justify-end mr-6">
+            <p class="font-bold m-0 xs:text-xs">SUMAS IGUALES:</p>
+            <p class="xs:text-xs">{{ totalDebe }}</p>
+            <p class="xs:text-xs">{{ totalHaber }}</p>
+          </div>
+        </div>
+        <!-- Observaciones end-->
+
+        <!-- Insumos Table -->
+        <div class="rounded-lg shadow-md overflow-hidden mt-4">
+          <table class="w-full">
+            <thead class="bg-primario text-white rounded-lg px-1 py-[2px]">
+              <tr class="xs:text-[12px]">
+                <th class="text-center">Elaboró</th>
+                <th class="text-left">Revisó</th>
+                <th class="text-center">Autorizó</th>
+                <th class="text-center">Diario No.</th>
+                <th class="text-center">Poliza No.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              >
+                <td scope="col" class="text-center"></td>
+                <td scope="col" class="text-center"></td>
+                <td scope="col" class="text-center"></td>
+                <td scope="col" class="text-center">
+                  {{ poliza.numeroPoliza }}
+                </td>
+                <td scope="col" class="text-center">{{ poliza.folio }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Insumos Table -->
+
+        <div class="flex justify-end mt-2">
+          <button
+            (click)="generarPdf()"
+            class="flex items-center gap-3 text-white py-2 px-6 rounded-lg font-medium bg-colorButton hover:bg-colorButtonHover transition 200ms xs:text-xs"
+          >
+            Descargar
+            <img
+              class="w-8 h-8 xs:w-5 xs:h-5"
+              src="../../../../../assets/pdf_icon.svg"
+              alt="icono pdf"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

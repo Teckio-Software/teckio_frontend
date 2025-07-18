@@ -1,0 +1,42 @@
+
+
+
+<h2 mat-dialog-title>{{ tituloAccion }} Corporativo</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="formularioCorporativo">
+    <mat-grid-list cols="1" rowHeight="80px">
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre Completo</mat-label>
+          <input matInput autocomplete="off" formControlName="Nombre" />
+          <mat-icon matSuffix>account-box</mat-icon>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="Estatus">
+            <mat-option value="1">Activo</mat-option>
+            <mat-option value="0">No Activo</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-grid-tile>
+
+    </mat-grid-list>
+  </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-raised-button mat-dialog-close color="warn">Cancelar</button>
+    <button mat-raised-button color="primary"
+    [disabled]="formularioCorporativo.invalid"
+    (click)="guardarEditar_Corporativo()">{{botonAccion}}</button>
+
+
+</mat-dialog-actions>
+
+

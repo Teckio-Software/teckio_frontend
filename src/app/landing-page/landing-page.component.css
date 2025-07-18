@@ -1,0 +1,18 @@
+
+body {
+  margin: auto;
+  width: 640px;
+  padding: 50px;
+  font-family: 'Arial', sans-serif;
+  color: #33475b;
+}
+
+/* Centered Image Code */
+
+ .center {
+  height: 92%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none; /* Border color is optional */
+}

@@ -1,0 +1,55 @@
+<div class="item w-full">
+  <button
+    (click)="finalizarPrestamo()"
+    class="bg-colorButton text-[#f2f2f2] rounded-sm hover:bg-hoverButton px-3 py-1"
+    *ngIf="existenPrestamos"
+  >
+    Devolver insumos
+  </button>
+</div>
+
+<div class="overflow-x-auto shadow-md rounded-lg mt-10 max-h-[500px]">
+  <table class="w-full text-sm xs:table-fixed">
+    <thead class="bg-primario text-white">
+      <tr>
+        <th scope="col" class="px-1 py-[2px]">No. Salida Almacén</th>
+        <th scope="col" class="px-1 py-[2px]">Descripción</th>
+        <th scope="col" class="px-1 py-[2px]">Unidad</th>
+        <th scope="col" class="px-1 py-[2px]">Cantidad Por Salir</th>
+        <th scope="col" class="px-1 py-[2px]">Es Préstamo</th>
+        <th scope="col" class="px-1 py-[2px]">Devolución</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray300">
+      <tr
+        *ngFor="let ias of insumossalidaalmacen"
+        class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+      >
+        <td scope="col" class="px-1 py-[2px]">
+          {{ ias.codigoSalida }}
+        </td>
+        <td scope="col" class="px-1 py-[2px]">
+          {{ ias.descripcioninsumo }}
+        </td>
+        <td scope="col" class="px-1 py-[2px]">
+          {{ ias.unidadinsumo }}
+        </td>
+        <td scope="col" class="px-1 py-[2px]">
+          {{ ias.cantidadPorSalir }}
+        </td>
+        <td scope="col" class="px-1 py-[2px]">
+          {{ ias.esPrestamo ? "Sí" : "No" }}
+        </td>
+        <td scope="col" class="px-1 py-[2px]">
+          <ng-container *ngIf="!ias.prestamoFinalizado && ias.esPrestamo">
+            <input type="checkbox" [(ngModel)]="ias.seleccionado" />
+          </ng-container>
+          <div *ngIf="!ias.esPrestamo">No aplica</div>
+          <div *ngIf="ias.esPrestamo && ias.prestamoFinalizado">
+            Insumos devueltos
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,124 @@
+.cabecera {
+  background-color: #7A8DA8;
+  border: solid 2px #f1f6f8;
+  color: #B5DCE0;
+  padding: 2px;
+}
+
+.none {
+  border: solid 2px #f1f6f8;
+  background-color: #bee2e6 ;
+}
+
+.orden {
+  -webkit-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+  -moz-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+  box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+}
+
+.orden-compra {
+  position: relative;
+  width: 95.7%;
+  opacity: 95%;
+}
+
+.tabla-detalle {
+  margin-top: 90px;
+}
+
+.selected {
+  border: solid 2px #f1f6f8;
+  background-color: rgb(232, 66, 11);
+}
+
+/* ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
+
+.container-tablas {
+  width: 77%;
+  margin:  auto;
+  height: 100vh;
+ }
+
+ .cabecera {
+   background-color: #7A8DA8;
+   border: 1px solid #f1f6f8;
+   color: #f2f2f2;
+ }
+
+ .none {
+   border: solid 1px #f1f6f8;
+   background-color: rgb(249, 254, 255) ;
+ }
+
+ .cont-table {
+   width: 100%;
+ }
+
+ .table {
+   -webkit-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+   -moz-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+   box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+   width: 100%;
+ }
+
+ .formulario {
+   display: flex;
+   justify-content: center;
+ }
+
+ .shadow-form {
+   padding: 0 20px;
+   margin: 10px;
+   border-radius: 15px;
+   box-shadow: 0px 9px 4px -6px rgba(163,157,157,0.74);
+  -webkit-box-shadow: 0px 9px 4px -6px rgba(163,157,157,0.74);
+  -moz-box-shadow: 0px 9px 4px -6px rgba(163,157,157,0.74);
+ }
+
+ .cont-formulario {
+   width: 500px;
+   margin: 10px;
+ }
+
+ /*Botones tablas*/
+ .card-info-action {
+   background-color: #00a7e9;
+   color: #f2feff;
+   padding: 5px;
+   border-radius: 10px 10px 0 0;
+   border: 1px solid #fff;
+   width: 50px;
+ }
+
+ .card-info-title {
+   background-color: #00a7e9;
+   color: #f2feff;
+   padding: 5px;
+   border-radius: 10px 10px 0 0;
+   border: 1px solid #fff;
+ }
+
+ .card-info-action:hover {
+   background-color: #2ac3ff;
+   color: #f2feff;
+   padding: 5px;
+   border-radius: 10px 10px 0 0;
+   border: 1px solid #fff;
+   width: 50px;
+ }
+
+ .button-entradas {
+   background-color: #00a7e9;
+   color: #f2feff;
+   padding: 5px;
+   border-radius: 10px 10px 0 0;
+   width: 170px;
+   height: 36px;
+   border: 1px solid #f2feff;
+ }
+
+
+ .button-entradas:hover {
+   background-color: #2ac3ff;
+   color: #ffffff;
+ }

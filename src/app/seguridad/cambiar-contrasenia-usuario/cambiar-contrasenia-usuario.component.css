@@ -1,0 +1,176 @@
+.titular-contraseña {
+  background-color: #b9dfe9;
+  padding: 2px 10px;
+  border-radius: 3px;
+  width: 200px;
+}
+
+
+.cont-empresas {
+  background-color: #b5dce02d;
+  padding: 5px;
+  border-radius: 7px;
+}
+
+.cont-input {
+  display: flex;
+  justify-content: end;
+  margin-bottom: 10px;
+  background-color: #b5dce02d;
+  padding: 5px;
+  border-radius: 7px;
+  height: 55px;
+  margin-top: 10px;
+}
+
+.cont-input input {
+  text-align: center;
+  margin-left: 10px;
+  border-radius: 7px;
+  border: none;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #093446;
+  width: 98%;
+  height: 80px;
+  margin: 10px auto;
+  padding: 0 20px;
+  border-radius: 7px;
+  -webkit-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+  -moz-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+  box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
+  position: static;
+}
+
+.contenedor-inputs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.contenedor-input {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-1 {
+  width: 270px;
+  border: none;
+  margin-right: 5px;
+  border-radius: 3px;
+  padding: 2px;
+  background-color:  #d3d9e263;
+}
+
+.label-1 {
+  border-bottom: 2px solid #b9dfe9;
+  margin-right: 5px;
+  border-radius: 3px;
+  margin-bottom: 3px;
+  width: 270px;
+}
+
+.img-teckio {
+  width: 170px;
+}
+
+.button-menu {
+  background-color: #093446;
+    margin-left: 20px;
+    -webkit-box-shadow: 0px 4px 5px 0px rgba(171, 216, 222, 0.32);
+    -moz-box-shadow: 0px 4px 5px 0px rgba(171, 216, 222, 0.32);
+    box-shadow: 0px 4px 5px 0px rgba(171, 216, 222, 0.32);
+    padding: 5px;
+    border-radius: 7px;
+    text-decoration: none;
+    color: #ABD8DE;
+    border: none;
+}
+
+.button-menu:hover{
+    background-color: #2ac3ff;
+    color: #00161F;
+}
+
+.user-name {
+  color: #f2f2f2;
+  margin-right: 10px;
+}
+
+.Logout {
+  color: #f2f2f2;
+  text-decoration: none;
+    padding: 5px;
+}
+
+.Logout:hover {
+  background-color: #2ac3ff;
+  border-radius: 7px;
+}
+
+.button-login {
+  text-decoration:  none;
+  color: #ABD8DE;
+  margin-left: 10px;
+}
+
+.button-login:hover {
+  color:#2ac3ff ;
+}
+
+.btn-modal {
+background-color: #51aec7;
+color: #ffff;
+margin: 5px;
+border-radius: 3px;
+border: none;
+}
+
+.cancelar:hover {
+background-color: #B05B5B;
+}
+
+.guardar:hover {
+background-color: #002B53;
+}
+
+::ng-deep .SweetAlert2ConfirmButtonError {
+  box-shadow: none !important;
+  width: 100% !important;
+  background-color: #A8343453 !important;
+  border: none !important;
+  color: #fff !important;
+  margin: 0px !important;
+  border-width: none !important;
+  box-sizing: none !important;
+}
+::ng-deep .SweetAlert2ConfirmButtonCorrecto{
+  box-shadow: none !important;
+  width: 100% !important;
+  background-color: #34a83e53 !important;
+  border: none !important;
+  color: #fff !important;
+  margin: 0px !important;
+  border-width: none !important;
+  box-sizing: none !important;
+}
+
+
+::ng-deep .swal2-actions{
+  width: 100% !important;
+}
+::ng-deep .swal2-popup{
+  padding: 0px !important;
+}
+::ng-deep .swal2-image{
+  padding: 8px !important;
+  margin: auto !important;
+}
+
+  ::ng-deep .swal2-html-container{
+  margin: .3rem 1.6rem .3rem !important;
+}

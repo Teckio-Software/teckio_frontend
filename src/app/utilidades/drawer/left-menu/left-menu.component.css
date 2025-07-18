@@ -1,0 +1,15 @@
+::ng-deep .test.mat-mdc-list-base {
+  padding: 0.8px !important;
+}
+
+*,
+::after,
+::before {
+  box-sizing: unset;
+}
+.hidden {
+  display: none !important;
+}
+.block {
+  display: block !important;
+}

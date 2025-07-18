@@ -1,0 +1,397 @@
+<!-- Agrgar cotizacion -->
+<p class="text-center font-semibold text-lg mt-1 xs:text-sm">
+  Agregar cotización
+</p>
+<div class="flex mb-1">
+  <button
+    (click)="crearCotizacion()"
+    class="flex align-items-center rounded-md bg-colorButton transition-colors delay-75 hover:bg-colorButtonHover font-light text-white p-1"
+  >
+    <p
+      class="text-[#f2f2f2] titular bg-custom-bg w-52 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
+    >
+      Nueva cotización
+    </p>
+    <img class="xs:w-4" src="assets/add.svg" alt="botón agregar" />
+  </button>
+</div>
+
+<div class="p-[7px] bg-transparent">
+  <div class="rounded-lg shadow-md overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm text-left table-fixed">
+        <thead class="bg-primario text-white">
+          <tr class="xs:text-[10px]">
+            <th
+              scope="col"
+              class="px-1 py-[2px] xs:w-[20px] md:hidden lg:hidden"
+            ></th>
+            <th class="px-[1px] py-[1px] xs:w-[70px]" scope="col">
+              No.Cotizacion
+            </th>
+            <th class="px-1 py-[1px] xs:w-[60px] xs:hidden" scope="col">
+              Registro
+            </th>
+            <th class="px-[1px] py-[1px] text-center xs:hidden" scope="col">
+              Estado
+            </th>
+            <th class="px-[1px] py-[1px] xs:w-[80px]" scope="col">
+              Proveedor*
+            </th>
+            <th class="px-[1px] py-[1px] xs:w-[70px]" scope="col">
+              Descripción*
+            </th>
+            <th class="px-[1px] py-[1px] text-center xs:w-[50px]" scope="col">
+              Insumos
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray300">
+          <tr
+            class="font-medium text-gray700 hover:bg-gray200 animation duration-200"
+            *ngIf="cotizaciones.length == 0"
+          >
+            <td
+              colspan="5"
+              class="text-center text-gray700 xs:text-[8px] md:hidden lg:hidden"
+            >
+              No existen cotizaciones.
+            </td>
+            <td
+              colspan="6"
+              class="text-center text-gray700 xs:text-[8px] xs:hidden"
+            >
+              No existen cotizaciones.
+            </td>
+          </tr>
+          <ng-container *ngFor="let cotizacion of cotizaciones">
+            <tr
+              class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              [ngClass]="{
+                'change-background-color': cotizacion.id === idCotizacion
+              }"
+            >
+              <td class="md:hidden lg:hidden" scope="col">
+                <img
+                  (click)="desplegarInformacion(cotizacion)"
+                  *ngIf="cotizacion.isExpanded"
+                  src="../../../../assets/arrow_down.svg"
+                  alt="icono de flecha abrir"
+                />
+                <img
+                  (click)="desplegarInformacion(cotizacion)"
+                  *ngIf="!cotizacion.isExpanded"
+                  src="../../../../assets/arrow_right.svg"
+                  alt="icono de flecha cerrar"
+                />
+              </td>
+              <td class="px-1 py-[2px] min-w-2" scope="col">
+                {{ cotizacion.noCotizacion }}
+              </td>
+              <td class="px-1 py-[2px] min-w-2 xs:hidden" scope="col">
+                {{ cotizacion.fechaRegistro | date : "dd-MM-yyyy" }}
+              </td>
+              <td class="px-1 py-[2px] min-w-2 xs:hidden" scope="col">
+                <div class="flex justify-center h-full">
+                  <div
+                    class="bg-green100 rounded-lg w-28 h-5 xs:w-18"
+                    *ngIf="
+                      cotizacion.estatusCotizacionDescripcion === 'Comprada'
+                    "
+                  >
+                    <p class="text-green600 text-center">Comprada</p>
+                  </div>
+                  <div
+                    class="bg-green100 rounded-lg w-28 h-5 xs:w-18"
+                    *ngIf="
+                      cotizacion.estatusCotizacionDescripcion === 'Autorizada'
+                    "
+                  >
+                    <p class="text-green600 text-center">Autorizada</p>
+                  </div>
+                  <div
+                    class="bg-blue100 rounded-lg w-28 h-5 xs:w-18"
+                    *ngIf="
+                      cotizacion.estatusCotizacionDescripcion === 'Capturada'
+                    "
+                  >
+                    <p class="text-blue600 text-center">Capturada</p>
+                  </div>
+                </div>
+              </td>
+              <td
+                class="px-1 py-[2px] min-w-2"
+                scope="col"
+                *ngIf="cotizacion.idContratista != 0"
+              >
+                {{ cotizacion.representanteLegal }}
+              </td>
+              <td
+                class="px-1 py-[2px] min-w-2"
+                scope="col"
+                *ngIf="cotizacion.idContratista == 0"
+              >
+                <select
+                  class="dropdown2 w-full bg-transparent text-sm xs:text-[8px]"
+                  id="insumo"
+                  name="insumo"
+                  [(ngModel)]="cotizacion.representanteLegal"
+                  (change)="actualizarCotizacion(cotizacion)"
+                >
+                  <option value="" disabled selected>Seleccionar</option>
+                  <option
+                    *ngFor="let c of contratista"
+                    [value]="c.representanteLegal"
+                  >
+                    {{ c.representanteLegal }}
+                  </option>
+                </select>
+              </td>
+              <td class="px-1 py-[2px] min-w-2" scope="col">
+                <input
+                  placeholder="Descripción..."
+                  autocomplete="off"
+                  autocomplete="off"
+                  class="dropdown1 w-full bg-transparent"
+                  type="text"
+                  data-bs-toggle="dropdown"
+                  [(ngModel)]="cotizacion.observaciones"
+                  (keydown.enter)="actualizarCotizacion(cotizacion)"
+                />
+              </td>
+              <td class="px-1 py-[2px] min-w-2" scope="col">
+                <div *ngIf="!insumosEstado">
+                  <img
+                    ngbTooltip="Ver insumos"
+                    triggers="mouseenter:mouseleave"
+                    class="cursor-pointer mx-auto xs:w-4"
+                    src="../../../../assets/visibility_btn.svg"
+                    alt="ver insumos"
+                    (click)="seleccionado(cotizacion)"
+                  />
+                </div>
+                <div *ngIf="insumosEstado">
+                  <img
+                    ngbTooltip="Cerrar insumos"
+                    triggers="mouseenter:mouseleave"
+                    class="cursor-pointer mx-auto xs:w-4"
+                    src="../../../../assets/visibility-off_btn.svg"
+                    alt="ver insumos"
+                    (click)="seleccionado(cotizacion)"
+                  />
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              *ngIf="cotizacion.isExpanded"
+            >
+              <td class="px-1 py-[2px] min-w-2" scope="col" colspan="5">
+                <div class="flex gap-1">
+                  <label class="font-bold">Fecha de registro:</label>
+
+                  {{ cotizacion.fechaRegistro | date : "dd-MM-yyyy" }}
+                </div>
+                <div class="flex gap-1">
+                  <label class="font-bold">Estatus Compra:</label>
+                  <div class="flex h-full">
+                    <div
+                      class="bg-green100 rounded-lg w-28 h-5 xs:w-18"
+                      *ngIf="
+                        cotizacion.estatusCotizacionDescripcion === 'Comprada'
+                      "
+                    >
+                      <p class="text-green600 text-center">Comprada</p>
+                    </div>
+                    <div
+                      class="bg-green100 rounded-lg w-28 h-5 xs:w-18"
+                      *ngIf="
+                        cotizacion.estatusCotizacionDescripcion === 'Autorizada'
+                      "
+                    >
+                      <p class="text-green600 text-center">Autorizada</p>
+                    </div>
+                    <div
+                      class="bg-blue100 rounded-lg w-28 h-5 xs:w-18"
+                      *ngIf="
+                        cotizacion.estatusCotizacionDescripcion === 'Capturada'
+                      "
+                    >
+                      <p class="text-blue600 text-center">Capturada</p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- Agregar cotizacion end -->
+
+<!-- Insumos por cotización -->
+
+<div *ngIf="idCotizacion != 0 && !seleccionParaOrdenComrpa">
+  <p class="text-center font-semibold text-lg mt-2 xs:text-sm">
+    Insumos por cotización
+  </p>
+  <div class="flex justify-end">
+    <div
+      class="flex flex-row bg-white shadow-sm rounded-t-lg p-1 items-end"
+    >
+      <div
+        class="flex items-center justify-center flex-shrink-0 h-10 w-10 rounded-xl bg-[#4eaac138] text-[#4eaac1]"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
+        </svg>
+      </div>
+      <div class="flex flex-col flex-grow ml-4">
+        <div class="text-sm text-[#6b7280]">Total</div>
+        <div class="font-bold text-base">
+          <span>{{ importeTotalCotizacionConFormato }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="p-[7px] bg-transparent">
+    <div class="rounded-lg shadow-md overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left">
+          <thead class="bg-primario text-white">
+            <tr class="xs:text-[10px]">
+              <th class="px-1 py-[1px] xs:w-[80px]" scope="col">Descripción</th>
+              <th class="px-[1px] py-[1px] xs:w-[50px]" scope="col">Unidad</th>
+              <th class="px-[1px] py-[1px]" scope="col">P.U Cotizado</th>
+              <th class="px-[1px] py-[1px]" scope="col">Cantidad*</th>
+              <th class="px-[1px] py-[1px]" scope="col">P.U.*</th>
+              <th class="px-[1px] py-[1px]" scope="col">Descuento*</th>
+              <th class="px-[1px] py-[1px]" scope="col">IVA %</th>
+              <th class="px-[1px] py-[1px]" scope="col">Importe</th>
+            </tr>
+          </thead>
+
+          <tbody class="divide-y divide-gray300">
+            <tr
+              class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              *ngIf="listaInsumosCotizacionCrear.length == 0"
+            >
+              <td colspan="6" class="text-center">No existen insumos.</td>
+            </tr>
+
+            <tr
+              class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              *ngFor="let ic of listaInsumosCotizacionCrear"
+            >
+              <td class="px-1 py-[2px] min-w-2" scope="col">
+                <input
+                  readonly
+                  autocomplete="off"
+                  type="text"
+                  class="bg-transparent w-[90%]"
+                  [(ngModel)]="ic.descripcion"
+                />
+              </td>
+              <td class="px-1 py-[2px] min-w-2" scope="col">
+                {{ ic.unidad }}
+              </td>
+              <td class="px-1 py-[2px] min-w-2" scope="col">
+                {{ ic.pCotizadoConFormato }}
+              </td>
+              <td class="px-1 py-[3px] min-w-2" scope="col">
+                <input
+                  autocomplete="off"
+                  type="number"
+                  class="dropdown1 w-full bg-transparent"
+                  [disabled]="ic.estatus > 1"
+                  data-bs-toggle="dropdown"
+                  [(ngModel)]="ic.cantidad"
+                  (keydown.enter)="actualizarInsumoCotizado(ic)"
+                />
+              </td>
+              <td class="px-1 py-[2px] min-w-2" scope="col">
+                <input
+                  autocomplete="off"
+                  class="dropdown1 w-full bg-transparent"
+                  type="number"
+                  [disabled]="ic.estatus > 1"
+                  data-bs-toggle="dropdown"
+                  [(ngModel)]="ic.precioUnitario"
+                  (keydown.enter)="actualizarInsumoCotizado(ic)"
+                />
+              </td>
+              <td class="px-1 py-[2px] min-w-2" scope="col">
+                <input
+                  autocomplete="off"
+                  autocomplete="off"
+                  class="dropdown1 w-full bg-transparent"
+                  type="number"
+                  [disabled]="ic.estatus > 1"
+                  data-bs-toggle="dropdown"
+                  [(ngModel)]="ic.descuento"
+                  (keydown.enter)="actualizarInsumoCotizado(ic)"
+                />
+              </td>
+              <td class="px-1 py-[2px] min-w-2" scope="col">
+                <input *ngIf="ic.id != 0"
+                  autocomplete="off"
+                  autocomplete="off"
+                  class="dropdown1 w-full bg-transparent"
+                  type="number"
+                  [disabled]="ic.estatus > 1"
+                  data-bs-toggle="dropdown"
+                  [(ngModel)]="ic.pIvaConFormato"
+                  [disabled]="ic.id != 0"
+                  (keydown.enter)="actualizarInsumoCotizado(ic)"
+                />
+                <input *ngIf="ic.id == 0"
+                  autocomplete="off"
+                  autocomplete="off"
+                  class="dropdown1 w-full bg-transparent"
+                  type="number"
+                  [disabled]="ic.estatus > 1"
+                  data-bs-toggle="dropdown"
+                  [(ngModel)]="ic.pIVA"
+                  [disabled]="ic.id != 0"
+                  (keydown.enter)="actualizarInsumoCotizado(ic)"
+                />
+              </td>
+              <td class="px-1 py-[2px] min-w-2" scope="col">
+                {{ic.importeTotalConFormato}}
+              </td>
+              <!-- <td style="justify-content: center; align-items: center;" scope="col">
+                <button (click)="EliminarListaInsumosXCotizacion(ic.descripcion, ic.unidad)" class="button-filt"
+                  placement="start" ngbTooltip="Eliminar" triggers="mouseenter:mouseleave">
+                  <img src="assets/delete.svg" alt="add cotizacion">
+                </button>
+              </td> -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Insumos por cotización end-->
+
+<div *ngIf="seleccionParaOrdenComrpa">
+  <app-orden-compra
+    *appRecarga="appRecarga"
+    [idCotizacionInput]="idCotizacionParaOC"
+  >
+  </app-orden-compra>
+</div>

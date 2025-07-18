@@ -1,0 +1,185 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<div class="flex font-inter">
+  <div class="w-full">
+    <ng-container *ngIf="esLogueado; else loginContent">
+      <div
+        *ngIf="esLogueado"
+        class="bg-primario flex justify-between items-center h-10 xs:flex"
+      >
+        <div class="flex items-center">
+          <!-- Icono menú hamburguesa -->
+          <div *ngIf="!isOpen">
+            <button (click)="onSinenavToggle()" class="mx-[20px]">
+              <img class="w-6 h-6" src="../assets/menu.svg" alt="Abrir menú" />
+            </button>
+          </div>
+          <div *ngIf="isOpen">
+            <button class="mx-[20px]" (click)="onSinenavToggle()">
+              <img
+                class="w-6 h-6"
+                src="../assets/close.svg"
+                alt="Cerrar menú"
+              />
+            </button>
+          </div>
+          <!-- Icono menú hamburguesa end-->
+
+          <div class="flex gap-2 items-center justify-center xs:ml-3">
+            <ng-container zvAutorizado>
+              <!-- Input de coporativo -->
+              <div class="flex justify-center h-7 items-center gap-1 xs:px-1">
+                <p
+                  class="text-white lg:text-2xl md:text-2xl sm:text-xl lg:ml-10 font-bold mt-2 xs:hidden"
+                >
+                  {{ tituloComponente }}
+                </p>
+
+                <div>
+                  <img
+                    class="w-8 xs:w-8"
+                    src="assets/corporativo.svg"
+                    alt="coporativo"
+                  />
+                </div>
+                <select
+                  class="border-none rounded-lg bg-gray300 text-gray700 font-medium p-1 lg:w-52 md:w-36 xms:w-28 xs:w-24 xs:text-xs"
+                  aria-label="Corporativo"
+                  [(ngModel)]="selectedEmpresa"
+                  (ngModelChange)="actualizar($event)"
+                >
+                  <option
+                    *ngFor="let empresa of empresasPertenecientes"
+                    [value]="empresa.id"
+                  >
+                    {{ empresa.nombreComercial }}
+                  </option>
+                </select>
+              </div>
+              <!-- Input de coporativo end -->
+
+              <!-- Input de proyecto -->
+              <div class="flex justify-center h-7 item gap-1 xs:px-1">
+                <img class="w-9 xs:w-8" src="assets/project.svg" alt="" />
+                <input
+                  type="text"
+                  placeholder="Selecciona un proyecto"
+                  [formControl]="proyectoControl"
+                  [matAutocomplete]="auto"
+                  class="border-none rounded-lg bg-gray300 text-gray700 font-medium p-1 lg:w-52 md:w-36 xms:w-28 xs:w-24 xs:text-xs"
+                  #textoDataList
+                  (click)="reiniciarFiltro()"
+                />
+                <mat-autocomplete
+                  #auto="matAutocomplete"
+                  (optionSelected)="selectionChangeContratista($event)"
+                >
+                  <mat-option
+                    class="mat-option-css"
+                    style="
+                      font-weight: 500;
+                      font-size: 14px;
+                      border-radius: 7px;
+                    "
+                    *ngFor="let proyecto of filteredProyectos | async"
+                    [value]="proyecto"
+                    >{{ proyecto.nombre }}</mat-option
+                  >
+                </mat-autocomplete>
+              </div>
+              <!-- Input de proyecto end -->
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="flex gap-2 justify-end p-1">
+          <div class="text-white xs:hidden">
+            {{ zvSeguridadService.zfObtenerCampoJwt("email") }}
+          </div>
+          <button
+            class="flex gap-2 flex-row items-center text-white"
+            [matMenuTriggerFor]="menu"
+          >
+            <svg
+              width="20"
+              height="20"
+              fill="#f2f2f2"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              stroke="#f2f2f2"
+            >
+              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+              <g
+                id="SVGRepo_tracerCarrier"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></g>
+              <g id="SVGRepo_iconCarrier">
+                <path
+                  d="M12,1A11,11,0,1,0,23,12,11.013,11.013,0,0,0,12,1Zm0,20a9.641,9.641,0,0,1-5.209-1.674,7,7,0,0,1,10.418,0A9.167,9.167,0,0,1,12,21Zm6.694-3.006a8.98,8.98,0,0,0-13.388,0,9,9,0,1,1,13.388,0ZM12,6a4,4,0,1,0,4,4A4,4,0,0,0,12,6Zm0,6a2,2,0,1,1,2-2A2,2,0,0,1,12,12Z"
+                ></path>
+              </g>
+            </svg>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="logout()">Cerrar sesión</button>
+          </mat-menu>
+        </div>
+      </div>
+
+      <mat-sidenav-container class="sidenav-container" autosize>
+        <mat-sidenav
+          class="sidenavmenu"
+          #leftSidenav
+          mode="side"
+          opened
+          (keydown.escape)="leftSidenav.toggle()"
+        >
+          <app-left-menu
+            [isLoading]="isLoading"
+            (onSinenavToggle)="onSinenavToggle()"
+            [sideNavState]="sideNavState"
+            [linkText]="linkText"
+          >
+          </app-left-menu>
+        </mat-sidenav>
+        <mat-sidenav-content
+          [@onMainContentChange]="sideNavState ? 'open' : 'close'"
+        >
+          <!-- (scroll)="onScroll($event)" -->
+          <div class="main_content" id="seccionMisGastos">
+            <div style="padding: 15px; background-color: #f2f2f2">
+              <router-outlet *appRecarga="recargar"></router-outlet>
+            </div>
+          </div>
+        </mat-sidenav-content>
+      </mat-sidenav-container>
+    </ng-container>
+    <ng-template #loginContent>
+      <app-login></app-login>
+    </ng-template>
+  </div>
+</div>
+
+<div *ngIf="isLoading" class="contenedor-ventana">
+  <div class="ventana-bloque"></div>
+  <div class="contenedor-spinner">
+    <div
+      class="spinner-border spinner"
+      role="status"
+      style="color: #4eaac1"
+    ></div>
+    <p
+      style="
+        position: fixed;
+        margin-top: 60px;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        color: #4eaac1;
+      "
+    >
+      Cargando...
+    </p>
+  </div>
+</div>

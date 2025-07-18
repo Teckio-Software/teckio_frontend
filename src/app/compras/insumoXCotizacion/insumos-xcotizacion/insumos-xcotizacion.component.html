@@ -1,0 +1,55 @@
+<section>
+  <div class="container-button">
+    
+    <button class="btn-autorizar" (click)="AutorizarInsumosCotizadosSeleccionados()" >
+        Autorizar Selecionados
+    </button>
+    <button class="btn-autorizar" (click)="verTodos()" *ngIf="todos">
+      Mostrar Todos
+  </button>
+
+  </div>
+  <div class="contenedor-tabla"
+  style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px;">
+  <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
+        <thead>
+          <tr>
+              <th class="cabecera1" scope="col">Denominación</th>
+              <th class="cabecera1" scope="col">Descripción</th>
+              <!-- <th class="cabecera1" scope="col">Unidad</th> -->
+              <th class="cabecera1" scope="col">Unidad Cotizada</th>
+              <!-- <th class="cabecera1" scope="col">Cantidad</th> -->
+              <th class="cabecera1" scope="col">Cantidad Cotizada</th>
+              <th class="cabecera1" scope="col">Precio Unitario</th>
+              <th class="cabecera1" scope="col">Importe Sin IVA</th>
+              <th class="cabecera1" scope="col">Importe Con IVA</th>
+              <th class="cabecera1" scope="col">Descuento</th>
+              <th class="cabecera1" scope="col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr  *ngFor="let ic of insumoXCotizacion" [ngClass]="{ estilo1 : ic.esSeleccionada}" scope="col" (click)="SeleccionarInsumoCotizacion(ic.id)"  >
+          
+              <td>{{ic.estatusInsumoCotizacionDescripcion}}</td>
+              <td>{{ic.descripcion}}</td>
+              <!-- <td>{{ic.unidad}}</td> -->
+              <td>{{ic.unidadCotizada}}</td>
+              <!-- <td>{{ic.cantidad}}</td> -->
+              <td>{{ic.cantidadCotizada | number: '1.4-4' }}</td>
+              <td>{{ic.precioUnitario | currency }}</td>
+              <td>{{ic.importeSinIva}}</td>
+              <td>{{ic.importeTotal}}</td>
+              <td>{{ic.descuento}}</td>
+              <td    scope="col">
+                <button class="button-filt"  placement="top" ngbTooltip="Autorizar Cotización" triggers="mouseenter:mouseleave"
+                (click)="AutorizarInusmo(ic.id)">
+                <img src="assets/autorizar.svg" alt="autorizar">
+              </button>
+            </tr>
+    
+        </tbody>
+      </table>
+    </div>
+</section>
+
+  

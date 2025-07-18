@@ -1,0 +1,31 @@
+.contenedor-inputs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+}
+.label-1 {
+    border-bottom: 2px solid #b9dfe9;
+    margin-right: 5px;
+    border-radius: 3px;
+    margin-bottom: 3px;
+}
+.input-1 {
+    width: 100%;
+    border: none;
+    margin-right: 5px;
+    border-radius: 3px;
+    padding: 2px;
+    background-color:  #d3d9e263;
+  }
+
+  .modal-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+@media screen and (max-width: 992px) {
+   .modal-body {
+    grid-template-columns: 1fr;
+   }
+}

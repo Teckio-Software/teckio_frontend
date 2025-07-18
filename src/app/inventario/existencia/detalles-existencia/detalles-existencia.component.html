@@ -1,0 +1,20 @@
+<div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; " class="overflow-y-auto max-h-[500px]">
+    <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
+        <thead>
+            <tr>
+                <th class="cabecera1" scope="col">Tipo</th>
+                <th class="cabecera1" scope="col">Fecha de Registro</th>
+                <th class="cabecera1" scope="col">Cantidad</th>
+                <th class="cabecera1" scope="col">Es Consumible</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let IDE of detallesExistencia">
+                <td class="" scope="col" >{{IDE.tipoExistencia}}</td>
+                <td class="" scope="col">{{IDE.fechaRegistro | date:"dd-MM-yyyy"}}</td>
+                <td class="" scope="col">{{IDE.cantidadInsumos}}</td>
+                <td class="" scope="col">{{IDE.esNoConsumible ? "Si" : "No"}}</td>
+            </tr>
+        </tbody>
+    </table>
+  </div>

@@ -1,0 +1,139 @@
+<!-- <div class="panelOpciones">
+  <table class="tablaPanelOpciones">
+    <th><mat-checkbox #matCheckBoxPanel [checked]="panelActivado" (change)="activaPanelCapturaRapida()">Activar panel de captura rápida</mat-checkbox></th>
+  </table>
+</div>
+<div class="flex-container">
+  <div style="width:25%;" class="divFormulario" *ngIf="panelActivado">
+    <h4>Panel de captura rápida</h4>
+    <form [formGroup]="form">
+      <mat-form-field appearance="outline" class="tableAl100">
+        <mat-label>Codigo</mat-label>
+        <input formControlName="codigo" matInput maxlength="10" type="text" (keydown.enter)="guardar()"/>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="tableAl100">
+        <mat-label>Descripcion</mat-label>
+        <input formControlName="descripcion" matInput maxlength="200" (keydown.enter)="guardar()"/>
+      </mat-form-field>
+        <div>
+          <button mat-flat-button color="warn" style="float: right;" (click)="limpiarFormulario()" >Cancelar</button>
+          <button mat-flat-button color="primary" style="float: right;" (click)="guardar()">Guardar cambios</button>
+        </div>
+    </form>
+  </div>
+  <div [ngClass]="{'panel100': !panelActivado, 'panel75': panelActivado}">
+    <app-listado-generico [listado]="tipoPolizas">
+      <ng-container contenido>
+        <h4>Listado de Tipos de Polizas</h4>
+        <table
+          #table
+          mat-table
+          [dataSource]="tipoPolizas"
+          class="mat-elevation-z8">
+          <ng-container matColumnDef="codigo">
+            <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Código</th>
+            <td mat-cell *matCellDef="let element">
+              <input #codigo matInput class="inputEnTabla" maxlength="10" type="text" [(ngModel)]="element.codigo" (keyup)="onKeyUp('codigo', element, codigo.value)" />
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="descripcion">
+            <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Descripción</th>
+            <td mat-cell *matCellDef="let element">
+              <input #descripcion matInput class="inputEnTabla" maxlength="200" type="text" [(ngModel)]="element.descripcion" (keyup)="onKeyUp('descripcion', element, descripcion.value)" />
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Acciones</th>
+            <td mat-cell *matCellDef="let element">
+              <button mat-flat-button color="primary"
+                (click)="traerParaEditar(element.id)">editar</button>
+              <button mat-flat-button color="warn"
+                (click)="borrar(element.id)">Borrar</button>
+            </td>
+        </ng-container>
+          <tr mat-header-row *matHeaderRowDef="zvColumnasAMostrar"></tr>
+          <tr mat-row *matRowDef="let row; columns: zvColumnasAMostrar"></tr>
+        </table>
+        <mat-paginator
+          [pageSizeOptions]="[5, 10, 20, 50]"
+          showFirstLastButtons
+          [length]="cantidadTotalRegistros"
+          [pageSize]="cantidadRegistrosAMostrar"
+          class="mat-elevation-z8"
+          (page)="actualizarPaginacion($event)"
+        >
+        </mat-paginator>
+      </ng-container>
+    </app-listado-generico>
+  </div>
+</div> -->
+
+<div style="display: flex; justify-content: center; margin-top: 10px;" class="contenedor-button">
+  <button type="button" class="btn-new" data-bs-target="#exampleModal" data-bs-toggle="modal">Nuevo tipo de poliza</button>
+</div>
+
+<div class="cont-table orden-compra" >
+  <table class="table table-striped rounded table-hover orden titular-table">
+    <thead>
+      <tr>
+        <th class="cabecera" style="width: 20%;" scope="col">Descripción</th>
+        <th class="cabecera" scope="col">Código</th>
+        <th class="cabecera" scope="col">Naturaleza</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let tipoPoliza of tipoPolizas" >
+        <td class="none body-table" style="width: 10%;">
+          <input type="text" class="form-control form-control-sm" id="input-table" [(ngModel)]="tipoPoliza.codigo"  (keydown.enter)="editar(tipoPoliza)">
+        </td>
+        <td class="none body-table" style="width: 45%;">
+          <input type="text" class="form-control form-control-sm" id="input-table" [(ngModel)]="tipoPoliza.descripcion"  (keydown.enter)="editar(tipoPoliza)">
+        </td>
+        <td class="none body-table" style="width: 45%;">
+          <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="select-table" [(ngModel)]="tipoPoliza.naturaleza" (ngModelChange)="editar(tipoPoliza)">
+            <option value="0">Sin definir</option>
+            <option value="1">Ingresos</option>
+            <option value="2">Egresos</option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" style="display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Nuevo tipo de poliza</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="form">
+          <div class="mb-3">
+            <label for="codigo" class="col-form-label">Descripción</label>
+            <input formControlName="codigo" type="text" class="form-control form-control-sm" id="codigo"> 
+          </div>
+          <div class="mb-3">
+            <label for="descripcion" class="col-form-label">Descripción</label>
+            <input formControlName="descripcion" type="text" class="form-control form-control-sm" id="descripcion"> 
+          </div>
+          <div class="mb-3">
+            <label for="naturaleza" class="col-form-label">Tipo de Reporte</label>
+            <select formControlName="naturaleza" class="form-select form-select-sm" id="naturaleza">
+              <option value="0">Sin definir</option>
+              <option value="1">Ingresos</option>
+              <option value="2">Egresos</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn button-modal cerrar" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn button-modal guardar" (click)="guardar()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

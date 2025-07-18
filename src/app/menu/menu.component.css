@@ -1,0 +1,167 @@
+
+* {
+  font-weight: 500;
+}
+
+.menu {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 1px 8px 5px -5px rgba(0, 0, 0, 0.329);
+  -webkit-box-shadow: 1px 8px 5px -5px rgba(0, 0, 0, 0.56);
+  -moz-box-shadow: 1px 8px 5px -5px rgba(0, 0, 0, 0.56);
+}
+
+
+.img-teckio {
+  width: 70px;
+  border-radius: 15px;
+  padding-top: 10px;
+}
+
+.button-menu {
+  margin-right: 10px;
+  border: none;
+  background-color: #f0f8ff00;
+  font-size: 16px;
+  font-weight: 800px;
+}
+
+.button-menu:hover {
+  color: #4EAAC1;
+}
+
+.contenedor-usuario {
+  display: flex;
+  justify-content: center;
+}
+
+.Logout {
+  margin-left: 5px;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.button-menu1 {
+  border: none;
+  padding: 5px;
+  border-radius: 30px;
+  margin-right: 7px;
+}
+
+.button-menu1:hover {
+  background-color: #4eaac14b;
+}
+
+.button-login {
+  color: #002B53;
+  text-decoration: none;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.button-login:hover {
+  color: #4EAAC1;
+}
+
+/*---------------Menú iconos------------------*/
+.contenedor-menu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 40px;
+}
+
+.contenedor-links {
+  display: flex;
+  justify-content: center;
+  background-color: #F7FBFF;
+  padding: 10px 0;
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 2px;
+  border-radius: 3px;
+  position: fixed;
+  z-index: 1;
+}
+
+.button-menu-icon {
+  border: none;
+  background-color: #4eaac100;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.button-menu-icon:hover {
+  color: #4EAAC1;
+}
+
+.icono-ui {
+  height: 37px;
+  margin: 0 auto;
+}
+
+.contenedor-icono {
+  display: grid;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #A4D7E4;
+  padding: 5px;
+  border-radius: 7px;
+  margin: 0 10px;
+}
+
+.contenedor-icono:hover {
+  color: #4EAAC1;
+}
+/*-----------Menus-----------*/
+
+
+.menu-movil {
+  display: none;
+}
+
+.dropdown-toggle{
+  display: flex;
+  justify-content: space-between;
+  width: 200px;
+  text-align: start;
+}
+
+.drop-icon {
+  width: 100vh;
+
+}
+
+@media screen and (max-width: 1075px) {
+  .cont-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 797) {
+  .contenedor-usuario {
+    margin-top: 10px;
+  }
+
+  .nameNone13 {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 565px) {
+  .menu {
+    display: none;
+  }
+
+  .menu-movil {
+    display: flex;
+  }
+}
+
+
+

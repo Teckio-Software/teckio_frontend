@@ -1,0 +1,72 @@
+<p class="titular-ventana" style="margin: 0 auto; margin-top: 5px;">Configurar Plaza y División</p>
+
+<p style="font-size: 14px; font-weight: 700; margin-left: 30px;">Nombre del empleado: </p>
+
+<div style="display: flex; justify-content: center;">
+  <div class="input-group input-group-sm mb-3" style="width: 600px; margin-top: -25px; margin-right: 10px;">
+    <label class="input-group-text input-span" style="background-color: #b9dfe9;" for="inputGroupSelect01">Seleccione División</label>
+    <select class="form-select input-receptor" id="inputGroupSelect01">
+      <option selected>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+          <label class="form-check-label" for="flexCheckDefault">
+            Seleccionar Todos
+          </label>
+        </div>
+      </option>
+    </select>
+    <button class="btn-asignar">Estatus</button>
+  </div>
+  <div class="input-group input-group-sm mb-3" style="width: 600px; margin-top: -25px;">
+    <label class="input-group-text input-span" style="background-color: #b9dfe9;" for="inputGroupSelect01">Seleccione Plaza</label>
+    <select class="form-select input-receptor" id="inputGroupSelect01">
+      <option selected>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+          <label class="form-check-label" for="flexCheckDefault">
+            Seleccionar Todos
+          </label>
+        </div>
+      </option>
+    </select>
+    <button class="btn-asignar">Estatus</button>
+  </div>
+</div>
+
+
+<!--Visualización de PlazaEmpleado-->
+<div  class="contenedor-tabla" style="margin-top: -10px; overflow-y: auto; white-space: nowrap; height: 500px; width: 98%; margin: 0 auto; margin-top: 10px;">
+  <table class="table table-striped rounded table-hover">
+    <thead>
+      <tr>
+        <th class="cabecera" scope="col" style="width: 40%;">Plaza</th>
+        <th class="cabecera" scope="col" style="width: 40%;">División</th>
+        <th class="cabecera" scope="col" style="width: 20%; text-align: center;">Estatus</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let plazaEmpleado of plazasEmpleados" >
+        <td class="body-table" style="width: 50%;">
+          <input type="text" class="form-control form-control-sm" id="input-table" [(ngModel)]="plazaEmpleado.nombrePlaza" readonly>
+        </td>
+        <td class="body-table" style="width: 50%;">
+          <input type="text" class="form-control form-control-sm" id="input-table" [(ngModel)]="plazaEmpleado.nombreDivision" readonly>
+        </td>
+        <td class="none">
+          <div class="form-check form-switch" style="padding: 0px auto; margin: 0 10px;">
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked
+                [(ngModel)]="plazaEmpleado.estatus" >
+            <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+          </div>
+        </td>
+        <td class="none">
+          <!-- <button class="btn-accion" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEditar" aria-controls="offcanvasEditar" (click)="prueba(plazaEmpleado)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
+              <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001"/>
+            </svg>
+          </button> -->
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,81 @@
+<section class="mt-1">
+  <div class="p-2">
+    <div class="overflow-x-auto shadow-md rounded-lg">
+      <table class="w-full text-sm xs:table-fixed">
+        <thead class="bg-primario text-white">
+          <tr>
+            <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Banco</th>
+            <th class="px-[2px] py-[2px] xs:w-[70px]" scope="col">
+              Numero Sucursal
+            </th>
+            <th class="px-[2px] py-[2px] xs:w-[75px]" scope="col">
+              Numero Cuenta
+            </th>
+            <th class="px-[2px] py-[2px] xs:w-[75px]" scope="col">
+              Cuenta Clabe
+            </th>
+            <th class="px-[2px] py-[2px] xs:w-[75px]" scope="col">
+              Fecha Creación
+            </th>
+            <th class="px-[2px] py-[2px] xs:w-[75px]" scope="col">
+              Tipo Moneda
+            </th>
+            <th
+              class="px-[2px] py-[2px] xs:w-[75px]"
+              scope="col"
+              *ngIf="this.IdContratistaInput == 0 && this.IdClienteInput == 0"
+            >
+              Accion
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray300">
+          <tr
+            *ngFor="let cuentaBancaria of cuentasBancarias"
+            class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+          >
+            <td class="px-1 py-[2px]" scope="col">
+              {{ cuentaBancaria.nombreBanco }}
+            </td>
+            <td class="px-1 py-[2px]" scope="col">
+              {{ cuentaBancaria.numeroSucursal }}
+            </td>
+            <td class="px-1 py-[2px]" scope="col">
+              {{ cuentaBancaria.numeroCuenta }}
+            </td>
+            <td class="px-1 py-[2px]" scope="col">
+              {{ cuentaBancaria.clabe }}
+            </td>
+            <td class="px-1 py-[2px]" scope="col">
+              {{ cuentaBancaria.fechaAlta | date : "dd-MM-yyyy" }}
+            </td>
+            <td class="px-1 py-[2px]" scope="col">
+              {{
+                cuentaBancaria.tipoMoneda == 1
+                  ? "MXN"
+                  : cuentaBancaria.tipoMoneda == 2
+                  ? "USD"
+                  : "EUR"
+              }}
+            </td>
+            <td
+              class="px-1 py-[2px]"
+              scope="col"
+              *ngIf="this.IdContratistaInput == 0 && this.IdClienteInput == 0"
+            >
+              <button
+                (click)="abrirModalCCEmpresa(cuentaBancaria)"
+                ngbTooltip="Asignar Cuenta Contable"
+                placement="top"
+                triggers="mouseenter:mouseleave"
+                class="bg-[#51aec7] hover:bg-hoverButton h-auto titular items-center bg-custom-bg flex font-bold tracking-wider m-0 text-center"
+              >
+                <img src="assets/add.svg" alt="" />
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

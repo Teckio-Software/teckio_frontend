@@ -1,0 +1,43 @@
+<section class="m-1">
+  <div class="flex justify-end">
+    
+    <button class=" flex gap-1 bg-colorButton text-[#f2f2f2] rounded-sm hover:bg-hoverButton" (click)="abrirDialogoFormulario()">
+        <img src="assets/contratista.svg" alt="" style="width: 26px; height: 26px; ">
+        Agregar contartista
+      
+    </button>
+
+  </div>
+    <div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px;">
+        <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
+          <thead>
+            <tr>
+              <th class="cabecera1" scope="col">Razon Social</th>
+              <th class="cabecera1" scope="col">RFC</th>
+              <th class="cabecera1" scope="col">Representante legal</th>
+              <th class="cabecera1" scope="col">Telefono</th>
+              <th class="cabecera1" scope="col">Email</th>
+              <th class="cabecera1" scope="col">Domicilio</th>
+              <th class="cabecera1" scope="col">No. Exterior</th>
+              <th class="cabecera1" scope="col">Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let contratista of contratistas |slice:inicioCopia:terminoCopia ">
+                <td class="td-0" scope="col">{{contratista.razonSocial}}</td>
+                <td class="td-0" scope="col">{{contratista.rfc}}</td>
+                <td class="td-0" scope="col">{{contratista.representanteLegal}}</td>
+                <td class="td-0" scope="col">{{contratista.telefono}}</td>
+                <td class="td-0" scope="col">{{contratista.email}}</td>
+                <td class="td-0" scope="col">{{contratista.domicilio}}</td>
+                <td class="td-0" scope="col">{{contratista.nExterior}}</td>
+                <td class="td-0" scope="col"><button (click)="abrirModalCBContratista(contratista.id)">Nueva Cuenta Bancaria</button></td>
+              </tr>
+      
+          </tbody>
+        </table>
+        <mat-paginator [length]="contratistas.length" [pageSize]="20" aria-label="Select page"
+        (page)="cambiarPaginaCopia($event)">
+      </mat-paginator>
+      </div>
+</section>

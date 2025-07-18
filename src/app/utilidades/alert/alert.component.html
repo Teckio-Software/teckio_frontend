@@ -1,0 +1,23 @@
+<!-- Alert -->
+<div
+  *ngIf="alertaTipo !== 'none'"
+  class="position-fixed z-50 right-3 px-3 py-3 border-t-4 rounded-b shadow-md h-14 w-96"
+  [ngClass]="{
+    'alert-save': alertaTipo === 'save',
+    'alert-edit': alertaTipo === 'edit',
+    'alert-delete': alertaTipo === 'delete',
+    'alert-error': alertaTipo === 'error',
+    'bg-bgTeal100  border-t-textAlertSucces  text-textAlertSucces': alertaTipo === 'save',
+    'bg-blue100  border-t-blue500  text-blue500': alertaTipo === 'edit',
+    'bg-red-100 border-t-red-500  text-red-500': alertaTipo === 'delete' || alertaTipo === 'error',
+    'animate-fadeIn': alertaTipo === 'save' || alertaTipo === 'edit' || alertaTipo === 'delete' || alertaTipo === 'error',
+  }"
+  [ngStyle]="{
+    height: '56px',
+  }"
+>
+  <p class="font-medium">
+    {{ alertaMessage }}
+  </p>
+</div>
+<!-- Alert end -->

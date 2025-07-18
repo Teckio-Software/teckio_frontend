@@ -1,0 +1,47 @@
+
+
+
+
+<mat-card style="margin: 20px 40px 40px 40px">
+  <br />
+  <div class="flex">
+    <button (click)="nuevoCorporativo()" class="bg-[#51aec7] hover:bg-hoverButton titular items-center bg-custom-bg flex font-bold tracking-wider m-0 text-center">
+      <p class="  text-[#f2f2f2] titular bg-custom-bg w-52  font-bold tracking-wider  m-0 text-center">Nuevo corporativo</p><img src="assets/add.svg" alt="">
+    </button>
+  </div>
+  <br />
+  <mat-divider></mat-divider>
+  <br />
+  <mat-card-content class="dashboard-card-content">
+    <mat-form-field>
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="aplicarFiltroTabla($event)" #input />
+    </mat-form-field>
+    <div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px; ">
+      <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pago">
+        <thead>
+          <tr>
+            <th>Nombre Completo</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let corporativo of dataListaCorporativos2">
+            <td>{{ corporativo.nombre }}</td>
+            <td>{{ corporativo.estatus == 1 ? "Activo" : "No activo" }}</td>
+            <td>
+              <button (click)="editarCorporativo(corporativo)" color="primary">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button color="warn" (click)="eliminarCorporativo(corporativo)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,24 @@
+.td-0 {
+  padding: 0;
+  background-color: #fffefe;
+  border: 0.5px solid #ffffff85;
+}
+.select-opcion {
+  width: 100%;
+  border: none;
+  height: auto;
+}
+.input-text {
+  width: 100%;
+  border: none;
+  background-color: transparent;
+  line-height: 0px;
+}
+
+.change-background-color {
+  background-color: #b9dfe9;
+}
+
+.change-background-color td {
+  background-color: inherit;
+}

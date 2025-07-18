@@ -1,0 +1,521 @@
+
+
+
+
+
+
+<!-- Filtrado por proyectos -->
+<div class="PanelOpciones">
+    <table class="tablaPanelOpciones">
+        <th>
+            <button mat-flat-button color="primary" (click)="openDialogWithoutRef()">Nueva compra directa</button>
+        </th>
+    </table>
+</div>
+
+<div class="flex-container">
+    <div [ngClass]="'panel100'">
+        <app-listado-generico [listado]="comprasDirectas">
+            <ng-container  contenido>
+                <h4>Listado de compras directas</h4>
+                <table
+                  #table
+                  mat-table
+                  [dataSource]="comprasDirectas"
+                  class="mat-elevation-z8">
+
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Numero de compra</th>
+                        <td mat-cell *matCellDef="let element"
+                          [ngClass]="{'backGris': element.id === selectedRow}"
+                          (click)="cargaInsumosCompraDirecta(element.id)">
+                            {{element.id}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fechaRegistro">
+                        <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Fecha de registro</th>
+                        <td mat-cell *matCellDef="let element"
+                          [ngClass]="{'backGris': element.id === selectedRow}"
+                          (click)="cargaInsumosCompraDirecta(element.id)">
+                            {{ element.fechaRegistro | date:'dd-MM-yyyy' }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fechaEntrega">
+                        <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Fecha de entrega</th>
+                        <td mat-cell *matCellDef="let element"
+                          [ngClass]="{'backGris': element.id === selectedRow}"
+                          (click)="cargaInsumosCompraDirecta(element.id)">
+                            {{ element.fechaEntrega | date:'dd-MM-yyyy' }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="proveedor">
+                        <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Proveedor</th>
+                        <td mat-cell *matCellDef="let element"
+                          [ngClass]="{'backGris': element.id === selectedRow}"
+                          (click)="cargaInsumosCompraDirecta(element.id)">
+                            {{element.razonContratista}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="montoDescuento">
+                        <th mat-header-cell *matHeaderCellDef style="width: 5%;border: 1px solid;">Monto descuento</th>
+                        <td mat-cell *matCellDef="let element"
+                          [ngClass]="{'backGris': element.id === selectedRow}"
+                          (click)="cargaInsumosCompraDirecta(element.id)">
+                            {{element.montoDescuento}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="importeIva">
+                        <th mat-header-cell *matHeaderCellDef style="width: 5%;border: 1px solid;">IVA</th>
+                        <td mat-cell *matCellDef="let element"
+                          [ngClass]="{'backGris': element.id === selectedRow}"
+                          (click)="cargaInsumosCompraDirecta(element.id)">
+                            {{element.importeIva}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="totalPedido">
+                        <th mat-header-cell *matHeaderCellDef style="width: 5%;border: 1px solid;">Total del pedido con IVA</th>
+                        <td mat-cell *matCellDef="let element"
+                          [ngClass]="{'backGris': element.id === selectedRow}"
+                          (click)="cargaInsumosCompraDirecta(element.id)">
+                            {{element.totalPedido}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="estatus">
+                        <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Estatus</th>
+                        <td mat-cell *matCellDef="let element" (click)="cargaInsumosCompraDirecta(element.id)">
+                            {{element.estatus == 1 ? 'Capturada' : ''}}
+                            {{element.estatus == 2 ? 'Autorizada' : ''}}
+                            {{element.estatus == 3 ? 'Liberada' : ''}}
+                            {{element.estatus == 5 ? 'Cancelada' : ''}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="norequisicionsurte">
+                      <th mat-header-cell *matHeaderCellDef style="width: 5%;border: 1px solid;">No de requisición</th>
+                      <td mat-cell *matCellDef="let element"
+                        [ngClass]="{'backGris': element.id === selectedRow}"
+                        (click)="cargaInsumosCompraDirecta(element.id)">
+                          {{element.noRequisicion == 0 ? '' : element.noRequisicion}}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nombreproyecto">
+                      <th mat-header-cell *matHeaderCellDef style="width: 5%;border: 1px solid;">Proyecto</th>
+                      <td mat-cell *matCellDef="let element"
+                        [ngClass]="{'backGris': element.id === selectedRow}"
+                        (click)="cargaInsumosCompraDirecta(element.id)">
+                          {{element.idProyecto <= 0 ? '' : element.descripcionProyecto}}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="observaciones">
+                        <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Observaciones</th>
+                        <td mat-cell *matCellDef="let element"
+                          [ngClass]="{'backGris': element.id === selectedRow}"
+                          (click)="cargaInsumosCompraDirecta(element.id)">
+                            {{element.observaciones}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="acciones">
+                        <th mat-header-cell *matHeaderCellDef style="width: 20%;border: 1px solid;">Acciones</th>
+                        <td mat-cell *matCellDef="let element"
+                          [ngClass]="{'backGris': element.id === selectedRow}">
+                            <button mat-flat-button color="primary" *ngIf="element.estatus == 1" (click)="autorizar(element)">Autorizar</button>
+                            <button mat-flat-button color="primary" *ngIf="element.estatus == 2" (click)="liberar(element)">Comprar</button>
+                            <button mat-flat-button color="warn" *ngIf="element.estatus == 2" (click)="removerAutorizacion(element)">Remover autorización</button>
+                            <button mat-flat-button color="warn" *ngIf="element.estatus !== 5 && element.estatus !== 3" (click)="cancelar(element)">Cancelar</button>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="columnasAMostrar"></tr>
+                    <tr mat-row *matRowDef="let row; columns: columnasAMostrar"></tr>
+                </table>
+                <mat-paginator
+                [pageSizeOptions]="[5, 10, 20, 50]"
+                #paginado1
+                showFirstLastButtons
+                [length]="cantidadTotalRegistros"
+                [pageSize]="cantidadRegistrosAMostrar"
+                class="mat-elevation-z8"
+                (page)="actualizarPaginacion($event)"
+                >
+                </mat-paginator>
+            </ng-container>
+        </app-listado-generico>
+    </div>
+</div>
+
+<div class="flex-container" *ngIf="tieneInsumosXCompraDirecta">
+    <div [ngClass]="'panel100'">
+        <app-listado-generico [listado]="insumosXCompraDirecta">
+            <ng-container contenido>
+                <h4>Listado de insumos en la orden de compra</h4>
+                <table
+                  #table
+                  mat-table
+                  [dataSource]="insumosXCompraDirecta"
+                  class="mat-elevation-z8">
+
+                    <ng-container matColumnDef="codigo">
+                        <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Código</th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.codigoInsumo}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="descripcion">
+                        <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Descripción</th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.descripcionInsumo}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="unidad">
+                        <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Unidad</th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.unidadInsumo}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="cantidad">
+                        <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Cantidad</th>
+                        <td mat-cell *matCellDef="let element">
+                          <input #cantidad matInput class="inputEnTabla" type="text" [ngModel]="element.cantidadInsumos" (keyup)="onKeyUp('cantidad', element, cantidad.value)" />
+
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="precio">
+                        <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Precio unitario</th>
+                        <td mat-cell *matCellDef="let element">
+                          <input #precio matInput class="inputEnTabla" type="text" [ngModel]="element.precioUnitarioInsumo" (keyup)="onKeyUp('precio', element, precio.value)" />
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="preciototal">
+                      <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Precio total</th>
+                      <td mat-cell *matCellDef="let element">
+                        {{element.cantidadInsumos * element.precioUnitarioInsumo | number: '0.00' }}
+                      </td>
+                  </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="columnasAMostrarIXCD"></tr>
+                    <tr mat-row *matRowDef="let row; columns: columnasAMostrarIXCD"></tr>
+                </table>
+                <mat-paginator
+                    [pageSizeOptions]="[5, 10, 20, 50]"
+                    #paginado2
+                    showFirstLastButtons
+                    [length]="cantidadTotalRegistrosInsumosCD"
+                    [pageSize]="cantidadRegistrosAMostrarInsumosCD"
+                    class="mat-elevation-z8"
+                    (page)="actualizarPaginacionIXCD($event)" >
+                </mat-paginator>
+            </ng-container>
+        </app-listado-generico>
+    </div>
+</div>
+
+
+
+
+
+<!-- Panel de Captura -->
+<ng-template #dialogNuevaCompraDirecta>
+    <h2 matDialogTitle>Nueva compra directa</h2>
+    <mat-dialog-content>
+        <form [formGroup]="form">
+          <br>
+          <table class="sinborder" style="width: 97%; height: 100%;">
+            <tr>
+              <td class="sinborder" colspan="2">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <input type="text"
+                    placeholder="Requisición"
+                    matInput
+                    [formControl]="requisicionControl"
+                    [matAutocomplete]="autoRequisicion">
+                  <mat-autocomplete autoActiveFirstOption #autoRequisicion (optionSelected)="opcionSeleccionadaRequisicion($event)">
+                    <mat-option *ngFor="let opcion of requisiciones"  [value]="opcion">
+                      Requisición: {{opcion.noRequisicion }} | Proyecto: {{ opcion.nombre }} | Fecha de registro: {{opcion.fechaRegistro | date:'dd-MM-yyyy' }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td class="sinborder">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>Fecha de entrega estimada*</mat-label>
+                  <input [matDatepicker]="picker" formControlName="fechaEntrega" matInput #fechaEntrega (keydown.enter)="guardar()">
+                  <mat-datepicker-toggle (dateChange)="fechaEntregaChange($event)" matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </td>
+              <td class="sinborder">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>Proveedor*</mat-label>
+                  <mat-select >
+                      <mat-option *ngFor="let contratista of contratistas" (onSelectionChange)="selectionChangeContratista(contratista.id)" [value]="contratista.id">
+                        {{contratista.razonSocial}}
+                      </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+                <td class="sinborder">
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                        <mat-label>Proyecto</mat-label>
+                        <mat-select [(value)]="selectedProyecto" >
+                          <mat-option [value]="0" ><p>Seleccione</p></mat-option>
+                          <mat-option *ngFor="let proyecto of proyectos" (onSelectionChange)="selectionChangeProyecto(proyecto.id)" [value]="proyecto.id">
+                            {{proyecto.nombre }}
+                          </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </td>
+                <td class="sinborder">
+                  <mat-form-field appearance="outline" style="width: 100%;">
+                    <mat-label>Almacen*</mat-label>
+                    <mat-select [(value)]="selectedAlmacen" >
+
+                      <mat-option *ngFor="let almacen of almacenes" (onSelectionChange)="selectionChangeAlmacen(almacen.id)" [value]="almacen.id">
+                        {{almacen.codigo}} | {{almacen.almacenNombre}}
+                      </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td class="sinborder">
+
+                </td>
+                <td class="sinborder">
+
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="sinborder">
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                        <mat-label>Observaciones</mat-label>
+                        <input formControlName="observaciones" matInput #observaciones (keydown.enter)="guardar()"/>
+                    </mat-form-field>
+                </td>
+            </tr>
+          </table>
+          </form>
+          <p>Filtro de insumos</p>
+          <table class="sinborder" style="width: 100%;">
+            <tr>
+              <td class="sinborder" style="width: 100%;">
+                <mat-form-field appearance="outline" style="margin-top: 6px;" class="tableAl100">
+                  <input type="text"
+                    placeholder="Insumo general"
+                    matInput
+                    [formControl]="insumoControlNormal"
+                    [matAutocomplete]="autoInsumoNormal">
+                  <mat-autocomplete autoActiveFirstOption #autoInsumoNormal (optionSelected)="opcionSeleccionadaNormal($event)">
+                    <mat-option [value]="">
+                      <button mat-flat-button color="primary" style="float: right; right: 3%;" (click)="openDialogWithoutRefNuevoInsumo()">Nuevo insumo no presupuestado</button>
+                    </mat-option>
+                    <mat-option *ngFor="let opcion of insumos"  [value]="opcion">
+                      {{opcion.codigo }} | {{opcion.descripcion }} | {{opcion.unidad }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </td>
+            </tr>
+          </table>
+          <table
+          #tableInsumosPresupuestados
+          mat-table
+          [dataSource]="listaInsumosSeleccionados"
+          class="mat-elevation-z8">
+            <ng-container matColumnDef="codigo">
+                <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Codigo</th>
+                <td mat-cell *matCellDef="let element" (contextmenu)="onRightClick(element, $event)">
+                    {{element.codigoInsumo}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="descripcion">
+                <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Descripción</th>
+                <td mat-cell *matCellDef="let element" (contextmenu)="onRightClick(element, $event)">
+                    {{element.descripcionInsumo}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="unidad">
+                <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Unidad</th>
+                <td mat-cell *matCellDef="let element" (contextmenu)="onRightClick(element, $event)">
+                    {{element.unidadInsumo}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="cantidad">
+                <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Cantidad</th>
+                <td mat-cell *matCellDef="let element;" matInput (contextmenu)="onRightClick(element, $event)" >
+                  <input matInput [(ngModel)]="element.cantidadInsumos" (keyup)="calculaMontos()" class="inputEnTabla" />
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="importe">
+              <th mat-header-cell *matHeaderCellDef style="width: 10%;border: 1px solid;">Importe sin IVA</th>
+              <td mat-cell *matCellDef="let element;" matInput (contextmenu)="onRightClick(element, $event)">
+                <input matInput type="number" [(ngModel)]="element.precioUnitarioInsumo" (keyup)="calculaMontos()" class="inputEnTabla" />
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnasAMostrarPU"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnasAMostrarPU"></tr>
+          </table>
+          <br>
+          <table class="sinborder" style="width: 97%; height: 100%;">
+            <tr>
+              <td class="sinborder">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>IVA</mat-label>
+                  <input [formControl]="montoIvaControl" type="number" matInput (keydown.enter)="guardar()"/>
+                </mat-form-field>
+              </td>
+              <td class="sinborder">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>ISR</mat-label>
+                  <input [formControl]="montoIsrControl" type="number" matInput (keydown.enter)="guardar()"/>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td class="sinborder">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>IEPS</mat-label>
+                  <input [formControl]="montoIepsControl" type="number" matInput (keydown.enter)="guardar()"/>
+                </mat-form-field>
+              </td>
+              <td class="sinborder">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>ISAN</mat-label>
+                  <input [formControl]="montoIsanControl" type="number" matInput (keydown.enter)="guardar()"/>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td class="sinborder">
+
+              </td>
+              <td class="sinborder">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>Subtotal</mat-label>
+                  <input type="number" [formControl]="montoSubTotalControl" matInput #totalPedido />
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td class="sinborder">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>Descuento</mat-label>
+                  <input [formControl]="montoDescuentoControl" type="number" matInput (keyup)="calculaMontos()" (keydown.enter)="guardar()"/>
+                </mat-form-field>
+              </td>
+              <td class="sinborder">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>Total</mat-label>
+                  <input [formControl]="montoTotalControl" type="number" matInput (keydown.enter)="guardar()"/>
+                </mat-form-field>
+              </td>
+            </tr>
+
+          </table>
+
+
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-flat-button color="primary" matDialogClose class="botonesFormulario" (click)="guardar()">Guardar cambios</button>
+        <button mat-flat-button color="warn" matDialogClose class="botonesFormulario" (click)="limpiarFormulario()" >Cerrar</button>
+    </mat-dialog-actions>
+</ng-template>
+
+
+
+
+<!-- Panel de Captura -->
+<ng-template #dialogNuevoInsumo>
+  <h2 matDialogTitle>Agregar nuevo insumo</h2>
+  <mat-dialog-content>
+    <form [formGroup]="formNuevoInsumo">
+      <mat-form-field appearance="outline" class="tableAl100" style="padding-top: 1%;">
+        <mat-label>Código</mat-label>
+        <input formControlName="codigo" matInput maxlength="50" (keydown.enter)="guardar()"/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="tableAl100">
+        <mat-label>Descripción</mat-label>
+        <input formControlName="descripcion" matInput maxlength="200" (keydown.enter)="guardar()"/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="tableAl100">
+        <mat-label>Unidad</mat-label>
+        <input formControlName="unidad" matInput maxlength="15" (keydown.enter)="guardar()"/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="tableAl100">
+        <mat-label>Tipo de insumo</mat-label>
+        <mat-select formControlName="idTipoInsumo" (selectionChange)="onTipoInsumoChange($event)">
+          <mat-option *ngFor="let tipoInsumo of tiposInsumo" [value]="tipoInsumo.id">
+            {{tipoInsumo.descripcion}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="tableAl100">
+        <mat-label>Familia de insumo</mat-label>
+        <mat-select formControlName="idFamiliaInsumo" (selectionChange)="onFamiliaInsumoChange($event)">
+          <mat-option *ngFor="let familiaInsumo of familiasInsumo" [value]="familiaInsumo.id">
+            {{familiaInsumo.descripcion}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+        <div>
+          <button mat-flat-button matDialogClose color="warn" class="botonesFormulario" (click)="limpiarFormularioNuevoInsumo()" >Cerrar</button>
+          <button mat-flat-button color="primary" class="botonesFormulario" (click)="guardarNuevoInsumo()">Guardar cambios</button>
+        </div>
+    </form>
+  </mat-dialog-content>
+</ng-template>
+
+
+
+<div class="container">
+
+  <div style="visibility: hidden; position: fixed;"
+  [style.left.px]="menuTopLeftPosition.x"
+  [style.top.px]="menuTopLeftPosition.y"
+  [matMenuTriggerFor]="rightMenu"
+  ></div>
+  <!-- standar material menu -->
+  <mat-menu #rightMenu="matMenu" (click)="$event.stopPropagation()">
+    <ng-template matMenuContent let-item="item" (click)="$event.stopPropagation()">
+      <mat-form-field appearance="outline" class="table100Left" (click)="$event.stopPropagation()">
+        <mat-label>IVA %</mat-label>
+        <input #iva matInput maxlength="15" type="number" [(ngModel)]="item.iva" (keyup)="calculaMontos()" (click)="$event.stopPropagation()" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="table100Left" (click)="$event.stopPropagation()">
+        <mat-label>ISR %</mat-label>
+        <input matInput maxlength="15" type="number" [(ngModel)]="item.isr" (keyup)="calculaMontos()" (click)="$event.stopPropagation()" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="table100Left" (click)="$event.stopPropagation()">
+        <mat-label>IEPS %</mat-label>
+        <input matInput maxlength="15" type="number" [(ngModel)]="item.ieps" (keyup)="calculaMontos()" (click)="$event.stopPropagation()" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="table100Left" (click)="$event.stopPropagation()">
+        <mat-label>ISAN %</mat-label>
+        <input matInput maxlength="15" type="number" [(ngModel)]="item.isan" (keyup)="calculaMontos()" (click)="$event.stopPropagation()" />
+      </mat-form-field>
+    </ng-template>
+  </mat-menu>
+</div>

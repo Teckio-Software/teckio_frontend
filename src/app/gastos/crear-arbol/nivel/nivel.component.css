@@ -1,0 +1,56 @@
+.contenedor-niveles {
+    border: 2px solid #b9dfe9;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 7px;
+}
+
+li {
+    list-style: none;
+}
+
+.button-generar {
+    background-color: #b9dfe9;
+    border: none;
+    border-radius: 3px;
+    padding: 3px 10px;
+}
+
+.button-generar:hover {
+    background-color: #21416e;
+    color: #f2f2f2;
+}
+
+.contenedor-usuario {
+    background-color: #16292e;
+    border-radius: 3px;
+}
+
+.button-agregar {
+    background-color: #51aec7;
+    border: none;
+    color: #f2f2f2;
+    border-radius: 3px;
+}
+
+.button-agregar:hover {
+    background-color: #21416e;
+}
+
+.contenedor-agregar {
+    background-color: #b9dfe9;
+    padding: 5px;
+    margin-right: 10px;
+    border-radius: 3px;
+}
+
+.btn-borrar {
+    border: none;
+    background-color: #51aec7;
+    color: #f2f2f2;
+    border-radius: 3px;
+}
+
+.btn-borrar:hover {
+    background-color: #21416e;
+}

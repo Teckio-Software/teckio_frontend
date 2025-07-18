@@ -1,0 +1,535 @@
+<!-- Add insumos table -->
+<p class="text-center font-semibold text-lg mt-1 xs:text-sm">Agregar Insumos</p>
+<div
+  class="md:hidden lg:hidden h-5 bg-colorButton w-5 rounded-md flex justify-center items-center mb-1 ml-auto"
+>
+  <img
+    triggers="mouseenter:mouseleave"
+    ngbTooltip="Guardar"
+    class="cursor-pointer xs:w-4 xs:h-4"
+    src="../../../../assets/save.svg"
+    alt="Botón de guardar"
+    (click)="agregarNuevoInsumo()"
+  />
+</div>
+<div class="overflow-x-auto shadow-md rounded-lg">
+  <table class="w-full text-sm text-left xs:table-fixed">
+    <thead class="bg-primario text-white">
+      <tr class="xs:text-[10px]">
+        <th class="py-[2px] w-3 text-center xs:w-[50px] xs:hidden" scope="col">
+          Detalles
+        </th>
+        <th class="px-[2px] py-[2px] w-5 xs:w-[75px]" scope="col">
+          Descripción*
+        </th>
+        <th class="px-[2px] py-[2px] w-4 xs:w-[50px]" scope="col">Unidad*</th>
+        <th class="px-[2px] py-[2px] w-4 xs:w-[85px]" scope="col">
+          Tipo Insumo*
+        </th>
+        <th class="px-[2px] py-[2px] w-3 xs:hidden" scope="col">
+          Costo Unitario
+        </th>
+        <th class="px-[2px] py-[2px] w-4 xs:hidden" scope="col">
+          C. Presupuesto
+        </th>
+        <th class="px-[2px] py-[2px] w-4 xs:w-[65px]" scope="col">Cantidad*</th>
+        <!-- <th class="cabecera1" scope="col">Solicita</th> -->
+        <th class="px-[2px] py-[2px] xs:px-[1px] w-6 xs:w-[90px]" scope="col">
+          Entrega*
+        </th>
+        <th class="px-[2px] py-[2px] w-8 xs:px-[1px] xs:hidden" scope="col">
+          Observaciones*
+        </th>
+        <!-- <th class="cabecera1" scope="col">Acciones</th> -->
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray300">
+      <tr
+        class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+      >
+        <td class="px-1 py-[2px] xs:hidden" scope="col">
+          <img
+            ngbTooltip="Ver detalles"
+            triggers="mouseenter:mouseleave"
+            class="mx-auto cursor-pointer"
+            src="../../../../assets/more.svg"
+            (click)="verDetalleInsumo()"
+          />
+        </td>
+        <td class="px-1 py-[2px]" scope="col" [formGroup]="form">
+          <!-- <input
+            HEAD
+            class="dropdown bg-transparent w-[75%] xs:w-[95%]"
+            list="insumodata"
+            id="insumo"
+            name="insumo"
+            formControlName="descripcion"
+            placeholder="Descripción..."
+            autocomplete="off"
+            (keydown.enter)="agregarNuevoInsumo()"
+            (input)="informacionInsumo($event)"
+          />
+          <datalist id="insumodata">
+            <option *ngFor="let insumo of explocionInsumosparaRequisicion">
+              {{ insumo.descripcion }}
+            </option>
+          </datalist> -->
+
+          <input
+            type="text"
+            placeholder="Seleccionar..."
+            [matAutocomplete]="auto"
+            class="dropdown bg-transparent border-none rounded-lg bg-gray300 text-gray700 font-medium lg:w-52 md:w-36 xms:w-28 xs:w-[95%] w-[75%]"
+            #textoDataList
+            [formControl]="insumoControl"
+            (input)="filtrarInsumos($event)"
+          />
+          <mat-autocomplete
+            #auto="matAutocomplete"
+            (optionSelected)="selectionChangeInsumo($event)"
+          >
+            <mat-option
+              class="mat-option-css"
+              style="font-weight: 500; font-size: 14px; border-radius: 7px"
+              *ngFor="let insumo of filteredExplosion | async"
+              [value]="insumo.descripcion"
+              >{{ insumo.descripcion }}
+            </mat-option>
+          </mat-autocomplete>
+        </td>
+        <td class="px-1 py-[2px]" scope="col" [formGroup]="form">
+          <input
+            placeholder="Unidad..."
+            autocomplete="off"
+            class="dropdown1 bg-transparent w-[75%] xs:w-[80%]"
+            type="text"
+            data-bs-toggle="dropdown"
+            (keydown.enter)="agregarNuevoInsumo()"
+            formControlName="unidad"
+          />
+        </td>
+        <td class="px-1 py-[2px] w-[10%]" scope="col" [formGroup]="form">
+          <select
+            (input)="selectTipoInsumo($event)"
+            formControlName="idTipoInsumo"
+            class="dropdown2 w-full bg-transparent"
+          >
+            <option value="0" disabled>Seleccionar</option>
+            <option
+              *ngFor="let tipoInsumo of tipoInsumos"
+              [value]="tipoInsumo.id"
+            >
+              {{ tipoInsumo.descripcion }}
+            </option>
+          </select>
+        </td>
+        <td class="px-1 py-[2px] xs:hidden" scope="col" [formGroup]="form">
+          <!-- <input
+            autocomplete="off"
+            class="dropdown1 bg-transparent"
+            type="text"
+            data-bs-toggle="dropdown"
+            (keydown.enter)="agregarNuevoInsumo()"
+            formControlName="cUnitario"
+            [disabled]="false"
+          /> -->
+          {{form.get('cUnitario')?.value | number: '1.2-2'}}
+
+        </td>
+        <td class="px-1 py-[2px] xs:hidden" scope="col" [formGroup]="form">
+          <!-- <input
+            autocomplete="off"
+            class="dropdown1 bg-transparent"
+            type="text"
+            data-bs-toggle="dropdown"
+            (keydown.enter)="agregarNuevoInsumo()"
+            formControlName="cPresupuestada"
+            [disabled]="true"
+          /> -->
+          {{form.get('cPresupuestada')?.value | number: '1.4-4'}}
+        </td>
+        <td
+          class="px-1 py-[2px] w-[20%] xs:w-[5%]"
+          scope="col"
+          [formGroup]="form"
+        >
+          <input
+            min="1"
+            placeholder="Cantidad..."
+            autocomplete="off"
+            class="dropdown1 bg-transparent w-[75%] xs:w-[100%]"
+            type="number"
+            data-bs-toggle="dropdown"
+            (keydown.enter)="agregarNuevoInsumo()"
+            formControlName="cantidad"
+          />
+        </td>
+        <!-- <td scope="col">
+                    <input autocomplete="off" autocomplete="off" class="form-contrtrol dropdown1" type="text"
+                      placeholder="Buscar" style="margin: 5px;" data-bs-toggle="dropdown"
+                      (keydown.enter)="agregarNuevoInsumo()" [(ngModel)]="insumo.personaIniciales">
+                  </td> -->
+        <td class="px-1 py-[2px]" scope="col" [formGroup]="form">
+          <input
+            type="date"
+            min="1900-01-01"
+            max="9999-01-01"
+            class="bg-transparent"
+            (keydown.enter)="agregarNuevoInsumo()"
+            formControlName="fechaEntrega"
+          />
+        </td>
+        <td class="px-1 py-[2px] xs:hidden" scope="col" [formGroup]="form">
+          <input
+            autocomplete="off"
+            class="dropdown1 bg-transparent"
+            type="text"
+            data-bs-toggle="dropdown"
+            (keydown.enter)="agregarNuevoInsumo()"
+            formControlName="observaciones"
+          />
+        </td>
+        <!-- <td scope="col">
+          <button class="button-filt" placement="start" ngbTooltip="Eliminar" triggers="mouseenter:mouseleave">
+            <img src="assets/delete.svg" alt="add cotizacion">
+          </button>
+        </td> -->
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!-- Add insumos table end -->
+
+<!-- List insumos table -->
+<p class="text-center font-semibold text-lg mt-2 xs:text-sm">
+  Lista de Insumos
+</p>
+<div class="overflow-x-auto shadow-md rounded-lg">
+  <table class="w-full text-sm text-left xs:table-fixed">
+    <thead class="bg-primario text-white">
+      <tr class="xs:text-[10px]">
+        <th
+          scope="col"
+          class="px-1 py-[2px] xs:w-[20px] md:hidden lg:hidden"
+        ></th>
+        <th scope="col" class="px-1 py-[2px] xs:hidden">Estatus</th>
+        <th scope="col" class="px-[2px] py-[2px] xs:w-[40px]">Entrega</th>
+        <th scope="col" class="px-[2px] py-[2px] xs:hidden">Folio</th>
+        <th scope="col" class="px-[2px] py-[2px] xs:w-[65px]">Descripción</th>
+        <th scope="col" class="px-[2px] py-[2px] xs:w-[30px]">Unidad</th>
+        <th scope="col" class="px-[2px] py-[2px] xs:w-[30px]">Cantidad*</th>
+        <th scope="col" class="px-[2px] py-[2px] xs:w-[85px] xs:hidden">
+          Observaciones*
+        </th>
+        <th
+          scope="col"
+          class="px-[2px] py-[2px] text-center xs:w-[80px] xs:hidden"
+        >
+          Estatus Compra
+        </th>
+        <th
+          scope="col"
+          class="px-[2px] py-[2px] text-center xs:w-[80px] xs:hidden"
+        >
+          Estatus Surtido
+        </th>
+        <th scope="col" class="px-[2px] py-[2px] text-center xs:w-[50px]">
+          Acción
+        </th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray300">
+      <tr
+        class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:hidden"
+        *ngIf="insumoXRequisicion.length == 0"
+      >
+        <td colspan="10" class="text-center">No existen insumos.</td>
+      </tr>
+      <tr
+        class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px] md:hidden lg:hidden"
+        *ngIf="insumoXRequisicion.length == 0"
+      >
+        <td colspan="6" class="text-center">No existen insumos.</td>
+      </tr>
+      <ng-container *ngFor="let i of insumoXRequisicion">
+        <tr
+          class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+        >
+          <td class="md:hidden lg:hidden" scope="col">
+            <img
+              (click)="desplegarInformacion(i)"
+              *ngIf="i.isExpanded"
+              src="../../../../assets/arrow_down.svg"
+              alt="icono de flecha abrir"
+            />
+            <img
+              (click)="desplegarInformacion(i)"
+              *ngIf="!i.isExpanded"
+              src="../../../../assets/arrow_right.svg"
+              alt="icono de flecha cerrar"
+            />
+          </td>
+          <td class="px-1 py-[2px] xs:hidden" scope="col">
+            <!-- {{ i.denominacionBool ? "Normal" : "Urgente" }} -->
+            <div class="flex justify-start h-full">
+              <div
+                class="bg-amber50 rounded-lg w-48 h-5"
+                *ngIf="!i.estatusInsumoCompradoDescripcion"
+              >
+                <p class="text-amber500 text-center">Urgente</p>
+              </div>
+
+              <div
+                class="bg-blue100 rounded-lg w-24 h-5"
+                *ngIf="i.estatusInsumoCompradoDescripcion"
+              >
+                <p class="text-blue600 text-center">Normal</p>
+              </div>
+            </div>
+          </td>
+          <td class="px-1 py-[2px]" scope="col">
+            {{ i.fechaEntrega | date : "dd-MM-yyyy" }}
+          </td>
+          <td class="px-1 py-[2px] xs:hidden" scope="col">{{ i.folio }}</td>
+          <td class="px-1 py-[2px]" scope="col">
+            <input
+              readonly
+              autocomplete="off"
+              type="text"
+              class="bg-transparent w-[70%]"
+              [(ngModel)]="i.descripcion"
+            />
+          </td>
+          <td class="px-1 py-[2px]" scope="col">{{ i.unidad }}</td>
+          <td class="px-1 py-[2px]" scope="col">
+            <input
+              min="1"
+              autocomplete="off"
+              class="bg-transparent xs:w-[75%]"
+              type="number"
+              data-bs-toggle="dropdown"
+              (keydown.enter)="actualizarIXR(i)"
+              [(ngModel)]="i.cantidad"
+            />
+          </td>
+          <td class="px-1 py-[2px] xs:hidden">
+            <input
+              readonly
+              autocomplete="off"
+              autocomplete="off"
+              class="dropdown1 bg-transparent"
+              type="text"
+              data-bs-toggle="dropdown"
+              (keydown.enter)="actualizarIXR(i)"
+              [(ngModel)]="i.observaciones"
+              (click)="abrirText(i); focus()"
+            />
+          </td>
+          <td class="px-1 py-[2px] align-middle xs:hidden">
+            <div class="flex justify-center h-full">
+              <div
+                class="bg-amber50 rounded-lg w-48 h-5"
+                *ngIf="
+                  i.estatusInsumoCompradoDescripcion ===
+                  'No hay ordenes de compra'
+                "
+              >
+                <p class="text-amber500 text-center">No hay compras</p>
+              </div>
+              <div
+                class="bg-amber50 rounded-lg w-48 h-5 xs:w-18"
+                *ngIf="i.estatusInsumoCompradoDescripcion === 'Pendiente'"
+              >
+                <p class="text-amber500 text-center">Pendiente</p>
+              </div>
+              <div
+                class="bg-green100 rounded-lg w-28 h-5 xs:w-18"
+                *ngIf="i.estatusInsumoCompradoDescripcion === 'Comprada'"
+              >
+                <p class="text-green600 text-center">Comprada</p>
+              </div>
+              <div
+                class="bg-blue100 rounded-lg w-28 h-5 xs:w-18"
+                *ngIf="i.estatusInsumoCompradoDescripcion === 'Autorizada'"
+              >
+                <p class="text-blue600 text-center">Autorizada</p>
+              </div>
+              <div
+                class="bg-blue100 rounded-lg w-28 h-5 xs:w-18"
+                *ngIf="i.estatusInsumoCompradoDescripcion === 'Capturada'"
+              >
+                <p class="text-blue600 text-center">Capturada</p>
+              </div>
+            </div>
+          </td>
+
+          <td class="px-1 py-[2px] xs:hidden" scope="col">
+            <div class="flex justify-center h-full">
+              <div
+                class="bg-amber50 rounded-lg w-48 h-5 xs:w-36"
+                *ngIf="
+                  i.estatusInsumoSurtidoDescripcion ===
+                  'No hay entradas de material'
+                "
+              >
+                <p class="text-amber500 text-center">No hay entradas</p>
+              </div>
+              <div
+                class="bg-amber50 rounded-lg w-28 h-5 xs:w-36"
+                *ngIf="i.estatusInsumoSurtidoDescripcion === 'Pendiente'"
+              >
+                <p class="text-amber500 text-center">Pendiente</p>
+              </div>
+              <div
+                class="bg-green100 rounded-lg w-48 h-5 xs:w-36"
+                *ngIf="
+                  i.estatusInsumoSurtidoDescripcion === 'Surtido Totalmente'
+                "
+              >
+                <p class="text-green600 text-center">Surtido Totalmente</p>
+              </div>
+              <div
+                class="bg-blue100 rounded-lg w-46 h-5 xs:w-36"
+                *ngIf="
+                  i.estatusInsumoSurtidoDescripcion === 'Surtido Parcialmente'
+                "
+              >
+                <p class="text-blue600 text-center">Parcialmente</p>
+              </div>
+            </div>
+          </td>
+          <td class="px-1 py-[2px]" scope="col">
+            <img
+              class="mx-auto cursor-pointer xs:w-4"
+              ngbTooltip="Eliminar"
+              triggers="mouseenter:mouseleave"
+              (click)="handleClick(i.id)"
+              src="../../../../assets/delete.svg"
+              alt="delete"
+            />
+          </td>
+        </tr>
+        <tr
+          class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+          *ngIf="i.isExpanded"
+        >
+          <td class="px-1 py-[2px]" colspan="6">
+            <div class="flex gap-1">
+              <label class="font-bold">Observaciones:</label>
+              <input
+                readonly
+                autocomplete="off"
+                autocomplete="off"
+                class="dropdown1 bg-transparent"
+                type="text"
+                data-bs-toggle="dropdown"
+                (keydown.enter)="actualizarIXR(i)"
+                [(ngModel)]="i.observaciones"
+                (click)="abrirText(i); focus()"
+              />
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+          *ngIf="i.isExpanded"
+        >
+          <td class="px-1 py-[2px]" colspan="6">
+            <div class="flex gap-1">
+              <label class="font-bold">Estatus Compra:</label>
+              <div
+                class="bg-amber50 rounded-lg w-48 h-5 xs:w-24"
+                *ngIf="
+                  i.estatusInsumoCompradoDescripcion ===
+                  'No hay ordenes de compra'
+                "
+              >
+                <p class="text-amber500 text-center">No hay compras</p>
+              </div>
+              <div
+                class="bg-amber50 rounded-lg w-48 h-5 xs:w-18"
+                *ngIf="i.estatusInsumoCompradoDescripcion === 'Pendiente'"
+              >
+                <p class="text-amber500 text-center">Pendiente</p>
+              </div>
+              <div
+                class="bg-green100 rounded-lg w-16 h-5 xs:w-18"
+                *ngIf="i.estatusInsumoCompradoDescripcion === 'Comprada'"
+              >
+                <p class="text-green600 text-center">Comprada</p>
+              </div>
+              <div
+                class="bg-blue100 rounded-lg w-28 h-5 xs:w-18"
+                *ngIf="i.estatusInsumoCompradoDescripcion === 'Autorizada'"
+              >
+                <p class="text-blue600 text-center">Autorizada</p>
+              </div>
+              <div
+                class="bg-blue100 rounded-lg w-16 h-5 xs:w-18"
+                *ngIf="i.estatusInsumoCompradoDescripcion === 'Capturada'"
+              >
+                <p class="text-blue600 text-center">Capturada</p>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+          *ngIf="i.isExpanded"
+        >
+          <td class="px-1 py-[2px]" colspan="6">
+            <div class="flex gap-1">
+              <label class="font-bold">Estatus Entrega:</label>
+
+              <div
+                class="bg-amber50 rounded-lg w-48 h-5 xs:w-24"
+                *ngIf="
+                  i.estatusInsumoSurtidoDescripcion ===
+                  'No hay entradas de material'
+                "
+              >
+                <p class="text-amber500 text-center">No hay entradas</p>
+              </div>
+              <div
+                class="bg-amber50 rounded-lg w-28 h-5 xs:w-18"
+                *ngIf="i.estatusInsumoSurtidoDescripcion === 'Pendiente'"
+              >
+                <p class="text-amber500 text-center">Pendiente</p>
+              </div>
+              <div
+                class="bg-green100 rounded-lg w-48 h-5 xs:w-24"
+                *ngIf="
+                  i.estatusInsumoSurtidoDescripcion === 'Surtido Totalmente'
+                "
+              >
+                <p class="text-green600 text-center">Surtido totalmente</p>
+              </div>
+              <div
+                class="bg-blue100 rounded-lg w-46 h-5 xs:w-24"
+                *ngIf="
+                  i.estatusInsumoSurtidoDescripcion === 'Surtido parcialmente'
+                "
+              >
+                <p class="text-blue600 text-center">Parcialmente</p>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</div>
+<div class="mt-2 mb-2">
+  <p class="font-medium xs:text-[8px]">{{ descripcion }}</p>
+  <textarea
+    #testInput
+    #textarea
+    [(ngModel)]="observacion"
+    (keydown.enter)="editaObservacionTextArea()"
+    style="width: 100%; display: none"
+    rows="2"
+    class="resize-none w-full p-1 text-sm bg-white rounded-t-lg border xs:text-[8px]"
+    placeholder="Descripción..."
+  ></textarea>
+</div>
+<!-- List insumos table -->

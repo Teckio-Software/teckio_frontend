@@ -1,0 +1,40 @@
+.titular-ventana {
+    background-color: #d3d9e2 ;
+    padding: 5px;
+    width: 250px;
+    margin: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    border-radius: 3px;
+}
+
+.btn-asignar {
+    border: none;
+    border-radius: 0 3px 3px 0;
+    background-color: #4EAAC1;
+    color: #f2f2f2;
+}
+
+.btn-asignar:hover {
+    background-color: #002B53;
+}
+
+.contenedor-tabla {
+    width: 98%;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
+td {
+    border: 1px solid #f2f2f2;
+    padding: 2px;
+}
+
+.cabecera {
+    background-color: #21416e;
+    padding: 2px;
+    color: #f2f2f2;
+    font-size: 400;
+    border: 1px solid #f2f2f24f;
+}

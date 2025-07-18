@@ -1,0 +1,53 @@
+<p class="text-center font-semibold text-lg mt-1">Entradas de insumos</p>
+<div class="p-[5px] bg-transparent">
+  <div class="rounded-lg shadow-md overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead class="bg-primario text-white">
+          <tr>
+            <th class="px-1 py-[1px] min-w-2" scope="col">Descripción</th>
+            <th class="px-[2px] py-[1px] min-w-2" scope="col">Unidad</th>
+            <th class="px-[2px] py-[1px] min-w-2" scope="col">Por Recibir</th>
+            <th class="px-[2px] py-[1px] min-w-2" scope="col">Recibido</th>
+            <th class="px-[2px] py-[1px] min-w-2" scope="col">Saldo</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray300">
+          <tr *ngIf="isumosentradaalmacen.length == 0">
+            <td
+              scope="col"
+              colspan="5"
+              class="font-medium text-gray700 hover:bg-gray200 animation duration-200 py-2 text-center"
+            >
+              No existen insumos registrados.
+            </td>
+          </tr>
+          <tr
+            class="font-medium text-gray700 hover:bg-gray200 animation duration-200"
+            *ngFor="let iae of isumosentradaalmacen"
+          >
+            <td class="px-1 py-[2px] min-w-2" scope="col">
+              {{ iae.descripcionInsumo }}
+            </td>
+            <td class="px-1 py-[2px] min-w-2" scope="col">
+              {{ iae.unidadInsumo }}
+            </td>
+            <td class="px-1 py-[2px] min-w-2" scope="col">
+              {{ iae.cantidadPorRecibir }}
+            </td>
+            <td class="px-1 py-[2px] min-w-2" scope="col">
+              {{ iae.cantidadRecibida }}
+            </td>
+            <td class="px-1 py-[2px] min-w-2" scope="col">
+              {{
+                iae.cantidadPorRecibir - iae.cantidadRecibida < 0
+                  ? 0
+                  : iae.cantidadPorRecibir - iae.cantidadRecibida
+              }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

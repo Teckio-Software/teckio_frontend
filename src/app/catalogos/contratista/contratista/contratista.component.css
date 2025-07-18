@@ -1,0 +1,52 @@
+/* my-component.component.css */
+::ng-deep
+  .first-custom-tab-group.mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs
+  > .mat-mdc-tab-header
+  .mat-mdc-tab {
+  flex-grow: 0 !important; /* Asegúrate de que solo el primer grupo de pestañas se vea afectado */
+  background-color: #4eaac1 !important; /* Cambia el color de fondo de las pestañas */
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+::ng-deep .first-custom-tab-group .mat-mdc-tab-labels {
+  gap: 2px !important; /* Asegúrate de que no haya espacio entre las pestañas */
+}
+::ng-deep .first-custom-tab-group .mat-mdc-tab:not(.mdc-tab--stacked) {
+  height: 25px !important; /* Cambia la altura de las pestañas */
+}
+::ng-deep .first-custom-tab-group .mdc-tab__text-label {
+  color: #f2f2f2 !important; /* Cambia el color del texto de las pestañas */
+}
+
+.change-background-color {
+  background-color: #b9dfe9;
+}
+.change-background-color td {
+  background-color: inherit;
+}
+
+::ng-deep .SweetAlert2ConfirmButtonError {
+  box-shadow: none !important;
+  width: 100% !important;
+  background-color: #a8343453 !important;
+  border: none !important;
+  color: #fff !important;
+  margin: 0px !important;
+  border-width: none !important;
+  box-sizing: none !important;
+}
+
+::ng-deep .swal2-actions {
+  width: 100% !important;
+}
+::ng-deep .swal2-popup {
+  padding: 0px !important;
+}
+::ng-deep .swal2-image {
+  padding: 8px !important;
+  margin: auto !important;
+}
+
+::ng-deep .swal2-html-container {
+  margin: 0.3rem 1.6rem 0.3rem !important;
+}
