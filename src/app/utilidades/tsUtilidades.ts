@@ -78,36 +78,42 @@ export const pages: Page[] = [
         name: 'Proyectos',
         link: '/proyecto',
         imageUrl: 'assets/proyectos.svg',
+        permiso: '',
       },
       {
         name: 'Precio Unitario',
         link: '/preciounitario',
         imageUrl: 'assets/preciounitario.svg',
-        permiso: 'SeccionPrecioUnitario',
+        permiso: '',
+        // SeccionPrecioUnitario
       },
       {
         name: 'Programacion Estimada',
         link: '/programacionestimada',
         imageUrl: 'assets/almacen.svg',
-        permiso: 'SeccionProgramacionEstimada',
+        permiso: '',
+        // SeccionProgramacionEstimada
       },
       {
         name: 'Contratos',
         link: '/contratos',
         imageUrl: 'assets/contratista.svg',
-        permiso: 'SeccionContrato',
+        permiso: '',
+        //SeccionContrato
       },
       {
         name: 'Reportes',
         link: '/reportes',
         imageUrl: 'assets/facturas.svg',
-        permiso: 'SeccionAvanceObra',
+        permiso: '',
+        //SeccionAvanceObra
       },
       {
         name: 'Avance de obra',
         link: '/estimaciones',
         imageUrl: 'assets/estimada.svg',
-        permiso: 'SeccionAvanceObra',
+        permiso: '',
+        //SeccionAvanceObra
       },
     ],
     expanded: false,

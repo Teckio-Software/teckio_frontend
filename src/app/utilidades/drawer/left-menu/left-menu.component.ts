@@ -55,6 +55,13 @@ export class LeftMenuComponent implements OnInit {
       this.proyectoStateService.proyectoNombre$,
       this.zvSeguridadService.token$,
     ]).subscribe(([proyecto, token]) => {
+      if (!token) {
+        const localToken = localStorage.getItem('token');
+        if (localToken) {
+          this.zvSeguridadService.actualizarToken(localToken);
+          return;
+        }
+      }
       if (proyecto && token) {
         this.permisosUsuario =
           this.zvSeguridadService.obtenerSeccionesUsuario();
@@ -106,8 +113,8 @@ export class LeftMenuComponent implements OnInit {
   }
 
   private tienePermiso(permiso: string): boolean {
-    const tiene = this.permisosUsuario.includes(permiso);
-    return tiene;
+    const permisos = this.permisosUsuario.includes(permiso);
+    return permisos;
   }
 
   private esAdministrador(): boolean {
