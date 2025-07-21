@@ -20,6 +20,8 @@ export class LoginComponent {
 
   mensajeUsuario: string = '';
   mensajeContrasena: string = '';
+  isLoading: boolean = false;
+  botonMensaje: string = 'Entrar';
 
   constructor(
     private seguridadService: SeguridadService,
@@ -30,17 +32,23 @@ export class LoginComponent {
   ) {}
 
   zfLogin(zCredenciales: CredencialesUsuarioDTO) {
+    this.isLoading = true;
+    this.botonMensaje = 'Entrando...';
     this.seguridadMultiEmpresa.zfLogin(zCredenciales).subscribe({
       next: (zRespuesta) => {
         if (zRespuesta.token == 'El usuario ingresado es incorrecto.') {
           this.mensajeUsuario = 'El usuario ingresado es incorrecto.';
           this.mensajeContrasena = '';
+          this.isLoading = false;
+          this.botonMensaje = 'Entrar';
 
           return;
         }
         if (zRespuesta.token == 'La contraseña ingresada es incorrecta.') {
           this.mensajeContrasena = 'La contraseña ingresada es incorrecta.';
           this.mensajeUsuario = '';
+          this.isLoading = false;
+          this.botonMensaje = 'Entrar';
 
           return;
         }
@@ -58,6 +66,8 @@ export class LoginComponent {
               confirmButton: 'SweetAlert2ConfirmButtonWarning',
             },
           });
+          this.isLoading = false;
+          this.botonMensaje = 'Entrar';
           return;
         }
         if (zRespuesta.token != 'NoToken') {
@@ -69,7 +79,11 @@ export class LoginComponent {
           this.router.navigate(['/']);
         }
       },
+
       error: (zError) => {
+        this.isLoading = false;
+        this.botonMensaje = 'Entrar';
+
         console.error(zError);
       },
     });

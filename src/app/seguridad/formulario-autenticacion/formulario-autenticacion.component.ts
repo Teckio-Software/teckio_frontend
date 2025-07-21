@@ -7,7 +7,6 @@ import { animate, style, transition, trigger } from '@angular/animations';
   selector: 'app-formulario-autenticacion',
   templateUrl: './formulario-autenticacion.component.html',
   animations: [
-    // Overlay: solo fade in/out
     trigger('overlayFade', [
       transition(':enter', [
         style({ opacity: 0 }),
@@ -38,17 +37,17 @@ export class FormularioAutenticacionComponent {
   @Input()
   listaErrores: string[] = [];
   @Input()
-  accion!: string;
-  @Input() mensajeUsuario: string = '';
+  mensajeUsuario: string = '';
   @Input() mensajeContrasena: string = '';
-  @Output()
-  onSubmit: EventEmitter<CredencialesUsuarioDTO> =
+  @Input() accion: string = '';
+  @Input() isLoading!: boolean;
+
+  @Output() onSubmit: EventEmitter<CredencialesUsuarioDTO> =
     new EventEmitter<CredencialesUsuarioDTO>();
   recargar: number = 0;
 
   password!: string;
   showPassword: boolean = false;
-  isLoading = false;
   isOpen = false;
 
   constructor(private formBuilder: FormBuilder) {}

@@ -1,42 +1,43 @@
 <div
-  class="grid grid-cols-1 lg:grid-cols-2 h-screen items-center px-5 sm:px-20 md:px-40 lg:px-20"
+  class="grid grid-cols-1 lg:grid-cols-2 min-h-screen items-center px-4 sm:px-8 md:px-24 lg:px-20"
 >
   <!-- Logo lado izquierdo -->
-  <div class="mt-10 flex flex-col justify-center items-center">
+  <div class="mt-8 lg:mt-0 flex flex-col justify-center items-center">
     <img
       src="../../../assets/teckio.svg"
       alt="Teckio Logo"
-      class="xs:w-40 xs:h-40 sm:w-56 sm:h-56 md:w-56 md:h-56 lg:w-96 lg:h-96"
+      class="w-32 h-32 sm:w-40 sm:h-40 md:w-56 md:h-56 lg:w-96 lg:h-96"
     />
   </div>
 
   <!-- Form lado derecho -->
-  <div class="flex justify-center items-center mt-5">
+  <div class="flex justify-center items-center mt-5 lg:mt-0">
     <div
-      class="w-full max-w-lg bg-white rounded-md shadow-sm p-12 flex flex-col gap-7"
+      class="w-full max-w-xl bg-white rounded-md shadow-sm p-6 sm:p-8 md:p-12 flex flex-col gap-7"
     >
       <div>
         <p
-          class="text-gray-700 text-lg lg:text-2xl font-normal tracking-tighter"
+          class="text-gray-700 text-base sm:text-lg lg:text-2xl font-normal tracking-tighter"
         >
           Bienvenido a
         </p>
-        <p class="text-[#1d232a] text-4xl font-semibold tracking-tight">
+        <p
+          class="text-[#1d232a] text-3xl sm:text-4xl font-semibold tracking-tight"
+        >
           Teckio Software
         </p>
       </div>
       <div>
-        <p class="text-gray-800 text-sm font-normal">
+        <p class="text-gray-800 text-xs sm:text-sm font-normal">
           Ingresa los siguientes datos
         </p>
         <form
           (submit)="onSubmit.emit(form.value)"
           [formGroup]="form"
-          class="space-y-8"
+          class="space-y-6 sm:space-y-8"
         >
           <!-- Email -->
-          <div class="space-y-5">
-            <!-- Email -->
+          <div class="space-y-4 sm:space-y-5">
             <div
               class="w-full bg-gray-200 rounded-lg py-2 px-3 flex items-center space-x-3"
             >
@@ -53,7 +54,7 @@
                 />
               </div>
             </div>
-            <p class="text-red-600 font-normal px-2">
+            <p class="text-red-600 font-normal px-2 text-xs">
               {{ mensajeUsuario }}
             </p>
             <!-- Contraseña -->
@@ -91,18 +92,20 @@
                 />
               </button>
             </div>
-            <p class="text-red-600 font-normal px-2">{{ mensajeContrasena }}</p>
+            <p class="text-red-600 font-normal px-2 text-xs">
+              {{ mensajeContrasena }}
+            </p>
             <p
               (click)="openDialogRecuperarContrasena()"
-              #modalContraseña
               class="text-gray-800 text-xs font-normal underline cursor-pointer text-right"
             >
-              Olvidaste tu contraseña?
+              ¿Olvidaste tu contraseña?
             </p>
           </div>
 
           <!-- Botón -->
           <button
+            [ngClass]="{ 'animate-pulse': isLoading }"
             type="submit"
             [disabled]="form.invalid"
             class="w-full bg-primario text-white font-medium py-2 rounded-lg disabled:opacity-50 transition-colors hover:bg-hoverButton"
@@ -115,25 +118,27 @@
   </div>
 </div>
 
+<!-- Modal (overlay) -->
 <div @overlayFade *ngIf="isOpen">
-  <!-- Overlay: cierra al hacer click SOLO aquí -->
   <div
-    class="fixed inset-0 z-10 w-screen overflow-y-auto bg-opacity-50 backdrop-blur-sm"
+    class="fixed inset-0 z-10 w-screen overflow-y-auto bg-black bg-opacity-40 backdrop-blur-sm"
     (click)="cerrarModal()"
   >
     <div
-      class="content-center sm:flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0"
+      class="flex min-h-full items-center justify-center p-4 text-center sm:p-0"
       (click)="$event.stopPropagation()"
     >
       <div
         @modalPop
-        class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl"
+        class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all w-full max-w-xs sm:max-w-lg md:max-w-2xl"
         role="dialog"
         aria-modal="true"
       >
         <!-- Cabecera -->
         <div class="flex justify-between items-center border-b px-4 py-3">
-          <h2 class="font-semibold text-gray-800 tracking-wider text-lg">
+          <h2
+            class="font-semibold text-gray-800 tracking-wider text-base sm:text-lg"
+          >
             Restablecer contraseña
           </h2>
           <button
@@ -148,7 +153,7 @@
 
         <!-- Contenido -->
         <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-          <p class="text-gray-800 text-lg xs:text-base">
+          <p class="text-gray-800 text-base sm:text-lg">
             Para restablecer tu contraseña, contacta a nuestro equipo de soporte
             y ellos se encargarán de restablecerla.
           </p>
