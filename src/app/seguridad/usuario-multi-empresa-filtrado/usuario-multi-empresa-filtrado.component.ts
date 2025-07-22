@@ -509,6 +509,12 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
       });
   }
 
+  cambiarAdministradorRoles(usuario: UsuarioEstructuraCorporativoDTO){
+    this.usuarioService.CrearAdministradorRoles(usuario).subscribe((datos) =>{
+      console.log("Respuesta: ",datos.descripcion);
+    })
+  }
+
   nuevoUsuarioProveedor() {
     this.dialog
       .open(ModalUsuarioProveedorComponent, {
