@@ -36,7 +36,10 @@ import { EmpleadoServiceService } from '../empleado/empleado-service.service';
 import { da, el } from 'date-fns/locale';
 import { EmpleadosComponent } from '../empleado/empleados/empleados.component';
 import { ModalTablaEmpleadosComponent } from '../empleado/modal-tabla-empleados/modal-tabla-empleados.component';
-import { esAdminUsuarioCorporativoFuntion } from 'src/app/safe.guard';
+import {
+  esAdminRoles,
+  esAdminUsuarioCorporativoFuntion,
+} from 'src/app/safe.guard';
 
 @Component({
   selector: 'app-usuario-multi-empresa-filtrado',
@@ -52,6 +55,7 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
   tablaAsignacion = false;
   nombreUsuario: string = '';
   esAdmin: boolean = false;
+  esAdminRoles: boolean = false;
   clicked = false; // Variable para controlar si se ha hecho clic
 
   @HostListener('window:resize', ['$event'])
@@ -163,6 +167,7 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
   ) {
     this.paginator.itemsPerPageLabel = 'Registros por pagina:';
     this.esAdmin = esAdminUsuarioCorporativoFuntion();
+    this.esAdminRoles = esAdminRoles();
   }
 
   ngOnInit(): void {
