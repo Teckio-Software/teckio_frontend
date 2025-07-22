@@ -110,8 +110,14 @@
               <tr>
                 <th class="px-1 py-[2px]" scope="col">Nombre de usuario</th>
                 <th class="px-[2px] py-[2px]" scope="col">Nombre completo</th>
-                <th class="px-[2px] py-[2px]" scope="col">Activar</th>
-                <th class="px-[2px] py-[2px] text-center" scope="col">
+                <th *ngIf="!esAdminRoles" class="px-[2px] py-[2px]" scope="col">
+                  Activar
+                </th>
+                <th
+                  *ngIf="!esAdminRoles"
+                  class="px-[2px] py-[2px] text-center"
+                  scope="col"
+                >
                   Acciones
                 </th>
               </tr>
@@ -150,6 +156,7 @@
                 </td>
                 <!-- <td  style="width: 377px; margin-left: 15px;" (click)="cargarRegistrosEmpresas(registro)" [ngClass]="{ 'fila-seleccionada': registro === filaSeleccionada}">{{ registro.tipo == 1 ? "Usuario normal" : registro.tipo == 2 ? "Usuario proveedor" : registro.tipo == 3 ? "Usuario gastos" : "" }}</td> -->
                 <td
+                  *ngIf="!esAdminRoles"
                   [ngClass]="{
                     'bg-[#b9dfe9]': registro === filaSeleccionada
                   }"
@@ -176,6 +183,7 @@
                   </div>
                 </td>
                 <td
+                  *ngIf="!esAdminRoles"
                   [ngClass]="{
                     'bg-[#b9dfe9]': registro === filaSeleccionada
                   }"
@@ -227,11 +235,17 @@
             <thead class="bg-primario text-white">
               <tr>
                 <th class="px-1 py-[2px]" scope="col">Nombre Empresa</th>
-                <th class="px-[2px] py-[2px]" scope="col">
+                <th *ngIf="!esAdminRoles" class="px-[2px] py-[2px]" scope="col">
                   Esta activo en empresa
                 </th>
-                <th class="px-[2px] py-[2px]" scope="col">Rol</th>
-                <th class="px-[2px] py-[2px] text-center" scope="col">
+                <th *ngIf="!esAdminRoles" class="px-[2px] py-[2px]" scope="col">
+                  Rol
+                </th>
+                <th
+                  *ngIf="!esAdminRoles"
+                  class="px-[2px] py-[2px] text-center"
+                  scope="col"
+                >
                   Acciones
                 </th>
               </tr>
@@ -256,6 +270,7 @@
                     {{ registro.nombreEmpresa }}
                   </td>
                   <td
+                    *ngIf="!esAdminRoles"
                     [ngClass]="{
                       'bg-[#b9dfe9]': selectedEmpresaId === registro.idEmpresa
                     }"
@@ -277,6 +292,7 @@
                     </div>
                   </td>
                   <td
+                    *ngIf="!esAdminRoles"
                     [ngClass]="{
                       'bg-[#b9dfe9]': selectedEmpresaId === registro.idEmpresa
                     }"
@@ -296,6 +312,7 @@
                     </select>
                   </td>
                   <td
+                    *ngIf="!esAdminRoles"
                     [ngClass]="{
                       'bg-[#b9dfe9]': selectedEmpresaId === registro.idEmpresa
                     }"
