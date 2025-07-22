@@ -57,6 +57,7 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
   esAdmin: boolean = false;
   esAdminRoles: boolean = false;
   clicked = false; // Variable para controlar si se ha hecho clic
+  isActive: boolean = false;
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -599,7 +600,10 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
         registro.idEmpresa,
         registro.idRol
       )
-      .subscribe(() => {});
+      .subscribe(() => {
+        console.log(this.isActive, 'activo');
+        this.isActive = true;
+      });
   }
 
   guardarDatosUsuario() {
@@ -709,6 +713,7 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
       this.selectedEmpresaId = registro.idEmpresa;
     }
     this.isClicked = !this.isClicked;
+    console.log(this.isClicked, this.isActive);
     // this.selectedUsuario;
     // registro.idEmpresa;
   }

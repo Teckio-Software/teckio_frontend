@@ -37,6 +37,7 @@ export class ProyectoUsuarioComponent implements OnInit {
   };
 
   selectedProyectoId: number = 0;
+  agregarSelectedProyectoId: number = 0;
 
   alertaSuccess: boolean = false;
   alertaMessage: string = '';
@@ -142,7 +143,7 @@ export class ProyectoUsuarioComponent implements OnInit {
 
     this.selectedProyectoId = id;
     this.asignarProyecto(id);
-    this.selectedProyectoId = 0;
+    this.agregarSelectedProyectoId = 0;
   }
 
   obtenerRelaciones(registro: usuarioProyectoDTO) {
