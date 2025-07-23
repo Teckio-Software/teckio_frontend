@@ -128,7 +128,7 @@ export class ProyectoUsuarioComponent implements OnInit {
     };
 
     this.usuarioService.asignarRolesPorProyecto(parametro).subscribe(() => {
-      this.obtenerRelaciones(usuarioProyecto);
+      // this.obtenerRelaciones(usuarioProyecto);
     });
   }
 

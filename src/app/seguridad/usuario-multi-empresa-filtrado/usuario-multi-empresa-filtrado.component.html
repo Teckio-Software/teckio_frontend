@@ -1,42 +1,94 @@
 <section>
-  <!-- <div class="titularUsuarios">Usuarios</div> -->
+  <!-- <div>
+    <p class="text-lg text-center text-gray-700 font-bold mt-2">
+      Administración de usuarios
+    </p>
+  </div> -->
 
-  <div class="flex justify-center mt-3">
+  <div class="flex justify-center mt-3 space-x-3">
+    <!-- Grupo Corporativos -->
     <div
-      class="flex justify-center items-center px-5 rounded-lg bg-colorButton hover:bg-colorButtonHover transition-colors delay-75 mr-3 font-medium select-w"
+      class="flex items-center space-x-4 w-96 h-10 px-4 rounded-lg bg-colorButton hover:bg-colorButtonHover transition-colors delay-75"
     >
-      <mat-label class="mr-3 text-white">Corporativos:</mat-label>
+      <mat-label class="text-white text-base"> Corporativo: </mat-label>
       <mat-select
-        style="width: 200px; color: #f2f2f2"
-        class="text-white"
+        class="flex-1 text-white text-base"
         [(value)]="selectedCorporativo"
         (valueChange)="cargarRegistros($event)"
       >
         <mat-option
-          class="w-52"
           *ngFor="let corporativo of corporativos"
           [value]="corporativo.id"
+          class="text-base"
         >
           {{ corporativo.nombre }}
         </mat-option>
       </mat-select>
     </div>
-    <!-- Button cotainer -->
-    <div *ngIf="!esAdminRoles" class="flex mt-1 mb-2">
+
+    <!-- Botón Nuevo Usuario -->
+    <div *ngIf="!esAdminRoles">
       <button
         (click)="nuevoUsuario()"
-        class="flex items-center rounded-md bg-colorButton transition-colors delay-75 hover:bg-colorButtonHover font-light text-white p-1"
+        class="flex items-center justify-center w-60 h-10 rounded-lg bg-colorButton hover:bg-colorButtonHover transition-colors delay-75 font-medium text-base tracking-wider text-white"
       >
-        <p
-          class="text-[#f2f2f2] titular bg-custom-bg w-52 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
-        >
-          Nuevo usuario
-        </p>
-        <img class="xs:w-4" src="assets/add.svg" alt="botón agregar" />
+        <span class="mr-2">Nuevo usuario</span>
+        <img class="w-5 h-5" src="assets/add.svg" alt="botón agregar" />
       </button>
     </div>
-    <!-- Button cotainer  end -->
   </div>
+
+  <div class="w-full flex justify-end gap-2" *ngIf="esAdmin">
+    <div
+      class="flex justify-center m-0 p-0 items-center gap-3 border-2 border-[#51aec7] rounded-lg px-1"
+    >
+      <div class="flex justify-center m-0 p-0 items-center gap-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20
+              "
+          fill="#51aec7"
+          class="bi bi-search"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
+          />
+        </svg>
+      </div>
+      <input
+        class="input-1 dropdown1"
+        id="myInput"
+        type="text"
+        placeholder="Buscar usuario"
+        style="margin: 5px; margin-left: -5px"
+        data-bs-toggle="dropdown"
+        (click)="clickInputFiltroProveedores()"
+        (keyup)="filtrarProveedores($event)"
+        [(ngModel)]="nombreUsuario"
+      />
+      <ul
+        class="dropdown-menu"
+        style="overflow-x: auto; white-space: nowrap; height: 300px"
+      >
+        <li *ngIf="esAdmin && dropdown">
+          <option
+            class="option-hover"
+            *ngFor="let proveedor of dataUsuario"
+            [value]="proveedor.nombreCompleto"
+            (click)="seleccionaProveedor(proveedor)"
+          >
+            {{ proveedor.nombreCompleto }}
+          </option>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="text-sm font-medium mb-2 text-gray700 px-2 xs:text-[10px]">
+    Selecciona un usuario para asignar empresas, proyectos y roles.
+  </p>
 
   <div style="margin-top: 10px" [@changeStyles]="currentState">
     <div
@@ -49,55 +101,7 @@
           justify-content: space-between;
           align-items: center;
         "
-      >
-        <div class="w-full flex justify-end gap-2" *ngIf="esAdmin">
-          <div
-            class="flex justify-center m-0 p-0 items-center gap-3 border-2 border-[#51aec7] rounded-lg px-1"
-          >
-            <div class="flex justify-center m-0 p-0 items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20
-              "
-                fill="#51aec7"
-                class="bi bi-search"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
-                />
-              </svg>
-            </div>
-            <input
-              class="input-1 dropdown1"
-              id="myInput"
-              type="text"
-              placeholder="Buscar usuario"
-              style="margin: 5px; margin-left: -5px"
-              data-bs-toggle="dropdown"
-              (click)="clickInputFiltroProveedores()"
-              (keyup)="filtrarProveedores($event)"
-              [(ngModel)]="nombreUsuario"
-            />
-            <ul
-              class="dropdown-menu"
-              style="overflow-x: auto; white-space: nowrap; height: 300px"
-            >
-              <li *ngIf="esAdmin && dropdown">
-                <option
-                  class="option-hover"
-                  *ngFor="let proveedor of dataUsuario"
-                  [value]="proveedor.nombreCompleto"
-                  (click)="seleccionaProveedor(proveedor)"
-                >
-                  {{ proveedor.nombreCompleto }}
-                </option>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
+      ></div>
       <div class="p-2">
         <div class="overflow-x-auto shadow-md rounded-lg">
           <table
@@ -196,7 +200,10 @@
                       placement="top"
                       triggers="mouseenter:mouseleave"
                     >
-                      <img src="../../../assets/settings.svg" alt="" />
+                      <img
+                        src="../../../assets/settings.svg"
+                        alt="Editar usuario"
+                      />
                     </button>
                     <button
                       class="bg-colorButton hover:bg-colorButtonHover transition-colors delay-75 rounded-md p-1"
@@ -205,16 +212,22 @@
                       placement="start"
                       triggers="mouseenter:mouseleave"
                     >
-                      <img src="../../../assets/password.svg" alt="" />
+                      <img
+                        src="../../../assets/password.svg"
+                        alt="Cambiar contraseña"
+                      />
                     </button>
                     <button
                       class="bg-colorButton hover:bg-colorButtonHover transition-colors delay-75 rounded-md p-1"
                       (click)="cambiarAdministradorRoles(registro)"
-                      ngbTooltip="Administrador Roles"
+                      ngbTooltip="Hacer adminsitrador de roles"
                       placement="start"
                       triggers="mouseenter:mouseleave"
                     >
-                      <img src="../../../assets/password.svg" alt="" />
+                      <img
+                        src="../../../assets/supersu.svg"
+                        alt="Hacer adminsitrador de roles"
+                      />
                     </button>
                   </div>
                 </td>
@@ -233,11 +246,6 @@
     </div>
 
     <div *ngIf="tablaAsignacion" class="overflow-x-auto">
-      <div>
-        <p class="text-lg text-center text-gray-700 font-bold mt-2">
-          Tabla de Asignación
-        </p>
-      </div>
       <div class="p-2">
         <div class="overflow-hidden shadow-md rounded-lg">
           <table #tablaMenu class="w-full text-sm">
@@ -245,7 +253,7 @@
               <tr>
                 <th class="px-1 py-[2px]" scope="col">Nombre Empresa</th>
                 <th *ngIf="!esAdminRoles" class="px-[2px] py-[2px]" scope="col">
-                  Esta activo en empresa
+                  Esta activo en la empresa
                 </th>
                 <th *ngIf="!esAdminRoles" class="px-[2px] py-[2px]" scope="col">
                   Rol

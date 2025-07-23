@@ -221,7 +221,6 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
 
   seleccionEmpresaTablaRelacion(empresa: UsuarioEmpresaEstructura) {
     this.IdEmpresa = empresa.idEmpresa;
-    console.log('esta es la empresa', this.IdEmpresa);
     this.usarioActivoEmpresa = empresa.activoEmpresa;
     if (this.usarioActivoEmpresa) {
       this._empleadoService
@@ -446,7 +445,6 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
       .afterClosed()
       .subscribe(() => {
         this.cargarRegistros(this.selectedCorporativo);
-        console.log();
       });
   }
 
@@ -464,7 +462,6 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
             .afterClosed()
             .subscribe(() => {
               this.cargarRegistros(this.selectedCorporativo);
-              console.log();
             });
         } else if (info.descripcion == 'gastos') {
           this.dialog
@@ -476,7 +473,6 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
             .afterClosed()
             .subscribe(() => {
               this.cargarRegistros(this.selectedCorporativo);
-              console.log();
             });
         } else if (info.descripcion == 'normal') {
           this.dialog
@@ -488,7 +484,6 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
             .afterClosed()
             .subscribe(() => {
               this.cargarRegistros(this.selectedCorporativo);
-              console.log();
             });
         }
       });
@@ -510,10 +505,10 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
       });
   }
 
-  cambiarAdministradorRoles(usuario: UsuarioEstructuraCorporativoDTO){
-    this.usuarioService.CrearAdministradorRoles(usuario).subscribe((datos) =>{
-      console.log("Respuesta: ",datos.descripcion);
-    })
+  cambiarAdministradorRoles(usuario: UsuarioEstructuraCorporativoDTO) {
+    this.usuarioService
+      .CrearAdministradorRoles(usuario)
+      .subscribe((datos) => {});
   }
 
   nuevoUsuarioProveedor() {
@@ -607,7 +602,6 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
         registro.idRol
       )
       .subscribe(() => {
-        console.log(this.isActive, 'activo');
         this.isActive = true;
       });
   }
@@ -696,7 +690,6 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
       this.usuarioEmpresaService
         .ObtenEmpresasXUsuario(this.selectedCorporativo, parametro.idUsuario)
         .subscribe((datos) => {
-          console.log('Aqui estamos', datos);
           this.empresasConRoles = datos;
         });
       this.filaSeleccionada = parametro;
@@ -719,7 +712,6 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
       this.selectedEmpresaId = registro.idEmpresa;
     }
     this.isClicked = !this.isClicked;
-    console.log(this.isClicked, this.isActive);
     // this.selectedUsuario;
     // registro.idEmpresa;
   }
