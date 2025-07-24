@@ -130,6 +130,7 @@ export class PrecioUnitarioComponent implements OnInit {
     id: 0,
     idProyecto: 0,
     porcentajeFsr: 0,
+    esCompuesto: false
   };
   diasConsideradosFsiPagados!: diasConsideradosDTO[];
   diasConsideradosFsiNoTrabajados!: diasConsideradosDTO[];
