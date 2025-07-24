@@ -68,6 +68,7 @@ export class ProyectoUsuarioComponent implements OnInit {
       .obtenerTodosSinEstructurar(this.selectedEmpresa)
       .subscribe((proyectos: proyectoDTO[]) => {
         this.proyectos = proyectos;
+        console.log(this.proyectos);
       });
 
     this._ProyectoUsuarioService
@@ -87,6 +88,10 @@ export class ProyectoUsuarioComponent implements OnInit {
       });
 
     this.obtenerRoles();
+  }
+
+  get tieneEmpresaYRol(): boolean {
+    return this.registros.some((r) => r.estatus && !!r.idRol) ?? false;
   }
 
   asignarProyecto(idProyecto: number) {

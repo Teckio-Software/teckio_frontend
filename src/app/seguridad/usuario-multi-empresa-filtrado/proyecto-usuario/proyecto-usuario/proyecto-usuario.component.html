@@ -1,4 +1,4 @@
-<div class="p-2">
+<div class="p-2 w-3/4 mx-auto">
   <app-alert
     *ngIf="alertaTipo !== AlertaTipo.none"
     [alertaTipo]="alertaTipo"
@@ -7,9 +7,10 @@
   >
   </app-alert>
   <div class="mb-2">
-    <label class="block mb-2 font-medium text-gray-700 text-base"
-      >Agregar proyecto</label
-    >
+    <p class="mt-2 text-xl font-medium tracking-tight text-text-primary">
+      Agregar proyecto(s)
+    </p>
+
     <div class="flex gap-2">
       <select
         [(ngModel)]="agregarSelectedProyectoId"
@@ -77,10 +78,11 @@
   </div>
 </div>
 
-<div class="p-2" *ngIf="selectedProyectoId">
+<div class="p-2 w-3/4 mx-auto" *ngIf="selectedProyectoId">
   <div>
-    <label class="block mb-2 font-medium text-gray-700 text-base"
-      >Agregar rol</label
+    <label
+      class="mt-2 mb-2 text-xl font-medium tracking-tight text-text-primary"
+      >Agregar rol(es)</label
     >
     <div class="flex gap-2">
       <select

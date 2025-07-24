@@ -152,6 +152,7 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
   IdEmpresa: number = 0;
   usarioActivoEmpresa: boolean = false;
   IdUser: number = 0;
+  isOpen: boolean = false;
 
   constructor(
     private empresaService: EmpresaService,
@@ -198,6 +199,22 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
       limite_Extranjero_Transporte: [0, { validators: [] }],
     });
     this.cargarRegistrosCorporativos();
+  }
+
+  modalAsignar() {
+    this.isOpen = true;
+  }
+
+  cerrarModal() {
+    this.isOpen = false;
+  }
+
+  toggleActivo(registro: UsuarioEstructuraCorporativoDTO) {
+    const nuevoEstado = !registro.activo;
+    // Actualiza localmente para feedback instantáneo
+    registro.activo = nuevoEstado;
+    // Llama a tu método original
+    this.activarDesactivarUsuario(registro.idUsuario, nuevoEstado);
   }
 
   seleccionEmpresaTabla(empresa: UsuarioEmpresaEstructura) {
@@ -650,17 +667,17 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
       event.target as HTMLInputElement
     ).value.toLocaleLowerCase();
     this.dataUsuario = this.dataUsuarioReset.filter((usuario) =>
-      usuario.nombreCompleto
+      usuario.nombreUsuario
         .toLocaleLowerCase()
         .includes(filterValue.toLocaleLowerCase())
     );
   }
   seleccionaProveedor(proveedor: UsuarioEstructuraCorporativoDTO) {
     this.dataUsuario = this.dataUsuarioReset.filter(
-      (z) => z.nombreCompleto == proveedor.nombreCompleto
+      (z) => z.nombreUsuario == proveedor.nombreUsuario
     );
     this.dropdown = false;
-    this.nombreUsuario = proveedor.nombreCompleto;
+    this.nombreUsuario = proveedor.nombreUsuario;
   }
 
   cargarRegistrosEmpresas(parametro: UsuarioEstructuraCorporativoDTO) {

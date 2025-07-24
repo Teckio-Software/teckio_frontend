@@ -1,36 +1,34 @@
 <section>
-  <!-- <div>
-    <p class="text-lg text-center text-gray-700 font-bold mt-2">
+  <div class="flex justify-between px-2 w-3/4 mx-auto">
+    <p class="mt-2 text-xl font-medium tracking-tight text-text-primary">
       Administración de usuarios
     </p>
-  </div> -->
 
-  <div class="flex justify-center mt-3 space-x-3">
-    <!-- Grupo Corporativos -->
-    <div
-      class="flex items-center space-x-4 w-96 h-10 px-4 rounded-lg bg-colorButton hover:bg-colorButtonHover transition-colors delay-75"
-    >
-      <mat-label class="text-white text-base"> Corporativo: </mat-label>
-      <mat-select
-        class="flex-1 text-white text-base"
-        [(value)]="selectedCorporativo"
-        (valueChange)="cargarRegistros($event)"
+    <div class="flex justify-center space-x-3">
+      <!-- Grupo Corporativos -->
+      <div
+        class="flex items-center space-x-4 w-96 h-10 px-4 rounded-lg bg-colorButton hover:bg-colorButtonHover transition-colors delay-75"
       >
-        <mat-option
-          *ngFor="let corporativo of corporativos"
-          [value]="corporativo.id"
-          class="text-base"
+        <mat-label class="text-white text-base"> Corporativo: </mat-label>
+        <mat-select
+          class="flex-1 text-white text-base"
+          [(value)]="selectedCorporativo"
+          (valueChange)="cargarRegistros($event)"
         >
-          {{ corporativo.nombre }}
-        </mat-option>
-      </mat-select>
+          <mat-option
+            *ngFor="let corporativo of corporativos"
+            [value]="corporativo.id"
+            class="text-base"
+          >
+            {{ corporativo.nombre }}
+          </mat-option>
+        </mat-select>
+      </div>
     </div>
-
-    <!-- Botón Nuevo Usuario -->
     <div *ngIf="!esAdminRoles">
       <button
         (click)="nuevoUsuario()"
-        class="flex items-center justify-center w-60 h-10 rounded-lg bg-colorButton hover:bg-colorButtonHover transition-colors delay-75 font-medium text-base tracking-wider text-white"
+        class="flex items-center justify-center w-60 h-10 rounded-md bg-colorButton hover:bg-colorButtonHover transition-colors delay-75 font-medium text-base tracking-wider text-white"
       >
         <span class="mr-2">Nuevo usuario</span>
         <img class="w-5 h-5" src="assets/add.svg" alt="botón agregar" />
@@ -38,131 +36,250 @@
     </div>
   </div>
 
-  <div class="w-full flex justify-end gap-2" *ngIf="esAdmin">
-    <div
-      class="flex justify-center m-0 p-0 items-center gap-3 border-2 border-[#51aec7] rounded-lg px-1"
-    >
-      <div class="flex justify-center m-0 p-0 items-center gap-2">
+  <div *ngIf="esAdmin" class="mb-6 px-2 w-3/4 mx-auto">
+    <div class="relative">
+      <!-- icono de lupa -->
+      <div
+        class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20
-              "
-          fill="#51aec7"
-          class="bi bi-search"
-          viewBox="0 0 16 16"
+          class="h-5 w-5 text-text-secondary"
+          fill="currentColor"
+          viewBox="0 0 20 20"
         >
           <path
-            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
-          />
+            clip-rule="evenodd"
+            fill-rule="evenodd"
+            d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+          ></path>
         </svg>
       </div>
+
+      <!-- Input  -->
       <input
-        class="input-1 dropdown1"
         id="myInput"
         type="text"
         placeholder="Buscar usuario"
-        style="margin: 5px; margin-left: -5px"
+        class="block w-full rounded-md border-0 py-2.5 pl-10 text-text-primary ring-1 ring-inset ring-gray-500 focus:ring-2 placeholder:text-text-secondary"
         data-bs-toggle="dropdown"
         (click)="clickInputFiltroProveedores()"
         (keyup)="filtrarProveedores($event)"
         [(ngModel)]="nombreUsuario"
       />
-      <ul
-        class="dropdown-menu"
-        style="overflow-x: auto; white-space: nowrap; height: 300px"
-      >
-        <li *ngIf="esAdmin && dropdown">
+
+      <ul class="dropdown-menu mt-1 overflow-x-auto whitespace-nowrap max-h-72">
+        <li *ngIf="dropdown">
           <option
-            class="option-hover"
+            class="option-hover block px-3 py-2 cursor-pointer hover:bg-gray-100"
             *ngFor="let proveedor of dataUsuario"
-            [value]="proveedor.nombreCompleto"
+            [value]="proveedor.nombreUsuario"
             (click)="seleccionaProveedor(proveedor)"
           >
-            {{ proveedor.nombreCompleto }}
+            {{ proveedor.nombreUsuario }}
           </option>
         </li>
       </ul>
     </div>
   </div>
 
-  <p class="text-sm font-medium mb-2 text-gray700 px-2 xs:text-[10px]">
-    Selecciona un usuario para asignar empresas, proyectos y roles.
-  </p>
-
-  <div style="margin-top: 10px" [@changeStyles]="currentState">
-    <div
-      class="cont-table orden-compra"
-      style="overflow-x: auto; white-space: nowrap"
-    >
-      <div
-        style="
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        "
-      ></div>
-      <div class="p-2">
-        <div class="overflow-x-auto shadow-md rounded-lg">
-          <table
-            #tablaMenu
-            class="w-full text-sm"
-            *ngIf="menuUsuario"
-            (mouseover)="activarElemento()"
-          >
-            <thead class="bg-primario text-white">
-              <tr>
-                <th class="px-1 py-[2px]" scope="col">Nombre de usuario</th>
-                <th class="px-[2px] py-[2px]" scope="col">Nombre completo</th>
-                <th *ngIf="!esAdminRoles" class="px-[2px] py-[2px]" scope="col">
-                  Activar
-                </th>
-                <th
-                  *ngIf="!esAdminRoles"
-                  class="px-[2px] py-[2px] text-center"
-                  scope="col"
+  <div [@changeStyles]="currentState" class="w-3/4 mx-auto">
+    <div class="px-2">
+      <div class="overflow-x-auto shadow-md rounded-lg">
+        <table
+          #tablaMenu
+          class="w-full text-sm"
+          *ngIf="menuUsuario"
+          (mouseover)="activarElemento()"
+        >
+          <thead class="bg-primario text-white">
+            <tr>
+              <th class="px-2 py-[2px]" scope="col">Usuario</th>
+              <th class="px-[2px] py-[2px]" scope="col">Correo electrónico</th>
+              <th *ngIf="!esAdminRoles" class="px-[2px] py-[2px]" scope="col">
+                Estatus
+              </th>
+              <th
+                *ngIf="!esAdminRoles"
+                class="px-[2px] py-[2px] text-center"
+                scope="col"
+              ></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray300">
+            <tr
+              class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              *ngFor="
+                let registro of dataUsuario | slice : inicioCopia : terminoCopia
+              "
+            >
+              <td
+                class="px-2 py-[2px]"
+                (click)="cargarRegistrosEmpresas(registro)"
+                [ngClass]="{
+                  'bg-[#b9dfe9]': registro === filaSeleccionada
+                }"
+              >
+                {{ registro.nombreUsuario }}
+              </td>
+              <td
+                class="px-2 py-[2px]"
+                (click)="cargarRegistrosEmpresas(registro)"
+                [ngClass]="{
+                  'bg-[#b9dfe9]': registro === filaSeleccionada
+                }"
+              >
+                {{ registro.correo }}
+              </td>
+              <!-- <td  style="width: 377px; margin-left: 15px;" (click)="cargarRegistrosEmpresas(registro)" [ngClass]="{ 'fila-seleccionada': registro === filaSeleccionada}">{{ registro.tipo == 1 ? "Usuario normal" : registro.tipo == 2 ? "Usuario proveedor" : registro.tipo == 3 ? "Usuario gastos" : "" }}</td> -->
+              <td
+                class="px-2 py-[2px]"
+                *ngIf="!esAdminRoles"
+                [ngClass]="{
+                  'bg-[#b9dfe9]': registro === filaSeleccionada
+                }"
+              >
+                <div
+                  class="cursor-pointer select-none"
+                  (click)="toggleActivo(registro)"
                 >
-                  Acciones
-                </th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray300">
-              <tr
-                class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
-                *ngFor="
-                  let registro of dataUsuario
-                    | slice : inicioCopia : terminoCopia
+                  <!-- Caja con color según estado -->
+                  <div
+                    class="rounded-lg w-20 h-5 flex items-center justify-center"
+                    [ngClass]="{
+                      'bg-green-100': registro.activo,
+                      'bg-red-100': !registro.activo
+                    }"
+                  >
+                    <p
+                      class="text-center font-medium my-auto"
+                      [ngClass]="{
+                        'text-green-600': registro.activo,
+                        'text-red-600': !registro.activo
+                      }"
+                    >
+                      {{ registro.activo ? "Activo" : "Inactivo" }}
+                    </p>
+                  </div>
+                </div>
+              </td>
+              <td
+                class="px-2 py-[2px]"
+                *ngIf="!esAdminRoles"
+                [ngClass]="{
+                  'bg-[#b9dfe9]': registro === filaSeleccionada
+                }"
+              >
+                <div class="flex gap-1.5 justify-center">
+                  <!-- <button
+                    class="bg-colorButton hover:bg-colorButtonHover transition-colors delay-75 rounded-md py-1 px-2 text-white"
+                    (click)="modalAsignar()"
+                    ngbTooltip="Asignar empresa"
+                    placement="top"
+                    triggers="mouseenter:mouseleave"
+                  >
+                    Asignar
+                  </button> -->
+                  <button
+                    class="bg-colorButton hover:bg-colorButtonHover transition-colors delay-75 rounded-md p-1"
+                    (click)="modificaDatosUsuarioBase(registro)"
+                    ngbTooltip="Editar Usuario"
+                    placement="top"
+                    triggers="mouseenter:mouseleave"
+                  >
+                    <img
+                      src="../../../assets/settings.svg"
+                      alt="Editar usuario"
+                    />
+                  </button>
+                  <button
+                    class="bg-colorButton hover:bg-colorButtonHover transition-colors delay-75 rounded-md p-1"
+                    (click)="cambiarContrasenia(registro)"
+                    ngbTooltip="Cambiar Contraseña"
+                    placement="start"
+                    triggers="mouseenter:mouseleave"
+                  >
+                    <img
+                      src="../../../assets/password.svg"
+                      alt="Cambiar contraseña"
+                    />
+                  </button>
+                  <button
+                    class="bg-colorButton hover:bg-colorButtonHover transition-colors delay-75 rounded-md p-1"
+                    (click)="cambiarAdministradorRoles(registro)"
+                    ngbTooltip="Hacer adminsitrador de roles"
+                    placement="start"
+                    triggers="mouseenter:mouseleave"
+                  >
+                    <img
+                      src="../../../assets/supersu.svg"
+                      alt="Hacer adminsitrador de roles"
+                    />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <mat-paginator
+          [length]="dataUsuario.length"
+          [pageSize]="20"
+          aria-label="Select page"
+          (page)="cambiarPaginaCopia($event)"
+        >
+        </mat-paginator>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="tablaAsignacion" class="overflow-x-auto w-3/4 mx-auto mt-2">
+    <div class="p-2">
+      <p class="mt-2 text-xl font-medium tracking-tight text-text-primary">
+        Asignar empresa al usuario {{ filaSeleccionada.nombreUsuario }}
+      </p>
+
+      <div class="overflow-hidden shadow-md rounded-lg">
+        <table #tablaMenu class="w-full text-sm">
+          <thead class="bg-primario text-white">
+            <tr>
+              <th class="px-1 py-[2px]" scope="col">Empresa</th>
+              <th *ngIf="!esAdminRoles" class="px-[2px] py-[2px]" scope="col">
+                Esta activo en la empresa
+              </th>
+              <th *ngIf="!esAdminRoles" class="px-[2px] py-[2px]" scope="col">
+                Rol
+              </th>
+              <th
+                *ngIf="!esAdminRoles"
+                class="px-[2px] py-[2px] text-center"
+                scope="col"
+              >
+                Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray300">
+            <tr
+              *ngFor="let registro of empresasConRoles"
+              class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+            >
+              <ng-container
+                *ngIf="
+                  !selectedEmpresaId || selectedEmpresaId === registro.idEmpresa
                 "
               >
                 <td
-                  (click)="cargarRegistrosEmpresas(registro)"
                   [ngClass]="{
-                    'bg-[#b9dfe9]': registro === filaSeleccionada
+                    'bg-[#b9dfe9]': selectedEmpresaId === registro.idEmpresa
                   }"
+                  (click)="cargarProyectos(registro)"
                 >
-                  {{ registro.nombreUsuario }}
+                  {{ registro.nombreEmpresa }}
                 </td>
-                <td
-                  (click)="cargarRegistrosEmpresas(registro)"
-                  [ngClass]="{
-                    'bg-[#b9dfe9]': registro === filaSeleccionada
-                  }"
-                >
-                  <div
-                    class="ajuste-texto"
-                    ngbTooltip="{{ registro.nombreCompleto }}
-              "
-                    placement="bottom"
-                  >
-                    {{ registro.nombreCompleto.slice(0, 20)
-                    }}{{ registro.nombreCompleto.length <= 20 ? "" : "..." }}
-                  </div>
-                </td>
-                <!-- <td  style="width: 377px; margin-left: 15px;" (click)="cargarRegistrosEmpresas(registro)" [ngClass]="{ 'fila-seleccionada': registro === filaSeleccionada}">{{ registro.tipo == 1 ? "Usuario normal" : registro.tipo == 2 ? "Usuario proveedor" : registro.tipo == 3 ? "Usuario gastos" : "" }}</td> -->
                 <td
                   *ngIf="!esAdminRoles"
                   [ngClass]="{
-                    'bg-[#b9dfe9]': registro === filaSeleccionada
+                    'bg-[#b9dfe9]': selectedEmpresaId === registro.idEmpresa
                   }"
                 >
                   <div class="flex items-center">
@@ -172,13 +289,8 @@
                         value=""
                         class="sr-only peer"
                         checked
-                        [(ngModel)]="registro.activo"
-                        (change)="
-                          activarDesactivarUsuario(
-                            registro.idUsuario,
-                            registro.activo
-                          )
-                        "
+                        [(ngModel)]="registro.activoEmpresa"
+                        (change)="activarEmpresaUsuario(registro)"
                       />
                       <div
                         class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"
@@ -189,187 +301,70 @@
                 <td
                   *ngIf="!esAdminRoles"
                   [ngClass]="{
-                    'bg-[#b9dfe9]': registro === filaSeleccionada
+                    'bg-[#b9dfe9]': selectedEmpresaId === registro.idEmpresa
+                  }"
+                >
+                  <select
+                    [(ngModel)]="registro.idRol"
+                    (ngModelChange)="
+                      cambiaPermisosRolAUsuario($event, registro)
+                    "
+                  >
+                    <option
+                      *ngFor="let registro2 of registro.roles"
+                      [value]="registro2.id"
+                    >
+                      {{ registro2.nombre }}
+                    </option>
+                  </select>
+                </td>
+                <td
+                  *ngIf="!esAdminRoles"
+                  [ngClass]="{
+                    'bg-[#b9dfe9]': selectedEmpresaId === registro.idEmpresa
                   }"
                 >
                   <div class="flex gap-1 justify-center">
                     <button
-                      class="bg-colorButton hover:bg-colorButtonHover transition-colors delay-75 rounded-md p-1"
-                      (click)="modificaDatosUsuarioBase(registro)"
-                      ngbTooltip="Editar Usuario"
+                      ngbTooltip="Nuevo empleado"
+                      triggers="mouseenter:mouseleave"
                       placement="top"
-                      triggers="mouseenter:mouseleave"
+                      (click)="seleccionEmpresaTabla(registro)"
+                      class="bg-colorButton hover:bg-colorButtonHover transition-colors delay-75 rounded-md p-1"
                     >
-                      <img
-                        src="../../../assets/settings.svg"
-                        alt="Editar usuario"
-                      />
+                      <img src="../../../assets/nuevo_empleado.svg" alt="" />
                     </button>
                     <button
-                      class="bg-colorButton hover:bg-colorButtonHover transition-colors delay-75 rounded-md p-1"
-                      (click)="cambiarContrasenia(registro)"
-                      ngbTooltip="Cambiar Contraseña"
-                      placement="start"
+                      ngbTooltip="Relacionar empleado"
                       triggers="mouseenter:mouseleave"
+                      placement="top"
+                      (click)="seleccionEmpresaTablaRelacion(registro)"
+                      class="bg-colorButton hover:bg-colorButtonHover transition-colors delay-75 rounded-md p-1"
                     >
                       <img
-                        src="../../../assets/password.svg"
-                        alt="Cambiar contraseña"
-                      />
-                    </button>
-                    <button
-                      class="bg-colorButton hover:bg-colorButtonHover transition-colors delay-75 rounded-md p-1"
-                      (click)="cambiarAdministradorRoles(registro)"
-                      ngbTooltip="Hacer adminsitrador de roles"
-                      placement="start"
-                      triggers="mouseenter:mouseleave"
-                    >
-                      <img
-                        src="../../../assets/supersu.svg"
-                        alt="Hacer adminsitrador de roles"
+                        src="../../../assets/relacionar_empleado.svg"
+                        alt=""
                       />
                     </button>
                   </div>
                 </td>
-              </tr>
-            </tbody>
-          </table>
-          <mat-paginator
-            [length]="dataUsuario.length"
-            [pageSize]="20"
-            aria-label="Select page"
-            (page)="cambiarPaginaCopia($event)"
-          >
-          </mat-paginator>
-        </div>
+              </ng-container>
+            </tr>
+          </tbody>
+        </table>
       </div>
-    </div>
-
-    <div *ngIf="tablaAsignacion" class="overflow-x-auto">
-      <div class="p-2">
-        <div class="overflow-hidden shadow-md rounded-lg">
-          <table #tablaMenu class="w-full text-sm">
-            <thead class="bg-primario text-white">
-              <tr>
-                <th class="px-1 py-[2px]" scope="col">Nombre Empresa</th>
-                <th *ngIf="!esAdminRoles" class="px-[2px] py-[2px]" scope="col">
-                  Esta activo en la empresa
-                </th>
-                <th *ngIf="!esAdminRoles" class="px-[2px] py-[2px]" scope="col">
-                  Rol
-                </th>
-                <th
-                  *ngIf="!esAdminRoles"
-                  class="px-[2px] py-[2px] text-center"
-                  scope="col"
-                >
-                  Acciones
-                </th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray300">
-              <tr
-                *ngFor="let registro of empresasConRoles"
-                class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
-              >
-                <ng-container
-                  *ngIf="
-                    !selectedEmpresaId ||
-                    selectedEmpresaId === registro.idEmpresa
-                  "
-                >
-                  <td
-                    [ngClass]="{
-                      'bg-[#b9dfe9]': selectedEmpresaId === registro.idEmpresa
-                    }"
-                    (click)="cargarProyectos(registro)"
-                  >
-                    {{ registro.nombreEmpresa }}
-                  </td>
-                  <td
-                    *ngIf="!esAdminRoles"
-                    [ngClass]="{
-                      'bg-[#b9dfe9]': selectedEmpresaId === registro.idEmpresa
-                    }"
-                  >
-                    <div class="flex items-center">
-                      <label class="inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          value=""
-                          class="sr-only peer"
-                          checked
-                          [(ngModel)]="registro.activoEmpresa"
-                          (change)="activarEmpresaUsuario(registro)"
-                        />
-                        <div
-                          class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"
-                        ></div>
-                      </label>
-                    </div>
-                  </td>
-                  <td
-                    *ngIf="!esAdminRoles"
-                    [ngClass]="{
-                      'bg-[#b9dfe9]': selectedEmpresaId === registro.idEmpresa
-                    }"
-                  >
-                    <select
-                      [(ngModel)]="registro.idRol"
-                      (ngModelChange)="
-                        cambiaPermisosRolAUsuario($event, registro)
-                      "
-                    >
-                      <option
-                        *ngFor="let registro2 of registro.roles"
-                        [value]="registro2.id"
-                      >
-                        {{ registro2.nombre }}
-                      </option>
-                    </select>
-                  </td>
-                  <td
-                    *ngIf="!esAdminRoles"
-                    [ngClass]="{
-                      'bg-[#b9dfe9]': selectedEmpresaId === registro.idEmpresa
-                    }"
-                  >
-                    <div class="flex gap-1 justify-center">
-                      <button
-                        ngbTooltip="Nuevo empleado"
-                        triggers="mouseenter:mouseleave"
-                        placement="top"
-                        (click)="seleccionEmpresaTabla(registro)"
-                        class="bg-colorButton hover:bg-colorButtonHover transition-colors delay-75 rounded-md p-1"
-                      >
-                        <img src="../../../assets/nuevo_empleado.svg" alt="" />
-                      </button>
-                      <button
-                        ngbTooltip="Relacionar empleado"
-                        triggers="mouseenter:mouseleave"
-                        placement="top"
-                        (click)="seleccionEmpresaTablaRelacion(registro)"
-                        class="bg-colorButton hover:bg-colorButtonHover transition-colors delay-75 rounded-md p-1"
-                      >
-                        <img
-                          src="../../../assets/relacionar_empleado.svg"
-                          alt=""
-                        />
-                      </button>
-                    </div>
-                  </td>
-                </ng-container>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div *ngIf="selectedUsuario && selectedEmpresaId">
-      <app-proyecto-usuario
-        [selectedEmpresa]="selectedEmpresaId"
-        [selectedUsuario]="selectedUsuario"
-      ></app-proyecto-usuario>
     </div>
   </div>
+  <div *ngIf="selectedUsuario && selectedEmpresaId">
+    <app-proyecto-usuario
+      [selectedEmpresa]="selectedEmpresaId"
+      [selectedUsuario]="selectedUsuario"
+    ></app-proyecto-usuario>
+  </div>
+  <!-- <div *ngIf="isOpen">
+    <app-modal-asigacion
+      [isOpen]="isOpen"
+      (close)="cerrarModal()"
+    ></app-modal-asigacion>
+  </div> -->
 </section>

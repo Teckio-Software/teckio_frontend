@@ -1,100 +1,159 @@
+<mat-dialog-content>
+  <h2 mat-dialog-title>Nuevo usuario</h2>
+  <br />
+  <form [formGroup]="formulario">
+    <table style="align-content: center">
+      <tr>
+        <th>
+          <div appearance="outline" class="cont-input">
+            <mat-label>Nombre</mat-label>
+            <input
+              matInput
+              autocomplete="off"
+              formControlName="nombre"
+              placeholder="Nombre"
+            />
+            <mat-icon matSuffix>account-box</mat-icon>
+          </div>
+        </th>
+        <th>
+          <div appearance="outline" class="cont-input">
+            <mat-label>Apellido paterno</mat-label>
+            <input
+              matInput
+              autocomplete="off"
+              formControlName="apaterno"
+              placeholder="Apellido paterno"
+            />
+            <mat-icon matSuffix>account-box</mat-icon>
+          </div>
+        </th>
+      </tr>
+      <tr>
+        <th>
+          <div appearance="outline" class="cont-input">
+            <mat-label>Apellido materno</mat-label>
+            <input
+              matInput
+              autocomplete="off"
+              formControlName="amaterno"
+              placeholder="Apellido materno"
+            />
+            <mat-icon matSuffix>account-box</mat-icon>
+          </div>
+        </th>
+        <th>
+          <div appearance="outline" class="cont-input">
+            <mat-label>Correo electrónico</mat-label>
+            <input
+              matInput
+              autocomplete="off"
+              formControlName="correoElectronico"
+              placeholder="Correo electrónico"
+            />
+            <mat-icon matSuffix>account-box</mat-icon>
+          </div>
+        </th>
+      </tr>
+      <tr>
+        <th>
+          <div appearance="outline" class="cont-input">
+            <mat-label>Usuario</mat-label>
+            <input
+              matInput
+              autocomplete="off"
+              formControlName="usuario"
+              placeholder="Nombre de usuario"
+            />
+            <mat-icon matSuffix>account-box</mat-icon>
+          </div>
+        </th>
+        <th>
+          <div appearance="outline" class="cont-input">
+            <mat-label>R.F.C.</mat-label>
+            <input
+              matInput
+              autocomplete="off"
+              formControlName="rfc"
+              placeholder="R.F.C."
+            />
+            <mat-icon matSuffix>account-box</mat-icon>
+          </div>
+        </th>
+      </tr>
+      <tr>
+        <th>
+          <div appearance="outline" class="cont-input">
+            <mat-label>Número de proveedor</mat-label>
+            <input
+              matInput
+              autocomplete="off"
+              formControlName="numeroProveedor"
+              placeholder="Número de proveedor"
+            />
+            <mat-icon matSuffix>account-box</mat-icon>
+          </div>
+        </th>
+        <th>
+          <div appearance="outline" class="cont-input">
+            <mat-label>Identificador fiscal</mat-label>
+            <input
+              matInput
+              autocomplete="off"
+              formControlName="identificadorFiscal"
+              placeholder="Identificador fiscal"
+            />
+            <mat-icon matSuffix>account-box</mat-icon>
+          </div>
+        </th>
+      </tr>
+      <tr>
+        <th>
+          <div appearance="outline" class="cont-input">
+            <mat-label>Contraseña</mat-label>
+            <input
+              matInput
+              autocomplete="off"
+              formControlName="contrasenia"
+              placeholder="Contraseña"
+            />
+            <mat-icon matSuffix>account-box</mat-icon>
+          </div>
+        </th>
+        <th>
+          <div appearance="outline" class="cont-input">
+            <mat-label>Confirmar contraseña</mat-label>
+            <input
+              matInput
+              autocomplete="off"
+              formControlName="confirmaContrasenia"
+              placeholder="Corfirma contraseña"
+            />
+            <mat-icon matSuffix>account-box</mat-icon>
+          </div>
+        </th>
+      </tr>
+    </table>
+  </form>
+</mat-dialog-content>
 
-
-
-
-
-
-<mat-dialog-content >
-    <h2 mat-dialog-title> Nuevo usuario</h2>
-    <br />
-    <form [formGroup]="formulario">
-      <table style="align-content: center;">
-        <tr>
-          <th>
-            <div appearance="outline" class="cont-input">
-              <mat-label>Nombre</mat-label>
-              <input matInput autocomplete="off" formControlName="nombre" placeholder="Nombre"/>
-              <mat-icon matSuffix>account-box</mat-icon>
-            </div>
-          </th>
-          <th>
-            <div appearance="outline" class="cont-input">
-              <mat-label>Apellido paterno</mat-label>
-              <input matInput autocomplete="off" formControlName="apaterno" placeholder="Apellido paterno"/>
-              <mat-icon matSuffix>account-box</mat-icon>
-            </div>
-          </th>
-        </tr>
-        <tr>
-          <th>
-            <div appearance="outline" class="cont-input">
-              <mat-label>Apellido materno</mat-label>
-              <input matInput autocomplete="off" formControlName="amaterno" placeholder="Apellido materno"/>
-              <mat-icon matSuffix>account-box</mat-icon>
-            </div>
-          </th>
-          <th>
-            <div appearance="outline" class="cont-input">
-              <mat-label>Correo electrónico</mat-label>
-              <input matInput autocomplete="off" formControlName="correoElectronico" placeholder="Correo electrónico" />
-              <mat-icon matSuffix>account-box</mat-icon>
-            </div>
-          </th>
-        </tr>
-        <tr>
-          <th>
-            <div appearance="outline" class="cont-input">
-              <mat-label>Usuario</mat-label>
-              <input matInput autocomplete="off" formControlName="usuario" placeholder="Nombre de usuario" />
-              <mat-icon matSuffix>account-box</mat-icon>
-            </div>
-          </th>
-          <th>
-            <div appearance="outline" class="cont-input">
-              <mat-label>R.F.C.</mat-label>
-              <input matInput autocomplete="off" formControlName="rfc" placeholder="R.F.C." />
-              <mat-icon matSuffix>account-box</mat-icon>
-            </div>
-          </th>
-        </tr>
-        <tr>
-          <th>
-            <div appearance="outline" class="cont-input">
-              <mat-label>Número de proveedor</mat-label>
-              <input matInput autocomplete="off" formControlName="numeroProveedor" placeholder="Número de proveedor" />
-              <mat-icon matSuffix>account-box</mat-icon>
-            </div>
-          </th>
-          <th>
-            <div appearance="outline" class="cont-input">
-              <mat-label>Identificador fiscal</mat-label>
-              <input matInput autocomplete="off" formControlName="identificadorFiscal" placeholder="Identificador fiscal" />
-              <mat-icon matSuffix>account-box</mat-icon>
-            </div>
-          </th>
-        </tr>
-        <tr>
-          <th>
-            <div appearance="outline" class="cont-input">
-              <mat-label>Contraseña</mat-label>
-              <input matInput autocomplete="off" formControlName="contrasenia" placeholder="Contraseña" />
-              <mat-icon matSuffix>account-box</mat-icon>
-            </div>
-          </th>
-          <th>
-            <div appearance="outline" class="cont-input">
-              <mat-label>Confirmar contraseña</mat-label>
-              <input matInput autocomplete="off" formControlName="confirmaContrasenia" placeholder="Corfirma contraseña" />
-              <mat-icon matSuffix>account-box</mat-icon>
-            </div>
-          </th>
-        </tr>
-      </table>
-    </form>
-  </mat-dialog-content>
-
-  <mat-dialog-actions align="end">
-      <button mat-raised-button mat-dialog-close color="warn">Cancelar</button>
-      <button mat-raised-button mat-dialog-close color="primary"
-      (click)="guardarEditar()">Guardar</button>
-  </mat-dialog-actions>
+<mat-dialog-actions align="end">
+  <button
+    type="button"
+    mat-raised-button
+    mat-dialog-close
+    color="warn"
+    (click)="cancelar()"
+  >
+    Cancelar
+  </button>
+  <button
+    type="submit"
+    mat-raised-button
+    mat-dialog-close
+    color="primary"
+    (click)="guardarEditar()"
+  >
+    Guardar
+  </button>
+</mat-dialog-actions>
