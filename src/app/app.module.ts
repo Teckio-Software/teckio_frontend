@@ -157,6 +157,7 @@ import { PrecioUnitarioModalComponent } from './proyectos/precio-unitario/precio
 import { ResumenOrdenesCompraComponent } from './compras/resumen-ordenes-compra/resumen-ordenes-compra.component';
 import { LottieModule } from 'ngx-lottie';
 import player from 'lottie-web';
+import { ModalAsigacionComponent } from './seguridad/usuario-multi-empresa-filtrado/modal-asigacion/modal-asigacion.component';
 
 export function playerFactory() {
   return player;
@@ -304,6 +305,7 @@ export function playerFactory() {
     ProductosComponent,
     PrecioUnitarioModalComponent,
     ResumenOrdenesCompraComponent,
+    ModalAsigacionComponent,
   ],
 
   imports: [

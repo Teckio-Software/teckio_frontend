@@ -303,7 +303,7 @@ export const pages: Page[] = [
     expanded: false,
   },
   {
-    name: 'Usuarios',
+    name: 'Administración',
     link: '',
     imageUrl: 'assets/users-s.svg',
 

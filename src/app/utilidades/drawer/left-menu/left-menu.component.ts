@@ -66,7 +66,6 @@ export class LeftMenuComponent implements OnInit {
         this.permisosUsuario =
           this.zvSeguridadService.obtenerSeccionesUsuario();
         this.filtrarPagesPorPermiso();
-        console.log(this.permisosUsuario);
       } else {
         this.pagesFiltradas = [];
       }

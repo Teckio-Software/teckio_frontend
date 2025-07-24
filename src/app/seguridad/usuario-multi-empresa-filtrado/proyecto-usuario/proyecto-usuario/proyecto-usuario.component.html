@@ -1,4 +1,4 @@
-<div class="p-2 mt-2">
+<div class="p-2 w-3/4 mx-auto">
   <app-alert
     *ngIf="alertaTipo !== AlertaTipo.none"
     [alertaTipo]="alertaTipo"
@@ -7,9 +7,10 @@
   >
   </app-alert>
   <div class="mb-2">
-    <label class="block mb-2 font-medium text-gray-700 text-base"
-      >Agregar proyecto</label
-    >
+    <p class="mt-2 text-xl font-medium tracking-tight text-text-primary">
+      Agregar proyecto(s)
+    </p>
+
     <div class="flex gap-2">
       <select
         [(ngModel)]="agregarSelectedProyectoId"
@@ -77,10 +78,11 @@
   </div>
 </div>
 
-<div class="p-2 mt-2" *ngIf="selectedProyectoId > 0">
-  <div class="mb-2">
-    <label class="block mb-2 font-medium text-gray-700 text-base"
-      >Agregar rol</label
+<div class="p-2 w-3/4 mx-auto" *ngIf="selectedProyectoId">
+  <div>
+    <label
+      class="mt-2 mb-2 text-xl font-medium tracking-tight text-text-primary"
+      >Agregar rol(es)</label
     >
     <div class="flex gap-2">
       <select
@@ -102,7 +104,7 @@
       </button>
     </div>
   </div>
-  <div class="overflow-x-auto shadow-md rounded-lg">
+  <div class="overflow-x-auto shadow-md rounded-lg mt-2">
     <table class="w-full text-sm">
       <thead class="bg-primario text-white">
         <tr>
@@ -117,7 +119,7 @@
         >
           <td colspan="2" class="py-1">No hay roles asignados.</td>
         </tr>
-        <ng-container *ngIf="registros.length > 0">
+        <ng-container *ngIf="registros.length">
           <tr
             class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
             *ngFor="let rol of registros"

@@ -13,70 +13,73 @@ import { MenusXEmpresaService } from '../../Servicios/menus-xempresa.service';
 @Component({
   selector: 'app-menus-empresa',
   templateUrl: './menus-empresa.component.html',
-  styleUrls: ['./menus-empresa.component.css']
+  styleUrls: ['./menus-empresa.component.css'],
 })
 export class MenusEmpresaComponent implements OnInit {
   @ViewChild('tablaMenu') tablaMenu?: MatTable<any>;
-  treeControl = new NestedTreeControl<MenuEstructuraDTO>((node) => node.estructura);
+  treeControl = new NestedTreeControl<MenuEstructuraDTO>(
+    (node) => node.estructura
+  );
   dataSource = new MatTreeNestedDataSource<MenuEstructuraDTO>();
   corporativos: corporativo[] = [];
   empresas: EmpresaDTO[] = [];
-  descripcionMenu: string = "";
+  descripcionMenu: string = '';
   dataMenu: MenuEstructuraDTO[] = [];
   dataSeccion: MenuEstructuraDTO[] = [];
   dataSeccionFiltrado: MenuEstructuraDTO[] = [];
   dataActividad: MenuEstructuraDTO[] = [];
   dataActividadFiltrado: MenuEstructuraDTO[] = [];
   selectedEmpresa: number = 0;
-  selectedCorporativo: number = 0;
+  selectedCorporativo: number | '' = 0;
   constructor(
-    private seguridadMultiEmpresaService: SeguridadMultiEmpresaService
-    , private menusXEmpresaService: MenusXEmpresaService
-    , private corporativoService: CorporativoService
-    , private empresaService: EmpresaService) {}
+    private seguridadMultiEmpresaService: SeguridadMultiEmpresaService,
+    private menusXEmpresaService: MenusXEmpresaService,
+    private corporativoService: CorporativoService,
+    private empresaService: EmpresaService
+  ) {}
   ngOnInit(): void {
     this.cargarRegistrosCorporativos();
     //this.cargarRegistros(this.selectedEmpresa);
     //this.cargarRegistrosEmpresas();
   }
 
-  cargarRegistrosCorporativos(){
-    this.corporativoService.lista()
-    .subscribe((datos) => {
+  cargarRegistrosCorporativos() {
+    this.corporativoService.lista().subscribe((datos) => {
       this.corporativos = datos;
-    })
+    });
   }
-  cambiaCorporativo(registro: any){
+  cambiaCorporativo(registro: number) {
     this.cargarRegistrosEmpresas(registro);
   }
-  cargarRegistros(idEmpresa: number){
+  cargarRegistros(idEmpresa: number) {
     this.dataMenu = [];
     this.dataSeccion = [];
     this.dataActividad = [];
-    this.menusXEmpresaService.obtenMenuEstructura(idEmpresa)
-    .subscribe((datos) => {
-      this.dataMenu = datos;
-      for (let index = 0; index < this.dataMenu.length; index++) {
-        const element = this.dataMenu[index];
-        for (let j = 0; j < element.estructura.length; j++) {
-          const element2 = element.estructura[j];
-          this.dataActividad.push(...element2.estructura);
+    this.menusXEmpresaService
+      .obtenMenuEstructura(idEmpresa)
+      .subscribe((datos) => {
+        this.dataMenu = datos;
+        for (let index = 0; index < this.dataMenu.length; index++) {
+          const element = this.dataMenu[index];
+          for (let j = 0; j < element.estructura.length; j++) {
+            const element2 = element.estructura[j];
+            this.dataActividad.push(...element2.estructura);
+          }
+          this.dataSeccion.push(...element.estructura);
         }
-        this.dataSeccion.push(...element.estructura);
-      }
-    });
+      });
   }
 
-  cargarRegistrosEmpresas(idCorporativo: number){
-    this.empresaService.ObtenXIdCorporativo(idCorporativo)
-    .subscribe((datos) => {
-      this.empresas = datos;
-      console.log(datos);
-    });
+  cargarRegistrosEmpresas(idCorporativo: number) {
+    this.empresaService
+      .ObtenXIdCorporativo(idCorporativo)
+      .subscribe((datos) => {
+        this.empresas = datos;
+        console.log(datos);
+      });
   }
 
-  cargarRegistrosSecciones(menu: MenuEstructuraDTO){
-
+  cargarRegistrosSecciones(menu: MenuEstructuraDTO) {
     this.descripcionMenu = menu.descripcion;
     this.dataSeccionFiltrado = [];
     for (let index = 0; index < this.dataSeccion.length; index++) {
@@ -88,7 +91,7 @@ export class MenusEmpresaComponent implements OnInit {
     this.dataActividadFiltrado = [];
   }
 
-  cargarRegistrosActividades(idSeccion: number){
+  cargarRegistrosActividades(idSeccion: number) {
     this.dataActividadFiltrado = [];
     for (let index = 0; index < this.dataActividad.length; index++) {
       const element = this.dataActividad[index];
@@ -98,7 +101,7 @@ export class MenusEmpresaComponent implements OnInit {
     }
   }
 
-  cambiaEmpresa(idEmpresa: number){
+  cambiaEmpresa(idEmpresa: number) {
     this.selectedEmpresa = idEmpresa;
     this.dataMenu = [];
     this.dataSeccionFiltrado = [];
@@ -106,23 +109,25 @@ export class MenusEmpresaComponent implements OnInit {
     this.cargarRegistros(this.selectedEmpresa);
   }
 
-  autorizaMenu(objeto: MenuEstructuraDTO){
+  autorizaMenu(objeto: MenuEstructuraDTO) {
     if (this.selectedEmpresa <= 0) {
       return;
     }
     if (objeto.esAutorizado == true) {
-      this.menusXEmpresaService.autorizaMenu({
-        idEmpresa: this.selectedEmpresa,
-        idMenu: objeto.idMenu
-      })
-      .subscribe();
+      this.menusXEmpresaService
+        .autorizaMenu({
+          idEmpresa: this.selectedEmpresa,
+          idMenu: objeto.idMenu,
+        })
+        .subscribe();
     }
     if (objeto.esAutorizado == false) {
-      this.menusXEmpresaService.desautorizaMenu({
-        idEmpresa: this.selectedEmpresa,
-        idMenu: objeto.idMenu
-      })
-      .subscribe();
+      this.menusXEmpresaService
+        .desautorizaMenu({
+          idEmpresa: this.selectedEmpresa,
+          idMenu: objeto.idMenu,
+        })
+        .subscribe();
     }
     console.log(objeto);
   }
