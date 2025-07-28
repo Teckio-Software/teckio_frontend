@@ -1,4 +1,4 @@
-import { ParametrosFsrDTO, PorcentajeCesantiaEdadDTO } from './../../fsr/tsFSR';
+import { ParametrosFsrDTO, ParametrosFsrXInsumoDTO, PorcentajeCesantiaEdadDTO } from './../../fsr/tsFSR';
 import { Component, Inject } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -51,6 +51,7 @@ export class DialogFSRComponent {
     uma: 0,
   };
   porcentajesCesantiaEdad: PorcentajeCesantiaEdadDTO[] = [];
+  parametrosXInsumo : ParametrosFsrXInsumoDTO[] = [];
 
   diasNoLaborales: number = 0;
   diasPagados: number = 0;
@@ -342,6 +343,21 @@ export class DialogFSRComponent {
     }
   }
 
+  cargarParametrosXInsumo(){
+    this.fsrService.obtenerParametrosXInsumo(this.fsr, this.selectedEmpresa).subscribe((datos) => {
+      this.parametrosXInsumo = datos;
+      console.log("parametrso x Insumo", this.parametrosXInsumo);
+
+    });
+  }
+
+  actualizarCostoBaseInsumo(insumo : ParametrosFsrXInsumoDTO){
+    this.existeEdicion = true;
+    this.fsrService.actualizarCostoBaseInsumo(insumo, this.selectedEmpresa).subscribe((datos)=> {
+      this.cargarParametrosXInsumo();
+    });
+  }
+
   cerrarDialog() {
     this.dialogRef.close(this.existeEdicion); // Cierra el modal sin guardar
   }
@@ -353,5 +369,8 @@ export class DialogFSRComponent {
 
   seleccionarIndex(event: MatTabChangeEvent) {
     this.selectedIndex = event.index;
+    if(this.selectedIndex == 2){
+      this.cargarParametrosXInsumo();
+    }
   }
 }

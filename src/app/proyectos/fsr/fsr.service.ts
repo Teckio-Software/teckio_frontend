@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment.development';
-import { diasConsideradosDTO, factorSalarioIntegradoDTO, factorSalarioRealDTO, factorSalarioRealDetalleDTO, relacionFSRInsumoDTO, fsrXInsumoMdODetalleDTO, fsiXInsumoMdODetalleDTO, objetoFactorSalarioXInsumoDTO, ParametrosFsrDTO, PorcentajeCesantiaEdadDTO } from './tsFSR';
+import { diasConsideradosDTO, factorSalarioIntegradoDTO, factorSalarioRealDTO, factorSalarioRealDetalleDTO, relacionFSRInsumoDTO, fsrXInsumoMdODetalleDTO, fsiXInsumoMdODetalleDTO, objetoFactorSalarioXInsumoDTO, ParametrosFsrDTO, PorcentajeCesantiaEdadDTO, ParametrosFsrXInsumoDTO } from './tsFSR';
 import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 
 @Injectable({
@@ -109,5 +109,13 @@ export class FSRService{
 
     public editarRangoPorcentajeCesantiaEdad(porcentaje: PorcentajeCesantiaEdadDTO, idEmpresa: number){
         return this.HttpClient.put(`${this.apiUrl}/${idEmpresa}/editarRangoPorcentajeCesantiaEdad`, porcentaje);
+    }
+
+    public obtenerParametrosXInsumo(fsr: factorSalarioRealDTO, idEmpresa: number){
+        return this.HttpClient.post<ParametrosFsrXInsumoDTO[]>(`${this.apiUrl}/${idEmpresa}/obtenerParametrosXInsumo`, fsr);
+    }
+
+    public actualizarCostoBaseInsumo(parametrosXInsumo: ParametrosFsrXInsumoDTO, idEmpresa: number){
+        return this.HttpClient.post(`${this.apiUrl}/${idEmpresa}/actualizarCostoBaseInsumo`, parametrosXInsumo);
     }
 }

@@ -120,3 +120,16 @@ export interface PorcentajeCesantiaEdadDTO {
   rangoUMA: number;
   porcentaje: number;
 }
+
+export interface ParametrosFsrXInsumoDTO extends ParametrosFsrDTO {
+  idInsumo: number;
+  descripcion: string;
+  costoBase: number;
+  costoUnitario: number;
+  importe: number;
+  cesantiaEdad: number;
+  salarioBaseCotizacion: number;
+  sumaPrestaciones: number;
+  sumaSOBRECostoBase: number;
+  fsrInsumo: number;
+}
