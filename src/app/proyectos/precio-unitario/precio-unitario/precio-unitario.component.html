@@ -288,6 +288,14 @@
                                   Concepto
                                 </a>
                               </li>
+                              <li class="cursor-pointer" *ngIf="precioUnitario.tipoPrecioUnitario == 1 && precioUnitario.id != 0">
+                                <a
+                                  (click)="partirConcepto(precioUnitario)"
+                                  class="dropdown-item block px-4 py-2 hover:bg-[#4eaac154] hover:text-[#000000DE]"
+                                >
+                                  Partir
+                                </a>
+                              </li>
                               <li class="cursor-pointer">
                                 <a
                                   (click)="eliminarPU(precioUnitario)"

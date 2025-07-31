@@ -34,6 +34,10 @@ export class PrecioUnitarioService {
         return this.HttpClient.post<precioUnitarioDTO[]>(`${this.apiUrl}/${idEmpresa}/editar`, precioUnitario)
     }
 
+    public partirConcepto(registro: precioUnitarioDTO, idEmpresa: number): Observable<precioUnitarioDTO[]>{
+        return this.HttpClient.post<precioUnitarioDTO[]>(`${this.apiUrl}/${idEmpresa}/partirConcepto`, registro);
+    }
+
     public editarIndirectoPrecioUnitario(precioUnitario: precioUnitarioDTO, idEmpresa: number) {
         return this.HttpClient.post<boolean>(`${this.apiUrl}/${idEmpresa}/EditarIndirectoPrecioUnitario`, precioUnitario)
     }

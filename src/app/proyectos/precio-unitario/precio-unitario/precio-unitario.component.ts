@@ -949,6 +949,16 @@ export class PrecioUnitarioComponent implements OnInit {
     }
   }
 
+  partirConcepto(precioUnitario: precioUnitarioDTO){
+    this.displayCarga = 'flex';
+    this.precioUnitarioService.partirConcepto(precioUnitario, this.selectedEmpresa).subscribe((datos) => {
+      this.preciosUnitariosRefresco = datos;
+      this.refrescar();
+      this.cargarListaConceptos();
+      this.displayCarga = 'none';
+    });
+  }
+
   crearPartidaAlMismoNivel(precioUnitario: precioUnitarioDTO) {
     if (this.existeCaptura == false) {
       if (precioUnitario.idPrecioUnitarioBase == 0) {
