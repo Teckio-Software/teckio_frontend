@@ -658,12 +658,15 @@ export class PrecioUnitarioComponent implements OnInit {
       .subscribe((tipos) => {
         this.tiposInsumos = tipos;
       });
+
+  }
+
+  cargarListaConceptos(){
     this.precioUnitarioService
       .obtenerConceptos(this.selectedProyecto, this.selectedEmpresa)
       .subscribe((datos) => {
         this.conceptos = datos;
         this.conceptosReset = datos;
-        console.log('estos son los conceptos', this.conceptos);
       });
   }
 
@@ -728,12 +731,7 @@ export class PrecioUnitarioComponent implements OnInit {
             this.insumos = insumos;
             this.insumosReset = insumos;
           });
-        this.precioUnitarioService
-          .obtenerConceptos(this.selectedProyecto, this.selectedEmpresa)
-          .subscribe((datos) => {
-            this.conceptos = datos;
-            this.conceptosReset = datos;
-          });
+        this.cargarListaConceptos();
       });
     this.esquemaArbol2 = false;
     this.esquemaArbol3 = false;
@@ -819,6 +817,7 @@ export class PrecioUnitarioComponent implements OnInit {
           .subscribe((preciosUnitarios) => {
             this.preciosUnitariosRefresco = preciosUnitarios;
             this.refrescar();
+            this.cargarListaConceptos();
             this.displayCarga = 'none';
           });
       } else {
@@ -852,6 +851,7 @@ export class PrecioUnitarioComponent implements OnInit {
           .subscribe((precioUnitario) => {
             this.preciosUnitariosRefresco = precioUnitario;
             this.refrescar();
+            this.cargarListaConceptos();
             this.displayCarga = 'none';
           });
       }
@@ -881,6 +881,7 @@ export class PrecioUnitarioComponent implements OnInit {
           .subscribe((preciosUnitarios) => {
             this.preciosUnitariosRefresco = preciosUnitarios;
             this.refrescar();
+            this.cargarListaConceptos();
             this.displayCarga = 'none';
           });
       } else {
@@ -906,6 +907,7 @@ export class PrecioUnitarioComponent implements OnInit {
           .subscribe((precioUnitario) => {
             this.preciosUnitariosRefresco = precioUnitario;
             this.refrescar();
+            this.cargarListaConceptos();
             this.displayCarga = 'none';
           });
       }
@@ -1715,12 +1717,7 @@ export class PrecioUnitarioComponent implements OnInit {
               this.insumos = insumos;
               this.insumosReset = insumos;
             });
-          this.precioUnitarioService
-            .obtenerConceptos(this.selectedProyecto, this.selectedEmpresa)
-            .subscribe((datos) => {
-              this.conceptos = datos;
-              this.conceptosReset = datos;
-            });
+          this.cargarListaConceptos();
         });
     } else {
       if (
@@ -1787,12 +1784,7 @@ export class PrecioUnitarioComponent implements OnInit {
               this.insumos = insumos;
               this.insumosReset = insumos;
             });
-          this.precioUnitarioService
-            .obtenerConceptos(this.selectedProyecto, this.selectedEmpresa)
-            .subscribe((datos) => {
-              this.conceptos = datos;
-              this.conceptosReset = datos;
-            });
+          this.cargarListaConceptos();
         });
     }
   }
@@ -1864,12 +1856,7 @@ export class PrecioUnitarioComponent implements OnInit {
             this.insumos = insumos;
             this.insumosReset = insumos;
           });
-        this.precioUnitarioService
-          .obtenerConceptos(this.selectedProyecto, this.selectedEmpresa)
-          .subscribe((datos) => {
-            this.conceptos = datos;
-            this.conceptosReset = datos;
-          });
+        this.cargarListaConceptos();
       });
   }
 
@@ -3005,12 +2992,7 @@ export class PrecioUnitarioComponent implements OnInit {
                   this.insumos = insumos;
                   this.insumosReset = insumos;
                 });
-              this.precioUnitarioService
-                .obtenerConceptos(this.selectedProyecto, this.selectedEmpresa)
-                .subscribe((datos) => {
-                  this.conceptos = datos;
-                  this.conceptosReset = datos;
-                });
+              this.cargarListaConceptos();
             });
         });
     } else {
@@ -3050,12 +3032,7 @@ export class PrecioUnitarioComponent implements OnInit {
                   this.insumos = insumos;
                   this.insumosReset = insumos;
                 });
-              this.precioUnitarioService
-                .obtenerConceptos(this.selectedProyecto, this.selectedEmpresa)
-                .subscribe((datos) => {
-                  this.conceptos = datos;
-                  this.conceptosReset = datos;
-                });
+              this.cargarListaConceptos();
             });
         });
     }
@@ -3096,11 +3073,7 @@ export class PrecioUnitarioComponent implements OnInit {
                 this.insumos = insumos;
                 this.insumosReset = insumos;
               });
-            this.precioUnitarioService
-              .obtenerConceptos(this.selectedProyecto, this.selectedEmpresa)
-              .subscribe((datos) => {
-                this.conceptos = datos;
-              });
+            this.cargarListaConceptos();
           });
       });
   }
