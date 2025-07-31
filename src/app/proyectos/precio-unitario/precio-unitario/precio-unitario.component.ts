@@ -667,6 +667,40 @@ export class PrecioUnitarioComponent implements OnInit {
       .subscribe((datos) => {
         this.conceptos = datos;
         this.conceptosReset = datos;
+        this.precioUnitarioSeleccionado = {
+          hijos: [],
+          id: 0,
+          idProyecto: 0,
+          cantidad: 0,
+          cantidadExcedente: 0,
+          tipoPrecioUnitario: 0,
+          costoUnitario: 0,
+          nivel: 0,
+          noSerie: 0,
+          idPrecioUnitarioBase: 0,
+          esDetalle: false,
+          idConcepto: 0,
+          codigo: '',
+          descripcion: '',
+          unidad: '',
+          precioUnitario: 0,
+          importe: 0,
+          importeSeries: 0,
+          expandido: false,
+          cantidadConFormato: '',
+          cantidadExcedenteConFormato: '',
+          costoUnitarioConFormato: '',
+          precioUnitarioConFormato: '',
+          importeConFormato: '',
+          importeSeriesConFormato: '',
+          cantidadEditado: false,
+          costoUnitarioEditado: false,
+          precioUnitarioEditado: false,
+          porcentajeIndirecto: 0,
+          porcentajeIndirectoConFormato: '',
+          posicion: 0,
+          codigoPadre: '',
+        }
       });
   }
 
