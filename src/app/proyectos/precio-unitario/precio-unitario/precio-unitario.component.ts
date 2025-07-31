@@ -2994,6 +2994,29 @@ export class PrecioUnitarioComponent implements OnInit {
         .crearOperacion(operacion, this.selectedEmpresa)
         .subscribe((detalles) => {
           this.detalles = detalles;
+          this.detalles.push({
+            id: 0,
+            idPrecioUnitario: 0,
+            idInsumo: 0,
+            esCompuesto: false,
+            costoUnitario: 0,
+            costoUnitarioConFormato: '0.00',
+            costoUnitarioEditado: false,
+            cantidad: 0,
+            cantidadConFormato: '0.00',
+            cantidadEditado: false,
+            cantidadExcedente: 0,
+            idPrecioUnitarioDetallePerteneciente: 0,
+            codigo: '',
+            descripcion: '',
+            unidad: '',
+            idTipoInsumo: 0,
+            idFamiliaInsumo: 0,
+            importe: 0,
+            importeConFormato: '0.00',
+            costoBase: 0,
+            costoBaseConFormato: '0.00'
+          });
           this.precioUnitarioDetalleService
             .obtenerOperaciones(
               this.detalleSeleccionado.id,
@@ -3034,6 +3057,29 @@ export class PrecioUnitarioComponent implements OnInit {
         .editarOperacion(operacion, this.selectedEmpresa)
         .subscribe((detalles) => {
           this.detalles = detalles;
+          this.detalles.push({
+            id: 0,
+            idPrecioUnitario: 0,
+            idInsumo: 0,
+            esCompuesto: false,
+            costoUnitario: 0,
+            costoUnitarioConFormato: '0.00',
+            costoUnitarioEditado: false,
+            cantidad: 0,
+            cantidadConFormato: '0.00',
+            cantidadEditado: false,
+            cantidadExcedente: 0,
+            idPrecioUnitarioDetallePerteneciente: 0,
+            codigo: '',
+            descripcion: '',
+            unidad: '',
+            idTipoInsumo: 0,
+            idFamiliaInsumo: 0,
+            importe: 0,
+            importeConFormato: '0.00',
+            costoBase: 0,
+            costoBaseConFormato: '0.00'
+          })
           this.precioUnitarioDetalleService
             .obtenerOperaciones(
               this.detalleSeleccionado.id,
