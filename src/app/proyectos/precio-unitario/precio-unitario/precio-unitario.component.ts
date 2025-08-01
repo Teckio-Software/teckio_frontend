@@ -59,7 +59,7 @@ import { IndirectosConceptoComponent } from '../../indirectos-concepto/indirecto
 import Swal from 'sweetalert2';
 import { eventListeners } from '@popperjs/core';
 import { ModalAlertComponent } from 'src/app/utilidades/modal-alert/modal-alert.component';
-import { da, de } from 'date-fns/locale';
+import { da, de, el } from 'date-fns/locale';
 import { operacionesXPrecioUnitarioDetalleDTO } from '../../precio-unitario-detalle/tsOperacionesXPrecioUnitarioDetalle';
 import { EstimacionesService } from '../../estimaciones/estimaciones.service';
 
@@ -667,42 +667,37 @@ export class PrecioUnitarioComponent implements OnInit {
       .subscribe((datos) => {
         this.conceptos = datos;
         this.conceptosReset = datos;
-        this.precioUnitarioSeleccionado = {
-          hijos: [],
-          id: 0,
-          idProyecto: 0,
-          cantidad: 0,
-          cantidadExcedente: 0,
-          tipoPrecioUnitario: 0,
-          costoUnitario: 0,
-          nivel: 0,
-          noSerie: 0,
-          idPrecioUnitarioBase: 0,
-          esDetalle: false,
-          idConcepto: 0,
-          codigo: '',
-          descripcion: '',
-          unidad: '',
-          precioUnitario: 0,
-          importe: 0,
-          importeSeries: 0,
-          expandido: false,
-          cantidadConFormato: '',
-          cantidadExcedenteConFormato: '',
-          costoUnitarioConFormato: '',
-          precioUnitarioConFormato: '',
-          importeConFormato: '',
-          importeSeriesConFormato: '',
-          cantidadEditado: false,
-          costoUnitarioEditado: false,
-          precioUnitarioEditado: false,
-          porcentajeIndirecto: 0,
-          porcentajeIndirectoConFormato: '',
-          posicion: 0,
-          codigoPadre: '',
-        }
+
+        this.preciosUnitarios.forEach(registro => {
+          console.log("Registro: ", registro);
+          if(registro.id == this.precioUnitarioSeleccionado.id){
+            registro.esDetalle = true;
+            this.precioUnitarioSeleccionado = registro;
+            console.log("Registro seleccionado: ", registro);
+          }
+          if(registro.tipoPrecioUnitario == 0){
+            this.buscarHijoParaSeleccionar(registro);
+          }
+        });
       });
   }
+
+  buscarHijoParaSeleccionar(
+    precioUnitario: precioUnitarioDTO,){
+      precioUnitario.hijos.forEach(registro => {
+        if(registro.id == this.precioUnitarioSeleccionado.id){
+          registro.esDetalle = true;
+          registro.cantidadEditado = true;
+          registro.costoUnitarioEditado = true;
+          registro.precioUnitarioEditado = true;
+          this.precioUnitarioSeleccionado = registro;
+          console.log("Registro seleccionado: ", registro);
+        }
+        if(registro.tipoPrecioUnitario == 0){
+          this.buscarHijoParaSeleccionar(registro);
+        }
+      });
+    }
 
   expansionDominio(precioUnitario: precioUnitarioDTO): void {
     precioUnitario.expandido = !precioUnitario.expandido;
