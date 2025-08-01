@@ -118,4 +118,8 @@ export class FSRService{
     public actualizarCostoBaseInsumo(parametrosXInsumo: ParametrosFsrXInsumoDTO, idEmpresa: number){
         return this.HttpClient.post(`${this.apiUrl}/${idEmpresa}/actualizarCostoBaseInsumo`, parametrosXInsumo);
     }
+
+    public importarFsr(IdProyecto: number, IdProyectoImportar : number, idEmpresa: number){
+        return this.HttpClient.get(`${this.apiUrl}/${idEmpresa}/importarFsr/${IdProyecto}/${IdProyectoImportar}`)
+    }
 }
