@@ -298,6 +298,14 @@
                               </li>
                               <li class="cursor-pointer">
                                 <a
+                                  (click)="explosionInsumoXPrecioUnitario(precioUnitario)"
+                                  class="dropdown-item block px-4 py-2 hover:bg-[#4eaac154] hover:text-[#000000DE]"
+                                >
+                                  Explosión Insumos
+                                </a>
+                              </li>
+                              <li class="cursor-pointer">
+                                <a
                                   (click)="eliminarPU(precioUnitario)"
                                   class="dropdown-item block px-4 py-2 hover:bg-[#4eaac154] hover:text-[#000000DE]"
                                 >
@@ -1901,7 +1909,7 @@
   <!--Contenedor Tabla Explosion de Insumos-->
   <div *ngIf="contenedorExplosionInsumo">
     <app-dialog-explosion-insumos
-      *appRecarga="appRecarga"
+      *appRecarga="appRecarga" [precioUnitario]="precioUnitarioParaExplosion"
       (recalcular)="recalcular($event)"
     ></app-dialog-explosion-insumos>
   </div>

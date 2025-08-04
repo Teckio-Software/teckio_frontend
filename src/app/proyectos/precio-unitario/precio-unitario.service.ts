@@ -66,6 +66,12 @@ export class PrecioUnitarioService {
         return this.HttpClient.get<InsumoParaExplosionDTO[]>(`${this.apiUrl}/${idEmpresa}/obtenerExplosionDeInsumos/${idProyecto}`)
     }
 
+    public obtenerExplosionDeInsumosXPrecioUnitario(precioUnitario: precioUnitarioDTO, idEmpresa: number) {
+      console.log("aqui esta el objeto real", precioUnitario);
+
+        return this.HttpClient.post<InsumoParaExplosionDTO[]>(`${this.apiUrl}/${idEmpresa}/obtenerExplosionDeInsumosXPrecioUnitario`, precioUnitario)
+    }
+
     public editarDesdeExplosion(insumo: InsumoParaExplosionDTO, idEmpresa: number) {
         return this.HttpClient.post<InsumoParaExplosionDTO[]>(`${this.apiUrl}/${idEmpresa}/editarCostoDesdeExplosion`, insumo)
     }

@@ -1,3 +1,4 @@
+import { precioUnitarioDTO } from './../tsPrecioUnitario';
 import {
   Component,
   EventEmitter,
@@ -11,7 +12,6 @@ import {
 import { PrecioUnitarioService } from '../precio-unitario.service';
 import {
   detalleDesglosadoDTO,
-  precioUnitarioDTO,
   precioUnitarioCopiaDTO,
   datosParaCopiarDTO,
   DatosParaCopiarArmadoDTO,
@@ -73,8 +73,6 @@ export class PrecioUnitarioComponent implements OnInit {
   @ViewChild('tooltipContent') tooltipContent!: any;
   @ViewChild('tooltipIndirecto') tooltipIndirecto!: any;
 
-
-
   @ViewChild(NgbTooltip) tooltip!: NgbTooltip; // Inicialización de la propiedad tooltip
   selectedIndex: number = 0;
   preciosUnitarios!: precioUnitarioDTO[];
@@ -130,7 +128,7 @@ export class PrecioUnitarioComponent implements OnInit {
     id: 0,
     idProyecto: 0,
     porcentajeFsr: 0,
-    esCompuesto: false
+    esCompuesto: false,
   };
   diasConsideradosFsiPagados!: diasConsideradosDTO[];
   diasConsideradosFsiNoTrabajados!: diasConsideradosDTO[];
@@ -354,6 +352,43 @@ export class PrecioUnitarioComponent implements OnInit {
     cantidadTotal: 0,
     cantidadOperacion: '',
   };
+
+  precioUnitarioParaExplosion : precioUnitarioDTO = {
+    hijos: [],
+    id: 0,
+    idProyecto: 0,
+    cantidad: 0,
+    cantidadConFormato: '',
+    cantidadEditado: false,
+    cantidadExcedente: 0,
+    cantidadExcedenteConFormato: '',
+    tipoPrecioUnitario: 0,
+    costoUnitario: 0,
+    porcentajeIndirecto: 0,
+    porcentajeIndirectoConFormato: '',
+    costoUnitarioConFormato: '',
+    costoUnitarioEditado: false,
+    nivel: 0,
+    noSerie: 0,
+    idPrecioUnitarioBase: 0,
+    esDetalle: false,
+    idConcepto: 0,
+    codigo: '',
+    descripcion: '',
+    unidad: '',
+    precioUnitario: 0,
+    precioUnitarioConFormato: '',
+    precioUnitarioEditado: false,
+    importe: 0,
+    importeConFormato: '',
+    importeSeries: 0,
+    importeSeriesConFormato: '',
+    expandido: false,
+    posicion: 0,
+    codigoPadre: ''
+  };
+
+  IdPrecioParaExplosion : number = 0;
   @ViewChild('InputOperacionGenerador') InputOperacionGenerador: any;
 
   archivosCargarExcels: FileList | null = null;
@@ -658,10 +693,9 @@ export class PrecioUnitarioComponent implements OnInit {
       .subscribe((tipos) => {
         this.tiposInsumos = tipos;
       });
-
   }
 
-  cargarListaConceptos(){
+  cargarListaConceptos() {
     this.precioUnitarioService
       .obtenerConceptos(this.selectedProyecto, this.selectedEmpresa)
       .subscribe((datos) => {
@@ -700,7 +734,7 @@ export class PrecioUnitarioComponent implements OnInit {
           porcentajeIndirectoConFormato: '',
           posicion: 0,
           codigoPadre: '',
-        }
+        };
       });
   }
 
@@ -949,14 +983,16 @@ export class PrecioUnitarioComponent implements OnInit {
     }
   }
 
-  partirConcepto(precioUnitario: precioUnitarioDTO){
+  partirConcepto(precioUnitario: precioUnitarioDTO) {
     this.displayCarga = 'flex';
-    this.precioUnitarioService.partirConcepto(precioUnitario, this.selectedEmpresa).subscribe((datos) => {
-      this.preciosUnitariosRefresco = datos;
-      this.refrescar();
-      this.cargarListaConceptos();
-      this.displayCarga = 'none';
-    });
+    this.precioUnitarioService
+      .partirConcepto(precioUnitario, this.selectedEmpresa)
+      .subscribe((datos) => {
+        this.preciosUnitariosRefresco = datos;
+        this.refrescar();
+        this.cargarListaConceptos();
+        this.displayCarga = 'none';
+      });
   }
 
   crearPartidaAlMismoNivel(precioUnitario: precioUnitarioDTO) {
@@ -1319,7 +1355,10 @@ export class PrecioUnitarioComponent implements OnInit {
         this.pestanas = true;
         this.esquemaArbol3 = true;
         this.esquemaArbol4 = false;
-        if (PrecioUnitario.unidad.toLowerCase() == 'm' || PrecioUnitario.unidad.toLowerCase() == 'ml') {
+        if (
+          PrecioUnitario.unidad.toLowerCase() == 'm' ||
+          PrecioUnitario.unidad.toLowerCase() == 'ml'
+        ) {
           this.esM = true;
         } else {
           this.esM = false;
@@ -3025,7 +3064,7 @@ export class PrecioUnitarioComponent implements OnInit {
             importe: 0,
             importeConFormato: '0.00',
             costoBase: 0,
-            costoBaseConFormato: '0.00'
+            costoBaseConFormato: '0.00',
           });
           this.precioUnitarioDetalleService
             .obtenerOperaciones(
@@ -3088,8 +3127,8 @@ export class PrecioUnitarioComponent implements OnInit {
             importe: 0,
             importeConFormato: '0.00',
             costoBase: 0,
-            costoBaseConFormato: '0.00'
-          })
+            costoBaseConFormato: '0.00',
+          });
           this.precioUnitarioDetalleService
             .obtenerOperaciones(
               this.detalleSeleccionado.id,
@@ -3243,7 +3282,23 @@ export class PrecioUnitarioComponent implements OnInit {
     //         this.recalcularPresupuesto();
     //     }
     // });
+    this.precioUnitarioParaExplosion.id = 0;
     this.appRecarga += 1;
+    this.contenedorPresupuesto = false;
+    this.contenedorExplosionInsumo = true;
+  }
+
+  explosionInsumoXPrecioUnitario(precioUnitario: precioUnitarioDTO) {
+    this.IdPrecioParaExplosion = precioUnitario.id;
+    console.log(precioUnitario);
+
+    this.precioUnitarioParaExplosion = precioUnitario;
+
+    // console.log({...this.precioUnitarioParaExplosion}, 'copia');
+    console.log(this.precioUnitarioParaExplosion.id);
+
+    this.appRecarga += 1;
+
     this.contenedorPresupuesto = false;
     this.contenedorExplosionInsumo = true;
   }
