@@ -180,6 +180,7 @@ export class PrecioUnitarioComponent implements OnInit {
     porcentajeIndirectoConFormato: '',
     posicion: 0,
     codigoPadre: '',
+    esCatalogoGeneral: false
   };
   selectedProyecto = 0;
   selectedProyecto2 = 0;
@@ -242,6 +243,7 @@ export class PrecioUnitarioComponent implements OnInit {
     porcentajeIndirectoConFormato: '',
     posicion: 0,
     codigoPadre: '',
+    esCatalogoGeneral: false
   };
   seEstaCopiandoArmado = false;
   seEstaCopiandoConcepto = false;
@@ -281,6 +283,7 @@ export class PrecioUnitarioComponent implements OnInit {
     porcentajeIndirectoConFormato: '',
     posicion: 0,
     codigoPadre: '',
+    esCatalogoGeneral: false
   };
   precioUnitarioDetalleEditado: precioUnitarioDetalleDTO = {
     id: 0,
@@ -385,7 +388,8 @@ export class PrecioUnitarioComponent implements OnInit {
     importeSeriesConFormato: '',
     expandido: false,
     posicion: 0,
-    codigoPadre: ''
+    codigoPadre: '',
+    esCatalogoGeneral: false
   };
 
   IdPrecioParaExplosion : number = 0;
@@ -519,6 +523,7 @@ export class PrecioUnitarioComponent implements OnInit {
       expandido: false,
       posicion: 0,
       codigoPadre: '',
+      esCatalogoGeneral: false
     },
     destino: {
       hijos: [],
@@ -553,6 +558,7 @@ export class PrecioUnitarioComponent implements OnInit {
       expandido: false,
       posicion: 0,
       codigoPadre: '',
+      esCatalogoGeneral: false
     },
     esSubnivel: false,
     esCopiado: false,
@@ -681,6 +687,31 @@ export class PrecioUnitarioComponent implements OnInit {
       .obtenerTodosSinEstructurar(this.selectedEmpresa)
       .subscribe((proyectos) => {
         this.proyectos = proyectos;
+        this.proyectos.unshift({
+          id: 0,
+          codigoProyecto: '',
+          nombre: 'Catalogo General',
+          noSerie: 0,
+          moneda: '',
+          presupuestoSinIva: 0,
+          tipoCambio: 0,
+          presupuestoSinIvaMonedaNacional: 0,
+          porcentajeIva: 0,
+          presupuestoConIvaMonedaNacional: 0,
+          anticipo: 0,
+          codigoPostal: 0,
+          domicilio: '',
+          fechaInicio: new Date,
+          fechaFinal: new Date,
+          tipoProgramaActividad: 0,
+          inicioSemana: 0,
+          esSabado: true,
+          esDomingo: true,
+          idPadre: 0,
+          nivel: 0,
+          expandido: false,
+          hijos: []
+        });
         this.proyectosReset = proyectos;
       });
     this.familiaInsumoService
@@ -734,6 +765,8 @@ export class PrecioUnitarioComponent implements OnInit {
           porcentajeIndirectoConFormato: '',
           posicion: 0,
           codigoPadre: '',
+          esCatalogoGeneral : false
+
         };
       });
   }
@@ -750,6 +783,8 @@ export class PrecioUnitarioComponent implements OnInit {
       .obtenerEstructurado(this.selectedProyecto, this.selectedEmpresa)
       .subscribe((preciosUnitarios) => {
         this.preciosUnitarios = preciosUnitarios;
+        console.log("PUs", this.preciosUnitarios);
+
         for (let i = 0; i < preciosUnitarios.length; i++) {
           this.total = this.total + this.preciosUnitarios[i].importe;
         }
@@ -791,6 +826,7 @@ export class PrecioUnitarioComponent implements OnInit {
             porcentajeIndirectoConFormato: '',
             posicion: 0,
             codigoPadre: '',
+            esCatalogoGeneral: false
           });
         }
         this.insumoService
@@ -854,6 +890,7 @@ export class PrecioUnitarioComponent implements OnInit {
       porcentajeIndirectoConFormato: '',
       posicion: 0,
       codigoPadre: '',
+      esCatalogoGeneral : false
     };
     this.testInput.nativeElement.style.display = 'none';
     this.mostrarBotones = false;
@@ -1031,6 +1068,7 @@ export class PrecioUnitarioComponent implements OnInit {
           porcentajeIndirectoConFormato: '',
           posicion: 0,
           codigoPadre: '',
+          esCatalogoGeneral: false
         });
         this.precioUnitarioPadreCreacion.hijos = this.preciosUnitarios;
       } else {
@@ -1068,6 +1106,7 @@ export class PrecioUnitarioComponent implements OnInit {
           porcentajeIndirectoConFormato: '',
           posicion: 0,
           codigoPadre: '',
+          esCatalogoGeneral: false
         });
         this.precioUnitarioPadreCreacion = this.precioUnitarioPadre;
       }
@@ -1136,6 +1175,7 @@ export class PrecioUnitarioComponent implements OnInit {
           porcentajeIndirectoConFormato: '',
           posicion: 0,
           codigoPadre: '',
+          esCatalogoGeneral: false
         });
         this.precioUnitarioPadreCreacion = this.precioUnitarioPadre;
       } else {
@@ -1172,6 +1212,7 @@ export class PrecioUnitarioComponent implements OnInit {
           porcentajeIndirectoConFormato: '',
           posicion: 0,
           codigoPadre: '',
+          esCatalogoGeneral: false
         });
         this.precioUnitarioPadreCreacion = precioUnitario;
       }
@@ -1217,6 +1258,7 @@ export class PrecioUnitarioComponent implements OnInit {
           porcentajeIndirectoConFormato: '',
           posicion: 0,
           codigoPadre: '',
+          esCatalogoGeneral: false
         });
         this.precioUnitarioPadreCreacion = this.precioUnitarioPadre;
       } else {
@@ -1253,6 +1295,7 @@ export class PrecioUnitarioComponent implements OnInit {
           porcentajeIndirectoConFormato: '',
           posicion: 0,
           codigoPadre: '',
+          esCatalogoGeneral: false
         });
         this.precioUnitarioPadreCreacion = precioUnitario;
       }
@@ -1494,6 +1537,7 @@ export class PrecioUnitarioComponent implements OnInit {
     porcentajeIndirectoConFormato: '',
     posicion: 0,
     codigoPadre: '',
+    esCatalogoGeneral: false
   };
 
   cargarDetallesXIdPrecioUnitarioCopia1(
@@ -2272,6 +2316,8 @@ export class PrecioUnitarioComponent implements OnInit {
       )
       .subscribe((preciosUnitariosParaCopiar) => {
         this.preciosUnitariosParaCopiar = preciosUnitariosParaCopiar;
+        console.log("PUs para copiar", this.preciosUnitariosParaCopiar);
+
         this.displayCarga = 'none';
       });
   }
@@ -2363,6 +2409,7 @@ export class PrecioUnitarioComponent implements OnInit {
             porcentajeIndirectoConFormato: '',
             posicion: 0,
             codigoPadre: '',
+            esCatalogoGeneral: false
           });
         }
         this.displayCarga = 'none';
@@ -2489,6 +2536,7 @@ export class PrecioUnitarioComponent implements OnInit {
     porcentajeIndirectoConFormato: '',
     posicion: 0,
     codigoPadre: '',
+    esCatalogoGeneral: false
   };
 
   importar(precioUnitario: precioUnitarioDTO) {

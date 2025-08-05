@@ -50,7 +50,8 @@ export class DialogExplosionInsumosComponent {
     importeSeriesConFormato: '',
     expandido: false,
     posicion: 0,
-    codigoPadre: ''
+    codigoPadre: '',
+    esCatalogoGeneral: false
   }
 
   selectedProyecto: number = 0;

@@ -225,8 +225,8 @@
                         }}
                       </mat-icon>
                     </div>
-                    <div *ngIf="precioUnitario.hijos.length == 0">
-                      <button class="button-accion" style="width: 5px"></button>
+                    <div *ngIf="precioUnitario.hijos.length == 0" class="p-1">
+                      <input type="checkbox" name="" id="" [(ngModel)]="precioUnitario.esCatalogoGeneral" (change)="crear(precioUnitario)">
                     </div>
                     <div>
                       <tr>
