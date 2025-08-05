@@ -3504,6 +3504,7 @@ export class PrecioUnitarioComponent implements OnInit {
           if (datos.estatus) {
             this.cargarRegistros();
             this.limpiarCargarExcel();
+            this.recalcularPresupuesto();
           } else {
             this.mensajeModal =
               datos.descripcion || 'Error al procesar el archivo';
@@ -3545,6 +3546,7 @@ export class PrecioUnitarioComponent implements OnInit {
             // se subio
             this.cargarRegistros();
             this.limpiarCargarExcel();
+            this.recalcularPresupuesto();
           } else {
             // error back
             this.mensajeModal =
