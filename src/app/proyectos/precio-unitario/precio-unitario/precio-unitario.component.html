@@ -23,6 +23,12 @@
           </button>
           <button
             class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
+            (click)="openDialogCatalogoGeneral()"
+          >
+            Catalogo General
+          </button>
+          <button
+            class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
             (click)="recalcularPresupuesto()"
           >
             Recalcular
@@ -86,6 +92,18 @@
                 (click)="openDialogExpInsumos()"
               >
                 Explosión de insumos
+              </button>
+              <button
+                class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
+                (click)="openDialogCatalogoGeneral()"
+              >
+                Catalogo General
+              </button>
+              <button *ngIf="contenedorCatalogoGeneral"
+                class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
+                (click)="regresarPU()"
+              >
+                Regresar
               </button>
               <button
                 class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
@@ -225,7 +243,7 @@
                         }}
                       </mat-icon>
                     </div>
-                    <div *ngIf="precioUnitario.hijos.length == 0" class="p-1">
+                    <div *ngIf="precioUnitario.tipoPrecioUnitario == 1" class="p-1">
                       <input type="checkbox" name="" id="" [(ngModel)]="precioUnitario.esCatalogoGeneral" (change)="crear(precioUnitario)">
                     </div>
                     <div>
@@ -239,7 +257,7 @@
                               *ngIf="
                                 precioUnitario.id != 0 &&
                                 seEstaCopiando == false &&
-                                !existenEstimaciones
+                                !existenEstimaciones && !contenedorCatalogoGeneral
                               "
                               class="inline-flex items-center p-1 text-md font-medium text-center text-gray-900 rounded-lg"
                               type="button"
@@ -339,7 +357,7 @@
                     <div>
                       <tr>
                         <td class="flex justify-center items-center">
-                          <button
+                          <button *ngIf="!contenedorCatalogoGeneral"
                             class="w-[27px] bg-[#6db1c4a8] hover:bg-[#53AFC8] rounded-sm"
                             (click)="IndirectosXConcepto(precioUnitario)"
                             ngbTooltip="Nuevo costo indirecto"
@@ -423,7 +441,7 @@
                     data-bs-toggle="dropdown"
                     (keyup)="filtrarConcepto($event)"
                     (keydown.enter)="crear(precioUnitario)"
-                    [readonly]="existenEstimaciones"
+                    [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                     style="
                       border: 0.5px solid #ffffff4d;
                       border-radius: 3px;
@@ -465,7 +483,7 @@
                     id="input-table"
                     [(ngModel)]="precioUnitario.codigo"
                     (keydown.enter)="crear(precioUnitario)"
-                    [readonly]="existenEstimaciones"
+                    [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                     style="
                       border: 0.5px solid #ffffff4d;
                       border-radius: 3px;
@@ -494,7 +512,7 @@
                     id="input-table"
                     [(ngModel)]="precioUnitario.codigo"
                     (keydown.enter)="crear(precioUnitario)"
-                    [readonly]="existenEstimaciones"
+                    [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                     style="
                       border: 0.5px solid #ffffff4d;
                       border-radius: 3px;
@@ -519,7 +537,7 @@
                     [(ngModel)]="precioUnitario.descripcion"
                     (keydown.enter)="crear(precioUnitario)"
                     (dblclick)="desplegarCampoEdicion(precioUnitario)"
-                    [readonly]="existenEstimaciones"
+                    [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                     style="
                       border: 0.5px solid #ffffff4d;
                       border-radius: 3px;
@@ -552,7 +570,7 @@
                     aria-label=".form-select-sm example"
                     id="select-table"
                     class="input-table"
-                    [disabled]="existenEstimaciones"
+                    [disabled]="existenEstimaciones || contenedorCatalogoGeneral"
                     [(ngModel)]="precioUnitario.unidad"
                     (ngModelChange)="crear(precioUnitario)"
                     style="
@@ -641,7 +659,7 @@
                     class="input-table bg-transparent"
                     id="input-table"
                     [(ngModel)]="precioUnitario.cantidad"
-                    [readonly]="existenEstimaciones"
+                    [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                     style="
                       border: 0.5px solid #ffffff4d;
                       border-radius: 3px;
@@ -998,7 +1016,7 @@
                 (click)="pruebaCont2(detalle)"
                 (keyup)="filtrarInsumo($event)"
                 (keydown.enter)="crearDetalle(detalle)"
-                [readonly]="existenEstimaciones"
+                [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                 style="
                   border: 0.5px solid #ffffff4d;
                   border-radius: 3px;
@@ -1030,7 +1048,7 @@
                 id="input-table"
                 [(ngModel)]="detalle.descripcion"
                 (keydown.enter)="crearDetalle(detalle)"
-                [readonly]="existenEstimaciones"
+                [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                 style="
                   border: 0.5px solid #ffffff4d;
                   border-radius: 3px;
@@ -1047,7 +1065,7 @@
                 style="width: 100%"
                 [(ngModel)]="detalle.unidad"
                 (ngModelChange)="crearDetalle(detalle)"
-                [disabled]="existenEstimaciones"
+                [disabled]="existenEstimaciones || contenedorCatalogoGeneral"
                 style="
                   border: 0.5px solid #ffffff4d;
                   border: none;
@@ -1111,7 +1129,7 @@
                 autoClose="outside"
                 (keydown.enter)="crearDetalle(detalle)"
                 (click)="guardarRegistro(detalle)"
-                [readonly]="existenEstimaciones"
+                [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                 style="
                   background-color: rgba(0, 0, 0, 0.164);
                   border: none;
@@ -1172,7 +1190,7 @@
                               (keydown.enter)="
                                 asignarCantidadDetalleRendimiento()
                               "
-                              [readonly]="existenEstimaciones"
+                              [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                             />
                           </td>
                           <td>
@@ -1183,7 +1201,7 @@
                               (keydown.enter)="
                                 asignarCantidadDetalleRendimiento()
                               "
-                              [readonly]="existenEstimaciones"
+                              [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                             />
                           </td>
                         </tr>
@@ -1276,7 +1294,7 @@
                                 (keydown.enter)="
                                   crearOperacionDetalle(operacion)
                                 "
-                                [readonly]="existenEstimaciones"
+                                [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                               />
                             </td>
                             <td>
@@ -1286,7 +1304,7 @@
                                 (keydown.enter)="
                                   crearOperacionDetalle(operacion)
                                 "
-                                [readonly]="existenEstimaciones"
+                                [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                               />
                             </td>
                             <td>
@@ -1305,7 +1323,7 @@
                                 placement="start"
                                 ngbTooltip="Eliminar"
                                 triggers="mouseenter:mouseleave"
-                                [disabled]="existenEstimaciones"
+                                [disabled]="existenEstimaciones || contenedorCatalogoGeneral"
                                 (click)="EliminarOperacion(operacion)"
                               >
                                 <img
@@ -1366,7 +1384,7 @@
                 id="input-table"
                 [(ngModel)]="detalle.costoBase"
                 (keydown.enter)="crearDetalle(detalle)"
-                [readonly]="existenEstimaciones"
+                [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                 style="
                   border: 0.5px solid #ffffff4d;
                   border: none;
@@ -1485,7 +1503,7 @@
                 [(ngModel)]="detalle.importe"
                 *ngIf="detalle.cantidadEditado"
                 (keydown.enter)="editarDetalleImporte(detalle)"
-                [readonly]="existenEstimaciones"
+                [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                 style="
                   background-color: rgba(0, 0, 0, 0.164);
                   border: none;
@@ -1502,7 +1520,7 @@
                 class="bg-transparent"
                 id="select-table"
                 style="width: 100%"
-                [disabled]="existenEstimaciones"
+                [disabled]="existenEstimaciones || contenedorCatalogoGeneral"
                 [(ngModel)]="detalle.idTipoInsumo"
                 (ngModelChange)="crearDetalle(detalle)"
                 style="
@@ -1523,7 +1541,7 @@
                 class="bg-transparent"
                 id="select-table"
                 style="width: 100%"
-                [disabled]="existenEstimaciones"
+                [disabled]="existenEstimaciones || contenedorCatalogoGeneral"
                 [(ngModel)]="detalle.idFamiliaInsumo"
                 (ngModelChange)="crearDetalle(detalle)"
                 style="border: none; border-radius: 3px"
@@ -1737,7 +1755,7 @@
                   id="input-table"
                   [(ngModel)]="generador.codigo"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="existenEstimaciones"
+                  [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                   style="
                     border: none;
                     border-radius: 3px;
@@ -1754,7 +1772,7 @@
                   id="input-table"
                   [(ngModel)]="generador.ejeX"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="existenEstimaciones"
+                  [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                   maxlength="20"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -1772,7 +1790,7 @@
                   id="input-table"
                   [(ngModel)]="generador.ejeY"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="existenEstimaciones"
+                  [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                   maxlength="20"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -1790,7 +1808,7 @@
                   id="input-table"
                   [(ngModel)]="generador.ejeZ"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="existenEstimaciones"
+                  [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                   maxlength="20"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -1808,7 +1826,7 @@
                   id="input-table"
                   [(ngModel)]="generador.cantidad"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="existenEstimaciones"
+                  [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                   (dblclick)="abrirOperacionCantidadGenerador(generador)"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -1826,7 +1844,7 @@
                   id="input-table"
                   [(ngModel)]="generador.x"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="existenEstimaciones"
+                  [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                   style="
                     border: 0.5px solid #ffffff4d;
                     border-radius: 3px;
@@ -1847,7 +1865,7 @@
                   id="input-table"
                   [(ngModel)]="generador.y"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="existenEstimaciones"
+                  [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                   style="
                     border: 0.5px solid #ffffff4d;
                     border-radius: 3px;
@@ -1864,7 +1882,7 @@
                   id="input-table"
                   [(ngModel)]="generador.z"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="existenEstimaciones"
+                  [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                   style="
                     border: 0.5px solid #ffffff4d;
                     border-radius: 3px;
@@ -1888,7 +1906,7 @@
                   class="button-importar"
                   data-bs-toggle="modal"
                   (click)="eliminarGenerador(generador)"
-                  [disabled]="existenEstimaciones"
+                  [disabled]="existenEstimaciones || contenedorCatalogoGeneral"
                 >
                   Eliminar
                 </button>
@@ -1913,7 +1931,6 @@
       (recalcular)="recalcular($event)"
     ></app-dialog-explosion-insumos>
   </div>
-
   <!---------------------------Tabla Muestra Detalle------------------------------>
 
   <!--Tabla 3-->

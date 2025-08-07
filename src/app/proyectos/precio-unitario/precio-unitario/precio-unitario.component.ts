@@ -334,6 +334,7 @@ export class PrecioUnitarioComponent implements OnInit {
 
   contenedorPresupuesto: boolean = true;
   contenedorExplosionInsumo: boolean = false;
+  contenedorCatalogoGeneral: boolean = false;
   appRecarga: number = 0;
   mostrarBotones: boolean = false;
   existenEstimaciones: boolean = false;
@@ -920,9 +921,12 @@ export class PrecioUnitarioComponent implements OnInit {
         this.precioUnitarioService
           .crearYObtener(precioUnitario, this.selectedEmpresa)
           .subscribe((preciosUnitarios) => {
-            this.preciosUnitariosRefresco = preciosUnitarios;
+            if(!this.contenedorCatalogoGeneral){
+              this.preciosUnitariosRefresco = preciosUnitarios;
             this.refrescar();
             this.cargarListaConceptos();
+            }
+
             this.displayCarga = 'none';
           });
       } else {
@@ -954,9 +958,11 @@ export class PrecioUnitarioComponent implements OnInit {
         this.precioUnitarioService
           .crearYObtener(precioUnitario, this.selectedEmpresa)
           .subscribe((precioUnitario) => {
-            this.preciosUnitariosRefresco = precioUnitario;
+            if(!this.contenedorCatalogoGeneral){
+              this.preciosUnitariosRefresco = precioUnitario;
             this.refrescar();
             this.cargarListaConceptos();
+            }
             this.displayCarga = 'none';
           });
       }
@@ -1010,9 +1016,11 @@ export class PrecioUnitarioComponent implements OnInit {
         this.precioUnitarioService
           .editar(precioUnitario, this.selectedEmpresa)
           .subscribe((precioUnitario) => {
-            this.preciosUnitariosRefresco = precioUnitario;
+            if(!this.contenedorCatalogoGeneral){
+              this.preciosUnitariosRefresco = precioUnitario;
             this.refrescar();
             this.cargarListaConceptos();
+            }
             this.displayCarga = 'none';
           });
       }
@@ -3334,6 +3342,20 @@ export class PrecioUnitarioComponent implements OnInit {
     this.appRecarga += 1;
     this.contenedorPresupuesto = false;
     this.contenedorExplosionInsumo = true;
+  }
+
+  openDialogCatalogoGeneral() {
+    this.precioUnitarioService.obtenerEstructurado(0, this.selectedEmpresa).subscribe((datos) => {
+      this.preciosUnitarios = datos;
+    });
+    this.contenedorPresupuesto = true;
+    this.contenedorCatalogoGeneral = true;
+  }
+
+  regresarPU(){
+    this.contenedorPresupuesto = true;
+    this.contenedorCatalogoGeneral = false;
+    this.cargarRegistros();
   }
 
   explosionInsumoXPrecioUnitario(precioUnitario: precioUnitarioDTO) {
