@@ -6,6 +6,7 @@ import { DetalleOrdenVentaDTO, ImpuestoDetalleOrdenVentaDTO, OrdenVentaDTO } fro
 import { da, de } from 'date-fns/locale';
 import { ClienteService } from 'src/app/catalogos/cliente/cliente.service';
 import { clienteDTO } from 'src/app/catalogos/cliente/tsCliente';
+import { ProductoYServicioService } from 'src/app/productos-y-servicios/productoyservicio.service';
 
 @Component({
   selector: 'app-ventas',
@@ -22,7 +23,7 @@ export class VentasComponent {
     numeroOrdenVenta: '',
     autorizo: '',
     idCliente: 0,
-    fechaRegistro: new Date,
+    fechaRegistro: new Date(),
     estatus: 0,
     importeTotal: 0,
     subtotal: 0,
@@ -30,8 +31,13 @@ export class VentasComponent {
     totalSaldado: 0,
     descuento: 0,
     observaciones: '',
-    detalleOrdenVenta: []
+    detalleOrdenVenta: [],
+    elaboro: ''
   }
+
+  ordenesVenta: OrdenVentaDTO[] = [];
+
+  // productosYServicios: ProductoYServicioDTO[] = [];
 
   selectedDetalleOrdenVenta: DetalleOrdenVentaDTO = {
     id: 0,
@@ -66,16 +72,19 @@ export class VentasComponent {
   constructor(
     private _seguridadService: SeguridadService,
     private _ordenVentaService: VentasService,
-    private _clienteService : ClienteService
+    private _clienteService : ClienteService,
+    private _prodYserService: ProductoYServicioService
   ) {
     let IdEmpresa = _seguridadService.obtenIdEmpresaLocalStorage();
     this.selectedEmpresa = Number(IdEmpresa);
   }
 
   ngOnInit(): void {
-    this._clienteService.obtenerTodos(this.selectedEmpresa).subscribe((datos) => {
+    this._clienteService.obtenerTodos(this.selectedEmpresa).subscribe({next:(datos) => {
       this.clientes = datos;
-    });
+    },error:()=>{
+      //Imprime mensaje de error.
+    }});
     this.productosYServicio.push({
       id: 0,
       codigo: '555',
@@ -86,6 +95,25 @@ export class VentasComponent {
       idCategoriaProductoYServicio: 0,
       idSubategoriaProductoYServicio: 0
     })
+    this.cargarOrdenesVenta();
+    this.cargarProductosYServicios();
+  }
+
+  cargarOrdenesVenta(){
+    this._ordenVentaService.obtenerTodos(this.selectedEmpresa).subscribe({next:(datos)=>{
+      this.ordenesVenta = datos;
+    },error:()=>{
+      //Imprime mensaje de error.
+    }})
+  }
+
+  cargarProductosYServicios(){
+    this._prodYserService.obtenerTodos(this.selectedEmpresa).subscribe({next:(datos)=>{
+      this.productosYServicio = datos;
+      this.productosYServicioReset = datos;
+    },error:()=>{
+      //Imprime mensaje de error.
+    }})
   }
 
   openModal() {
@@ -271,5 +299,17 @@ export class VentasComponent {
     this.selectedDetalleOrdenVenta.impuestosDetalleOrdenVenta.splice(coincidencia, 1);
   }
 
-  guardarOrdenVenta() { }
+  guardarOrdenVenta() { 
+    this._ordenVentaService.crear(this.selectedEmpresa, this.ordenVenta).subscribe({next:(respuesta)=>{
+      if(respuesta.estatus){
+        this.closeModal();
+        this.cargarOrdenesVenta();
+      }else{
+        // console.log(respuesta);
+        //Mensaje de error
+      }
+    },error:()=>{
+      //Mensaje de error
+    }})
+  }
 }

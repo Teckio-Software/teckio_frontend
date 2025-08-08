@@ -16,5 +16,9 @@ export class VentasService {
   public crear(idEmp : number, ordenVenta: OrdenVentaDTO){
     return this.HttpClient.post<RespuestaDTO>(`${this.apiUrl}/${idEmp}/crearOrdenVenta`, ordenVenta);
   }
+
+  public obtenerTodos(idEmp: number){
+    return this.HttpClient.get<OrdenVentaDTO[]>(`${this.apiUrl}/${idEmp}/todos`);
+  }
 }
   

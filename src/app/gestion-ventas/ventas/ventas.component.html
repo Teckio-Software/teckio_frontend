@@ -40,10 +40,11 @@
             <ng-container>
               <tr
                 class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+                *ngFor="let orden of ordenesVenta"
               >
-                <td class="px-1 py-[2px]" scope="col">hola</td>
-                <td class="px-1 py-[2px]" scope="col">hola</td>
-                <td class="px-1 py-[2px]" scope="col">hola</td>
+                <td class="px-1 py-[2px]" scope="col">{{orden.numeroOrdenVenta}} </td>
+                <td class="px-1 py-[2px]" scope="col">{{orden.elaboro}} </td>
+                <td class="px-1 py-[2px]" scope="col">{{orden.fechaRegistro | date: 'dd/MM/yyyy HH:mm:ss'}} </td>
               </tr>
             </ng-container>
           </tbody>
@@ -126,7 +127,7 @@
             <table class="w-full text-sm xs:table-fixed">
               <thead class="bg-primario text-white">
                 <tr class="xs:text-[10px]">
-                  <th class="px-1 py-[2px]" scope="col">Estimacion</th>
+                  <!-- <th class="px-1 py-[2px]" scope="col">Estimacion</th> -->
                   <th class="px-1 py-[2px]" scope="col">Producto/Servicion</th>
                   <th class="px-1 py-[2px]" scope="col">Cantidad</th>
                   <th class="px-1 py-[2px] text-center" scope="col">
@@ -149,7 +150,7 @@
                         detalle == selectedDetalleOrdenVenta
                     }"
                   >
-                    <td class="px-1 py-[2px]" scope="col">
+                    <!-- <td class="px-1 py-[2px]" scope="col">
                       <input
                         min="1"
                         placeholder="Cantidad..."
@@ -160,7 +161,7 @@
                         (keydown.enter)="editarDetalle(detalle)"
                         [(ngModel)]="detalle.idEstimacion"
                       />
-                    </td>
+                    </td> -->
                     <td class="px-1 py-[2px]" scope="col">
                       <input
                         autocomplete="off"
@@ -188,7 +189,7 @@
                             class="option-hover"
                             *ngFor="let producto of productosYServicio"
                             [value]="producto.id"
-                            (click)=" (producto)"
+                            (click)=" detalle.idProductoYservicio = (producto.id)"
                           >
                             {{ producto.codigo }} || {{ producto.descripcion }}
                           </option>

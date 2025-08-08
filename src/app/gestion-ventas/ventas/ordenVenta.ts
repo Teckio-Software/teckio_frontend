@@ -13,6 +13,7 @@ export interface OrdenVentaDTO {
     descuento: number;
     observaciones: string;
     detalleOrdenVenta: DetalleOrdenVentaDTO[];
+    elaboro: string;
 }
 
 export interface DetalleOrdenVentaDTO {
