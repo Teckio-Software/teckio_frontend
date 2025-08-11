@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment.development';
-import { ProductoYServicioDTO } from '../gestion-ventas/productos/productos';
+import { ProductoYServicioConjunto, ProductoYServicioDTO } from '../gestion-ventas/productos/productos';
 
 @Injectable({providedIn: 'root'})
 export class ProductoYServicioService {
@@ -15,9 +15,8 @@ export class ProductoYServicioService {
       }
 
     public obtenerConjuntos(idEmp: number){
-      return this.HttpClient.get<any[]>(`${this.apiUrl}/${idEmp}/obtenerConjunto`);
+      return this.HttpClient.get<ProductoYServicioConjunto[]>(`${this.apiUrl}/${idEmp}/obtenerConjunto`);
     }
-
 
     
 }

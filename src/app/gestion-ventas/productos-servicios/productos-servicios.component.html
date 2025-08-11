@@ -53,14 +53,15 @@
             <ng-container>
               <tr
                 class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+                *ngFor="let prodyser of listaProductosYServicios"
               >
-                <td class="px-1 py-[2px]" scope="col">hola</td>
-                <td class="px-1 py-[2px]" scope="col">hola</td>
-                <td class="px-1 py-[2px]" scope="col">hola</td>
-                <td class="px-1 py-[2px]" scope="col">hola</td>
-                <td class="px-1 py-[2px]" scope="col">hola</td>
-                <td class="px-1 py-[2px]" scope="col">hola</td>
-                <td class="px-1 py-[2px]" scope="col">hola</td>
+                <td class="px-1 py-[2px]" scope="col">{{prodyser.codigoPS}} </td>
+                <td class="px-1 py-[2px]" scope="col">{{prodyser.descripcionPS}} </td>
+                <td class="px-1 py-[2px]" scope="col">{{prodyser.descripcionUnidad}} </td>
+                <td class="px-1 py-[2px]" scope="col">{{prodyser.codigoPS}} </td>
+                <td class="px-1 py-[2px]" scope="col">{{prodyser.claveUS}} </td>
+                <td class="px-1 py-[2px]" scope="col">{{prodyser.descripcionCPS}} </td>
+                <td class="px-1 py-[2px]" scope="col">{{prodyser.descripcionSPS}} </td>
                 <td class="px-1 py-[2px]" scope="col">
                   <div>
                     <img
