@@ -180,7 +180,8 @@ export class PrecioUnitarioComponent implements OnInit {
     porcentajeIndirectoConFormato: '',
     posicion: 0,
     codigoPadre: '',
-    esCatalogoGeneral: false
+    esCatalogoGeneral: false,
+    esAvanceObra: false
   };
   selectedProyecto = 0;
   selectedProyecto2 = 0;
@@ -243,7 +244,8 @@ export class PrecioUnitarioComponent implements OnInit {
     porcentajeIndirectoConFormato: '',
     posicion: 0,
     codigoPadre: '',
-    esCatalogoGeneral: false
+    esCatalogoGeneral: false,
+    esAvanceObra: false
   };
   seEstaCopiandoArmado = false;
   seEstaCopiandoConcepto = false;
@@ -283,7 +285,8 @@ export class PrecioUnitarioComponent implements OnInit {
     porcentajeIndirectoConFormato: '',
     posicion: 0,
     codigoPadre: '',
-    esCatalogoGeneral: false
+    esCatalogoGeneral: false,
+    esAvanceObra: false
   };
   precioUnitarioDetalleEditado: precioUnitarioDetalleDTO = {
     id: 0,
@@ -390,7 +393,8 @@ export class PrecioUnitarioComponent implements OnInit {
     expandido: false,
     posicion: 0,
     codigoPadre: '',
-    esCatalogoGeneral: false
+    esCatalogoGeneral: false,
+    esAvanceObra: false
   };
 
   IdPrecioParaExplosion : number = 0;
@@ -524,7 +528,8 @@ export class PrecioUnitarioComponent implements OnInit {
       expandido: false,
       posicion: 0,
       codigoPadre: '',
-      esCatalogoGeneral: false
+      esCatalogoGeneral: false,
+      esAvanceObra: false
     },
     destino: {
       hijos: [],
@@ -559,7 +564,8 @@ export class PrecioUnitarioComponent implements OnInit {
       expandido: false,
       posicion: 0,
       codigoPadre: '',
-      esCatalogoGeneral: false
+      esCatalogoGeneral: false,
+      esAvanceObra: false
     },
     esSubnivel: false,
     esCopiado: false,
@@ -766,8 +772,8 @@ export class PrecioUnitarioComponent implements OnInit {
           porcentajeIndirectoConFormato: '',
           posicion: 0,
           codigoPadre: '',
-          esCatalogoGeneral : false
-
+          esCatalogoGeneral : false,
+          esAvanceObra : false
         };
       });
   }
@@ -827,7 +833,8 @@ export class PrecioUnitarioComponent implements OnInit {
             porcentajeIndirectoConFormato: '',
             posicion: 0,
             codigoPadre: '',
-            esCatalogoGeneral: false
+            esCatalogoGeneral: false,
+            esAvanceObra: false
           });
         }
         this.insumoService
@@ -891,7 +898,8 @@ export class PrecioUnitarioComponent implements OnInit {
       porcentajeIndirectoConFormato: '',
       posicion: 0,
       codigoPadre: '',
-      esCatalogoGeneral : false
+      esCatalogoGeneral : false,
+      esAvanceObra: false
     };
     this.testInput.nativeElement.style.display = 'none';
     this.mostrarBotones = false;
@@ -1076,7 +1084,8 @@ export class PrecioUnitarioComponent implements OnInit {
           porcentajeIndirectoConFormato: '',
           posicion: 0,
           codigoPadre: '',
-          esCatalogoGeneral: false
+          esCatalogoGeneral: false,
+          esAvanceObra: false
         });
         this.precioUnitarioPadreCreacion.hijos = this.preciosUnitarios;
       } else {
@@ -1114,7 +1123,8 @@ export class PrecioUnitarioComponent implements OnInit {
           porcentajeIndirectoConFormato: '',
           posicion: 0,
           codigoPadre: '',
-          esCatalogoGeneral: false
+          esCatalogoGeneral: false,
+          esAvanceObra: false
         });
         this.precioUnitarioPadreCreacion = this.precioUnitarioPadre;
       }
@@ -1183,7 +1193,8 @@ export class PrecioUnitarioComponent implements OnInit {
           porcentajeIndirectoConFormato: '',
           posicion: 0,
           codigoPadre: '',
-          esCatalogoGeneral: false
+          esCatalogoGeneral: false,
+          esAvanceObra: false
         });
         this.precioUnitarioPadreCreacion = this.precioUnitarioPadre;
       } else {
@@ -1220,7 +1231,8 @@ export class PrecioUnitarioComponent implements OnInit {
           porcentajeIndirectoConFormato: '',
           posicion: 0,
           codigoPadre: '',
-          esCatalogoGeneral: false
+          esCatalogoGeneral: false,
+          esAvanceObra: false
         });
         this.precioUnitarioPadreCreacion = precioUnitario;
       }
@@ -1266,7 +1278,8 @@ export class PrecioUnitarioComponent implements OnInit {
           porcentajeIndirectoConFormato: '',
           posicion: 0,
           codigoPadre: '',
-          esCatalogoGeneral: false
+          esCatalogoGeneral: false,
+          esAvanceObra: false
         });
         this.precioUnitarioPadreCreacion = this.precioUnitarioPadre;
       } else {
@@ -1303,7 +1316,8 @@ export class PrecioUnitarioComponent implements OnInit {
           porcentajeIndirectoConFormato: '',
           posicion: 0,
           codigoPadre: '',
-          esCatalogoGeneral: false
+          esCatalogoGeneral: false,
+          esAvanceObra: false
         });
         this.precioUnitarioPadreCreacion = precioUnitario;
       }
@@ -1545,7 +1559,8 @@ export class PrecioUnitarioComponent implements OnInit {
     porcentajeIndirectoConFormato: '',
     posicion: 0,
     codigoPadre: '',
-    esCatalogoGeneral: false
+    esCatalogoGeneral: false,
+    esAvanceObra: false
   };
 
   cargarDetallesXIdPrecioUnitarioCopia1(
@@ -2417,7 +2432,8 @@ export class PrecioUnitarioComponent implements OnInit {
             porcentajeIndirectoConFormato: '',
             posicion: 0,
             codigoPadre: '',
-            esCatalogoGeneral: false
+            esCatalogoGeneral: false,
+            esAvanceObra: false
           });
         }
         this.displayCarga = 'none';
@@ -2544,7 +2560,8 @@ export class PrecioUnitarioComponent implements OnInit {
     porcentajeIndirectoConFormato: '',
     posicion: 0,
     codigoPadre: '',
-    esCatalogoGeneral: false
+    esCatalogoGeneral: false,
+    esAvanceObra: false
   };
 
   importar(precioUnitario: precioUnitarioDTO) {
