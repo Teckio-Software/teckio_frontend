@@ -1,5 +1,9 @@
-<app-alert *ngIf="alertaTipo !== AlertaTipo.none" [alertaTipo]="alertaTipo" [alertaMessage]="alertaMessage"
-  (close)="cerrarAlerta()">
+<app-alert
+  *ngIf="alertaTipo !== AlertaTipo.none"
+  [alertaTipo]="alertaTipo"
+  [alertaMessage]="alertaMessage"
+  (close)="cerrarAlerta()"
+>
 </app-alert>
 <p class="text-center font-semibold text-lg mt-2 xs:text-sm">
   Ordenes de compra capturadas
@@ -16,7 +20,10 @@
       <table class="w-full text-sm xs:table-fixed">
         <thead class="bg-primario text-white">
           <tr class="xs:text-[10px]">
-            <th class="px-1 py-[2px] xs:w-[50px] md:hidden lg:hidden" scope="col"></th>
+            <th
+              class="px-1 py-[2px] xs:w-[50px] md:hidden lg:hidden"
+              scope="col"
+            ></th>
             <th class="px-1 py-[2px]" scope="col">No. Orden</th>
             <th class="px-[2px] py-[2px]" scope="col">Chofer</th>
             <th class="px-[2px] py-[2px]" scope="col">Observaciones</th>
@@ -32,34 +39,66 @@
         </thead>
         <tbody class="divide-y divide-gray300">
           <tr *ngIf="ordenescompras.length == 0">
-            <td scope="col" colspan="7"
-              class="xs:hidden font-medium text-center text-gray700 hover:bg-gray200 animation duration-200">
+            <td
+              scope="col"
+              colspan="7"
+              class="xs:hidden font-medium text-center text-gray700 hover:bg-gray200 animation duration-200"
+            >
               No hay ordenes de compra.
             </td>
-            <td scope="col" colspan="5"
-              class="md:hidden lg:hiddenfont-medium text-center text-gray700 hover:bg-gray200 animation duration-200 text-[8px]">
+            <td
+              scope="col"
+              colspan="5"
+              class="md:hidden lg:hiddenfont-medium text-center text-gray700 hover:bg-gray200 animation duration-200 text-[8px]"
+            >
               No hay ordenes de compra.
             </td>
           </tr>
           <ng-container *ngFor="let oc of ordenescompras">
-            <tr class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
-              [ngClass]="{ 'change-background-color': oc.id == changeColor }">
+            <tr
+              class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              [ngClass]="{ 'change-background-color': oc.id == changeColor }"
+            >
               <td class="md:hidden lg:hidden" scope="col">
-                <img (click)="desplegarInformacion(oc)" *ngIf="oc.isExpanded" src="../../../../assets/arrow_down.svg"
-                  alt="icono de flecha abrir" />
-                <img (click)="desplegarInformacion(oc)" *ngIf="!oc.isExpanded" src="../../../../assets/arrow_right.svg"
-                  alt="icono de flecha cerrar" />
+                <img
+                  (click)="desplegarInformacion(oc)"
+                  *ngIf="oc.isExpanded"
+                  src="./assets/arrow_down.svg"
+                  alt="icono de flecha abrir"
+                />
+                <img
+                  (click)="desplegarInformacion(oc)"
+                  *ngIf="!oc.isExpanded"
+                  src="./assets/arrow_right.svg"
+                  alt="icono de flecha cerrar"
+                />
               </td>
               <td class="px-1 py-[2px]" scope="col">
-                <input readonly autocomplete="off" type="text" class="bg-transparent w-[70%]"
-                  [(ngModel)]="oc.noOrdenCompra" />
+                <input
+                  readonly
+                  autocomplete="off"
+                  type="text"
+                  class="bg-transparent w-[70%]"
+                  [(ngModel)]="oc.noOrdenCompra"
+                />
               </td>
               <td class="px-1 py-[2px]" scope="col">
-                <input readonly autocomplete="off" type="text" class="bg-transparent w-[70%]" [(ngModel)]="oc.chofer" />
+                <input
+                  readonly
+                  autocomplete="off"
+                  type="text"
+                  class="bg-transparent w-[70%]"
+                  [(ngModel)]="oc.chofer"
+                />
               </td>
               <td class="px-1 py-[2px]" scope="col">
-                <input readonly autocomplete="off" type="text" class="bg-transparent w-[70%]"
-                  [(ngModel)]="oc.observaciones" />
+                <input
+                  readonly
+                  autocomplete="off"
+                  type="text"
+                  class="bg-transparent w-[70%]"
+                  [(ngModel)]="oc.observaciones"
+                />
               </td>
               <td class="px-1 py-[2px] xs:hidden" scope="col">
                 {{ oc.fechaRegistro | date : "dd-MM-yyyy" }}
@@ -67,7 +106,10 @@
               <td class="px-1 py-[2px] xs:hidden" scope="col">
                 <!-- {{ oc.estatus === 1 ? "Capturada" : "" }} -->
                 <div class="flex justify-center h-full xs:hidden">
-                  <div class="bg-blue100 rounded-lg w-28 h-5" *ngIf="oc.estatus === 1">
+                  <div
+                    class="bg-blue100 rounded-lg w-28 h-5"
+                    *ngIf="oc.estatus === 1"
+                  >
                     <p class="text-blue600 text-center">Capturada</p>
                   </div>
                   <div class="bg-amber100 rounded-lg w-28 h-5" *ngElse>
@@ -78,42 +120,68 @@
               <td class="px-1 py-[2px] xs:hidden" scope="col">
                 <!-- {{ oc.estatusInsumosSurtidosDescripcion }} -->
                 <div class="flex justify-center h-full">
-                  <div class="bg-amber50 rounded-lg w-28 h-5"
-                    *ngIf="oc.estatusInsumosSurtidosDescripcion === 'Pendiente'">
+                  <div
+                    class="bg-amber50 rounded-lg w-28 h-5"
+                    *ngIf="oc.estatusInsumosSurtidosDescripcion === 'Pendiente'"
+                  >
                     <p class="text-amber500 text-center">Pendiente</p>
                   </div>
-                  <div class="bg-blue100 rounded-lg w-48 h-5" *ngIf="
+                  <div
+                    class="bg-blue100 rounded-lg w-48 h-5"
+                    *ngIf="
                       oc.estatusInsumosSurtidosDescripcion ===
                       'Surtida parcialmente'
-                    ">
+                    "
+                  >
                     <p class="text-blue600 text-center">Surtido parcialmente</p>
                   </div>
-                  <div class="bg-green100 rounded-lg w-48 h-5" *ngIf="
+                  <div
+                    class="bg-green100 rounded-lg w-48 h-5"
+                    *ngIf="
                       oc.estatusInsumosSurtidosDescripcion ===
                       'Surtida totalmente'
-                    ">
+                    "
+                  >
                     <p class="text-green600 text-center">Surtido totalmente</p>
                   </div>
                 </div>
               </td>
               <td class="px-1 py-[2px]" scope="col">
                 <div class="flex gap-2 justify-center">
-                  <img ngbTooltip="Entradas de Almacén" triggers="mouseenter:mouseleave" class="cursor-pointer xs:w-4"
-                    src="../../../../assets/warehouse.svg" (click)="VerEntradasAlmacen(oc.id)" />
+                  <img
+                    ngbTooltip="Entradas de Almacén"
+                    triggers="mouseenter:mouseleave"
+                    class="cursor-pointer xs:w-4"
+                    src="./assets/warehouse.svg"
+                    (click)="VerEntradasAlmacen(oc.id)"
+                  />
                   <div *ngIf="!insumosEstado">
-                    <img ngbTooltip="Ver insumos" triggers="mouseenter:mouseleave" class="cursor-pointer mx-auto xs:w-4"
-                      src="../../../../assets/visibility_btn.svg" alt="ver insumos" (click)="showModal(oc)" />
+                    <img
+                      ngbTooltip="Ver insumos"
+                      triggers="mouseenter:mouseleave"
+                      class="cursor-pointer mx-auto xs:w-4"
+                      src="./assets/visibility_btn.svg"
+                      alt="ver insumos"
+                      (click)="showModal(oc)"
+                    />
                   </div>
                   <div *ngIf="!insumosEstado">
-                    <img ngbTooltip="Cargar facturas" triggers="mouseenter:mouseleave"
-                      class="cursor-pointer mx-auto xs:w-4" src="../../../../assets/upload_file.svg" alt="ver insumos"
-                      (click)="nuevaFacturaOrdenCompra(oc.id)" />
+                    <img
+                      ngbTooltip="Cargar facturas"
+                      triggers="mouseenter:mouseleave"
+                      class="cursor-pointer mx-auto xs:w-4"
+                      src="./assets/upload_file.svg"
+                      alt="ver insumos"
+                      (click)="nuevaFacturaOrdenCompra(oc.id)"
+                    />
                   </div>
                 </div>
               </td>
             </tr>
-            <tr class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
-              *ngIf="oc.isExpanded">
+            <tr
+              class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              *ngIf="oc.isExpanded"
+            >
               <td class="px-1 py-[2px]" scope="col" colspan="5">
                 <div class="flex gap-1">
                   <label class="font-bold">Fecha de Registro:</label>
@@ -121,14 +189,19 @@
                 </div>
               </td>
             </tr>
-            <tr class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
-              *ngIf="oc.isExpanded">
+            <tr
+              class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              *ngIf="oc.isExpanded"
+            >
               <td class="px-1 py-[2px]" scope="col" colspan="5">
                 <!-- {{ oc.estatus === 1 ? "Capturada" : "" }} -->
                 <div class="flex gap-1">
                   <label class="font-bold">Estatus:</label>
                   <div class="flex justify-center h-full">
-                    <div class="bg-blue100 rounded-lg w-28 h-5" *ngIf="oc.estatus === 1">
+                    <div
+                      class="bg-blue100 rounded-lg w-28 h-5"
+                      *ngIf="oc.estatus === 1"
+                    >
                       <p class="text-blue600 text-center">Capturada</p>
                     </div>
                     <div class="bg-amber100 rounded-lg w-28 h-5" *ngElse>
@@ -138,30 +211,41 @@
                 </div>
               </td>
             </tr>
-            <tr class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
-              *ngIf="oc.isExpanded">
+            <tr
+              class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              *ngIf="oc.isExpanded"
+            >
               <td class="px-1 py-[2px]" scope="col" colspan="5">
                 <!-- {{ oc.estatusInsumosSurtidosDescripcion }} -->
                 <div class="flex gap-1">
                   <label class="font-bold">Estatus de insumos:</label>
                   <div class="flex justify-center h-full">
-                    <div class="bg-amber50 rounded-lg w-28 h-5" *ngIf="
+                    <div
+                      class="bg-amber50 rounded-lg w-28 h-5"
+                      *ngIf="
                         oc.estatusInsumosSurtidosDescripcion === 'Pendiente'
-                      ">
+                      "
+                    >
                       <p class="text-amber500 text-center">Pendiente</p>
                     </div>
-                    <div class="bg-blue100 rounded-lg w-48 h-5" *ngIf="
+                    <div
+                      class="bg-blue100 rounded-lg w-48 h-5"
+                      *ngIf="
                         oc.estatusInsumosSurtidosDescripcion ===
                         'Surtida parcialmente'
-                      ">
+                      "
+                    >
                       <p class="text-blue600 text-center">
                         Surtido parcialmente
                       </p>
                     </div>
-                    <div class="bg-green100 rounded-lg w-48 h-5" *ngIf="
+                    <div
+                      class="bg-green100 rounded-lg w-48 h-5"
+                      *ngIf="
                         oc.estatusInsumosSurtidosDescripcion ===
                         'Surtida totalmente'
-                      ">
+                      "
+                    >
                       <p class="text-green600 text-center">
                         Surtido totalmente
                       </p>
@@ -178,30 +262,46 @@
 </div>
 
 <div *ngIf="OrdenCompraSeleccionada">
-  <app-insumos-xorden-compra *appRecarga="appRegarga" [idEmpresaInput]="idEmpresaInput"
-    [idOrdenCompraInput]="idOrdenCompra"></app-insumos-xorden-compra>
+  <app-insumos-xorden-compra
+    *appRecarga="appRegarga"
+    [idEmpresaInput]="idEmpresaInput"
+    [idOrdenCompraInput]="idOrdenCompra"
+  ></app-insumos-xorden-compra>
 </div>
 <div *ngIf="prueba">
-  <app-modal-orden-compra *appRecarga="appRegarga" [isOpen]="isOpenModal" [ordenCompra]="isOrdenCompra"
-    (close)="closeModal()">
+  <app-modal-orden-compra
+    *appRecarga="appRegarga"
+    [isOpen]="isOpenModal"
+    [ordenCompra]="isOrdenCompra"
+    (close)="closeModal()"
+  >
   </app-modal-orden-compra>
 </div>
 
 <ng-template #dialogNuevaFactura>
-  <div class="fixed inset-0 z-10 w-screen overflow-y-auto" (click)="limpiarCargarFactura()">
-    <div class="content-center sm:flex min-h-full items-cen justify-center p-4 text-center sm:items-center sm:p-0">
+  <div
+    class="fixed inset-0 z-10 w-screen overflow-y-auto"
+    (click)="limpiarCargarFactura()"
+  >
+    <div
+      class="content-center sm:flex min-h-full items-cen justify-center p-4 text-center sm:items-center sm:p-0"
+    >
       <!-- Evita que el clic se propague al contenedor padre (overlay) -->
 
       <div
         class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl"
-        (click)="detenerCierre($event)">
+        (click)="detenerCierre($event)"
+      >
         <!-- detenerCierre(event: MouseEvent): Método que detiene la propagación del evento de clic cuando se hace clic dentro del contenido del modal, asegurando que el modal no se cierre inadvertidamente. -->
         <div class="px-9 mt-4 mb-1 flex justify-between">
           <h2 class="font-normal tracking-[2px] leading-8 text-base">
             Nueva Validación
           </h2>
-          <button type="button" class="leading-none absolute top-0 right-0 px-4 py-3 text-2xl"
-            (click)="limpiarCargarFactura()">
+          <button
+            type="button"
+            class="leading-none absolute top-0 right-0 px-4 py-3 text-2xl"
+            (click)="limpiarCargarFactura()"
+          >
             &times;
           </button>
         </div>
@@ -209,11 +309,22 @@
           <div>
             <div class="overflow-x-auto whitespace-nowrap w-full m-auto mt-1">
               <div class="mb-3 flex">
-                <input type="file" class="form-control text-gray-700" multiple (change)="onFileChangeFactura($event)" />
+                <input
+                  type="file"
+                  class="form-control text-gray-700"
+                  multiple
+                  (change)="onFileChangeFactura($event)"
+                />
                 <div
                   class="border-2 bg-colorButton rounded-lg p-2 hover:border-blue-200 transition-all duration-300 cursor-pointer"
-                  ngbTooltip="Cargar factura" triggers="mouseenter:mouseleave">
-                  <img src="../../../../assets//check_circle.svg" alt="" (click)="cargarFactura()" />
+                  ngbTooltip="Cargar factura"
+                  triggers="mouseenter:mouseleave"
+                >
+                  <img
+                    src="./assets/check_circle.svg"
+                    alt=""
+                    (click)="cargarFactura()"
+                  />
                 </div>
               </div>
               <div>
@@ -228,14 +339,14 @@
                           <th class="px-[2px] py-[2px]" scope="col">
                             Total Facturado
                           </th>
-                          <th class="px-[2px] py-[2px]" scope="col">
-                            Estatus
-                          </th>
+                          <th class="px-[2px] py-[2px]" scope="col">Estatus</th>
                         </tr>
                       </thead>
                       <tbody class="divide-y divide-gray300">
                         <ng-container>
-                          <tr class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]">
+                          <tr
+                            class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+                          >
                             <td class="px-1 py-[2px]" scope="col">
                               {{ ordenCompraFacturas.montoTotalOrdenCompra }}
                             </td>
@@ -244,26 +355,42 @@
                             </td>
                             <td class="px-1 py-[2px]" scope="col">
                               <div class="flex justify-center h-full">
-                                <div class="bg-blue100 rounded-lg w-28 h-5"
-                                  *ngIf="ordenCompraFacturas.estatusSaldado === 1">
+                                <div
+                                  class="bg-blue100 rounded-lg w-28 h-5"
+                                  *ngIf="
+                                    ordenCompraFacturas.estatusSaldado === 1
+                                  "
+                                >
                                   <p class="text-blue600 text-center">
                                     Pendiente por pagar
                                   </p>
                                 </div>
-                                <div class="bg-blue100 rounded-lg w-28 h-5"
-                                  *ngIf="ordenCompraFacturas.estatusSaldado === 1">
+                                <div
+                                  class="bg-blue100 rounded-lg w-28 h-5"
+                                  *ngIf="
+                                    ordenCompraFacturas.estatusSaldado === 1
+                                  "
+                                >
                                   <p class="text-blue600 text-center">
                                     Pendiente por pagar
                                   </p>
                                 </div>
-                                <div class="bg-green100 rounded-lg w-28 h-5"
-                                  *ngIf="ordenCompraFacturas.estatusSaldado === 2">
+                                <div
+                                  class="bg-green100 rounded-lg w-28 h-5"
+                                  *ngIf="
+                                    ordenCompraFacturas.estatusSaldado === 2
+                                  "
+                                >
                                   <p class="text-green600 text-center">
                                     Pagada Parcialmente
                                   </p>
                                 </div>
-                                <div class="bg-green100 rounded-lg w-28 h-5"
-                                  *ngIf="ordenCompraFacturas.estatusSaldado === 3">
+                                <div
+                                  class="bg-green100 rounded-lg w-28 h-5"
+                                  *ngIf="
+                                    ordenCompraFacturas.estatusSaldado === 3
+                                  "
+                                >
                                   <p class="text-green600 text-center">
                                     Pagada totalmente
                                   </p>
@@ -290,15 +417,26 @@
                             <th class="px-1 py-[2px] text-center" scope="col">
                               Estatus
                             </th>
-                            <th class="px-1 py-[2px] text-center" scope="col"></th>
+                            <th
+                              class="px-1 py-[2px] text-center"
+                              scope="col"
+                            ></th>
                           </tr>
                         </thead>
                         <tbody class="divide-y divide-gray300">
-                          <ng-container *ngFor="
+                          <ng-container
+                            *ngFor="
                               let fxoc of ordenCompraFacturas.facturasXOrdenCompra
-                            ">
-                            <tr class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]">
-                              <td class="px-1 py-[2px]" scope="col" (click)="facturaDetalleSelected(fxoc)">
+                            "
+                          >
+                            <tr
+                              class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+                            >
+                              <td
+                                class="px-1 py-[2px]"
+                                scope="col"
+                                (click)="facturaDetalleSelected(fxoc)"
+                              >
                                 {{ fxoc.uuid }}
                               </td>
                               <td class="px-1 py-[2px]" scope="col">
@@ -310,27 +448,42 @@
                               <td class="px-1 py-[2px]" scope="col">
                                 <!-- {{ fxoc.estatus }} -->
                                 <div class="flex justify-center h-full">
-                                  <div class="bg-blue100 rounded-lg w-28 h-5" *ngIf="fxoc.estatus === 1">
+                                  <div
+                                    class="bg-blue100 rounded-lg w-28 h-5"
+                                    *ngIf="fxoc.estatus === 1"
+                                  >
                                     <p class="text-blue600 text-center">
                                       Capturada
                                     </p>
                                   </div>
-                                  <div class="bg-green100 rounded-lg w-28 h-5" *ngIf="fxoc.estatus === 2">
+                                  <div
+                                    class="bg-green100 rounded-lg w-28 h-5"
+                                    *ngIf="fxoc.estatus === 2"
+                                  >
                                     <p class="text-green600 text-center">
                                       Autorizada
                                     </p>
                                   </div>
-                                  <div class="bg-green100 rounded-lg w-28 h-5" *ngIf="fxoc.estatus === 3">
+                                  <div
+                                    class="bg-green100 rounded-lg w-28 h-5"
+                                    *ngIf="fxoc.estatus === 3"
+                                  >
                                     <p class="text-green600 text-center">
                                       Pagada parcialmente
                                     </p>
                                   </div>
-                                  <div class="bg-green100 rounded-lg w-28 h-5" *ngIf="fxoc.estatus === 4">
+                                  <div
+                                    class="bg-green100 rounded-lg w-28 h-5"
+                                    *ngIf="fxoc.estatus === 4"
+                                  >
                                     <p class="text-green600 text-center">
                                       Pagada totalmente
                                     </p>
                                   </div>
-                                  <div class="bg-green100 rounded-lg w-28 h-5" *ngIf="fxoc.estatus === 5">
+                                  <div
+                                    class="bg-green100 rounded-lg w-28 h-5"
+                                    *ngIf="fxoc.estatus === 5"
+                                  >
                                     <p class="text-green600 text-center">
                                       Cancelada
                                     </p>
@@ -339,12 +492,24 @@
                               </td>
                               <td class="px-1 py-[2px]" scope="col">
                                 <div class="flex">
-                                  <img (click)="autorizarFactura(fxoc)" *ngIf="fxoc.estatus == 1"
-                                    src="../../../../assets/authorize_facture.svg" alt="" class="cursor-pointer mx-auto"
-                                    ngbTooltip="Autorizar" triggers="mouseenter:mouseleave" />
-                                  <img (click)="cancelarFactura(fxoc)" *ngIf="fxoc.estatus == 1"
-                                    src="../../../../assets/authorize_facture.svg" alt="" class="cursor-pointer mx-auto"
-                                    ngbTooltip="Cancelar" triggers="mouseenter:mouseleave" />
+                                  <img
+                                    (click)="autorizarFactura(fxoc)"
+                                    *ngIf="fxoc.estatus == 1"
+                                    src="./assets/authorize_facture.svg"
+                                    alt=""
+                                    class="cursor-pointer mx-auto"
+                                    ngbTooltip="Autorizar"
+                                    triggers="mouseenter:mouseleave"
+                                  />
+                                  <img
+                                    (click)="cancelarFactura(fxoc)"
+                                    *ngIf="fxoc.estatus == 1"
+                                    src="./assets/authorize_facture.svg"
+                                    alt=""
+                                    class="cursor-pointer mx-auto"
+                                    ngbTooltip="Cancelar"
+                                    triggers="mouseenter:mouseleave"
+                                  />
                                 </div>
                               </td>
                             </tr>
@@ -373,8 +538,12 @@
                           </tr>
                         </thead>
                         <tbody class="divide-y divide-gray300">
-                          <ng-container *ngFor="let detFactura of detalleFacturaXOC">
-                            <tr class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]">
+                          <ng-container
+                            *ngFor="let detFactura of detalleFacturaXOC"
+                          >
+                            <tr
+                              class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+                            >
                               <td class="px-1 py-[2px]" scope="col">
                                 {{ detFactura.descripcion }}
                               </td>
@@ -408,7 +577,8 @@
         <div class="bg-gray-50 px-2 py-2 flex justify-end gap-4">
           <button
             class="rounded-md px-4 py-2 bg-colorButton transition-all duration-300 text-white text-sm shadow-sm hover:bg-colorButtonHover"
-            (click)="limpiarCargarFactura()">
+            (click)="limpiarCargarFactura()"
+          >
             Cancelar
           </button>
         </div>

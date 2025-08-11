@@ -2,10 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { PrecioUnitarioRoutingModule } from './precio-unitario-routing.module';
-import { PrecioUnitarioModalComponent } from './precio-unitario/precio-unitario-modal/precio-unitario-modal.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
   declarations: [],
-  imports: [CommonModule, PrecioUnitarioRoutingModule],
+  imports: [CommonModule, PrecioUnitarioRoutingModule, ScrollingModule],
 })
 export class PrecioUnitarioModule {}

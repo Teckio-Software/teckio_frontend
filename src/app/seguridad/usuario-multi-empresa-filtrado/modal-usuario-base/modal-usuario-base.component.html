@@ -1,55 +1,97 @@
-
-
-
-
-
-
-<mat-dialog-content >
-  <p style="font-size: 14px; font-weight: 700; letter-spacing: 2px;" class="titulo-pop">{{ tituloAccion }}</p>
+<mat-dialog-content>
+  <p
+    style="font-size: 14px; font-weight: 700; letter-spacing: 2px"
+    class="titulo-pop"
+  >
+    {{ tituloAccion }}
+  </p>
   <br />
   <form [formGroup]="formulario" class="contenedor-inputs">
-          <div class="contenedor-input">
-            <label class="label-1">Nombre</label>
-            <input class="input-1" matInput autocomplete="off" formControlName="nombre" placeholder="Nombre"/>
-            <mat-icon matSuffix>account-box</mat-icon>
-          </div>
-          <div class="contenedor-input">
-            <label class="label-1">Apellido paterno</label>
-            <input class="input-1" matInput autocomplete="off" formControlName="apaterno" placeholder="Apellido paterno"/>
-            <mat-icon matSuffix>account-box</mat-icon>
-          </div>
-          <div class="contenedor-input">
-            <label class="label-1">Apellido materno</label>
-            <input class="input-1" matInput autocomplete="off" formControlName="amaterno" placeholder="Apellido materno"/>
-            <mat-icon matSuffix>account-box</mat-icon>
-          </div>
-          <div class="contenedor-input">
-            <label class="label-1">Correo electrónico</label>
-            <input class="input-1" matInput autocomplete="off" formControlName="correoElectronico" placeholder="Correo electrónico" />
-            <mat-icon matSuffix>account-box</mat-icon>
-          </div>
-          <div class="contenedor-input">
-            <label class="label-1">Usuario</label>
-            <input class="input-1" matInput autocomplete="off" formControlName="usuario" placeholder="Nombre de usuario" />
-            <mat-icon matSuffix>account-box</mat-icon>
-          </div>
-          <div class="contenedor-contraseña" *ngIf="datos == null">
-            <div class="contenedor-input">
-              <label class="label-1">Contraseña</label>
-              <input class="input-1" matInput autocomplete="off" formControlName="contrasenia" placeholder="Contraseña" />
-              <mat-icon matSuffix>account-box</mat-icon>
-            </div>
-            <div class="contenedor-input">
-              <label class="label-1">Confirmar contraseña</label>
-              <input class="input-1" matInput autocomplete="off" formControlName="confirmaContrasenia" placeholder="Corfirma contraseña" />
-              <mat-icon matSuffix>account-box</mat-icon>
-            </div>
-          </div>
+    <div class="contenedor-input">
+      <label class="label-1">Nombre</label>
+      <input
+        class="input-1"
+        matInput
+        autocomplete="off"
+        formControlName="nombre"
+        placeholder="Nombre"
+      />
+      <mat-icon matSuffix>account-box</mat-icon>
+    </div>
+    <div class="contenedor-input">
+      <label class="label-1">Apellido paterno</label>
+      <input
+        class="input-1"
+        matInput
+        autocomplete="off"
+        formControlName="apaterno"
+        placeholder="Apellido paterno"
+      />
+      <mat-icon matSuffix>account-box</mat-icon>
+    </div>
+    <div class="contenedor-input">
+      <label class="label-1">Apellido materno</label>
+      <input
+        class="input-1"
+        matInput
+        autocomplete="off"
+        formControlName="amaterno"
+        placeholder="Apellido materno"
+      />
+      <mat-icon matSuffix>account-box</mat-icon>
+    </div>
+    <div class="contenedor-input">
+      <label class="label-1">Correo electrónico</label>
+      <input
+        class="input-1"
+        matInput
+        autocomplete="off"
+        formControlName="correoElectronico"
+        placeholder="Correo electrónico"
+      />
+      <mat-icon matSuffix>account-box</mat-icon>
+    </div>
+    <div class="contenedor-input">
+      <label class="label-1">Usuario</label>
+      <input
+        class="input-1"
+        matInput
+        autocomplete="off"
+        formControlName="usuario"
+        placeholder="Nombre de usuario"
+      />
+      <mat-icon matSuffix>account-box</mat-icon>
+    </div>
+    <div class="contenedor-contraseña" *ngIf="datos == null">
+      <div class="contenedor-input">
+        <label class="label-1">Contraseña</label>
+        <input
+          class="input-1"
+          matInput
+          autocomplete="off"
+          formControlName="contrasenia"
+          placeholder="Contraseña"
+        />
+        <mat-icon matSuffix>account-box</mat-icon>
+      </div>
+      <div class="contenedor-input">
+        <label class="label-1">Confirmar contraseña</label>
+        <input
+          class="input-1"
+          matInput
+          autocomplete="off"
+          formControlName="confirmaContrasenia"
+          placeholder="Corfirma contraseña"
+        />
+        <mat-icon matSuffix>account-box</mat-icon>
+      </div>
+    </div>
   </form>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-    <button class="btn-modal cancelar" mat-dialog-close>Cancelar</button>
-    <button class="btn-modal guardar" mat-dialog-close
-    (click)="guardarEditar()">{{ botonAccion }}</button>
+  <button class="btn-modal cancelar" mat-dialog-close>Cancelar</button>
+  <button class="btn-modal guardar" mat-dialog-close (click)="guardarEditar()">
+    {{ botonAccion }}
+  </button>
 </mat-dialog-actions>

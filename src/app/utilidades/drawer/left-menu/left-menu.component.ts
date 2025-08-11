@@ -55,15 +55,28 @@ export class LeftMenuComponent implements OnInit {
       this.proyectoStateService.proyectoNombre$,
       this.zvSeguridadService.token$,
     ]).subscribe(([proyecto, token]) => {
+      if (!token) {
+        const localToken = localStorage.getItem('token');
+        if (localToken) {
+          this.zvSeguridadService.actualizarToken(localToken);
+          return;
+        }
+      }
       if (proyecto && token) {
         this.permisosUsuario =
           this.zvSeguridadService.obtenerSeccionesUsuario();
         this.filtrarPagesPorPermiso();
-        this.validarAccesoAProyectoActual();
       } else {
         this.pagesFiltradas = [];
       }
     });
+
+    this.router.events
+      .pipe(filter((event: any) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.setPageTitleBasedOnRoute(this.router.url);
+        this.validarAccesoAProyectoActual();
+      });
 
     this.breakpointObserver
       .observe(['(max-width: 639px)'])
@@ -105,9 +118,13 @@ export class LeftMenuComponent implements OnInit {
     this.setPageTitleBasedOnRoute(initialRoute);
   }
 
-  private tienePermiso(permiso: string): boolean {
-    const tiene = this.permisosUsuario.includes(permiso);
-    return tiene;
+  private tienePermiso(required: string[] = []): boolean {
+    // Si la sección no requiere permisos o el array está vacío/contiene "" (público)
+    if (!required || required.length === 0 || required.some((p) => p === '')) {
+      return true;
+    }
+    // Si el usuario tiene al menos uno de los permisos requeridos
+    return required.some((permiso) => this.permisosUsuario.includes(permiso));
   }
 
   private esAdministrador(): boolean {
@@ -118,31 +135,33 @@ export class LeftMenuComponent implements OnInit {
 
   private filtrarPagesPorPermiso(): void {
     const esAdmin = this.esAdministrador();
+
     this.pagesFiltradas = pages
       .filter(
         (page) =>
           esAdmin ||
-          (page.nestedPages || []).some(
-            (p) => !p.permiso || this.tienePermiso(p.permiso)
+          (page.nestedPages || []).some((nested) =>
+            this.tienePermiso(nested.permiso)
           )
       )
       .map((page) => ({
         ...page,
-        nestedPages:
-          page.nestedPages?.filter(
-            (p) => esAdmin || !p.permiso || this.tienePermiso(p.permiso)
-          ) ?? [],
+        nestedPages: (page.nestedPages || []).filter(
+          (nested) => esAdmin || this.tienePermiso(nested.permiso)
+        ),
       }));
   }
 
   private validarAccesoAProyectoActual(): void {
-    const esAdmin = this.esAdministrador();
+    const esPrivilegiado = this.esAdministrador();
     const ruta = this.router.url;
     const tieneAcceso = this.pagesFiltradas.some((page) =>
       page.nestedPages?.some((p) => ruta.startsWith(p.link))
     );
 
-    if (!esAdmin && !tieneAcceso) {
+    const esPaginaInicio = ruta === '/';
+
+    if (!esPrivilegiado && !tieneAcceso && !esPaginaInicio) {
       this.router.navigate(['**']);
     }
   }

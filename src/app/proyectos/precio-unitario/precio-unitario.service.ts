@@ -34,6 +34,10 @@ export class PrecioUnitarioService {
         return this.HttpClient.post<precioUnitarioDTO[]>(`${this.apiUrl}/${idEmpresa}/editar`, precioUnitario)
     }
 
+    public partirConcepto(registro: precioUnitarioDTO, idEmpresa: number): Observable<precioUnitarioDTO[]>{
+        return this.HttpClient.post<precioUnitarioDTO[]>(`${this.apiUrl}/${idEmpresa}/partirConcepto`, registro);
+    }
+
     public editarIndirectoPrecioUnitario(precioUnitario: precioUnitarioDTO, idEmpresa: number) {
         return this.HttpClient.post<boolean>(`${this.apiUrl}/${idEmpresa}/EditarIndirectoPrecioUnitario`, precioUnitario)
     }
@@ -60,6 +64,12 @@ export class PrecioUnitarioService {
 
     public explosionDeInsumos(idProyecto: number, idEmpresa: number) {
         return this.HttpClient.get<InsumoParaExplosionDTO[]>(`${this.apiUrl}/${idEmpresa}/obtenerExplosionDeInsumos/${idProyecto}`)
+    }
+
+    public obtenerExplosionDeInsumosXPrecioUnitario(precioUnitario: precioUnitarioDTO, idEmpresa: number) {
+      console.log("aqui esta el objeto real", precioUnitario);
+
+        return this.HttpClient.post<InsumoParaExplosionDTO[]>(`${this.apiUrl}/${idEmpresa}/obtenerExplosionDeInsumosXPrecioUnitario`, precioUnitario)
     }
 
     public editarDesdeExplosion(insumo: InsumoParaExplosionDTO, idEmpresa: number) {

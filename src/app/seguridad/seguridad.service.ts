@@ -347,7 +347,12 @@ export class SeguridadService {
     const secciones = Object.keys(payload).filter((key) =>
       key.startsWith('Seccion')
     );
-    return secciones;
+    const permisosSecciones = secciones.map((key) => key);
+
+    if (payload['role']) {
+      permisosSecciones.push(payload['role']);
+    }
+    return permisosSecciones;
   }
 
   actualizarToken(nuevoToken: string) {

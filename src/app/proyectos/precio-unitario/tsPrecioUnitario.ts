@@ -32,6 +32,7 @@ export interface precioUnitarioAbstractaDTO{
     expandido: boolean;
     posicion: number;
     codigoPadre: string;
+    esCatalogoGeneral : boolean;
 }
 
 export interface precioUnitarioDTO extends precioUnitarioAbstractaDTO{

@@ -36,7 +36,10 @@ import { EmpleadoServiceService } from '../empleado/empleado-service.service';
 import { da, el } from 'date-fns/locale';
 import { EmpleadosComponent } from '../empleado/empleados/empleados.component';
 import { ModalTablaEmpleadosComponent } from '../empleado/modal-tabla-empleados/modal-tabla-empleados.component';
-import { esAdminUsuarioCorporativoFuntion } from 'src/app/safe.guard';
+import {
+  esAdminRoles,
+  esAdminUsuarioCorporativoFuntion,
+} from 'src/app/safe.guard';
 
 @Component({
   selector: 'app-usuario-multi-empresa-filtrado',
@@ -52,7 +55,9 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
   tablaAsignacion = false;
   nombreUsuario: string = '';
   esAdmin: boolean = false;
+  esAdminRoles: boolean = false;
   clicked = false; // Variable para controlar si se ha hecho clic
+  isActive: boolean = false;
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -147,6 +152,7 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
   IdEmpresa: number = 0;
   usarioActivoEmpresa: boolean = false;
   IdUser: number = 0;
+  isOpen: boolean = false;
 
   constructor(
     private empresaService: EmpresaService,
@@ -163,6 +169,7 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
   ) {
     this.paginator.itemsPerPageLabel = 'Registros por pagina:';
     this.esAdmin = esAdminUsuarioCorporativoFuntion();
+    this.esAdminRoles = esAdminRoles();
   }
 
   ngOnInit(): void {
@@ -194,6 +201,22 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
     this.cargarRegistrosCorporativos();
   }
 
+  modalAsignar() {
+    this.isOpen = true;
+  }
+
+  cerrarModal() {
+    this.isOpen = false;
+  }
+
+  toggleActivo(registro: UsuarioEstructuraCorporativoDTO) {
+    const nuevoEstado = !registro.activo;
+    // Actualiza localmente para feedback instantáneo
+    registro.activo = nuevoEstado;
+    // Llama a tu método original
+    this.activarDesactivarUsuario(registro.idUsuario, nuevoEstado);
+  }
+
   seleccionEmpresaTabla(empresa: UsuarioEmpresaEstructura) {
     this.IdEmpresa = empresa.idEmpresa;
     this.usarioActivoEmpresa = empresa.activoEmpresa;
@@ -215,7 +238,6 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
 
   seleccionEmpresaTablaRelacion(empresa: UsuarioEmpresaEstructura) {
     this.IdEmpresa = empresa.idEmpresa;
-    console.log('esta es la empresa', this.IdEmpresa);
     this.usarioActivoEmpresa = empresa.activoEmpresa;
     if (this.usarioActivoEmpresa) {
       this._empleadoService
@@ -440,7 +462,6 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
       .afterClosed()
       .subscribe(() => {
         this.cargarRegistros(this.selectedCorporativo);
-        console.log();
       });
   }
 
@@ -458,7 +479,6 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
             .afterClosed()
             .subscribe(() => {
               this.cargarRegistros(this.selectedCorporativo);
-              console.log();
             });
         } else if (info.descripcion == 'gastos') {
           this.dialog
@@ -470,7 +490,6 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
             .afterClosed()
             .subscribe(() => {
               this.cargarRegistros(this.selectedCorporativo);
-              console.log();
             });
         } else if (info.descripcion == 'normal') {
           this.dialog
@@ -482,7 +501,6 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
             .afterClosed()
             .subscribe(() => {
               this.cargarRegistros(this.selectedCorporativo);
-              console.log();
             });
         }
       });
@@ -502,6 +520,12 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
       .subscribe(() => {
         this.cargarRegistros(this.selectedCorporativo);
       });
+  }
+
+  cambiarAdministradorRoles(usuario: UsuarioEstructuraCorporativoDTO) {
+    this.usuarioService
+      .CrearAdministradorRoles(usuario)
+      .subscribe((datos) => {});
   }
 
   nuevoUsuarioProveedor() {
@@ -594,7 +618,9 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
         registro.idEmpresa,
         registro.idRol
       )
-      .subscribe(() => {});
+      .subscribe(() => {
+        this.isActive = true;
+      });
   }
 
   guardarDatosUsuario() {
@@ -641,17 +667,17 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
       event.target as HTMLInputElement
     ).value.toLocaleLowerCase();
     this.dataUsuario = this.dataUsuarioReset.filter((usuario) =>
-      usuario.nombreCompleto
+      usuario.nombreUsuario
         .toLocaleLowerCase()
         .includes(filterValue.toLocaleLowerCase())
     );
   }
   seleccionaProveedor(proveedor: UsuarioEstructuraCorporativoDTO) {
     this.dataUsuario = this.dataUsuarioReset.filter(
-      (z) => z.nombreCompleto == proveedor.nombreCompleto
+      (z) => z.nombreUsuario == proveedor.nombreUsuario
     );
     this.dropdown = false;
-    this.nombreUsuario = proveedor.nombreCompleto;
+    this.nombreUsuario = proveedor.nombreUsuario;
   }
 
   cargarRegistrosEmpresas(parametro: UsuarioEstructuraCorporativoDTO) {
@@ -681,7 +707,6 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
       this.usuarioEmpresaService
         .ObtenEmpresasXUsuario(this.selectedCorporativo, parametro.idUsuario)
         .subscribe((datos) => {
-          console.log('Aqui estamos', datos);
           this.empresasConRoles = datos;
         });
       this.filaSeleccionada = parametro;

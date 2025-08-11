@@ -42,9 +42,13 @@
                 class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
                 *ngFor="let orden of ordenesVenta"
               >
-                <td class="px-1 py-[2px]" scope="col">{{orden.numeroOrdenVenta}} </td>
-                <td class="px-1 py-[2px]" scope="col">{{orden.elaboro}} </td>
-                <td class="px-1 py-[2px]" scope="col">{{orden.fechaRegistro | date: 'dd/MM/yyyy HH:mm:ss'}} </td>
+                <td class="px-1 py-[2px]" scope="col">
+                  {{ orden.numeroOrdenVenta }}
+                </td>
+                <td class="px-1 py-[2px]" scope="col">{{ orden.elaboro }}</td>
+                <td class="px-1 py-[2px]" scope="col">
+                  {{ orden.fechaRegistro | date : "dd/MM/yyyy HH:mm:ss" }}
+                </td>
               </tr>
             </ng-container>
           </tbody>
@@ -189,7 +193,7 @@
                             class="option-hover"
                             *ngFor="let producto of productosYServicio"
                             [value]="producto.id"
-                            (click)=" detalle.idProductoYservicio = (producto.id)"
+                            (click)="detalle.idProductoYservicio = producto.id"
                           >
                             {{ producto.codigo }} || {{ producto.descripcion }}
                           </option>
@@ -239,7 +243,7 @@
                             ngbTooltip="Ver insumos"
                             triggers="mouseenter:mouseleave"
                             class="cursor-pointer mx-auto xs:w-4"
-                            src="../../../../assets/visibility_btn.svg"
+                            src="./assets/visibility_btn.svg"
                             alt="ver insumos"
                             (click)="verImpuestos(detalle)"
                           />
@@ -247,7 +251,7 @@
                         <div class="flex">
                           <img
                             (click)="eliminarDetalle(detalle)"
-                            src="../../../../assets/authorize_facture.svg"
+                            src="./assets/authorize_facture.svg"
                             alt=""
                             class="cursor-pointer mx-auto"
                             ngbTooltip="Eliminar"

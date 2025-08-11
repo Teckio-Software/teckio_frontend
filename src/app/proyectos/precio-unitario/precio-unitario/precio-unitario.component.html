@@ -2,7 +2,7 @@
   <!---Contenedor 1---->
   <div class="contenedor1" style="width: 100%" *ngIf="contenedorPresupuesto">
     <!----boton versión 1-->
-    <div
+    <!-- <div
       class="cont-acciones"
       style="display: flex; justify-content: center; align-items: center"
       *ngIf="mostrarBotones"
@@ -23,9 +23,9 @@
           </button>
           <button
             class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
-            (click)="recalcularPresupuesto()"
+            (click)="openDialogCatalogoGeneral()"
           >
-            Recalcular
+            Catalogo General
           </button>
           <button
             class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
@@ -33,15 +33,9 @@
           >
             Indirectos
           </button>
-          <button
-            class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
-            (click)="nuevaImportacionPresupuesto()"
-          >
-            Importar Excel
-          </button>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- <div
       class="flex flex-col items-center justify-center gap-2 md:flex-row md:justify-between md:items-end w-[95%] ml-[2.4%]">
@@ -65,49 +59,109 @@
       </div>
     </div> -->
 
-    <div
-      class="flex flex-col justify-between gap-2 md:flex-row md:justify-between w-[95%] ml-[2.4%]"
-    >
-      <div *ngIf="!mostrarBotones" class="w-full">
-        <div
-          class="cont-acciones p-3"
-          style="display: flex; justify-content: center; align-items: center"
-        >
-          <div class="">
-            <div class="flex justify-center gap-2">
+    <div class="flex justify-between items-center gap-2 w-[95%] ml-[2.4%]">
+      <div
+        *ngIf="!mostrarBotones && !contenedorCatalogoGeneral"
+        class="w-auto"
+        #menuContainer
+      >
+        <div class="cont-acciones flex justify-start items-center">
+          <div class="relative inline-block text-left">
+            <div class="flex items-center gap-2">
               <button
-                class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
-                (click)="openDialogFSR()"
+                (click)="mostrarMenu = !mostrarMenu"
+                type="button"
+                class="inline-flex justify-center w-full rounded-md bg-colorButton px-4 py-1.5 text-sm text-white hover:bg-colorButtonHover transition"
               >
-                FSR
+                Configuración de costos
+                <svg
+                  class="ml-2 h-5 w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.23 8.27a.75.75 0 01.02-1.06z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
               </button>
               <button
-                class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
-                (click)="openDialogExpInsumos()"
+                ngbTooltip="Ver catálogo general"
+                placement="right"
+                (click)="openDialogCatalogoGeneral()"
               >
-                Explosión de insumos
+                <img
+                  src="../../../../assets/catalogo.svg"
+                  alt="Catálogo generalde conceptos"
+                  class="w-10"
+                />
               </button>
-              <button
-                class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
-                (click)="recalcularPresupuesto()"
-              >
-                Recalcular
-              </button>
-              <button
-                class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
-                (click)="indirectos()"
-              >
-                Indirectos
-              </button>
-              <button
-                class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
-                (click)="nuevaImportacionPresupuesto()"
-              >
-                Importar archivo
-              </button>
+            </div>
+
+            <div
+              *ngIf="mostrarMenu"
+              class="absolute -right-25 z-50 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            >
+              <div class="py-1">
+                <button
+                  class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  (click)="openDialogFSR(); mostrarMenu = false"
+                >
+                  FSR
+                </button>
+                <button
+                  class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  (click)="openDialogExpInsumos(); mostrarMenu = false"
+                >
+                  Explosión de insumos
+                </button>
+
+                <button
+                  class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  (click)="indirectos(); mostrarMenu = false"
+                >
+                  Indirectos
+                </button>
+              </div>
             </div>
           </div>
         </div>
+      </div>
+      <div class="flex gap-4 mb-2">
+        <button
+          *ngIf="contenedorCatalogoGeneral"
+          class="text-left text-sm hover:bg-gray-100 flex gap-2 items-center font-medium text-gray700"
+          (click)="regresarPU()"
+        >
+          <img
+            src="../../../../assets/go_back.svg"
+            alt="Regresar"
+            class="w-8"
+          />
+          Presupuesto
+        </button>
+
+        <button
+          *ngIf="contenedorCatalogoGeneral"
+          class="text-left text-sm hover:bg-gray-100 flex gap-2 items-center font-medium text-gray700"
+        >
+          <img
+            src="../../../../assets/download.svg"
+            alt="Importar"
+            class="w-8"
+          />
+          Importar
+        </button>
+        <button
+          *ngIf="contenedorCatalogoGeneral"
+          class="text-left text-sm hover:bg-gray-100 flex gap-2 items-center font-medium text-gray700"
+        >
+          <img src="../../../../assets/delete.svg" alt="Eliminar" class="w-8" />
+          Eliminar
+        </button>
       </div>
       <div class="flex-1 md:w-100%">
         <div class="flex items-end w-full">
@@ -122,32 +176,57 @@
           ></textarea>
         </div>
       </div>
-      <div class="flex-2">
-        <div
-          class="flex flex-row bg-white shadow-sm rounded-t-lg p-1 items-end"
+
+      <div class="flex gap-3" *ngIf="!contenedorCatalogoGeneral">
+        <button
+          class="w-8 disabled:opacity-50 disabled:cursor-not-allowed"
+          ngbTooltip="Importar archivos"
+          placement="left"
+          (click)="nuevaImportacionPresupuesto()"
         >
+          <img src="../../../../assets/upload.svg" alt="Importar archivos" />
+        </button>
+        <button
+          class="w-8 disabled:opacity-50 disabled:cursor-not-allowed"
+          ngbTooltip="Recalcular presupuesto"
+          placement="left"
+          [disabled]="displayCarga === 'flex'"
+          (click)="recalcularPresupuesto()"
+        >
+          <img
+            src="../../../../assets/reload.svg"
+            alt="Recalcular presupuesto"
+            [ngClass]="{ 'animate-spin': displayCarga === 'flex' }"
+          />
+        </button>
+
+        <div class="flex-2">
           <div
-            class="flex items-center justify-center flex-shrink-0 h-10 w-10 rounded-xl bg-[#4eaac138] text-[#4eaac1]"
+            class="flex flex-row bg-white shadow-sm rounded-t-lg p-1 items-end"
           >
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+            <div
+              class="flex items-center justify-center flex-shrink-0 h-10 w-10 rounded-xl bg-[#4eaac138] text-[#4eaac1]"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path>
-            </svg>
-          </div>
-          <div class="flex flex-col flex-grow ml-4">
-            <div class="text-sm text-[#6b7280]">Total</div>
-            <div class="font-bold text-base">
-              <span>{{ totalConFormato }}</span>
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
+            </div>
+            <div class="flex flex-col flex-grow ml-4">
+              <div class="text-sm text-[#6b7280]">Total</div>
+              <div class="font-bold text-base">
+                <span>{{ totalConFormato }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -225,8 +304,16 @@
                         }}
                       </mat-icon>
                     </div>
-                    <div *ngIf="precioUnitario.hijos.length == 0">
-                      <button class="button-accion" style="width: 5px"></button>
+                    <div
+                      *ngIf="precioUnitario.tipoPrecioUnitario == 1"
+                      class="p-1"
+                    >
+                      <input
+                        type="checkbox"
+                        [(ngModel)]="precioUnitario.esCatalogoGeneral"
+                        [checked]="precioUnitario.esCatalogoGeneral"
+                        (click)="enviaraCatalogoGeneral(precioUnitario, $event)"
+                      />
                     </div>
                     <div>
                       <tr>
@@ -239,7 +326,8 @@
                               *ngIf="
                                 precioUnitario.id != 0 &&
                                 seEstaCopiando == false &&
-                                !existenEstimaciones
+                                !existenEstimaciones &&
+                                !contenedorCatalogoGeneral
                               "
                               class="inline-flex items-center p-1 text-md font-medium text-center text-gray-900 rounded-lg"
                               type="button"
@@ -288,6 +376,32 @@
                                   Concepto
                                 </a>
                               </li>
+                              <li
+                                class="cursor-pointer"
+                                *ngIf="
+                                  precioUnitario.tipoPrecioUnitario == 1 &&
+                                  precioUnitario.id != 0
+                                "
+                              >
+                                <a
+                                  (click)="partirConcepto(precioUnitario)"
+                                  class="dropdown-item block px-4 py-2 hover:bg-[#4eaac154] hover:text-[#000000DE]"
+                                >
+                                  Partir
+                                </a>
+                              </li>
+                              <li class="cursor-pointer">
+                                <a
+                                  (click)="
+                                    explosionInsumoXPrecioUnitario(
+                                      precioUnitario
+                                    )
+                                  "
+                                  class="dropdown-item block px-4 py-2 hover:bg-[#4eaac154] hover:text-[#000000DE]"
+                                >
+                                  Explosión Insumos
+                                </a>
+                              </li>
                               <li class="cursor-pointer">
                                 <a
                                   (click)="eliminarPU(precioUnitario)"
@@ -324,6 +438,7 @@
                       <tr>
                         <td class="flex justify-center items-center">
                           <button
+                            *ngIf="!contenedorCatalogoGeneral"
                             class="w-[27px] bg-[#6db1c4a8] hover:bg-[#53AFC8] rounded-sm"
                             (click)="IndirectosXConcepto(precioUnitario)"
                             ngbTooltip="Nuevo costo indirecto"
@@ -407,7 +522,9 @@
                     data-bs-toggle="dropdown"
                     (keyup)="filtrarConcepto($event)"
                     (keydown.enter)="crear(precioUnitario)"
-                    [readonly]="existenEstimaciones"
+                    [readonly]="
+                      existenEstimaciones || contenedorCatalogoGeneral
+                    "
                     style="
                       border: 0.5px solid #ffffff4d;
                       border-radius: 3px;
@@ -449,7 +566,9 @@
                     id="input-table"
                     [(ngModel)]="precioUnitario.codigo"
                     (keydown.enter)="crear(precioUnitario)"
-                    [readonly]="existenEstimaciones"
+                    [readonly]="
+                      existenEstimaciones || contenedorCatalogoGeneral
+                    "
                     style="
                       border: 0.5px solid #ffffff4d;
                       border-radius: 3px;
@@ -478,7 +597,9 @@
                     id="input-table"
                     [(ngModel)]="precioUnitario.codigo"
                     (keydown.enter)="crear(precioUnitario)"
-                    [readonly]="existenEstimaciones"
+                    [readonly]="
+                      existenEstimaciones || contenedorCatalogoGeneral
+                    "
                     style="
                       border: 0.5px solid #ffffff4d;
                       border-radius: 3px;
@@ -503,7 +624,9 @@
                     [(ngModel)]="precioUnitario.descripcion"
                     (keydown.enter)="crear(precioUnitario)"
                     (dblclick)="desplegarCampoEdicion(precioUnitario)"
-                    [readonly]="existenEstimaciones"
+                    [readonly]="
+                      existenEstimaciones || contenedorCatalogoGeneral
+                    "
                     style="
                       border: 0.5px solid #ffffff4d;
                       border-radius: 3px;
@@ -536,7 +659,9 @@
                     aria-label=".form-select-sm example"
                     id="select-table"
                     class="input-table"
-                    [disabled]="existenEstimaciones"
+                    [disabled]="
+                      existenEstimaciones || contenedorCatalogoGeneral
+                    "
                     [(ngModel)]="precioUnitario.unidad"
                     (ngModelChange)="crear(precioUnitario)"
                     style="
@@ -625,7 +750,9 @@
                     class="input-table bg-transparent"
                     id="input-table"
                     [(ngModel)]="precioUnitario.cantidad"
-                    [readonly]="existenEstimaciones"
+                    [readonly]="
+                      existenEstimaciones || contenedorCatalogoGeneral
+                    "
                     style="
                       border: 0.5px solid #ffffff4d;
                       border-radius: 3px;
@@ -890,10 +1017,10 @@
           </button>
         </div>
       </div>
-      <table class="w-full">
+      <table class="w-full overflow-y-auto max-h-96">
         <thead class="bg-primario text-white">
           <tr>
-            <th class="px-1 py-[2px]" scope="col" style="width: 2%">C/S</th>
+            <!-- <th class="px-1 py-[2px]" scope="col" style="width: 2%">C/S</th> -->
             <!-- <th class="cabecera" scope="col" style="width: 2%;">-</th> -->
             <th class="cabecera" scope="col" style="width: 15%">Código</th>
             <th class="cabecera" scope="col" style="width: 30%">Descripcion</th>
@@ -919,7 +1046,7 @@
             }"
             class="font-medium text-gray700"
           >
-            <td class="body-table" style="width: 2%">
+            <!-- <td class="body-table" style="width: 2%">
               <div *ngIf="detalle.id != 0 && !existenEstimaciones">
                 <button
                   class="inline-flex items-center p-1 text-md font-medium text-center text-gray-900 rounded-lg"
@@ -960,7 +1087,7 @@
                   </li>
                 </ul>
               </div>
-            </td>
+            </td> -->
             <!-- <td class="body-table" style="width: 2%;" *ngIf="detalle.id != 0">
               +
             </td>
@@ -982,7 +1109,7 @@
                 (click)="pruebaCont2(detalle)"
                 (keyup)="filtrarInsumo($event)"
                 (keydown.enter)="crearDetalle(detalle)"
-                [readonly]="existenEstimaciones"
+                [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                 style="
                   border: 0.5px solid #ffffff4d;
                   border-radius: 3px;
@@ -1014,7 +1141,7 @@
                 id="input-table"
                 [(ngModel)]="detalle.descripcion"
                 (keydown.enter)="crearDetalle(detalle)"
-                [readonly]="existenEstimaciones"
+                [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                 style="
                   border: 0.5px solid #ffffff4d;
                   border-radius: 3px;
@@ -1031,7 +1158,7 @@
                 style="width: 100%"
                 [(ngModel)]="detalle.unidad"
                 (ngModelChange)="crearDetalle(detalle)"
-                [disabled]="existenEstimaciones"
+                [disabled]="existenEstimaciones || contenedorCatalogoGeneral"
                 style="
                   border: 0.5px solid #ffffff4d;
                   border: none;
@@ -1095,7 +1222,7 @@
                 autoClose="outside"
                 (keydown.enter)="crearDetalle(detalle)"
                 (click)="guardarRegistro(detalle)"
-                [readonly]="existenEstimaciones"
+                [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                 style="
                   background-color: rgba(0, 0, 0, 0.164);
                   border: none;
@@ -1156,7 +1283,9 @@
                               (keydown.enter)="
                                 asignarCantidadDetalleRendimiento()
                               "
-                              [readonly]="existenEstimaciones"
+                              [readonly]="
+                                existenEstimaciones || contenedorCatalogoGeneral
+                              "
                             />
                           </td>
                           <td>
@@ -1167,7 +1296,9 @@
                               (keydown.enter)="
                                 asignarCantidadDetalleRendimiento()
                               "
-                              [readonly]="existenEstimaciones"
+                              [readonly]="
+                                existenEstimaciones || contenedorCatalogoGeneral
+                              "
                             />
                           </td>
                         </tr>
@@ -1260,7 +1391,10 @@
                                 (keydown.enter)="
                                   crearOperacionDetalle(operacion)
                                 "
-                                [readonly]="existenEstimaciones"
+                                [readonly]="
+                                  existenEstimaciones ||
+                                  contenedorCatalogoGeneral
+                                "
                               />
                             </td>
                             <td>
@@ -1270,7 +1404,10 @@
                                 (keydown.enter)="
                                   crearOperacionDetalle(operacion)
                                 "
-                                [readonly]="existenEstimaciones"
+                                [readonly]="
+                                  existenEstimaciones ||
+                                  contenedorCatalogoGeneral
+                                "
                               />
                             </td>
                             <td>
@@ -1289,7 +1426,10 @@
                                 placement="start"
                                 ngbTooltip="Eliminar"
                                 triggers="mouseenter:mouseleave"
-                                [disabled]="existenEstimaciones"
+                                [disabled]="
+                                  existenEstimaciones ||
+                                  contenedorCatalogoGeneral
+                                "
                                 (click)="EliminarOperacion(operacion)"
                               >
                                 <img
@@ -1350,7 +1490,7 @@
                 id="input-table"
                 [(ngModel)]="detalle.costoBase"
                 (keydown.enter)="crearDetalle(detalle)"
-                [readonly]="existenEstimaciones"
+                [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                 style="
                   border: 0.5px solid #ffffff4d;
                   border: none;
@@ -1469,7 +1609,7 @@
                 [(ngModel)]="detalle.importe"
                 *ngIf="detalle.cantidadEditado"
                 (keydown.enter)="editarDetalleImporte(detalle)"
-                [readonly]="existenEstimaciones"
+                [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                 style="
                   background-color: rgba(0, 0, 0, 0.164);
                   border: none;
@@ -1486,7 +1626,7 @@
                 class="bg-transparent"
                 id="select-table"
                 style="width: 100%"
-                [disabled]="existenEstimaciones"
+                [disabled]="existenEstimaciones || contenedorCatalogoGeneral"
                 [(ngModel)]="detalle.idTipoInsumo"
                 (ngModelChange)="crearDetalle(detalle)"
                 style="
@@ -1501,13 +1641,13 @@
                 </option>
               </select>
             </td>
-            <td class="body-table" style="width: 5%">
+            <td class="body-table">
               <select
                 aria-label=".form-select-sm example"
                 class="bg-transparent"
                 id="select-table"
                 style="width: 100%"
-                [disabled]="existenEstimaciones"
+                [disabled]="existenEstimaciones || contenedorCatalogoGeneral"
                 [(ngModel)]="detalle.idFamiliaInsumo"
                 (ngModelChange)="crearDetalle(detalle)"
                 style="border: none; border-radius: 3px"
@@ -1721,7 +1861,7 @@
                   id="input-table"
                   [(ngModel)]="generador.codigo"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="existenEstimaciones"
+                  [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                   style="
                     border: none;
                     border-radius: 3px;
@@ -1738,7 +1878,7 @@
                   id="input-table"
                   [(ngModel)]="generador.ejeX"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="existenEstimaciones"
+                  [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                   maxlength="20"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -1756,7 +1896,7 @@
                   id="input-table"
                   [(ngModel)]="generador.ejeY"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="existenEstimaciones"
+                  [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                   maxlength="20"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -1774,7 +1914,7 @@
                   id="input-table"
                   [(ngModel)]="generador.ejeZ"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="existenEstimaciones"
+                  [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                   maxlength="20"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -1792,7 +1932,7 @@
                   id="input-table"
                   [(ngModel)]="generador.cantidad"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="existenEstimaciones"
+                  [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                   (dblclick)="abrirOperacionCantidadGenerador(generador)"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -1810,7 +1950,7 @@
                   id="input-table"
                   [(ngModel)]="generador.x"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="existenEstimaciones"
+                  [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                   style="
                     border: 0.5px solid #ffffff4d;
                     border-radius: 3px;
@@ -1831,7 +1971,7 @@
                   id="input-table"
                   [(ngModel)]="generador.y"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="existenEstimaciones"
+                  [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                   style="
                     border: 0.5px solid #ffffff4d;
                     border-radius: 3px;
@@ -1848,7 +1988,7 @@
                   id="input-table"
                   [(ngModel)]="generador.z"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="existenEstimaciones"
+                  [readonly]="existenEstimaciones || contenedorCatalogoGeneral"
                   style="
                     border: 0.5px solid #ffffff4d;
                     border-radius: 3px;
@@ -1872,7 +2012,7 @@
                   class="button-importar"
                   data-bs-toggle="modal"
                   (click)="eliminarGenerador(generador)"
-                  [disabled]="existenEstimaciones"
+                  [disabled]="existenEstimaciones || contenedorCatalogoGeneral"
                 >
                   Eliminar
                 </button>
@@ -1894,10 +2034,10 @@
   <div *ngIf="contenedorExplosionInsumo">
     <app-dialog-explosion-insumos
       *appRecarga="appRecarga"
+      [precioUnitario]="precioUnitarioParaExplosion"
       (recalcular)="recalcular($event)"
     ></app-dialog-explosion-insumos>
   </div>
-
   <!---------------------------Tabla Muestra Detalle------------------------------>
 
   <!--Tabla 3-->
@@ -2415,10 +2555,7 @@
           <tbody>
             <tr
               class="font-medium text-gray700"
-              *ngFor="
-                let detalle of detallesCopia
-                  | slice : inicioCopia : terminoCopia
-              "
+              *ngFor="let detalle of detallesCopia"
             >
               <td
                 class="body-table"
@@ -2684,8 +2821,10 @@
                   *ngIf="selectedFileName"
                   class="mt-2 text-gray-700 text-sm text-center"
                 >
-                  Archivo seleccionado:
-                  <span class="font-semibold">{{ selectedFileName }}</span>
+                  Archivos seleccionados:
+                  <span class="font-semibold">{{
+                    archivosCargarExcels?.length
+                  }}</span>
                 </p>
                 <p
                   *ngIf="mensajeModal"
@@ -2700,9 +2839,30 @@
           <!-- botones -->
           <div class="bg-gray-50 px-4 py-3 flex justify-end gap-2">
             <button
-              class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
-              (click)="cargarPresupuestoExcel()"
+              class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex items-center shadow-sm ring-1 ring-inset transition-all relative"
+              (click)="handleClick($event)"
             >
+              <span
+                class="mr-2 relative"
+                (click)="$event.stopPropagation(); mostrarInfo()"
+                style="cursor: pointer"
+                title="Mostrar info"
+              >
+                <img
+                  src="../../../../assets/info_excel.svg"
+                  alt="Info Icon"
+                  class="w-5"
+                />
+                <div
+                  *ngIf="tooltipVisible"
+                  class="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs rounded bg-gray-700 text-white whitespace-nowrap z-10"
+                >
+                  Puede descargar una demostración de Excel
+                  <a href="./assets/Demo.xlsx" download class="underline"
+                    >dando clic aquí.</a
+                  >
+                </div>
+              </span>
               Importar Excel
             </button>
             <button
