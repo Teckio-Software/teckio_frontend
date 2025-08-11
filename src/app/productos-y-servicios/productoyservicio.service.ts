@@ -14,6 +14,10 @@ export class ProductoYServicioService {
         return this.HttpClient.get<ProductoYServicioDTO[]>(`${this.apiUrl}/${idEmp}/obtenerTodos`);
       }
 
+    public obtenerConjuntos(idEmp: number){
+      return this.HttpClient.get<any[]>(`${this.apiUrl}/${idEmp}/obtenerConjunto`);
+    }
+
 
     
 }

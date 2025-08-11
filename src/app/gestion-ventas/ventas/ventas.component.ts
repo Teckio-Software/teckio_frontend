@@ -97,6 +97,10 @@ export class VentasComponent {
     })
     this.cargarOrdenesVenta();
     this.cargarProductosYServicios();
+    this._prodYserService.obtenerConjuntos(this.selectedEmpresa).subscribe(resp=>{
+      console.log(resp);
+      
+    })
   }
 
   cargarOrdenesVenta(){
