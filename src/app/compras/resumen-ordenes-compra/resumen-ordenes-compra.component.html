@@ -184,13 +184,13 @@
                 <img
                   (click)="desplegarInformacion(oc)"
                   *ngIf="oc.isExpanded"
-                  src="../../../../assets/arrow_down.svg"
+                  src="./assets/arrow_down.svg"
                   alt="icono de flecha abrir"
                 />
                 <img
                   (click)="desplegarInformacion(oc)"
                   *ngIf="!oc.isExpanded"
-                  src="../../../../assets/arrow_right.svg"
+                  src="./assets/arrow_right.svg"
                   alt="icono de flecha cerrar"
                 />
               </td>
@@ -287,7 +287,7 @@
                       ngbTooltip="Ver insumos"
                       triggers="mouseenter:mouseleave"
                       class="cursor-pointer mx-auto xs:w-4"
-                      src="../../../../assets/visibility_btn.svg"
+                      src="./assets/visibility_btn.svg"
                       alt="ver insumos"
                       (click)="showModal(oc)"
                     />
@@ -297,7 +297,7 @@
                       ngbTooltip="Cargar facturas"
                       triggers="mouseenter:mouseleave"
                       class="cursor-pointer mx-auto xs:w-4"
-                      src="../../../../assets/upload_file.svg"
+                      src="./assets/upload_file.svg"
                       alt="ver insumos"
                       (click)="nuevaFacturaOrdenCompra(oc.id)"
                     />
@@ -492,7 +492,7 @@
                   triggers="mouseenter:mouseleave"
                 >
                   <img
-                    src="../../../../assets//check_circle.svg"
+                    src="./assets/check_circle.svg"
                     alt=""
                     (click)="cargarFactura()"
                   />
@@ -666,7 +666,7 @@
                                   <img
                                     (click)="autorizarFactura(fxoc)"
                                     *ngIf="fxoc.estatus == 1"
-                                    src="../../../../assets/authorize_facture.svg"
+                                    src="./assets/authorize_facture.svg"
                                     alt=""
                                     class="cursor-pointer mx-auto"
                                     ngbTooltip="Autorizar"
@@ -675,7 +675,7 @@
                                   <img
                                     (click)="cancelarFactura(fxoc)"
                                     *ngIf="fxoc.estatus == 1"
-                                    src="../../../../assets/authorize_facture.svg"
+                                    src="./assets/authorize_facture.svg"
                                     alt=""
                                     class="cursor-pointer mx-auto"
                                     ngbTooltip="Cancelar"

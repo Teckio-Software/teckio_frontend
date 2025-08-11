@@ -67,13 +67,13 @@
       >
         <div class="cont-acciones flex justify-start items-center">
           <div class="relative inline-block text-left">
-            <div>
+            <div class="flex items-center gap-2">
               <button
                 (click)="mostrarMenu = !mostrarMenu"
                 type="button"
                 class="inline-flex justify-center w-full rounded-md bg-colorButton px-4 py-1.5 text-sm text-white hover:bg-colorButtonHover transition"
               >
-                Acciones
+                Configuración de costos
                 <svg
                   class="ml-2 h-5 w-5"
                   xmlns="http://www.w3.org/2000/svg"
@@ -87,6 +87,17 @@
                     clip-rule="evenodd"
                   />
                 </svg>
+              </button>
+              <button
+                ngbTooltip="Ver catálogo general"
+                placement="right"
+                (click)="openDialogCatalogoGeneral()"
+              >
+                <img
+                  src="../../../../assets/catalogo.svg"
+                  alt="Catálogo generalde conceptos"
+                  class="w-10"
+                />
               </button>
             </div>
 
@@ -107,12 +118,6 @@
                 >
                   Explosión de insumos
                 </button>
-                <button
-                  class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  (click)="openDialogCatalogoGeneral(); mostrarMenu = false"
-                >
-                  Catálogo general
-                </button>
 
                 <button
                   class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -125,10 +130,10 @@
           </div>
         </div>
       </div>
-      <div>
+      <div class="flex gap-4 mb-2">
         <button
           *ngIf="contenedorCatalogoGeneral"
-          class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 flex gap-2 items-center font-medium text-gray700"
+          class="text-left text-sm hover:bg-gray-100 flex gap-2 items-center font-medium text-gray700"
           (click)="regresarPU()"
         >
           <img
@@ -137,6 +142,25 @@
             class="w-8"
           />
           Presupuesto
+        </button>
+
+        <button
+          *ngIf="contenedorCatalogoGeneral"
+          class="text-left text-sm hover:bg-gray-100 flex gap-2 items-center font-medium text-gray700"
+        >
+          <img
+            src="../../../../assets/download.svg"
+            alt="Importar"
+            class="w-8"
+          />
+          Importar
+        </button>
+        <button
+          *ngIf="contenedorCatalogoGeneral"
+          class="text-left text-sm hover:bg-gray-100 flex gap-2 items-center font-medium text-gray700"
+        >
+          <img src="../../../../assets/delete.svg" alt="Eliminar" class="w-8" />
+          Eliminar
         </button>
       </div>
       <div class="flex-1 md:w-100%">
@@ -160,7 +184,7 @@
           placement="left"
           (click)="nuevaImportacionPresupuesto()"
         >
-          <img src="../../../../assets/import.svg" alt="Importar archivos" />
+          <img src="../../../../assets/upload.svg" alt="Importar archivos" />
         </button>
         <button
           class="w-8 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -286,10 +310,9 @@
                     >
                       <input
                         type="checkbox"
-                        name=""
-                        id=""
                         [(ngModel)]="precioUnitario.esCatalogoGeneral"
-                        (change)="crear(precioUnitario)"
+                        [checked]="precioUnitario.esCatalogoGeneral"
+                        (click)="enviaraCatalogoGeneral(precioUnitario, $event)"
                       />
                     </div>
                     <div>
@@ -994,10 +1017,10 @@
           </button>
         </div>
       </div>
-      <table class="w-full">
+      <table class="w-full overflow-y-auto max-h-96">
         <thead class="bg-primario text-white">
           <tr>
-            <th class="px-1 py-[2px]" scope="col" style="width: 2%">C/S</th>
+            <!-- <th class="px-1 py-[2px]" scope="col" style="width: 2%">C/S</th> -->
             <!-- <th class="cabecera" scope="col" style="width: 2%;">-</th> -->
             <th class="cabecera" scope="col" style="width: 15%">Código</th>
             <th class="cabecera" scope="col" style="width: 30%">Descripcion</th>
@@ -1023,7 +1046,7 @@
             }"
             class="font-medium text-gray700"
           >
-            <td class="body-table" style="width: 2%">
+            <!-- <td class="body-table" style="width: 2%">
               <div *ngIf="detalle.id != 0 && !existenEstimaciones">
                 <button
                   class="inline-flex items-center p-1 text-md font-medium text-center text-gray-900 rounded-lg"
@@ -1064,7 +1087,7 @@
                   </li>
                 </ul>
               </div>
-            </td>
+            </td> -->
             <!-- <td class="body-table" style="width: 2%;" *ngIf="detalle.id != 0">
               +
             </td>
@@ -1618,7 +1641,7 @@
                 </option>
               </select>
             </td>
-            <td class="body-table" style="width: 5%">
+            <td class="body-table">
               <select
                 aria-label=".form-select-sm example"
                 class="bg-transparent"
@@ -2532,10 +2555,7 @@
           <tbody>
             <tr
               class="font-medium text-gray700"
-              *ngFor="
-                let detalle of detallesCopia
-                  | slice : inicioCopia : terminoCopia
-              "
+              *ngFor="let detalle of detallesCopia"
             >
               <td
                 class="body-table"
@@ -2801,8 +2821,10 @@
                   *ngIf="selectedFileName"
                   class="mt-2 text-gray-700 text-sm text-center"
                 >
-                  Archivo seleccionado:
-                  <span class="font-semibold">{{ selectedFileName }}</span>
+                  Archivos seleccionados:
+                  <span class="font-semibold">{{
+                    archivosCargarExcels?.length
+                  }}</span>
                 </p>
                 <p
                   *ngIf="mensajeModal"
@@ -2817,9 +2839,30 @@
           <!-- botones -->
           <div class="bg-gray-50 px-4 py-3 flex justify-end gap-2">
             <button
-              class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
-              (click)="cargarPresupuestoExcel()"
+              class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex items-center shadow-sm ring-1 ring-inset transition-all relative"
+              (click)="handleClick($event)"
             >
+              <span
+                class="mr-2 relative"
+                (click)="$event.stopPropagation(); mostrarInfo()"
+                style="cursor: pointer"
+                title="Mostrar info"
+              >
+                <img
+                  src="../../../../assets/info_excel.svg"
+                  alt="Info Icon"
+                  class="w-5"
+                />
+                <div
+                  *ngIf="tooltipVisible"
+                  class="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs rounded bg-gray-700 text-white whitespace-nowrap z-10"
+                >
+                  Puede descargar una demostración de Excel
+                  <a href="./assets/Demo.xlsx" download class="underline"
+                    >dando clic aquí.</a
+                  >
+                </div>
+              </span>
               Importar Excel
             </button>
             <button

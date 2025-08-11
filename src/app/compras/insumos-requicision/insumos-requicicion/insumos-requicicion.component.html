@@ -7,7 +7,7 @@
     triggers="mouseenter:mouseleave"
     ngbTooltip="Guardar"
     class="cursor-pointer xs:w-4 xs:h-4"
-    src="../../../../assets/save.svg"
+    src="./assets/save.svg"
     alt="Botón de guardar"
     (click)="agregarNuevoInsumo()"
   />
@@ -52,7 +52,7 @@
             ngbTooltip="Ver detalles"
             triggers="mouseenter:mouseleave"
             class="mx-auto cursor-pointer"
-            src="../../../../assets/more.svg"
+            src="./assets/more.svg"
             (click)="verDetalleInsumo()"
           />
         </td>
@@ -133,8 +133,7 @@
             formControlName="cUnitario"
             [disabled]="false"
           /> -->
-          {{form.get('cUnitario')?.value | number: '1.2-2'}}
-
+          {{ form.get("cUnitario")?.value | number : "1.2-2" }}
         </td>
         <td class="px-1 py-[2px] xs:hidden" scope="col" [formGroup]="form">
           <!-- <input
@@ -146,7 +145,7 @@
             formControlName="cPresupuestada"
             [disabled]="true"
           /> -->
-          {{form.get('cPresupuestada')?.value | number: '1.4-4'}}
+          {{ form.get("cPresupuestada")?.value | number : "1.4-4" }}
         </td>
         <td
           class="px-1 py-[2px] w-[20%] xs:w-[5%]"
@@ -259,13 +258,13 @@
             <img
               (click)="desplegarInformacion(i)"
               *ngIf="i.isExpanded"
-              src="../../../../assets/arrow_down.svg"
+              src="./assets/arrow_down.svg"
               alt="icono de flecha abrir"
             />
             <img
               (click)="desplegarInformacion(i)"
               *ngIf="!i.isExpanded"
-              src="../../../../assets/arrow_right.svg"
+              src="./assets/arrow_right.svg"
               alt="icono de flecha cerrar"
             />
           </td>
@@ -404,7 +403,7 @@
               ngbTooltip="Eliminar"
               triggers="mouseenter:mouseleave"
               (click)="handleClick(i.id)"
-              src="../../../../assets/delete.svg"
+              src="./assets/delete.svg"
               alt="delete"
             />
           </td>

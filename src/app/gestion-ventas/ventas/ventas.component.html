@@ -188,7 +188,7 @@
                             class="option-hover"
                             *ngFor="let producto of productosYServicio"
                             [value]="producto.id"
-                            (click)=" (producto)"
+                            (click)="(producto)"
                           >
                             {{ producto.codigo }} || {{ producto.descripcion }}
                           </option>
@@ -238,7 +238,7 @@
                             ngbTooltip="Ver insumos"
                             triggers="mouseenter:mouseleave"
                             class="cursor-pointer mx-auto xs:w-4"
-                            src="../../../../assets/visibility_btn.svg"
+                            src="./assets/visibility_btn.svg"
                             alt="ver insumos"
                             (click)="verImpuestos(detalle)"
                           />
@@ -246,7 +246,7 @@
                         <div class="flex">
                           <img
                             (click)="eliminarDetalle(detalle)"
-                            src="../../../../assets/authorize_facture.svg"
+                            src="./assets/authorize_facture.svg"
                             alt=""
                             class="cursor-pointer mx-auto"
                             ngbTooltip="Eliminar"
