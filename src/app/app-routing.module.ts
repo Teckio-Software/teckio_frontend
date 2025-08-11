@@ -417,6 +417,13 @@ const routes: Routes = [
         (module) => module.VentasModule
       ),
   },
+  {
+    path: 'productos-y-servicios',
+    loadChildren: () =>
+      import(
+        `./gestion-ventas/productos-servicios/productos-servicios.module`
+      ).then((module) => module.ProductosServiciosModule),
+  },
 
   { path: '**', redirectTo: '' },
 ];
