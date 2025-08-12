@@ -2,16 +2,20 @@ import { ProductoYServicioDTO } from './../productos/productos';
 import { Component } from '@angular/core';
 import { VentasService } from './ventas.service';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
-import { DetalleOrdenVentaDTO, ImpuestoDetalleOrdenVentaDTO, OrdenVentaDTO } from './ordenVenta';
+import {
+  DetalleOrdenVentaDTO,
+  ImpuestoDetalleOrdenVentaDTO,
+  OrdenVentaDTO,
+} from './ordenVenta';
 import { da, de } from 'date-fns/locale';
 import { ClienteService } from 'src/app/catalogos/cliente/cliente.service';
 import { clienteDTO } from 'src/app/catalogos/cliente/tsCliente';
-import { ProductoYServicioService } from 'src/app/productos-y-servicios/productoyservicio.service';
+import { ProductoYServicioService } from './../productoyservicio.service';
 
 @Component({
   selector: 'app-ventas',
   templateUrl: './ventas.component.html',
-  styleUrls: ['./ventas.css']
+  styleUrls: ['./ventas.css'],
 })
 export class VentasComponent {
   selectedEmpresa: number = 0;
@@ -32,8 +36,8 @@ export class VentasComponent {
     descuento: 0,
     observaciones: '',
     detalleOrdenVenta: [],
-    elaboro: ''
-  }
+    elaboro: '',
+  };
 
   ordenesVenta: OrdenVentaDTO[] = [];
 
@@ -48,8 +52,8 @@ export class VentasComponent {
     precioUnitario: 0,
     descuento: 0,
     importeTotal: 0,
-    impuestosDetalleOrdenVenta: []
-  }
+    impuestosDetalleOrdenVenta: [],
+  };
 
   selectedImpuesto: ImpuestoDetalleOrdenVentaDTO = {
     id: 0,
@@ -59,20 +63,19 @@ export class VentasComponent {
     idCategoriaImpuesto: 0,
     idClasificacionImpuesto: 0,
     tasaCuota: 0,
-    importeTotal: 0
-  }
+    importeTotal: 0,
+  };
 
   impuestosDetalleOrdenVenta: ImpuestoDetalleOrdenVentaDTO[] = [];
 
-  clientes : clienteDTO[] = [];
-  productosYServicio : ProductoYServicioDTO[] = [];
-  productosYServicioReset : ProductoYServicioDTO[] = [];
-
+  clientes: clienteDTO[] = [];
+  productosYServicio: ProductoYServicioDTO[] = [];
+  productosYServicioReset: ProductoYServicioDTO[] = [];
 
   constructor(
     private _seguridadService: SeguridadService,
     private _ordenVentaService: VentasService,
-    private _clienteService : ClienteService,
+    private _clienteService: ClienteService,
     private _prodYserService: ProductoYServicioService
   ) {
     let IdEmpresa = _seguridadService.obtenIdEmpresaLocalStorage();
@@ -80,11 +83,14 @@ export class VentasComponent {
   }
 
   ngOnInit(): void {
-    this._clienteService.obtenerTodos(this.selectedEmpresa).subscribe({next:(datos) => {
-      this.clientes = datos;
-    },error:()=>{
-      //Imprime mensaje de error.
-    }});
+    this._clienteService.obtenerTodos(this.selectedEmpresa).subscribe({
+      next: (datos) => {
+        this.clientes = datos;
+      },
+      error: () => {
+        //Imprime mensaje de error.
+      },
+    });
     this.productosYServicio.push({
       id: 0,
       codigo: '555',
@@ -93,28 +99,33 @@ export class VentasComponent {
       idProductoYservicioSat: 0,
       idUnidadSat: 0,
       idCategoriaProductoYServicio: 0,
-      idSubategoriaProductoYServicio: 0
-    })
+      idSubategoriaProductoYServicio: 0,
+    });
     this.cargarOrdenesVenta();
     this.cargarProductosYServicios();
-    
   }
 
-  cargarOrdenesVenta(){
-    this._ordenVentaService.obtenerTodos(this.selectedEmpresa).subscribe({next:(datos)=>{
-      this.ordenesVenta = datos;
-    },error:()=>{
-      //Imprime mensaje de error.
-    }})
+  cargarOrdenesVenta() {
+    this._ordenVentaService.obtenerTodos(this.selectedEmpresa).subscribe({
+      next: (datos) => {
+        this.ordenesVenta = datos;
+      },
+      error: () => {
+        //Imprime mensaje de error.
+      },
+    });
   }
 
-  cargarProductosYServicios(){
-    this._prodYserService.obtenerTodos(this.selectedEmpresa).subscribe({next:(datos)=>{
-      this.productosYServicio = datos;
-      this.productosYServicioReset = datos;
-    },error:()=>{
-      //Imprime mensaje de error.
-    }})
+  cargarProductosYServicios() {
+    this._prodYserService.obtenerTodos(this.selectedEmpresa).subscribe({
+      next: (datos) => {
+        this.productosYServicio = datos;
+        this.productosYServicioReset = datos;
+      },
+      error: () => {
+        //Imprime mensaje de error.
+      },
+    });
   }
 
   openModal() {
@@ -128,14 +139,14 @@ export class VentasComponent {
       precioUnitario: 0,
       descuento: 0,
       importeTotal: 0,
-      impuestosDetalleOrdenVenta: []
+      impuestosDetalleOrdenVenta: [],
     });
   }
 
   closeModal() {
     this.isModalOpen = false;
     this.ordenVenta.idCliente = 0;
-    this.ordenVenta.observaciones = "";
+    this.ordenVenta.observaciones = '';
     this.ordenVenta.detalleOrdenVenta = [];
   }
 
@@ -150,14 +161,23 @@ export class VentasComponent {
         precioUnitario: 0,
         descuento: 0,
         importeTotal: 0,
-        impuestosDetalleOrdenVenta: []
+        impuestosDetalleOrdenVenta: [],
       });
     }
 
-    let ultimoProducto = this.ordenVenta.detalleOrdenVenta[this.ordenVenta.detalleOrdenVenta.length - 1];
-    if (ultimoProducto.idProductoYservicio == 0 || ultimoProducto.cantitdad == 0 || ultimoProducto.cantitdad == undefined || ultimoProducto.cantitdad == null ||
-      ultimoProducto.precioUnitario == 0 || ultimoProducto.precioUnitario == undefined || ultimoProducto.precioUnitario == null) {
-
+    let ultimoProducto =
+      this.ordenVenta.detalleOrdenVenta[
+        this.ordenVenta.detalleOrdenVenta.length - 1
+      ];
+    if (
+      ultimoProducto.idProductoYservicio == 0 ||
+      ultimoProducto.cantitdad == 0 ||
+      ultimoProducto.cantitdad == undefined ||
+      ultimoProducto.cantitdad == null ||
+      ultimoProducto.precioUnitario == 0 ||
+      ultimoProducto.precioUnitario == undefined ||
+      ultimoProducto.precioUnitario == null
+    ) {
       return;
     }
 
@@ -170,24 +190,32 @@ export class VentasComponent {
       precioUnitario: 0,
       descuento: 0,
       importeTotal: 0,
-      impuestosDetalleOrdenVenta: []
+      impuestosDetalleOrdenVenta: [],
     });
   }
 
-  seleccionarProducto(producto : ProductoYServicioDTO){
+  seleccionarProducto(producto: ProductoYServicioDTO) {
     this.selectedDetalleOrdenVenta.idProductoYservicio = producto.id;
-    }
+  }
 
   editarDetalle(detalle: DetalleOrdenVentaDTO) {
-    let existeDetalle = this.ordenVenta.detalleOrdenVenta.filter(z => z.idEstimacion == detalle.idEstimacion && z.idProductoYservicio == detalle.idProductoYservicio);
+    let existeDetalle = this.ordenVenta.detalleOrdenVenta.filter(
+      (z) =>
+        z.idEstimacion == detalle.idEstimacion &&
+        z.idProductoYservicio == detalle.idProductoYservicio
+    );
     if (existeDetalle.length > 1) {
       detalle.idEstimacion = 0;
       detalle.idProductoYservicio = 0;
 
-      let existeVacio = this.ordenVenta.detalleOrdenVenta.filter(z => z.idEstimacion == 0 && z.idProductoYservicio == 0);
+      let existeVacio = this.ordenVenta.detalleOrdenVenta.filter(
+        (z) => z.idEstimacion == 0 && z.idProductoYservicio == 0
+      );
 
       if (existeVacio.length > 1) {
-        let coincidencia = this.ordenVenta.detalleOrdenVenta.findIndex(z => z.idEstimacion == 0 && z.idProductoYservicio == 0);
+        let coincidencia = this.ordenVenta.detalleOrdenVenta.findIndex(
+          (z) => z.idEstimacion == 0 && z.idProductoYservicio == 0
+        );
 
         this.ordenVenta.detalleOrdenVenta.splice(coincidencia, 1);
       }
@@ -195,18 +223,28 @@ export class VentasComponent {
       return;
     }
 
-    if (detalle.idProductoYservicio == 0 || detalle.cantitdad == 0 || detalle.cantitdad == undefined || detalle.cantitdad == null ||
-      detalle.precioUnitario == 0 || detalle.precioUnitario == undefined || detalle.precioUnitario == null) {
+    if (
+      detalle.idProductoYservicio == 0 ||
+      detalle.cantitdad == 0 ||
+      detalle.cantitdad == undefined ||
+      detalle.cantitdad == null ||
+      detalle.precioUnitario == 0 ||
+      detalle.precioUnitario == undefined ||
+      detalle.precioUnitario == null
+    ) {
       return;
     }
 
-    let ultimoVacio = this.ordenVenta.detalleOrdenVenta.filter(z => z.idEstimacion == 0 && z.idProductoYservicio == 0);
+    let ultimoVacio = this.ordenVenta.detalleOrdenVenta.filter(
+      (z) => z.idEstimacion == 0 && z.idProductoYservicio == 0
+    );
     if (ultimoVacio.length >= 1) {
-      let coincidencia = this.ordenVenta.detalleOrdenVenta.findIndex(z => z.idEstimacion == 0 && z.idProductoYservicio == 0);
+      let coincidencia = this.ordenVenta.detalleOrdenVenta.findIndex(
+        (z) => z.idEstimacion == 0 && z.idProductoYservicio == 0
+      );
 
       this.ordenVenta.detalleOrdenVenta.splice(coincidencia, 1);
     }
-
 
     this.ordenVenta.detalleOrdenVenta.push({
       id: 0,
@@ -217,21 +255,31 @@ export class VentasComponent {
       precioUnitario: 0,
       descuento: 0,
       importeTotal: 0,
-      impuestosDetalleOrdenVenta: []
+      impuestosDetalleOrdenVenta: [],
     });
   }
 
   eliminarDetalle(detalle: DetalleOrdenVentaDTO) {
-    let coincidencia = this.ordenVenta.detalleOrdenVenta.findIndex(z => z.idEstimacion == detalle.idEstimacion && z.idProductoYservicio == detalle.idProductoYservicio);
+    let coincidencia = this.ordenVenta.detalleOrdenVenta.findIndex(
+      (z) =>
+        z.idEstimacion == detalle.idEstimacion &&
+        z.idProductoYservicio == detalle.idProductoYservicio
+    );
 
     this.ordenVenta.detalleOrdenVenta.splice(coincidencia, 1);
   }
 
   filtrarProducto(event: Event) {
-        this.productosYServicio = this.productosYServicioReset;
-        const filterValue = (event.target as HTMLInputElement).value.toLocaleLowerCase();
-        this.productosYServicio = this.productosYServicio.filter((producto) => (producto.codigo.toLocaleLowerCase().includes(filterValue)) || (producto.descripcion.toLocaleLowerCase().includes(filterValue)));
-    }
+    this.productosYServicio = this.productosYServicioReset;
+    const filterValue = (
+      event.target as HTMLInputElement
+    ).value.toLocaleLowerCase();
+    this.productosYServicio = this.productosYServicio.filter(
+      (producto) =>
+        producto.codigo.toLocaleLowerCase().includes(filterValue) ||
+        producto.descripcion.toLocaleLowerCase().includes(filterValue)
+    );
+  }
 
   verImpuestos(detalle: DetalleOrdenVentaDTO) {
     if (detalle.impuestosDetalleOrdenVenta.length <= 0) {
@@ -243,10 +291,9 @@ export class VentasComponent {
         idCategoriaImpuesto: 0,
         idClasificacionImpuesto: 0,
         tasaCuota: 0,
-        importeTotal: 0
+        importeTotal: 0,
       });
     }
-
 
     this.selectedDetalleOrdenVenta = detalle;
     this.impuestosDetalleOrdenVenta = detalle.impuestosDetalleOrdenVenta;
@@ -254,32 +301,56 @@ export class VentasComponent {
   }
 
   agregarImpuesto(impuesto: ImpuestoDetalleOrdenVentaDTO) {
-    console.log("Impuestos", this.selectedDetalleOrdenVenta.impuestosDetalleOrdenVenta);
-
-
-    let existeImpuesto = this.selectedDetalleOrdenVenta.impuestosDetalleOrdenVenta.filter(z => z.idTipoImpuesto == impuesto.idTipoImpuesto && z.idTipoFactor == impuesto.idTipoFactor
-      && z.idCategoriaImpuesto == impuesto.idCategoriaImpuesto
+    console.log(
+      'Impuestos',
+      this.selectedDetalleOrdenVenta.impuestosDetalleOrdenVenta
     );
+
+    let existeImpuesto =
+      this.selectedDetalleOrdenVenta.impuestosDetalleOrdenVenta.filter(
+        (z) =>
+          z.idTipoImpuesto == impuesto.idTipoImpuesto &&
+          z.idTipoFactor == impuesto.idTipoFactor &&
+          z.idCategoriaImpuesto == impuesto.idCategoriaImpuesto
+      );
     if (existeImpuesto.length > 1) {
       impuesto.idCategoriaImpuesto = 0;
       impuesto.idTipoFactor = 0;
       impuesto.idTipoImpuesto = 0;
       impuesto.tasaCuota = 0;
 
-      let existeVacio = this.selectedDetalleOrdenVenta.impuestosDetalleOrdenVenta.filter(z => z.idTipoImpuesto == 0 && z.idTipoFactor == 0
-        && z.idCategoriaImpuesto == 0
-      );
+      let existeVacio =
+        this.selectedDetalleOrdenVenta.impuestosDetalleOrdenVenta.filter(
+          (z) =>
+            z.idTipoImpuesto == 0 &&
+            z.idTipoFactor == 0 &&
+            z.idCategoriaImpuesto == 0
+        );
 
       if (existeVacio.length > 1) {
-        let coincidencia = this.selectedDetalleOrdenVenta.impuestosDetalleOrdenVenta.findIndex(z => z.idCategoriaImpuesto == 0 && z.idTipoImpuesto == 0 && z.idTipoFactor == 0);
+        let coincidencia =
+          this.selectedDetalleOrdenVenta.impuestosDetalleOrdenVenta.findIndex(
+            (z) =>
+              z.idCategoriaImpuesto == 0 &&
+              z.idTipoImpuesto == 0 &&
+              z.idTipoFactor == 0
+          );
 
-        this.selectedDetalleOrdenVenta.impuestosDetalleOrdenVenta.splice(coincidencia, 1);
+        this.selectedDetalleOrdenVenta.impuestosDetalleOrdenVenta.splice(
+          coincidencia,
+          1
+        );
       }
 
       return;
     }
 
-    if (impuesto.idCategoriaImpuesto != 0 && impuesto.idTipoFactor != 0 && impuesto.idTipoImpuesto != 0 && impuesto.tasaCuota != 0) {
+    if (
+      impuesto.idCategoriaImpuesto != 0 &&
+      impuesto.idTipoFactor != 0 &&
+      impuesto.idTipoImpuesto != 0 &&
+      impuesto.tasaCuota != 0
+    ) {
       this.selectedDetalleOrdenVenta.impuestosDetalleOrdenVenta.push({
         id: 0,
         idDetalleOrdenVenta: 0,
@@ -288,29 +359,42 @@ export class VentasComponent {
         idCategoriaImpuesto: 0,
         idClasificacionImpuesto: 0,
         tasaCuota: 0,
-        importeTotal: 0
+        importeTotal: 0,
       });
     }
   }
 
   eliminarImpuesto(impuesto: ImpuestoDetalleOrdenVentaDTO) {
-    let coincidencia = this.selectedDetalleOrdenVenta.impuestosDetalleOrdenVenta.findIndex(z => z.idCategoriaImpuesto == impuesto.idCategoriaImpuesto && z.idTipoImpuesto == impuesto.idTipoImpuesto &&
-      z.idTipoFactor == impuesto.idTipoFactor);
+    let coincidencia =
+      this.selectedDetalleOrdenVenta.impuestosDetalleOrdenVenta.findIndex(
+        (z) =>
+          z.idCategoriaImpuesto == impuesto.idCategoriaImpuesto &&
+          z.idTipoImpuesto == impuesto.idTipoImpuesto &&
+          z.idTipoFactor == impuesto.idTipoFactor
+      );
 
-    this.selectedDetalleOrdenVenta.impuestosDetalleOrdenVenta.splice(coincidencia, 1);
+    this.selectedDetalleOrdenVenta.impuestosDetalleOrdenVenta.splice(
+      coincidencia,
+      1
+    );
   }
 
-  guardarOrdenVenta() { 
-    this._ordenVentaService.crear(this.selectedEmpresa, this.ordenVenta).subscribe({next:(respuesta)=>{
-      if(respuesta.estatus){
-        this.closeModal();
-        this.cargarOrdenesVenta();
-      }else{
-        // console.log(respuesta);
-        //Mensaje de error
-      }
-    },error:()=>{
-      //Mensaje de error
-    }})
+  guardarOrdenVenta() {
+    this._ordenVentaService
+      .crear(this.selectedEmpresa, this.ordenVenta)
+      .subscribe({
+        next: (respuesta) => {
+          if (respuesta.estatus) {
+            this.closeModal();
+            this.cargarOrdenesVenta();
+          } else {
+            // console.log(respuesta);
+            //Mensaje de error
+          }
+        },
+        error: () => {
+          //Mensaje de error
+        },
+      });
   }
 }

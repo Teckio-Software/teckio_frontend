@@ -3,7 +3,7 @@ import {
   ProductoYServicioConjunto,
   ProductoYServicioDTO,
 } from '../productos/productos';
-import { ProductoYServicioService } from 'src/app/productos-y-servicios/productoyservicio.service';
+import { ProductoYServicioService } from '../productoyservicio.service';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import { UnidadService } from '../../facturacion/unidad/unidad.service';
 import { UnidadSatService } from '../../facturacion/unidadSat/unidad-sat.service';
@@ -15,6 +15,7 @@ import { UnidadDTO } from 'src/app/facturacion/unidad/ts.unidad';
 import { UnidadSatDTO } from 'src/app/facturacion/unidadSat/ts.unidad-sat';
 import { CategoriaProductoServicioDTO } from 'src/app/facturacion/categoria-producto-servicio/ts.categoria-producto-servicio';
 import { SubcategoriaProductoServicio } from 'src/app/facturacion/subcategoria-producto-servicio/ts.subcategoria-producto-servicio';
+import { AlertaTipo } from 'src/app/utilidades/alert/alert.component';
 
 @Component({
   selector: 'app-productos-servicios',
@@ -64,6 +65,10 @@ export class ProductosServiciosComponent {
   mostrarListaUnidadesSat = false;
   mostrarListaCategorias = false;
   mostrarListaSubCategorias = false;
+  alertaTipo: AlertaTipo = AlertaTipo.none;
+  AlertaTipo = AlertaTipo;
+  alertaMessage: string = '';
+  alertaSuccess: boolean = false;
 
   productoServicio: ProductoYServicioDTO = {
     id: 0,
@@ -112,6 +117,7 @@ export class ProductosServiciosComponent {
 
   seleccionarUnidad(unidad: UnidadDTO) {
     this.textoBusquedaUnidad = unidad.descripcion;
+    this.productoServicio.idUnidad = unidad.id;
     this.unidadesFiltradas = [];
     this.mostrarListaUnidades = false;
   }
@@ -145,6 +151,7 @@ export class ProductosServiciosComponent {
 
   seleccionarProductoServicio(productoServicio: ProductoServicioSat) {
     this.textoBusquedaPyS = productoServicio.descripcion;
+    this.productoServicio.idProductoYservicioSat = productoServicio.id;
     this.productoyServFiltrados = [];
     this.mostrarListaProductosYServicios = false;
   }
@@ -175,6 +182,7 @@ export class ProductosServiciosComponent {
 
   seleccionarUnidadSat(unidad: UnidadSatDTO) {
     this.textoBusquedaSAT = unidad.nombre;
+    this.productoServicio.idUnidadSat = unidad.id;
     this.unidadSATFiltradas = [];
     this.mostrarListaUnidadesSat = false;
   }
@@ -205,6 +213,7 @@ export class ProductosServiciosComponent {
 
   seleccionarCategoria(categoria: CategoriaProductoServicioDTO) {
     this.textoCategoria = categoria.descripcion;
+    this.productoServicio.idCategoriaProductoYServicio = categoria.id;
     this.categoriaFiltradas = [];
     this.mostrarListaCategorias = false;
   }
@@ -233,8 +242,15 @@ export class ProductosServiciosComponent {
     this.mostrarListaSubCategorias = true;
   }
 
+  /*************  ✨ Windsurf Command ⭐  *************/
+  /**
+   * Asigna el valor de la subcategoria seleccionada al producto o servicio, y resetea los valores de la busqueda y lista de subcategorias.
+   * @param subcategoria La subcategoria seleccionada.
+   */
+  /*******  c9893fe8-c933-43f0-bd53-fc8440e30b67  *******/
   seleccionarSubCategoria(subcategoria: SubcategoriaProductoServicio) {
     this.textoSubCategoria = subcategoria.descripcion;
+    this.productoServicio.idSubategoriaProductoYServicio = subcategoria.id;
     this.subcategoriaFiltradas = [];
     this.mostrarListaSubCategorias = false;
   }
@@ -278,9 +294,37 @@ export class ProductosServiciosComponent {
 
   crear() {
     console.log(this.productoServicio);
-    this._productoYServicioService.crearYObtener(this.selectedEmpresa, this.productoServicio).subscribe(resp=>{
-      console.log(resp);
-      
-    })
+    this._productoYServicioService
+      .crear(this.selectedEmpresa, this.productoServicio)
+      .subscribe((resp) => {
+        if (resp.estatus) {
+          this.alerta(AlertaTipo.save, resp.descripcion);
+          this.cerrarModal();
+          this.CargarProductosYServicios();
+        } else {
+          this.alerta(AlertaTipo.error, resp.descripcion);
+        }
+      });
+  }
+
+  alerta(tipo: AlertaTipo, mensaje: string = '') {
+    if (tipo === AlertaTipo.none) {
+      this.cerrarAlerta();
+      return;
+    }
+
+    this.alertaTipo = tipo;
+    this.alertaMessage = mensaje || 'Ocurrió un error';
+    this.alertaSuccess = true;
+
+    setTimeout(() => {
+      this.cerrarAlerta();
+    }, 3000);
+  }
+
+  cerrarAlerta() {
+    this.alertaSuccess = false;
+    this.alertaTipo = AlertaTipo.none;
+    this.alertaMessage = '';
   }
 }

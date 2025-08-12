@@ -159,6 +159,7 @@ import { LottieModule } from 'ngx-lottie';
 import player from 'lottie-web';
 import { ModalAsigacionComponent } from './seguridad/usuario-multi-empresa-filtrado/modal-asigacion/modal-asigacion.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { ProductosServiciosComponent } from './gestion-ventas/productos-servicios/productos-servicios.component';
 
 export function playerFactory() {
   return player;
@@ -307,6 +308,7 @@ export function playerFactory() {
     PrecioUnitarioModalComponent,
     ResumenOrdenesCompraComponent,
     ModalAsigacionComponent,
+    ProductosServiciosComponent,
   ],
 
   imports: [

@@ -1,6 +1,13 @@
 <section>
   <div>
     <div>
+      <app-alert
+        *ngIf="alertaTipo !== AlertaTipo.none"
+        [alertaTipo]="alertaTipo"
+        [alertaMessage]="alertaMessage"
+        (close)="cerrarAlerta()"
+      >
+      </app-alert>
       <!-- Button cotainer -->
       <div class="flex mt-1 mb-2">
         <button
@@ -156,7 +163,8 @@
                       placeholder="Código..."
                       autocomplete="off"
                       class="bg-transparent w-[75%] px-2 py-1"
-                      type="number"
+                      type="text"
+                      [(ngModel)]="productoServicio.codigo"
                     />
                   </td>
                   <td class="px-1 py-[2px]" scope="col">
@@ -166,6 +174,7 @@
                       autocomplete="off"
                       class="bg-transparent w-[75%] px-2 py-1"
                       type="text"
+                      [(ngModel)]="productoServicio.descripcion"
                     />
                   </td>
                   <td class="px-1 py-[2px]" scope="col">
@@ -320,8 +329,8 @@
     <!-- botones -->
     <div class="px-4 py-3 flex justify-end gap-4">
       <button
-      (click)="crear()"  
-      class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
+        (click)="crear()"
+        class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
       >
         Aceptar
       </button>
