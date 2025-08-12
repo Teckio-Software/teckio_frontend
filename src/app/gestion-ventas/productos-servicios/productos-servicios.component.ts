@@ -1,5 +1,8 @@
 import { Component, ElementRef, HostListener } from '@angular/core';
-import { ProductoYServicioConjunto } from '../productos/productos';
+import {
+  ProductoYServicioConjunto,
+  ProductoYServicioDTO,
+} from '../productos/productos';
 import { ProductoYServicioService } from 'src/app/productos-y-servicios/productoyservicio.service';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import { UnidadService } from '../../facturacion/unidad/unidad.service';
@@ -61,6 +64,20 @@ export class ProductosServiciosComponent {
   mostrarListaUnidadesSat = false;
   mostrarListaCategorias = false;
   mostrarListaSubCategorias = false;
+
+  productoServicio: ProductoYServicioDTO = {
+    id: 0,
+    codigo: '',
+    descripcion: '',
+    idUnidad: 0,
+    idProductoYservicioSat: 0,
+    idUnidadSat: 0,
+    idCategoriaProductoYServicio: 0,
+    idSubategoriaProductoYServicio: 0,
+  };
+
+  isModalAddOpen = false;
+  isModalInfoOpen = false;
 
   ngOnInit() {
     this.CargarProductosYServicios();
@@ -230,9 +247,6 @@ export class ProductosServiciosComponent {
       });
   }
 
-  isModalAddOpen = false;
-  isModalInfoOpen = false;
-
   abrirModal(tipoModal: string) {
     if (tipoModal === 'informacion') {
       this.isModalInfoOpen = true;
@@ -260,5 +274,13 @@ export class ProductosServiciosComponent {
 
   detenerCierre(event: MouseEvent) {
     event.stopPropagation();
+  }
+
+  crear() {
+    console.log(this.productoServicio);
+    this._productoYServicioService.crearYObtener(this.selectedEmpresa, this.productoServicio).subscribe(resp=>{
+      console.log(resp);
+      
+    })
   }
 }
