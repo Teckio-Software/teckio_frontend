@@ -16,6 +16,9 @@ import { UnidadSatDTO } from 'src/app/facturacion/unidadSat/ts.unidad-sat';
 import { CategoriaProductoServicioDTO } from 'src/app/facturacion/categoria-producto-servicio/ts.categoria-producto-servicio';
 import { SubcategoriaProductoServicio } from 'src/app/facturacion/subcategoria-producto-servicio/ts.subcategoria-producto-servicio';
 import { AlertaTipo } from 'src/app/utilidades/alert/alert.component';
+import { InsumoService } from 'src/app/catalogos/insumo/insumo.service';
+import { InsumoDTO } from 'src/app/catalogos/insumo/tsInsumo';
+import { InsumoXProductoYServicioService } from 'src/app/facturacion/insumoxproductoyservicio/insumoxproductoyservicio.service';
 
 @Component({
   selector: 'app-productos-servicios',
@@ -29,7 +32,10 @@ export class ProductosServiciosComponent {
     private _unidadSatService: UnidadSatService,
     private _categoriaProdSerservice: CategoriaProductoServicioService,
     private _subcategoriaProdSerservice: SubcategoriaProductoServicioService,
-    private _productoServicioSatService: ProductoServicioSatService
+    private _productoServicioSatService: ProductoServicioSatService,
+    private _insumoService: InsumoService,
+    private _insumoXProdySerService: InsumoXProductoYServicioService
+    
   ) {
     let IdEmpresa = _seguridadService.obtenIdEmpresaLocalStorage();
     this.selectedEmpresa = Number(IdEmpresa);
@@ -60,6 +66,7 @@ export class ProductosServiciosComponent {
   unidadSATFiltradas: UnidadSatDTO[] = [];
   categoriaFiltradas: CategoriaProductoServicioDTO[] = [];
   subcategoriaFiltradas: SubcategoriaProductoServicio[] = [];
+  listaInsumos: InsumoDTO[] = [];
   mostrarListaUnidades = false;
   mostrarListaProductosYServicios = false;
   mostrarListaUnidadesSat = false;
@@ -91,6 +98,7 @@ export class ProductosServiciosComponent {
     this.cargarProdYSerSat();
     this.cargarCategoriasProdSer();
     this.cargarSubcategoriasProdSer();
+    this.cargarInsumos();
   }
 
   // unidad
@@ -327,4 +335,24 @@ export class ProductosServiciosComponent {
     this.alertaTipo = AlertaTipo.none;
     this.alertaMessage = '';
   }
+
+  cargarInsumos(){
+    this._insumoService.obtenerTodos(this.selectedEmpresa).subscribe({next:resp=>{
+      this.listaInsumos = resp;
+      console.log(this.listaInsumos);
+      
+    },error:()=>{
+      //Mensaje de error
+    }})
+  }
+
+  cargarInsumopsProdySer(id: number){
+    this._insumoXProdySerService.obtenerPorProdyser(this.selectedEmpresa, id).subscribe({next:resp=>{
+      console.log(resp);
+      this.abrirModal('informacion');
+    }, error:()=>{
+      //Mensaje de error;
+    }})
+  }
+
 }
