@@ -11,6 +11,5 @@ export class InsumoXProductoYServicioService {
 
       public obtenerPorProdyser(idEmpresa:number, idProdySer: number){
             return this.httpClient.get<InsumoXProductoYServicioDTO[]>(`${this.apiUrl}/${idEmpresa}/obtenerXIdProdYSer/${idProdySer}`);
-        
       }
 }
