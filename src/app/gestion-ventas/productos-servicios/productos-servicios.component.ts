@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import {
   ProductoYServicioConjunto,
   ProductoYServicioDTO,
@@ -35,13 +35,13 @@ export class ProductosServiciosComponent {
     private _subcategoriaProdSerservice: SubcategoriaProductoServicioService,
     private _productoServicioSatService: ProductoServicioSatService,
     private _insumoService: InsumoService,
-    private _insumoXProdySerService: InsumoXProductoYServicioService
+    private _insumoXProdySerService: InsumoXProductoYServicioService,
+    private elementRef: ElementRef
   ) {
     let IdEmpresa = _seguridadService.obtenIdEmpresaLocalStorage();
     this.selectedEmpresa = Number(IdEmpresa);
   }
 
-  selectedEmpresa: number = 0;
   listaProductosYServicios: ProductoYServicioConjunto[] = [];
   listaProductosYServiciosSat: ProductoServicioSat[] = [];
   listaProductosYServiciosSatAux: ProductoServicioSat[] = [];
@@ -49,12 +49,7 @@ export class ProductosServiciosComponent {
   listaUnidadesSat: UnidadSatDTO[] = [];
   listaCategorias: CategoriaProductoServicioDTO[] = [];
   listaSubcategorias: SubcategoriaProductoServicio[] = [];
-  textoBusquedaUnidad = '';
-  textoBusquedaPyS = '';
-  textoBusquedaSAT = '';
-  textoCategoria = '';
-  textoSubCategoria = '';
-  textoInsumo = '';
+
   unidadesFiltradas: UnidadDTO[] = [];
   productoyServFiltrados: ProductoServicioSat[] = [];
   unidadSATFiltradas: UnidadSatDTO[] = [];
@@ -62,16 +57,8 @@ export class ProductosServiciosComponent {
   subcategoriaFiltradas: SubcategoriaProductoServicio[] = [];
   listaInsumosFiltrados: InsumoDTO[] = [];
   listaInsumos: InsumoDTO[] = [];
-  mostrarListaUnidades = false;
-  mostrarListaProductosYServicios = false;
-  mostrarListaUnidadesSat = false;
-  mostrarListaCategorias = false;
-  mostrarListaSubCategorias = false;
-  mostrarListaInsumos = false;
   alertaTipo: AlertaTipo = AlertaTipo.none;
   AlertaTipo = AlertaTipo;
-  alertaMessage: string = '';
-  alertaSuccess: boolean = false;
 
   insumoXProductoYServicio: InsumoXProductoYServicioDTO = {
     id: 0,
@@ -91,8 +78,24 @@ export class ProductosServiciosComponent {
     idSubategoriaProductoYServicio: 0,
   };
 
-  isModalAddOpen = false;
-  isModalInfoOpen = false;
+  selectedEmpresa: number = 0;
+  alertaMessage: string = '';
+  textoBusquedaUnidad: string = '';
+  textoBusquedaPyS: string = '';
+  textoBusquedaSAT: string = '';
+  textoCategoria: string = '';
+  textoSubCategoria: string = '';
+  textoInsumo: string = '';
+
+  mostrarListaUnidades: boolean = false;
+  mostrarListaProductosYServicios: boolean = false;
+  mostrarListaUnidadesSat: boolean = false;
+  mostrarListaCategorias: boolean = false;
+  mostrarListaSubCategorias: boolean = false;
+  mostrarListaInsumos: boolean = false;
+  isModalAddOpen: boolean = false;
+  isModalInfoOpen: boolean = false;
+  alertaSuccess: boolean = false;
 
   ngOnInit() {
     this.CargarProductosYServicios();
@@ -282,6 +285,9 @@ export class ProductosServiciosComponent {
     this.textoBusquedaUnidad = '';
     this.textoBusquedaPyS = '';
     this.textoBusquedaSAT = '';
+    this.textoCategoria = '';
+    this.textoSubCategoria = '';
+    this.textoInsumo = '';
     this.cerrarTodasListas();
   }
 
@@ -307,6 +313,20 @@ export class ProductosServiciosComponent {
           this.alerta(AlertaTipo.save, resp.descripcion);
           this.cerrarModal();
           this.CargarProductosYServicios();
+        } else {
+          this.alerta(AlertaTipo.error, resp.descripcion);
+        }
+      });
+  }
+
+  crearInsumoXProductoyServicio() {
+    this._insumoXProdySerService
+      .crear(this.selectedEmpresa, this.insumoXProductoYServicio)
+      .subscribe((resp) => {
+        console.log(this.insumoXProductoYServicio);
+
+        if (resp.estatus) {
+          this.alerta(AlertaTipo.save, resp.descripcion);
         } else {
           this.alerta(AlertaTipo.error, resp.descripcion);
         }
