@@ -90,6 +90,8 @@ export class ProductosServiciosComponent {
   textoCategoria: string = '';
   textoSubCategoria: string = '';
   textoInsumo: string = '';
+  textoCodigo: string = '';
+  textoDescripcion: string = '';
 
   mostrarListaUnidades: boolean = false;
   mostrarListaProductosYServicios: boolean = false;
@@ -292,6 +294,23 @@ export class ProductosServiciosComponent {
     this.textoCategoria = '';
     this.textoSubCategoria = '';
     this.textoInsumo = '';
+    this.productoServicio = {
+      id: 0,
+      codigo: '',
+      descripcion: '',
+      idUnidad: 0,
+      idProductoYservicioSat: 0,
+      idUnidadSat: 0,
+      idCategoriaProductoYServicio: 0,
+      idSubategoriaProductoYServicio: 0,
+    };
+    this.insumoXProductoYServicio = {
+      id: 0,
+      idProductoYservicio: 0,
+      idInsumo: 0,
+      cantidad: 0,
+    };
+
     this.cerrarTodasListas();
   }
 
@@ -331,6 +350,27 @@ export class ProductosServiciosComponent {
       .subscribe((resp) => {
         if (resp.estatus) {
           this.alerta(AlertaTipo.save, resp.descripcion);
+          this.refrescarInsumosXProdySer();
+
+          this.textoInsumo = '';
+          this.insumoXProductoYServicio = {} as InsumoXProductoYServicioDTO;
+          this.listaInsumosFiltrados = [];
+          this.mostrarListaInsumos = false;
+        } else {
+          this.alerta(AlertaTipo.error, resp.descripcion);
+        }
+      });
+  }
+
+  actualizarInsumoXProductoyServicio(
+    insumoXProductoYServicio: InsumoXProductoYServicioDTO
+  ) {
+    this._insumoXProdySerService
+      .editar(this.selectedEmpresa, insumoXProductoYServicio)
+      .subscribe((resp) => {
+        if (resp.estatus) {
+          this.alerta(AlertaTipo.save, resp.descripcion);
+          this.refrescarInsumosXProdySer();
         } else {
           this.alerta(AlertaTipo.error, resp.descripcion);
         }
@@ -343,6 +383,7 @@ export class ProductosServiciosComponent {
       .subscribe((resp) => {
         if (resp.estatus) {
           this.alerta(AlertaTipo.save, resp.descripcion);
+          this.refrescarInsumosXProdySer();
         } else {
           this.alerta(AlertaTipo.error, resp.descripcion);
         }
@@ -380,6 +421,17 @@ export class ProductosServiciosComponent {
         //Mensaje de error
       },
     });
+  }
+
+  refrescarInsumosXProdySer() {
+    this._insumoXProdySerService
+      .obtenerConjuntoPorProdyser(
+        this.selectedEmpresa,
+        this.insumoXProductoYServicio.idProductoYservicio
+      )
+      .subscribe((resp) => {
+        this.listaInsumosXProductoYServicio = resp;
+      });
   }
 
   cargarInsumopsProdySer(id: number) {
