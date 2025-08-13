@@ -2,14 +2,7 @@ import {
   InsumoXProductoYServicioConjuntoDTO,
   InsumoXProductoYServicioDTO,
 } from './../../facturacion/insumoxproductoyservicio/ts.insumoxproductoyservicio';
-import {
-  Component,
-  ElementRef,
-  HostListener,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
+import { Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
 import {
   ProductoYServicioConjunto,
   ProductoYServicioDTO,
@@ -45,8 +38,7 @@ export class ProductosServiciosComponent {
     private _subcategoriaProdSerservice: SubcategoriaProductoServicioService,
     private _productoServicioSatService: ProductoServicioSatService,
     private _insumoService: InsumoService,
-    private _insumoXProdySerService: InsumoXProductoYServicioService,
-    private elementRef: ElementRef
+    private _insumoXProdySerService: InsumoXProductoYServicioService
   ) {
     let IdEmpresa = _seguridadService.obtenIdEmpresaLocalStorage();
     this.selectedEmpresa = Number(IdEmpresa);
