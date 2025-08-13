@@ -2,7 +2,14 @@ import {
   InsumoXProductoYServicioConjuntoDTO,
   InsumoXProductoYServicioDTO,
 } from './../../facturacion/insumoxproductoyservicio/ts.insumoxproductoyservicio';
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import {
   ProductoYServicioConjunto,
   ProductoYServicioDTO,
@@ -113,6 +120,8 @@ export class ProductosServiciosComponent {
     this.cargarInsumos();
   }
 
+  @ViewChildren('lista') listas!: QueryList<ElementRef<HTMLElement>>;
+
   // unidad
   cargarUnidades() {
     this._unidadService.ObtenerTodos(this.selectedEmpresa).subscribe((resp) => {
@@ -122,7 +131,6 @@ export class ProductosServiciosComponent {
 
   abrirLista() {
     this.unidadesFiltradas = [...this.listaUnidades];
-    this.cerrarTodasListas();
     this.mostrarListaUnidades = true;
   }
 
@@ -156,7 +164,6 @@ export class ProductosServiciosComponent {
 
   abrirListaProductoyServ() {
     this.productoyServFiltrados = [...this.listaProductosYServiciosSatAux];
-    this.cerrarTodasListas();
     this.mostrarListaProductosYServicios = true;
   }
 
@@ -187,7 +194,6 @@ export class ProductosServiciosComponent {
 
   abrirListaUnidadesSat() {
     this.unidadSATFiltradas = [...this.listaUnidadesSat];
-    this.cerrarTodasListas();
     this.mostrarListaUnidadesSat = true;
   }
 
@@ -218,7 +224,6 @@ export class ProductosServiciosComponent {
 
   abrirListaCategoria() {
     this.categoriaFiltradas = [...this.listaCategorias];
-    this.cerrarTodasListas();
     this.mostrarListaCategorias = true;
   }
 
@@ -249,7 +254,6 @@ export class ProductosServiciosComponent {
 
   abrirListaSubCategoria() {
     this.subcategoriaFiltradas = [...this.listaSubcategorias];
-    this.cerrarTodasListas();
     this.mostrarListaSubCategorias = true;
   }
 
@@ -310,20 +314,26 @@ export class ProductosServiciosComponent {
       idInsumo: 0,
       cantidad: 0,
     };
-
-    this.cerrarTodasListas();
-  }
-
-  cerrarTodasListas() {
-    this.mostrarListaUnidades = false;
-    this.mostrarListaProductosYServicios = false;
-    this.mostrarListaUnidadesSat = false;
-    this.mostrarListaCategorias = false;
-    this.mostrarListaSubCategorias = false;
-    this.mostrarListaInsumos = false;
   }
 
   detenerCierre(event: MouseEvent) {
+    let clicDentro = false;
+
+    this.listas.forEach((lista) => {
+      if (lista.nativeElement.contains(event.target as Node)) {
+        clicDentro = true;
+      }
+    });
+
+    if (!clicDentro) {
+      this.mostrarListaInsumos = false;
+      this.mostrarListaUnidades = false;
+      this.mostrarListaProductosYServicios = false;
+      this.mostrarListaUnidadesSat = false;
+      this.mostrarListaCategorias = false;
+      this.mostrarListaSubCategorias = false;
+    }
+
     event.stopPropagation();
   }
 
@@ -338,6 +348,7 @@ export class ProductosServiciosComponent {
           this.CargarProductosYServicios();
         } else {
           this.alerta(AlertaTipo.error, resp.descripcion);
+          console.error(resp.descripcion);
         }
       });
   }

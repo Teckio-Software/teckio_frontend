@@ -178,7 +178,7 @@
                     />
                   </td>
                   <td class="px-1 py-[2px]" scope="col">
-                    <div class="relative w-full">
+                    <div class="relative w-full" #lista>
                       <input
                         type="text"
                         placeholder="Unidad..."
@@ -206,7 +206,7 @@
                     </div>
                   </td>
                   <td class="px-1 py-[2px]" scope="col">
-                    <div class="relative w-full">
+                    <div class="relative w-full" #lista>
                       <input
                         type="text"
                         placeholder="Seleccionar..."
@@ -238,7 +238,7 @@
                     </div>
                   </td>
                   <td class="px-1 py-[2px]" scope="col">
-                    <div class="relative w-full">
+                    <div class="relative w-full" #lista>
                       <input
                         type="text"
                         placeholder="Seleccionar..."
@@ -266,7 +266,7 @@
                   </td>
 
                   <td class="px-1 py-[2px]" scope="col">
-                    <div class="relative w-full">
+                    <div class="relative w-full" #lista>
                       <input
                         type="text"
                         placeholder="Seleccionar..."
@@ -293,7 +293,7 @@
                     </div>
                   </td>
                   <td class="px-1 py-[2px]" scope="col">
-                    <div class="relative w-full">
+                    <div class="relative w-full" #lista>
                       <input
                         type="text"
                         placeholder="Seleccionar..."
@@ -388,31 +388,33 @@
                   class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
                 >
                   <td class="px-1 py-[2px]" scope="col">
-                    <input
-                      type="text"
-                      placeholder="Seleccionar..."
-                      autocomplete="off"
-                      class="bg-transparent w-[75%] px-2 py-1"
-                      (input)="filtrarInsumos($event)"
-                      (click)="abrirListaInsumos()"
-                      [value]="textoInsumo"
-                    />
-                    <div *ngIf="mostrarListaInsumos">
-                      <cdk-virtual-scroll-viewport
-                        itemSize="36"
-                        class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-[800px] h-36 overflow-auto shadow-lg"
-                      >
-                        <div
-                          *cdkVirtualFor="
-                            let listaInsumos of listaInsumosFiltrados
-                          "
-                          (click)="seleccionarInsumo(listaInsumos)"
-                          class="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                          style="height: 36px; box-sizing: border-box"
+                    <div #lista>
+                      <input
+                        type="text"
+                        placeholder="Seleccionar..."
+                        autocomplete="off"
+                        class="bg-transparent w-[75%] px-2 py-1"
+                        (input)="filtrarInsumos($event)"
+                        (click)="abrirListaInsumos()"
+                        [value]="textoInsumo"
+                      />
+                      <div *ngIf="mostrarListaInsumos">
+                        <cdk-virtual-scroll-viewport
+                          itemSize="36"
+                          class="absolute z-50 bg-white border border-gray-200 rounded-md mt-1 w-[800px] h-36 overflow-auto shadow-lg"
                         >
-                          {{ listaInsumos.descripcion }}
-                        </div>
-                      </cdk-virtual-scroll-viewport>
+                          <div
+                            *cdkVirtualFor="
+                              let listaInsumos of listaInsumosFiltrados
+                            "
+                            (click)="seleccionarInsumo(listaInsumos)"
+                            class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                            style="height: 36px; box-sizing: border-box"
+                          >
+                            {{ listaInsumos.descripcion }}
+                          </div>
+                        </cdk-virtual-scroll-viewport>
+                      </div>
                     </div>
                   </td>
 
