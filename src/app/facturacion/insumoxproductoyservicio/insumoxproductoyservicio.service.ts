@@ -21,4 +21,8 @@ export class InsumoXProductoYServicioService {
       public eliminar(idEmpresa:number, insumo: number){
             return this.httpClient.delete<RespuestaDTO>(`${this.apiUrl}/${idEmpresa}/eliminar/`+insumo);
       }
+
+      public editar(idEmpresa:number, insumo: InsumoXProductoYServicioDTO){
+            return this.httpClient.post<RespuestaDTO>(`${this.apiUrl}/${idEmpresa}/editar`,insumo);
+      }
 }
