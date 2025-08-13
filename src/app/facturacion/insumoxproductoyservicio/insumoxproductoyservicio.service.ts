@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment.development';
-import { InsumoXProductoYServicioDTO } from './ts.insumoxproductoyservicio';
+import { InsumoXProductoYServicioConjuntoDTO, InsumoXProductoYServicioDTO } from './ts.insumoxproductoyservicio';
 import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 
 @Injectable({providedIn: 'root'})
@@ -24,5 +24,9 @@ export class InsumoXProductoYServicioService {
 
       public editar(idEmpresa:number, insumo: InsumoXProductoYServicioDTO){
             return this.httpClient.post<RespuestaDTO>(`${this.apiUrl}/${idEmpresa}/editar`,insumo);
+      }
+
+      public obtenerConjuntoPorProdyser(idEmpresa:number, idProdySer: number){
+            return this.httpClient.get<InsumoXProductoYServicioConjuntoDTO[]>(`${this.apiUrl}/${idEmpresa}/obtenerConjuntoXIdProdYSer/${idProdySer}`);
       }
 }
