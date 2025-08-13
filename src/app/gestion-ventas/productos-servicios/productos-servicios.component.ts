@@ -19,6 +19,7 @@ import { AlertaTipo } from 'src/app/utilidades/alert/alert.component';
 import { InsumoService } from 'src/app/catalogos/insumo/insumo.service';
 import { InsumoDTO } from 'src/app/catalogos/insumo/tsInsumo';
 import { InsumoXProductoYServicioService } from 'src/app/facturacion/insumoxproductoyservicio/insumoxproductoyservicio.service';
+import { InsumoXProductoYServicioDTO } from 'src/app/facturacion/insumoxproductoyservicio/ts.insumoxproductoyservicio';
 
 @Component({
   selector: 'app-productos-servicios',
@@ -40,13 +41,6 @@ export class ProductosServiciosComponent {
     this.selectedEmpresa = Number(IdEmpresa);
   }
 
-  @HostListener('document:click', ['$event'])
-  clickFuera(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.relative')) {
-      this.cerrarTodasListas();
-    }
-  }
   selectedEmpresa: number = 0;
   listaProductosYServicios: ProductoYServicioConjunto[] = [];
   listaProductosYServiciosSat: ProductoServicioSat[] = [];
@@ -78,6 +72,13 @@ export class ProductosServiciosComponent {
   AlertaTipo = AlertaTipo;
   alertaMessage: string = '';
   alertaSuccess: boolean = false;
+
+  insumoXProductoYServicio: InsumoXProductoYServicioDTO = {
+    id: 0,
+    idProductoYservicio: 0,
+    idInsumo: 0,
+    cantidad: 0,
+  };
 
   productoServicio: ProductoYServicioDTO = {
     id: 0,
@@ -290,6 +291,7 @@ export class ProductosServiciosComponent {
     this.mostrarListaUnidadesSat = false;
     this.mostrarListaCategorias = false;
     this.mostrarListaSubCategorias = false;
+    this.mostrarListaInsumos = false;
   }
 
   detenerCierre(event: MouseEvent) {
@@ -374,7 +376,7 @@ export class ProductosServiciosComponent {
 
   seleccionarInsumo(insumo: InsumoDTO) {
     this.textoInsumo = insumo.descripcion;
-    this.productoServicio.idInsumo = insumo.id;
+    this.insumoXProductoYServicio.idInsumo = insumo.id;
     this.listaInsumosFiltrados = [];
     this.mostrarListaInsumos = false;
   }
