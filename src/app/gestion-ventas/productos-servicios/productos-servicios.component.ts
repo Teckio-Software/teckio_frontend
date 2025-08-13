@@ -355,7 +355,6 @@ export class ProductosServiciosComponent {
           this.refrescarInsumosXProdySer();
 
           this.textoInsumo = '';
-          this.insumoXProductoYServicio = {} as InsumoXProductoYServicioDTO;
           this.listaInsumosFiltrados = [];
           this.mostrarListaInsumos = false;
         } else {
