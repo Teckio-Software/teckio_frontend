@@ -1,4 +1,7 @@
-import { InsumoXProductoYServicioDTO } from './../../facturacion/insumoxproductoyservicio/ts.insumoxproductoyservicio';
+import {
+  InsumoXProductoYServicioConjuntoDTO,
+  InsumoXProductoYServicioDTO,
+} from './../../facturacion/insumoxproductoyservicio/ts.insumoxproductoyservicio';
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import {
   ProductoYServicioConjunto,
@@ -43,7 +46,7 @@ export class ProductosServiciosComponent {
   }
 
   listaProductosYServicios: ProductoYServicioConjunto[] = [];
-  listaInsumosXProductoYServicio: InsumoXProductoYServicioDTO[] = [];
+  listaInsumosXProductoYServicio: InsumoXProductoYServicioConjuntoDTO[] = [];
   listaProductosYServiciosSat: ProductoServicioSat[] = [];
   listaProductosYServiciosSatAux: ProductoServicioSat[] = [];
   listaUnidades: UnidadDTO[] = [];
@@ -381,7 +384,7 @@ export class ProductosServiciosComponent {
 
   cargarInsumopsProdySer(id: number) {
     this._insumoXProdySerService
-      .obtenerPorProdyser(this.selectedEmpresa, id)
+      .obtenerConjuntoPorProdyser(this.selectedEmpresa, id)
       .subscribe({
         next: (resp) => {
           this.listaInsumosXProductoYServicio = resp;
