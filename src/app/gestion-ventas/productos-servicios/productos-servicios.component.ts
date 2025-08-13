@@ -330,7 +330,6 @@ export class ProductosServiciosComponent {
   }
 
   crear() {
-    console.log(this.productoServicio);
     this._productoYServicioService
       .crear(this.selectedEmpresa, this.productoServicio)
       .subscribe((resp) => {
@@ -418,7 +417,6 @@ export class ProductosServiciosComponent {
     this._insumoService.obtenerTodos(this.selectedEmpresa).subscribe({
       next: (resp) => {
         this.listaInsumos = resp;
-        console.log(this.listaInsumos);
       },
       error: () => {
         //Mensaje de error
@@ -444,7 +442,6 @@ export class ProductosServiciosComponent {
         next: (resp) => {
           this.listaInsumosXProductoYServicio = resp;
           this.insumoXProductoYServicio.idProductoYservicio = id;
-          console.log(resp);
           this.abrirModal('informacion');
         },
         error: () => {
