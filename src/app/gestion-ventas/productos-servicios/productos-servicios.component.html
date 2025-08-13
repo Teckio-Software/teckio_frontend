@@ -343,6 +343,7 @@
     </div>
   </div>
 </div>
+
 <!-- modal para información -->
 <div
   *ngIf="isModalInfoOpen"
@@ -421,8 +422,22 @@
                       class="dropdown1 bg-transparent w-[75%] xs:w-[100%]"
                       type="number"
                       data-bs-toggle="dropdown"
-                      (keydown.enter)="crearInsumoXProductoyServicio()"
+                      [(ngModel)]="insumoXProductoYServicio.cantidad"
+                      (keydown.enter)="
+                        crearInsumoXProductoyServicio(insumoXProductoYServicio)
+                      "
                     />
+                  </td>
+                </tr>
+                <tr
+                  *ngFor="let insumo of listaInsumosXProductoYServicio"
+                  class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+                >
+                  <td class="px-1 py-[2px]" scope="col">
+                    {{ insumo.idInsumo }}
+                  </td>
+                  <td class="px-1 py-[2px]" scope="col">
+                    {{ insumo.cantidad }}
                   </td>
                 </tr>
               </ng-container>

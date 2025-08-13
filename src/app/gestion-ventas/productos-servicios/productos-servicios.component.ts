@@ -1,3 +1,4 @@
+import { InsumoXProductoYServicioDTO } from './../../facturacion/insumoxproductoyservicio/ts.insumoxproductoyservicio';
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import {
   ProductoYServicioConjunto,
@@ -19,7 +20,6 @@ import { AlertaTipo } from 'src/app/utilidades/alert/alert.component';
 import { InsumoService } from 'src/app/catalogos/insumo/insumo.service';
 import { InsumoDTO } from 'src/app/catalogos/insumo/tsInsumo';
 import { InsumoXProductoYServicioService } from 'src/app/facturacion/insumoxproductoyservicio/insumoxproductoyservicio.service';
-import { InsumoXProductoYServicioDTO } from 'src/app/facturacion/insumoxproductoyservicio/ts.insumoxproductoyservicio';
 
 @Component({
   selector: 'app-productos-servicios',
@@ -43,6 +43,7 @@ export class ProductosServiciosComponent {
   }
 
   listaProductosYServicios: ProductoYServicioConjunto[] = [];
+  listaInsumosXProductoYServicio: InsumoXProductoYServicioDTO[] = [];
   listaProductosYServiciosSat: ProductoServicioSat[] = [];
   listaProductosYServiciosSatAux: ProductoServicioSat[] = [];
   listaUnidades: UnidadDTO[] = [];
@@ -319,12 +320,12 @@ export class ProductosServiciosComponent {
       });
   }
 
-  crearInsumoXProductoyServicio() {
+  crearInsumoXProductoyServicio(
+    insumoXProductoYServicio: InsumoXProductoYServicioDTO
+  ) {
     this._insumoXProdySerService
-      .crear(this.selectedEmpresa, this.insumoXProductoYServicio)
+      .crear(this.selectedEmpresa, insumoXProductoYServicio)
       .subscribe((resp) => {
-        console.log(this.insumoXProductoYServicio);
-
         if (resp.estatus) {
           this.alerta(AlertaTipo.save, resp.descripcion);
         } else {
@@ -371,6 +372,7 @@ export class ProductosServiciosComponent {
       .obtenerPorProdyser(this.selectedEmpresa, id)
       .subscribe({
         next: (resp) => {
+          this.listaInsumosXProductoYServicio = resp;
           this.insumoXProductoYServicio.idProductoYservicio = id;
           console.log(resp);
           this.abrirModal('informacion');
