@@ -351,6 +351,7 @@ export class ProductosServiciosComponent {
       .obtenerPorProdyser(this.selectedEmpresa, id)
       .subscribe({
         next: (resp) => {
+          this.insumoXProductoYServicio.idProductoYservicio = id;
           console.log(resp);
           this.abrirModal('informacion');
         },
