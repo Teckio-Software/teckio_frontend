@@ -35,7 +35,6 @@ export class ProductosServiciosComponent {
     private _productoServicioSatService: ProductoServicioSatService,
     private _insumoService: InsumoService,
     private _insumoXProdySerService: InsumoXProductoYServicioService
-    
   ) {
     let IdEmpresa = _seguridadService.obtenIdEmpresaLocalStorage();
     this.selectedEmpresa = Number(IdEmpresa);
@@ -61,17 +60,20 @@ export class ProductosServiciosComponent {
   textoBusquedaSAT = '';
   textoCategoria = '';
   textoSubCategoria = '';
+  textoInsumo = '';
   unidadesFiltradas: UnidadDTO[] = [];
   productoyServFiltrados: ProductoServicioSat[] = [];
   unidadSATFiltradas: UnidadSatDTO[] = [];
   categoriaFiltradas: CategoriaProductoServicioDTO[] = [];
   subcategoriaFiltradas: SubcategoriaProductoServicio[] = [];
+  listaInsumosFiltrados: InsumoDTO[] = [];
   listaInsumos: InsumoDTO[] = [];
   mostrarListaUnidades = false;
   mostrarListaProductosYServicios = false;
   mostrarListaUnidadesSat = false;
   mostrarListaCategorias = false;
   mostrarListaSubCategorias = false;
+  mostrarListaInsumos = false;
   alertaTipo: AlertaTipo = AlertaTipo.none;
   AlertaTipo = AlertaTipo;
   alertaMessage: string = '';
@@ -250,12 +252,6 @@ export class ProductosServiciosComponent {
     this.mostrarListaSubCategorias = true;
   }
 
-  /*************  ✨ Windsurf Command ⭐  *************/
-  /**
-   * Asigna el valor de la subcategoria seleccionada al producto o servicio, y resetea los valores de la busqueda y lista de subcategorias.
-   * @param subcategoria La subcategoria seleccionada.
-   */
-  /*******  c9893fe8-c933-43f0-bd53-fc8440e30b67  *******/
   seleccionarSubCategoria(subcategoria: SubcategoriaProductoServicio) {
     this.textoSubCategoria = subcategoria.descripcion;
     this.productoServicio.idSubategoriaProductoYServicio = subcategoria.id;
@@ -336,23 +332,50 @@ export class ProductosServiciosComponent {
     this.alertaMessage = '';
   }
 
-  cargarInsumos(){
-    this._insumoService.obtenerTodos(this.selectedEmpresa).subscribe({next:resp=>{
-      this.listaInsumos = resp;
-      console.log(this.listaInsumos);
-      
-    },error:()=>{
-      //Mensaje de error
-    }})
+  cargarInsumos() {
+    this._insumoService.obtenerTodos(this.selectedEmpresa).subscribe({
+      next: (resp) => {
+        this.listaInsumos = resp;
+        console.log(this.listaInsumos);
+      },
+      error: () => {
+        //Mensaje de error
+      },
+    });
   }
 
-  cargarInsumopsProdySer(id: number){
-    this._insumoXProdySerService.obtenerPorProdyser(this.selectedEmpresa, id).subscribe({next:resp=>{
-      console.log(resp);
-      this.abrirModal('informacion');
-    }, error:()=>{
-      //Mensaje de error;
-    }})
+  cargarInsumopsProdySer(id: number) {
+    this._insumoXProdySerService
+      .obtenerPorProdyser(this.selectedEmpresa, id)
+      .subscribe({
+        next: (resp) => {
+          console.log(resp);
+          this.abrirModal('informacion');
+        },
+        error: () => {
+          //Mensaje de error;
+        },
+      });
   }
 
+  abrirListaInsumos() {
+    this.listaInsumosFiltrados = [...this.listaInsumos];
+    this.mostrarListaInsumos = true;
+  }
+
+  filtrarInsumos(event: Event) {
+    const valor = (event.target as HTMLInputElement).value.toLowerCase();
+    this.textoInsumo = valor;
+    this.listaInsumosFiltrados = this.listaInsumos.filter((c) =>
+      c.descripcion.toLowerCase().includes(valor)
+    );
+    this.mostrarListaInsumos = true;
+  }
+
+  seleccionarInsumo(insumo: InsumoDTO) {
+    this.textoInsumo = insumo.descripcion;
+    this.productoServicio.idInsumo = insumo.id;
+    this.listaInsumosFiltrados = [];
+    this.mostrarListaInsumos = false;
+  }
 }
