@@ -334,6 +334,18 @@ export class ProductosServiciosComponent {
       });
   }
 
+  eliminarInsumoXProductoyServicio(id: number) {
+    this._insumoXProdySerService
+      .eliminar(this.selectedEmpresa, id)
+      .subscribe((resp) => {
+        if (resp.estatus) {
+          this.alerta(AlertaTipo.save, resp.descripcion);
+        } else {
+          this.alerta(AlertaTipo.error, resp.descripcion);
+        }
+      });
+  }
+
   alerta(tipo: AlertaTipo, mensaje: string = '') {
     if (tipo === AlertaTipo.none) {
       this.cerrarAlerta();

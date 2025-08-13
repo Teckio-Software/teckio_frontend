@@ -351,7 +351,7 @@
   (click)="cerrarModal()"
 >
   <div
-    class="relative transform rounded-lg bg-white text-left shadow-xl transition-all overflow-auto h-1/2 w-1/2"
+    class="relative transform rounded-lg bg-white text-left shadow-xl transition-all overflow-auto h-auto w-1/2"
     (click)="detenerCierre($event)"
   >
     <!-- header -->
@@ -371,8 +371,10 @@
 
     <!-- contenido -->
     <div class="bg-white px-6 py-4 sm:p-6">
-      <div class="rounded-lg shadow-md overflow-hidden">
-        <div class="overflow-x-auto">
+      <!-- tabla para agregar -->
+      <div class="overflow-x-auto p-2">
+        <p class="text-center text-lg mt-1 xs:text-sm">Agregar insumos</p>
+        <div class="rounded-lg shadow-md overflow-hidden">
           <table class="w-full text-sm xs:table-fixed">
             <thead class="bg-primario text-white">
               <tr class="xs:text-[10px]">
@@ -429,15 +431,70 @@
                     />
                   </td>
                 </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- tabla de insumos -->
+      <div class="overflow-x-auto p-2">
+        <p class="text-center text-lg mt-1 xs:text-sm">Lista de insumos</p>
+        <div class="rounded-lg shadow-md overflow-hidden">
+          <table class="w-full text-sm xs:table-fixed">
+            <thead class="bg-primario text-white">
+              <tr class="xs:text-[10px]">
+                <th class="px-1 py-[2px]" scope="col">Insumo</th>
+                <th class="px-1 py-[2px]" scope="col">Cantidad</th>
+                <th class="px-1 py-[2px]" scope="col"></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray300">
+              <ng-container>
+                <tr
+                  *ngIf="listaInsumosXProductoYServicio.length == 0"
+                  class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+                >
+                  <td
+                    colspan="2"
+                    class="text-center text-gray-700 font-medium py-1 xs:text-xs"
+                  >
+                    No hay insumos agregados.
+                  </td>
+                </tr>
                 <tr
                   *ngFor="let insumo of listaInsumosXProductoYServicio"
                   class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
                 >
                   <td class="px-1 py-[2px]" scope="col">
-                    {{ insumo.idInsumo }}
+                    <input
+                      type="text"
+                      placeholder="Seleccionar..."
+                      autocomplete="off"
+                      class="bg-transparent w-[75%] px-2 py-1"
+                      [value]="insumo.idInsumo"
+                    />
                   </td>
+
                   <td class="px-1 py-[2px]" scope="col">
-                    {{ insumo.cantidad }}
+                    <input
+                      min="1"
+                      placeholder="Cantidad..."
+                      autocomplete="off"
+                      class="dropdown1 bg-transparent w-[75%] xs:w-[100%]"
+                      type="number"
+                      data-bs-toggle="dropdown"
+                      [value]="insumo.cantidad"
+                    />
+                  </td>
+                  <td>
+                    <img
+                      ngbTooltip="Eliminar"
+                      triggers="mouseenter:mouseleave"
+                      class="cursor-pointer xs:w-4"
+                      src="./assets/delete.svg"
+                      alt="Icono de eliminar"
+                      (click)="eliminarInsumoXProductoyServicio(insumo.id)"
+                    />
                   </td>
                 </tr>
               </ng-container>
