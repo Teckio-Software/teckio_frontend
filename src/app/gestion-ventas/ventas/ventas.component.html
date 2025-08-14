@@ -145,7 +145,7 @@
               </thead>
               <tbody class="divide-y divide-gray300">
                 <ng-container
-                  *ngFor="let detalle of ordenVenta.detalleOrdenVenta"
+                  *ngFor="let detalle of ordenVenta.detalleOrdenVenta; let i = index"
                 >
                   <tr
                     class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"

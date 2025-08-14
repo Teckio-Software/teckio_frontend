@@ -117,7 +117,7 @@ export class AlmacenComponent implements OnInit {
         this.almacen.colonia = this.form.get("colonia")?.value;
         this.almacen.ciudad = this.form.get("ciudad")?.value;
         this.almacen.telefono = this.form.get("telefono")?.value;
-        this.almacen.idProyecto =  this.idProyecto;
+        this.almacen.idProyecto = this.almacen.central? null:  this.idProyecto;
         if (typeof this.almacen.codigo === 'undefined' || !this.almacen.codigo || this.almacen.codigo === "" ||
             typeof this.almacen.almacenNombre === 'undefined' || !this.almacen.almacenNombre || this.almacen.almacenNombre === "" ||
             typeof this.almacen.responsable === 'undefined' || !this.almacen.responsable || this.almacen.responsable === "" ||

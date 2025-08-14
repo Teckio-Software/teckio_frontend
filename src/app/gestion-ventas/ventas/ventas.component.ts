@@ -397,4 +397,8 @@ export class VentasComponent {
         },
       });
   }
+
+  // seleccionarProductoOServicio(id: number, index: number){
+  //   this.ordenVenta.detalleOrdenVenta[index].idProductoYservicio = id;
+  // }
 }
