@@ -1,6 +1,6 @@
 <section>
   <!-- Button cotainer -->
-  <div class="flex mt-1 mb-2" *ngIf="proyectoSeleccionado">
+  <div class="flex mt-1 mb-2 gap-3"  *ngIf="proyectoSeleccionado">
     <button
       (click)="openDialogWithoutRef()"
       class="flex align-items-center rounded-md bg-colorButton transition-colors delay-75 hover:bg-colorButtonHover font-light text-white p-1"
@@ -12,6 +12,16 @@
       </p>
       <img class="xs:w-4" src="assets/add.svg" alt="botón agregar" />
     </button>
+    <div class="flex align-items-center gap-1">
+      Mostrar Centrales
+    <input
+      type="checkbox"
+      [(ngModel)]="mostrarCentrales"
+      class="flex align-items-center rounded-md bg-colorButton transition-colors delay-75 hover:bg-colorButtonHover font-light text-white p-1"
+      (change)="cambiarSeleccion()"
+    />
+    </div>
+    
   </div>
   <!-- Button cotainer  end -->
   <div

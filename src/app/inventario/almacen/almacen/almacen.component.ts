@@ -28,6 +28,7 @@ export class AlmacenComponent implements OnInit {
     form!: FormGroup;
     ideditaAlmacen: number = 0;
     selectedEmpresa: number = 0;
+    mostrarCentrales: boolean = false;
 
     panelActivado: boolean = false;
     constructor(private almacenService: AlmacenService
@@ -117,7 +118,7 @@ export class AlmacenComponent implements OnInit {
         this.almacen.colonia = this.form.get("colonia")?.value;
         this.almacen.ciudad = this.form.get("ciudad")?.value;
         this.almacen.telefono = this.form.get("telefono")?.value;
-        this.almacen.idProyecto =  this.idProyecto;
+        this.almacen.idProyecto = this.almacen.central? null:  this.idProyecto;
         if (typeof this.almacen.codigo === 'undefined' || !this.almacen.codigo || this.almacen.codigo === "" ||
             typeof this.almacen.almacenNombre === 'undefined' || !this.almacen.almacenNombre || this.almacen.almacenNombre === "" ||
             typeof this.almacen.responsable === 'undefined' || !this.almacen.responsable || this.almacen.responsable === "" ||
@@ -184,5 +185,17 @@ export class AlmacenComponent implements OnInit {
     editar(almacen:almacenDTO){
         this.form.setValue(almacen);
         this.openDialogWithoutRef();
+    }
+
+    cambiarSeleccion(){
+        if(this.mostrarCentrales){
+            this.almacenService.obtenerTodosSinPaginar(this.selectedEmpresa).subscribe({next:(resp)=>{
+                this.almacenes = resp;
+            },error:()=>{
+                //Mensaje de error.
+            }})
+        }else{
+            this.traerInformacion()
+        }
     }
 }
