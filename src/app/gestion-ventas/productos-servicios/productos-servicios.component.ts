@@ -30,18 +30,19 @@ import { InsumoXProductoYServicioService } from 'src/app/facturacion/insumoxprod
 })
 export class ProductosServiciosComponent {
   constructor(
-    private _productoYServicioService: ProductoYServicioService,
-    private _seguridadService: SeguridadService,
-    private _unidadService: UnidadService,
-    private _unidadSatService: UnidadSatService,
-    private _categoriaProdSerservice: CategoriaProductoServicioService,
-    private _subcategoriaProdSerservice: SubcategoriaProductoServicioService,
-    private _productoServicioSatService: ProductoServicioSatService,
-    private _insumoService: InsumoService,
-    private _insumoXProdySerService: InsumoXProductoYServicioService
+    private productoYServicioService: ProductoYServicioService,
+    private seguridadService: SeguridadService,
+    private unidadService: UnidadService,
+    private unidadSatService: UnidadSatService,
+    private categoriaProdSerService: CategoriaProductoServicioService,
+    private subcategoriaProdSerService: SubcategoriaProductoServicioService,
+    private productoServicioSatService: ProductoServicioSatService,
+    private insumoService: InsumoService,
+    private insumoXProdySerService: InsumoXProductoYServicioService
   ) {
-    let IdEmpresa = _seguridadService.obtenIdEmpresaLocalStorage();
-    this.selectedEmpresa = Number(IdEmpresa);
+    this.selectedEmpresa = Number(
+      this.seguridadService.obtenIdEmpresaLocalStorage()
+    );
   }
 
   listaProductosYServicios: ProductoYServicioConjunto[] = [];
@@ -103,7 +104,7 @@ export class ProductosServiciosComponent {
   alertaSuccess: boolean = false;
 
   ngOnInit() {
-    this.CargarProductosYServicios();
+    this.cargarProductosYServicios();
     this.cargarUnidades();
     this.cargarUnidadesSat();
     this.cargarProdYSerSat();
@@ -114,23 +115,24 @@ export class ProductosServiciosComponent {
 
   @ViewChildren('lista') listas!: QueryList<ElementRef<HTMLElement>>;
 
-  // unidad
   cargarUnidades() {
-    this._unidadService.ObtenerTodos(this.selectedEmpresa).subscribe((resp) => {
+    this.unidadService.ObtenerTodos(this.selectedEmpresa).subscribe((resp) => {
       this.listaUnidades = resp;
     });
   }
 
-  abrirLista() {
+  abrirListaUnidades() {
     this.unidadesFiltradas = [...this.listaUnidades];
     this.mostrarListaUnidades = true;
   }
 
   filtrarUnidades(event: Event) {
-    const valor = (event.target as HTMLInputElement).value.toLowerCase();
-    this.textoBusquedaUnidad = valor;
-    this.unidadesFiltradas = this.listaUnidades.filter((u) =>
-      u.descripcion.toLowerCase().includes(valor)
+    this.filtrarLista(
+      event,
+      'textoBusquedaUnidad',
+      'listaUnidades',
+      'unidadesFiltradas',
+      'descripcion'
     );
     this.mostrarListaUnidades = true;
   }
@@ -142,28 +144,27 @@ export class ProductosServiciosComponent {
     this.mostrarListaUnidades = false;
   }
 
-  //producto y servicio
   cargarProdYSerSat() {
-    this._productoServicioSatService
+    this.productoServicioSatService
       .ObtenerTodos(this.selectedEmpresa)
       .subscribe((resp) => {
         this.listaProductosYServiciosSat = resp;
-        //muestra 100 resultados
-        this.listaProductosYServiciosSatAux =
-          this.listaProductosYServiciosSat.slice(0, 100);
+        this.listaProductosYServiciosSatAux = resp.slice(0, 100);
       });
   }
 
-  abrirListaProductoyServ() {
+  abrirListaProductosYServicios() {
     this.productoyServFiltrados = [...this.listaProductosYServiciosSatAux];
     this.mostrarListaProductosYServicios = true;
   }
 
   filtrarProductosYServicios(event: Event) {
-    const valor = (event.target as HTMLInputElement).value.toLowerCase();
-    this.textoBusquedaPyS = valor;
-    this.productoyServFiltrados = this.listaProductosYServiciosSatAux.filter(
-      (p) => p.descripcion.toLowerCase().includes(valor)
+    this.filtrarLista(
+      event,
+      'textoBusquedaPyS',
+      'listaProductosYServiciosSatAux',
+      'productoyServFiltrados',
+      'descripcion'
     );
     this.mostrarListaProductosYServicios = true;
   }
@@ -175,9 +176,8 @@ export class ProductosServiciosComponent {
     this.mostrarListaProductosYServicios = false;
   }
 
-  //unidad sat
   cargarUnidadesSat() {
-    this._unidadSatService
+    this.unidadSatService
       .ObtenerTodos(this.selectedEmpresa)
       .subscribe((resp) => {
         this.listaUnidadesSat = resp;
@@ -190,10 +190,12 @@ export class ProductosServiciosComponent {
   }
 
   filtrarUnidadesSat(event: Event) {
-    const valor = (event.target as HTMLInputElement).value.toLowerCase();
-    this.textoBusquedaSAT = valor;
-    this.unidadSATFiltradas = this.listaUnidadesSat.filter((u) =>
-      u.nombre.toLowerCase().includes(valor)
+    this.filtrarLista(
+      event,
+      'textoBusquedaSAT',
+      'listaUnidadesSat',
+      'unidadSATFiltradas',
+      'nombre'
     );
     this.mostrarListaUnidadesSat = true;
   }
@@ -205,25 +207,26 @@ export class ProductosServiciosComponent {
     this.mostrarListaUnidadesSat = false;
   }
 
-  //categoria
   cargarCategoriasProdSer() {
-    this._categoriaProdSerservice
+    this.categoriaProdSerService
       .ObtenerTodos(this.selectedEmpresa)
       .subscribe((resp) => {
         this.listaCategorias = resp;
       });
   }
 
-  abrirListaCategoria() {
+  abrirListaCategorias() {
     this.categoriaFiltradas = [...this.listaCategorias];
     this.mostrarListaCategorias = true;
   }
 
   filtrarCategorias(event: Event) {
-    const valor = (event.target as HTMLInputElement).value.toLowerCase();
-    this.textoCategoria = valor;
-    this.categoriaFiltradas = this.listaCategorias.filter((c) =>
-      c.descripcion.toLowerCase().includes(valor)
+    this.filtrarLista(
+      event,
+      'textoCategoria',
+      'listaCategorias',
+      'categoriaFiltradas',
+      'descripcion'
     );
     this.mostrarListaCategorias = true;
   }
@@ -235,25 +238,26 @@ export class ProductosServiciosComponent {
     this.mostrarListaCategorias = false;
   }
 
-  //subcategoria
   cargarSubcategoriasProdSer() {
-    this._subcategoriaProdSerservice
+    this.subcategoriaProdSerService
       .ObtenerTodos(this.selectedEmpresa)
       .subscribe((resp) => {
         this.listaSubcategorias = resp;
       });
   }
 
-  abrirListaSubCategoria() {
+  abrirListaSubCategorias() {
     this.subcategoriaFiltradas = [...this.listaSubcategorias];
     this.mostrarListaSubCategorias = true;
   }
 
   filtrarSubCategorias(event: Event) {
-    const valor = (event.target as HTMLInputElement).value.toLowerCase();
-    this.textoSubCategoria = valor;
-    this.subcategoriaFiltradas = this.listaSubcategorias.filter((c) =>
-      c.descripcion.toLowerCase().includes(valor)
+    this.filtrarLista(
+      event,
+      'textoSubCategoria',
+      'listaSubcategorias',
+      'subcategoriaFiltradas',
+      'descripcion'
     );
     this.mostrarListaSubCategorias = true;
   }
@@ -265,8 +269,8 @@ export class ProductosServiciosComponent {
     this.mostrarListaSubCategorias = false;
   }
 
-  CargarProductosYServicios() {
-    this._productoYServicioService
+  cargarProductosYServicios() {
+    this.productoYServicioService
       .obtenerConjuntos(this.selectedEmpresa)
       .subscribe((resp) => {
         this.listaProductosYServicios = resp;
@@ -274,11 +278,8 @@ export class ProductosServiciosComponent {
   }
 
   abrirModal(tipoModal: string) {
-    if (tipoModal === 'informacion') {
-      this.isModalInfoOpen = true;
-    } else {
-      this.isModalAddOpen = true;
-    }
+    this.isModalInfoOpen = tipoModal === 'informacion';
+    this.isModalAddOpen = tipoModal !== 'informacion';
   }
 
   cerrarModal() {
@@ -309,14 +310,9 @@ export class ProductosServiciosComponent {
   }
 
   detenerCierre(event: MouseEvent) {
-    let clicDentro = false;
-
-    this.listas.forEach((lista) => {
-      if (lista.nativeElement.contains(event.target as Node)) {
-        clicDentro = true;
-      }
-    });
-
+    const clicDentro = this.listas.some((lista) =>
+      lista.nativeElement.contains(event.target as Node)
+    );
     if (!clicDentro) {
       this.mostrarListaInsumos = false;
       this.mostrarListaUnidades = false;
@@ -325,18 +321,17 @@ export class ProductosServiciosComponent {
       this.mostrarListaCategorias = false;
       this.mostrarListaSubCategorias = false;
     }
-
     event.stopPropagation();
   }
 
   crear() {
-    this._productoYServicioService
+    this.productoYServicioService
       .crear(this.selectedEmpresa, this.productoServicio)
       .subscribe((resp) => {
         if (resp.estatus) {
           this.alerta(AlertaTipo.save, resp.descripcion);
           this.cerrarModal();
-          this.CargarProductosYServicios();
+          this.cargarProductosYServicios();
         } else {
           this.alerta(AlertaTipo.error, resp.descripcion);
           console.error(resp.descripcion);
@@ -347,14 +342,14 @@ export class ProductosServiciosComponent {
   crearInsumoXProductoyServicio(
     insumoXProductoYServicio: InsumoXProductoYServicioDTO
   ) {
-    this._insumoXProdySerService
+    this.insumoXProdySerService
       .crear(this.selectedEmpresa, insumoXProductoYServicio)
       .subscribe((resp) => {
         if (resp.estatus) {
           this.alerta(AlertaTipo.save, resp.descripcion);
           this.refrescarInsumosXProdySer();
-
           this.textoInsumo = '';
+          this.insumoXProductoYServicio.cantidad = 0;
           this.listaInsumosFiltrados = [];
           this.mostrarListaInsumos = false;
         } else {
@@ -366,7 +361,7 @@ export class ProductosServiciosComponent {
   actualizarInsumoXProductoyServicio(
     insumoXProductoYServicio: InsumoXProductoYServicioDTO
   ) {
-    this._insumoXProdySerService
+    this.insumoXProdySerService
       .editar(this.selectedEmpresa, insumoXProductoYServicio)
       .subscribe((resp) => {
         if (resp.estatus) {
@@ -379,7 +374,7 @@ export class ProductosServiciosComponent {
   }
 
   eliminarInsumoXProductoyServicio(id: number) {
-    this._insumoXProdySerService
+    this.insumoXProdySerService
       .eliminar(this.selectedEmpresa, id)
       .subscribe((resp) => {
         if (resp.estatus) {
@@ -396,14 +391,10 @@ export class ProductosServiciosComponent {
       this.cerrarAlerta();
       return;
     }
-
     this.alertaTipo = tipo;
     this.alertaMessage = mensaje || 'Ocurrió un error';
     this.alertaSuccess = true;
-
-    setTimeout(() => {
-      this.cerrarAlerta();
-    }, 3000);
+    setTimeout(() => this.cerrarAlerta(), 3000);
   }
 
   cerrarAlerta() {
@@ -413,7 +404,7 @@ export class ProductosServiciosComponent {
   }
 
   cargarInsumos() {
-    this._insumoService.obtenerTodos(this.selectedEmpresa).subscribe({
+    this.insumoService.obtenerTodos(this.selectedEmpresa).subscribe({
       next: (resp) => {
         this.listaInsumos = resp;
       },
@@ -424,7 +415,7 @@ export class ProductosServiciosComponent {
   }
 
   refrescarInsumosXProdySer() {
-    this._insumoXProdySerService
+    this.insumoXProdySerService
       .obtenerConjuntoPorProdyser(
         this.selectedEmpresa,
         this.insumoXProductoYServicio.idProductoYservicio
@@ -435,7 +426,7 @@ export class ProductosServiciosComponent {
   }
 
   cargarInsumopsProdySer(id: number) {
-    this._insumoXProdySerService
+    this.insumoXProdySerService
       .obtenerConjuntoPorProdyser(this.selectedEmpresa, id)
       .subscribe({
         next: (resp) => {
@@ -455,10 +446,12 @@ export class ProductosServiciosComponent {
   }
 
   filtrarInsumos(event: Event) {
-    const valor = (event.target as HTMLInputElement).value.toLowerCase();
-    this.textoInsumo = valor;
-    this.listaInsumosFiltrados = this.listaInsumos.filter((c) =>
-      c.descripcion.toLowerCase().includes(valor)
+    this.filtrarLista(
+      event,
+      'textoInsumo',
+      'listaInsumos',
+      'listaInsumosFiltrados',
+      'descripcion'
     );
     this.mostrarListaInsumos = true;
   }
@@ -468,5 +461,22 @@ export class ProductosServiciosComponent {
     this.insumoXProductoYServicio.idInsumo = insumo.id;
     this.listaInsumosFiltrados = [];
     this.mostrarListaInsumos = false;
+  }
+
+  /**
+   * Método genérico para filtrar listas por texto y propiedad
+   */
+  private filtrarLista(
+    event: Event,
+    textoProp: string,
+    listaProp: string,
+    filtradosProp: string,
+    propiedad: string
+  ) {
+    const valor = (event.target as HTMLInputElement).value.toLowerCase();
+    (this as any)[textoProp] = valor;
+    (this as any)[filtradosProp] = (this as any)[listaProp].filter(
+      (item: any) => item[propiedad].toLowerCase().includes(valor)
+    );
   }
 }
