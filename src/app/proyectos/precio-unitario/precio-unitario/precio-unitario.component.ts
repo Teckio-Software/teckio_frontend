@@ -1,12 +1,9 @@
 import { precioUnitarioDTO } from './../tsPrecioUnitario';
 import {
   Component,
-  EventEmitter,
-  HostBinding,
   HostListener,
   NgZone,
   OnInit,
-  Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -42,25 +39,20 @@ import {
   factorSalarioRealDetalleDTO,
 } from '../../fsr/tsFSR';
 import { FSRService } from '../../fsr/fsr.service';
-import { BehaviorSubject, connect, Observable } from 'rxjs';
+import { BehaviorSubject, finalize, Observable } from 'rxjs';
 import {
   InsumoDTO,
   InsumoParaExplosionDTO,
 } from 'src/app/catalogos/insumo/tsInsumo';
 import { InsumoService } from 'src/app/catalogos/insumo/insumo.service';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { DialogFSRComponent } from '../dialog-fsr/dialog-fsr.component';
-import { DialogExplosionInsumosComponent } from '../dialog-explosion-insumos/dialog-explosion-insumos.component';
 import { Unidades } from '../unidades';
 import { IndirectosComponent } from '../../indirectos/indirectos/indirectos.component';
-import { content } from 'html2canvas/dist/types/css/property-descriptors/content';
 import { IndirectosConceptoComponent } from '../../indirectos-concepto/indirectos-concepto/indirectos-concepto.component';
 import Swal from 'sweetalert2';
-import { eventListeners } from '@popperjs/core';
 import { ModalAlertComponent } from 'src/app/utilidades/modal-alert/modal-alert.component';
-import { da, de } from 'date-fns/locale';
 import { operacionesXPrecioUnitarioDetalleDTO } from '../../precio-unitario-detalle/tsOperacionesXPrecioUnitarioDetalle';
 import { EstimacionesService } from '../../estimaciones/estimaciones.service';
 
@@ -86,7 +78,7 @@ export class PrecioUnitarioComponent implements OnInit {
     }
   }
 
-  @ViewChild(NgbTooltip) tooltip!: NgbTooltip; // Inicialización de la propiedad tooltip
+  @ViewChild(NgbTooltip) tooltip!: NgbTooltip;
   estadoOriginal!: boolean;
   selectedIndex: number = 0;
   preciosUnitarios!: precioUnitarioDTO[];
@@ -262,7 +254,6 @@ export class PrecioUnitarioComponent implements OnInit {
   seEstaCopiandoArmado = false;
   seEstaCopiandoConcepto = false;
   displayCarga: string = 'none';
-  // explosionInsumos!: InsumoParaExplosionDTO[];
   explosionInsumosReset!: InsumoParaExplosionDTO[];
   precioUnitarioEditado: precioUnitarioDTO = {
     hijos: [],
@@ -323,7 +314,6 @@ export class PrecioUnitarioComponent implements OnInit {
     costoBaseConFormato: '',
   };
   seEstaEditandoRegistro = false;
-  // Redimensionamiento de la tabla
   isResizing = false;
   startMouseY = 0;
   initialHeight = 0;
@@ -341,7 +331,6 @@ export class PrecioUnitarioComponent implements OnInit {
   cargando = false;
   tooltipVisible = false;
 
-  //lista operaciones por Detalle
   operaciones: operacionesXPrecioUnitarioDetalleDTO[] = [];
   isRendimineto: boolean = true;
   isOpereciones: boolean = false;
@@ -419,7 +408,6 @@ export class PrecioUnitarioComponent implements OnInit {
   onMouseDown(event: MouseEvent) {
     const target = event.target as HTMLElement;
 
-    // Verificar si el botón izquierdo del mouse está presionado y si el cursor está en el borde inferior
     if (event.button === 0 && this.isCursorAtBottomBorder(target, event)) {
       this.enableResize(event);
     }
@@ -438,8 +426,6 @@ export class PrecioUnitarioComponent implements OnInit {
       if (target) {
         const deltaY = event.clientY - this.startMouseY;
         const newHeight = Math.max(50, this.initialHeight + deltaY);
-
-        // Ajustar solo la altura, no la anchura
       }
     }
   }
@@ -452,7 +438,6 @@ export class PrecioUnitarioComponent implements OnInit {
       this.startMouseY = event.clientY;
       this.initialHeight = target.clientHeight;
 
-      // Configurar el estilo CSS para permitir el redimensionamiento vertical
       target.style.resize = 'vertical';
     }
   }
@@ -466,7 +451,7 @@ export class PrecioUnitarioComponent implements OnInit {
     event: MouseEvent
   ): boolean {
     const rect = target.getBoundingClientRect();
-    const bottomThreshold = 10; // Umbral para considerar el borde inferior del elemento
+    const bottomThreshold = 10;
     return event.clientY > rect.bottom - bottomThreshold;
   }
 
@@ -484,8 +469,7 @@ export class PrecioUnitarioComponent implements OnInit {
     private insumoService: InsumoService,
     private unidades: Unidades,
     private estimacionesService: EstimacionesService,
-    private ChangeDetectorRef: ChangeDetectorRef,
-    private ngZone: NgZone
+    private ChangeDetectorRef: ChangeDetectorRef
   ) {
     let idEmpresa = _SeguridadEmpresa.obtenIdEmpresaLocalStorage();
     let idProyecto = _SeguridadEmpresa.obtenerIdProyectoLocalStorage();
@@ -504,7 +488,7 @@ export class PrecioUnitarioComponent implements OnInit {
     this.tooltipVisible = true;
     setTimeout(() => {
       this.tooltipVisible = false;
-    }, 4500); // se oculta después de 2.5 segundos
+    }, 5000);
   }
 
   dragStart(event: DragEvent, precioUnitario: any) {
@@ -819,12 +803,11 @@ export class PrecioUnitarioComponent implements OnInit {
   cargarRegistros() {
     this.seEstaEditandoRegistro = false;
     this.total = 0;
-    console.log('Aqui estoy', this.preciosUnitarios);
+    this.displayCarga = 'flex';
     this.precioUnitarioService
       .obtenerEstructurado(this.selectedProyecto, this.selectedEmpresa)
       .subscribe((preciosUnitarios) => {
         this.preciosUnitarios = preciosUnitarios;
-        console.log('PUs', this.preciosUnitarios);
 
         for (let i = 0; i < preciosUnitarios.length; i++) {
           this.total = this.total + this.preciosUnitarios[i].importe;
@@ -877,6 +860,7 @@ export class PrecioUnitarioComponent implements OnInit {
             this.insumosReset = insumos;
           });
         this.cargarListaConceptos();
+        this.displayCarga = 'none';
       });
     this.esquemaArbol2 = false;
     this.esquemaArbol3 = false;
@@ -1684,7 +1668,6 @@ export class PrecioUnitarioComponent implements OnInit {
       if (PrecioUnitario.tipoPrecioUnitario == 0) {
         return;
       }
-      console.log(this.selectedIndex);
       this.displayCarga = 'flex';
       if (PrecioUnitario.tipoPrecioUnitario == 1) {
         this.esquemaArbol2 = true;
@@ -3628,13 +3611,25 @@ export class PrecioUnitarioComponent implements OnInit {
   }
 
   openDialogCatalogoGeneral() {
+    this.displayCarga = 'flex';
+
     this.precioUnitarioService
       .obtenerEstructurado(0, this.selectedEmpresa)
-      .subscribe((datos) => {
-        this.preciosUnitarios = datos;
+      .pipe(finalize(() => (this.displayCarga = 'none')))
+      .subscribe({
+        next: (datos) => {
+          this.preciosUnitarios = datos;
+
+          this.contenedorPresupuesto = true;
+          this.contenedorCatalogoGeneral = true;
+          this.esquemaArbol2 = false;
+          this.esquemaArbol3 = false;
+          this.pestanas = false;
+        },
+        error: (err) => {
+          console.error('Error al cargar catálogo general', err);
+        },
       });
-    this.contenedorPresupuesto = true;
-    this.contenedorCatalogoGeneral = true;
   }
 
   regresarPU() {
@@ -3777,6 +3772,7 @@ export class PrecioUnitarioComponent implements OnInit {
     this.dialog.closeAll();
     this.mensajeModal = '';
     this.selectedFileName = '';
+    this.tooltipVisible = false;
   }
   detenerCierre(event: MouseEvent) {
     event.stopPropagation();

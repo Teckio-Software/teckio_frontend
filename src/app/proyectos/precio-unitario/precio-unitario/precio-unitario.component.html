@@ -91,6 +91,7 @@
               <button
                 ngbTooltip="Ver catálogo general"
                 placement="right"
+                class="hover:bg-gray-200 rounded-md transition-all delay-75"
                 (click)="openDialogCatalogoGeneral()"
               >
                 <img
@@ -130,36 +131,28 @@
           </div>
         </div>
       </div>
-      <div class="flex gap-4 mb-2">
+      <div class="flex gap-3 mb-2">
         <button
           *ngIf="contenedorCatalogoGeneral"
-          class="text-left text-sm hover:bg-gray-100 flex gap-2 items-center font-medium text-gray700"
+          class="text-left text-sm hover:bg-gray-200 rounded-md transition-all delay-75 flex gap-2 items-center font-medium text-gray700"
           (click)="regresarPU()"
         >
-          <img
-            src="../../../../assets/go_back.svg"
-            alt="Regresar"
-            class="w-8"
-          />
+          <img src="./assets/go_back.svg" alt="Regresar" class="w-8" />
           Presupuesto
         </button>
 
         <button
           *ngIf="contenedorCatalogoGeneral"
-          class="text-left text-sm hover:bg-gray-100 flex gap-2 items-center font-medium text-gray700"
+          class="text-left text-sm hover:bg-gray-200 rounded-md transition-all delay-75 flex gap-2 items-center font-medium text-gray700"
         >
-          <img
-            src="../../../../assets/download.svg"
-            alt="Importar"
-            class="w-8"
-          />
+          <img src="./assets/download.svg" alt="Importar" class="w-8" />
           Importar
         </button>
         <button
           *ngIf="contenedorCatalogoGeneral"
-          class="text-left text-sm hover:bg-gray-100 flex gap-2 items-center font-medium text-gray700"
+          class="text-left text-sm hover:bg-gray-200 rounded-md transition-all delay-75 flex gap-2 items-center font-medium text-gray700"
         >
-          <img src="../../../../assets/delete.svg" alt="Eliminar" class="w-8" />
+          <img src="./assets/delete.svg" alt="Eliminar" class="w-8" />
           Eliminar
         </button>
       </div>
@@ -177,56 +170,60 @@
         </div>
       </div>
 
-      <div class="flex gap-3" *ngIf="!contenedorCatalogoGeneral">
+      <div class="flex gap-4" *ngIf="!contenedorCatalogoGeneral">
         <button
-          class="w-8 disabled:opacity-50 disabled:cursor-not-allowed"
+          class="disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 rounded-md transition-all delay-75"
           ngbTooltip="Importar archivos"
           placement="left"
           (click)="nuevaImportacionPresupuesto()"
         >
-          <img src="../../../../assets/upload.svg" alt="Importar archivos" />
+          <img
+            src="./assets/upload.svg"
+            alt="Importar archivos"
+            class="w-8 h-8"
+          />
         </button>
         <button
-          class="w-8 disabled:opacity-50 disabled:cursor-not-allowed"
+          class="disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 rounded-md transition-all delay-75"
           ngbTooltip="Recalcular presupuesto"
           placement="left"
           [disabled]="displayCarga === 'flex'"
           (click)="recalcularPresupuesto()"
         >
           <img
-            src="../../../../assets/reload.svg"
+            src="./assets/reload.svg"
             alt="Recalcular presupuesto"
+            class="w-8 h-8"
             [ngClass]="{ 'animate-spin': displayCarga === 'flex' }"
           />
         </button>
-
-        <div class="flex-2">
+      </div>
+      <div class="flex-2">
+        <div
+          class="flex flex-row bg-white shadow-sm rounded-t-lg p-1 items-end"
+        >
           <div
-            class="flex flex-row bg-white shadow-sm rounded-t-lg p-1 items-end"
+            class="flex items-center justify-center flex-shrink-0 h-10 w-10 rounded-xl bg-[#4eaac138] text-[#4eaac1]"
           >
-            <div
-              class="flex items-center justify-center flex-shrink-0 h-10 w-10 rounded-xl bg-[#4eaac138] text-[#4eaac1]"
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                ></path>
-              </svg>
-            </div>
-            <div class="flex flex-col flex-grow ml-4">
-              <div class="text-sm text-[#6b7280]">Total</div>
-              <div class="font-bold text-base">
-                <span>{{ totalConFormato }}</span>
-              </div>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+          </div>
+          <div class="flex flex-col flex-grow ml-4">
+            <div class="text-sm text-[#6b7280]">Total</div>
+            <div class="font-bold text-base">
+              <span>{{ totalConFormato }}</span>
             </div>
           </div>
         </div>
@@ -2009,12 +2006,12 @@
               >
                 <button
                   type="button"
-                  class="button-importar"
+                  class="cursor-pointer"
                   data-bs-toggle="modal"
                   (click)="eliminarGenerador(generador)"
                   [disabled]="existenEstimaciones || contenedorCatalogoGeneral"
                 >
-                  Eliminar
+                  <img src="./assets/delete.svg" alt="Eliminar" class="w-6" />
                 </button>
               </td>
 
@@ -2745,7 +2742,7 @@
         color: #4eaac1;
       "
     >
-      Actualizando.
+      Cargando...
     </p>
   </div>
 </div>
