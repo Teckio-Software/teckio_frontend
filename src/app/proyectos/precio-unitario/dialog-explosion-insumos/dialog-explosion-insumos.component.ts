@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -10,6 +10,7 @@ import { map, Observable, startWith } from 'rxjs';
 import { valueOrDefault } from 'chart.js/dist/helpers/helpers.core';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import { EstimacionesService } from '../../estimaciones/estimaciones.service';
+import { precioUnitarioDTO } from '../tsPrecioUnitario';
 
 @Component({
   selector: 'app-dialog-explosion-insumos',
@@ -17,6 +18,42 @@ import { EstimacionesService } from '../../estimaciones/estimaciones.service';
   styleUrls: ['./dialog-explosion-insumos.component.css']
 })
 export class DialogExplosionInsumosComponent {
+  @Input() precioUnitario : precioUnitarioDTO = {
+    hijos: [],
+    id: 0,
+    idProyecto: 0,
+    cantidad: 0,
+    cantidadConFormato: '',
+    cantidadEditado: false,
+    cantidadExcedente: 0,
+    cantidadExcedenteConFormato: '',
+    tipoPrecioUnitario: 0,
+    costoUnitario: 0,
+    porcentajeIndirecto: 0,
+    porcentajeIndirectoConFormato: '',
+    costoUnitarioConFormato: '',
+    costoUnitarioEditado: false,
+    nivel: 0,
+    noSerie: 0,
+    idPrecioUnitarioBase: 0,
+    esDetalle: false,
+    idConcepto: 0,
+    codigo: '',
+    descripcion: '',
+    unidad: '',
+    precioUnitario: 0,
+    precioUnitarioConFormato: '',
+    precioUnitarioEditado: false,
+    importe: 0,
+    importeConFormato: '',
+    importeSeries: 0,
+    importeSeriesConFormato: '',
+    expandido: false,
+    posicion: 0,
+    codigoPadre: '',
+    esCatalogoGeneral: false
+  }
+
   selectedProyecto: number = 0;
   selectedEmpresa: number;
   explosionInsumos: InsumoParaExplosionDTO[] = [];
@@ -65,6 +102,8 @@ export class DialogExplosionInsumosComponent {
     let idEmpresa = _seguridadService.obtenIdEmpresaLocalStorage();
     this.selectedEmpresa = Number(idEmpresa);
     this.selectedProyecto = Number(idProyecto);
+
+
   }
 
   ngOnInit(): void {
@@ -189,7 +228,9 @@ export class DialogExplosionInsumosComponent {
         this.existenEstimaciones = true;
       }
     });
-    this.precioUnitarioService.explosionDeInsumos(this.selectedProyecto, this.selectedEmpresa)
+
+    if(this.precioUnitario.id == 0){
+      this.precioUnitarioService.explosionDeInsumos(this.selectedProyecto, this.selectedEmpresa)
       .subscribe((explosion) => {
         this.explosionInsumos = explosion;
         this.explosionInsumosReset = explosion;
@@ -208,6 +249,28 @@ export class DialogExplosionInsumosComponent {
         });
         this.importeTotalConFormato = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(this.importeTotal);
       })
+    }else{
+      this.precioUnitarioService.obtenerExplosionDeInsumosXPrecioUnitario(this.precioUnitario, this.selectedEmpresa)
+      .subscribe((explosion) => {
+        this.explosionInsumos = explosion;
+        this.explosionInsumosReset = explosion;
+        this.filteredExplosion = this.explosionControl.valueChanges.pipe(
+          startWith(''),
+          map(value => {
+            const stringValue = typeof value === 'string' ? value : '';
+            return this._filter(stringValue);
+          })
+        );
+        this.importeTotal = 0;
+        this.filteredExplosion.subscribe((datos) => {
+          datos.forEach((element) => {
+            this.importeTotal = this.importeTotal + element.importe;
+          });
+        });
+        this.importeTotalConFormato = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(this.importeTotal);
+      })
+    }
+
   }
 
 

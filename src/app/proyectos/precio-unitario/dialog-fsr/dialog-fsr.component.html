@@ -21,25 +21,64 @@
         </button>
         <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
           <!-- Pestañas -->
-          <div class="w-[95%] mt-1 h-auto z-10">
-            <mat-tab-group
-              class="first-custom-tab-group"
-              animationDuration="0ms"
-              (selectedTabChange)="seleccionarIndex($event)"
-            >
-              <mat-tab
-                class="text-labels z-10"
-                label="Factor Salario Real"
-              ></mat-tab>
-              <mat-tab
-                class="text-labels z-10"
-                label="Porcentaje Censantia Edad"
-              ></mat-tab>
-              <mat-tab
-                class="text-labels z-10"
-                label="Insumos FSR"
-              ></mat-tab>
-            </mat-tab-group>
+          <div class="w-[95%] mt-1 h-auto z-10 flex justify-between">
+            <div>
+              <mat-tab-group
+                class="first-custom-tab-group"
+                animationDuration="0ms"
+                (selectedTabChange)="seleccionarIndex($event)"
+              >
+                <mat-tab
+                  class="text-labels z-10"
+                  label="Factor Salario Real"
+                ></mat-tab>
+                <mat-tab
+                  class="text-labels z-10"
+                  label="Porcentaje Censantia Edad"
+                ></mat-tab>
+                <mat-tab class="text-labels z-10" label="Insumos FSR"></mat-tab>
+              </mat-tab-group>
+            </div>
+
+            <div class="flex gap-2">
+              <div>
+                <input
+                  type="text"
+                  [(ngModel)]="nombreProyecto"
+                  (input)="reiniciarProyecto($event)"
+                  placeholder="Selecciona un proyecto"
+                  [formControl]="proyectoControl"
+                  [matAutocomplete]="auto"
+                  class="border-none rounded-lg bg-gray300 text-gray700 font-medium p-1 lg:w-52 md:w-36 xms:w-28 xs:w-24 xs:text-xs"
+                  #textoDataList
+                  (click)="reiniciarFiltro()"
+                />
+                <mat-autocomplete
+                  #auto="matAutocomplete"
+                  (optionSelected)="selectionChangeProyecto($event)"
+                >
+                  <mat-option
+                    class="mat-option-css"
+                    style="
+                      font-weight: 500;
+                      font-size: 14px;
+                      border-radius: 7px;
+                    "
+                    *ngFor="let proyecto of filteredProyectos | async"
+                    [value]="proyecto"
+                    >{{ proyecto.nombre }}</mat-option
+                  >
+                </mat-autocomplete>
+              </div>
+              <div>
+                <button
+                  class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
+                  (click)="importarFsr()"
+                >
+                  Importar Fsr
+                </button>
+              </div>
+            </div>
           </div>
           <div *ngIf="selectedIndex == 0">
             <div class="text-center mb-4">

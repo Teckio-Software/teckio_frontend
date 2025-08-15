@@ -20,6 +20,6 @@ export interface almacenDTO{
     colonia: string;
     ciudad: string;
     telefono: string;
-    idProyecto : number;
+    idProyecto : number | null;
   }
   

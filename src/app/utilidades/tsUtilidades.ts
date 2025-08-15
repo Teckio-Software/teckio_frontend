@@ -129,9 +129,15 @@ export const pages: Page[] = [
         imageUrl: 'assets/cart.png',
         permiso: ['SeccionVenta'],
       },
+      // {
+      //   name: 'Productos',
+      //   link: '/productos',
+      //   imageUrl: 'assets/products.png',
+      //   permiso: ['SeccionProducto'],
+      // },
       {
-        name: 'Productos',
-        link: '/productos',
+        name: 'Productos y servicios',
+        link: '/productos-y-servicios',
         imageUrl: 'assets/products.png',
         permiso: ['SeccionProducto'],
       },

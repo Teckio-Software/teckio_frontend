@@ -1,6 +1,10 @@
-import { ParametrosFsrDTO, ParametrosFsrXInsumoDTO, PorcentajeCesantiaEdadDTO } from './../../fsr/tsFSR';
+import {
+  ParametrosFsrDTO,
+  ParametrosFsrXInsumoDTO,
+  PorcentajeCesantiaEdadDTO,
+} from './../../fsr/tsFSR';
 import { Component, Inject } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
@@ -11,10 +15,13 @@ import {
 } from '../../fsr/tsFSR';
 import { FSRService } from '../../fsr/fsr.service';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
-import { subscribeOn } from 'rxjs';
+import { map, Observable, startWith, subscribeOn } from 'rxjs';
 import { th } from 'date-fns/locale';
 import { EstimacionesService } from '../../estimaciones/estimaciones.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { proyectoDTO } from '../../proyecto/tsProyecto';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { ProyectoService } from '../../proyecto/proyecto.service';
 
 @Component({
   selector: 'app-dialog-fsr',
@@ -51,7 +58,7 @@ export class DialogFSRComponent {
     uma: 0,
   };
   porcentajesCesantiaEdad: PorcentajeCesantiaEdadDTO[] = [];
-  parametrosXInsumo : ParametrosFsrXInsumoDTO[] = [];
+  parametrosXInsumo: ParametrosFsrXInsumoDTO[] = [];
 
   diasNoLaborales: number = 0;
   diasPagados: number = 0;
@@ -65,6 +72,15 @@ export class DialogFSRComponent {
   existenEstimaciones: boolean = false;
   selectedIndex: number = 0;
 
+  proyectoControl = new FormControl('');
+  filteredProyectos: Observable<proyectoDTO[]> = new Observable<
+    proyectoDTO[]
+  >();
+
+  proyectos!: proyectoDTO[];
+  nombreProyecto: string = '';
+  idProyectoFiltro: number = 0;
+
   constructor(
     public dialogRef: MatDialogRef<DialogFSRComponent>,
     private formBuilder: FormBuilder,
@@ -72,6 +88,7 @@ export class DialogFSRComponent {
     private fsrService: FSRService,
     private _SeguridadService: SeguridadService,
     private estimacionesService: EstimacionesService,
+    private proyectoService: ProyectoService,
 
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -99,6 +116,9 @@ export class DialogFSRComponent {
     );
     this.ObtenerFS();
     this.calcularDias();
+    this.proyectoService.obtener(this.selectedEmpresa).subscribe((datos) => {
+      this.proyectos = datos;
+    });
   }
 
   ObtenerFS() {
@@ -185,11 +205,11 @@ export class DialogFSRComponent {
       .subscribe((datos) => {
         this.porcentajesCesantiaEdad = datos;
         this.porcentajesCesantiaEdad.push({
-            id: 0,
-            idProyecto: this.selectedProyecto,
-            rangoUMA: 0,
-            porcentaje: 0,
-          });
+          id: 0,
+          idProyecto: this.selectedProyecto,
+          rangoUMA: 0,
+          porcentaje: 0,
+        });
       });
   }
 
@@ -343,19 +363,22 @@ export class DialogFSRComponent {
     }
   }
 
-  cargarParametrosXInsumo(){
-    this.fsrService.obtenerParametrosXInsumo(this.fsr, this.selectedEmpresa).subscribe((datos) => {
-      this.parametrosXInsumo = datos;
-      console.log("parametrso x Insumo", this.parametrosXInsumo);
-
-    });
+  cargarParametrosXInsumo() {
+    this.fsrService
+      .obtenerParametrosXInsumo(this.fsr, this.selectedEmpresa)
+      .subscribe((datos) => {
+        this.parametrosXInsumo = datos;
+        console.log('parametrso x Insumo', this.parametrosXInsumo);
+      });
   }
 
-  actualizarCostoBaseInsumo(insumo : ParametrosFsrXInsumoDTO){
+  actualizarCostoBaseInsumo(insumo: ParametrosFsrXInsumoDTO) {
     this.existeEdicion = true;
-    this.fsrService.actualizarCostoBaseInsumo(insumo, this.selectedEmpresa).subscribe((datos)=> {
-      this.cargarParametrosXInsumo();
-    });
+    this.fsrService
+      .actualizarCostoBaseInsumo(insumo, this.selectedEmpresa)
+      .subscribe((datos) => {
+        this.cargarParametrosXInsumo();
+      });
   }
 
   cerrarDialog() {
@@ -369,8 +392,71 @@ export class DialogFSRComponent {
 
   seleccionarIndex(event: MatTabChangeEvent) {
     this.selectedIndex = event.index;
-    if(this.selectedIndex == 2){
+    if (this.selectedIndex == 2) {
       this.cargarParametrosXInsumo();
     }
+  }
+
+  selectionChangeProyecto(event: MatAutocompleteSelectedEvent) {
+    const selectedProyecto = event.option.value;
+
+    this.proyectoControl.setValue(selectedProyecto.nombre);
+    const exixteProyecto = this.proyectos.filter(
+      (e) => e.nombre === selectedProyecto.nombre
+    );
+    if (exixteProyecto.length > 0) {
+      const idProyecto = selectedProyecto.id;
+    }
+
+    this.nombreProyecto = exixteProyecto[0].nombre;
+    this.idProyectoFiltro = exixteProyecto[0].id;
+  }
+
+  importarFsr() {
+    console.log('este es el proyecto seleccionado', this.idProyectoFiltro);
+    if (this.idProyectoFiltro <= 0) {
+      console.log('Alerta de seleccione un proyecto');
+    } else {
+      this.fsrService
+        .importarFsr(
+          this.selectedProyecto,
+          this.idProyectoFiltro,
+          this.selectedEmpresa
+        )
+        .subscribe((datos) => {
+          this.existeEdicion = true;
+          this.nombreProyecto = "";
+          this.idProyectoFiltro = 0;
+          this.ObtenerFS();
+          this.calcularDias();
+          this.cargarParametrosXInsumo();
+        });
+    }
+  }
+
+  reiniciarFiltro() {
+    this.filteredProyectos = this.proyectoControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        const stringValue = typeof value === 'string' ? value : '';
+        return this._filter(stringValue);
+      })
+    );
+  }
+
+  reiniciarProyecto(event: any) {
+    this.idProyectoFiltro = 0;
+  }
+
+  private _filter(value: string): proyectoDTO[] {
+    const filterValue = this._normalizeValue(String(value));
+
+    return this.proyectos.filter((proyecto) =>
+      this._normalizeValue(proyecto.nombre).includes(filterValue)
+    );
+  }
+
+  private _normalizeValue(value: string): string {
+    return value.toLowerCase().replace(/\s/g, '');
   }
 }
