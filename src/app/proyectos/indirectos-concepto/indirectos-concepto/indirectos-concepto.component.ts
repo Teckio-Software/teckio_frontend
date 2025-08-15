@@ -56,7 +56,8 @@ export class IndirectosConceptoComponent {
     posicion: 0,
     codigoPadre: '',
     esCatalogoGeneral: false,
-    esAvanceObra: false
+    esAvanceObra: false,
+    esAdicional: false
   }
 
   PUEditando: boolean = false;

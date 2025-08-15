@@ -23,6 +23,7 @@ export interface precioUnitarioDetalleAbstractaDTO {
 
 export interface precioUnitarioDetalleDTO extends precioUnitarioDetalleAbstractaDTO {
     id: number;
+    esAutorizado : boolean;
 }
 
 export interface precioUnitarioDetalleCopiaDTO extends precioUnitarioDetalleDTO{

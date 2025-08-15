@@ -26,6 +26,14 @@ export class PrecioUnitarioService {
         return this.HttpClient.get<precioUnitarioDTO[]>(`${this.apiUrl}/${idEmpresa}/obtenerConceptos/${idProyecto}`)
     }
 
+    public autorizarPresupuesto(idProyecto: number, idEmpresa: number): Observable<any> {
+        return this.HttpClient.get(`${this.apiUrl}/${idEmpresa}/AutorizarPresupuesto/${idProyecto}`)
+    }
+
+    public autorizarXPrecioUnitario(precioUniatrio: precioUnitarioDTO, idEmpresa: number): Observable<any> {
+        return this.HttpClient.post(`${this.apiUrl}/${idEmpresa}/AutorizarXPrecioUnitario`, precioUniatrio)
+    }
+
     public crearYObtener(precioUnitario: precioUnitarioDTO, idEmpresa: number) {
         return this.HttpClient.post<precioUnitarioDTO[]>(`${this.apiUrl}/${idEmpresa}/crear`, precioUnitario)
     }
