@@ -408,6 +408,8 @@ export class PrecioUnitarioComponent implements OnInit {
     esAdicional: false,
   };
 
+  esAutorizado : boolean = false;
+
   IdPrecioParaExplosion: number = 0;
   @ViewChild('InputOperacionGenerador') InputOperacionGenerador: any;
 
@@ -852,6 +854,10 @@ export class PrecioUnitarioComponent implements OnInit {
       .obtenerEstructurado(this.selectedProyecto, this.selectedEmpresa)
       .subscribe((preciosUnitarios) => {
         this.preciosUnitarios = preciosUnitarios;
+
+        if(this.preciosUnitarios[0].esAvanceObra){
+          this.esAutorizado = true;
+        }
 
         for (let i = 0; i < preciosUnitarios.length; i++) {
           this.total = this.total + this.preciosUnitarios[i].importe;
