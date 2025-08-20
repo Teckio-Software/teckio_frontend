@@ -103,6 +103,8 @@ export class ProductosServiciosComponent {
   isModalInfoOpen: boolean = false;
   alertaSuccess: boolean = false;
 
+  isLoading: boolean = true;
+
   ngOnInit() {
     this.cargarProductosYServicios();
     this.cargarUnidades();
@@ -274,6 +276,7 @@ export class ProductosServiciosComponent {
       .obtenerConjuntos(this.selectedEmpresa)
       .subscribe((resp) => {
         this.listaProductosYServicios = resp;
+        this.isLoading = false;
       });
   }
 

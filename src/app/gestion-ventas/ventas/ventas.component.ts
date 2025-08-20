@@ -72,6 +72,8 @@ export class VentasComponent {
   productosYServicio: ProductoYServicioDTO[] = [];
   productosYServicioReset: ProductoYServicioDTO[] = [];
 
+  isLoading: boolean = true;
+
   constructor(
     private _seguridadService: SeguridadService,
     private _ordenVentaService: VentasService,
@@ -89,7 +91,9 @@ export class VentasComponent {
       },
       error: () => {
         //Imprime mensaje de error.
-      },
+      },complete:()=>{
+        this.isLoading = false;
+      }
     });
     this.productosYServicio.push({
       id: 0,

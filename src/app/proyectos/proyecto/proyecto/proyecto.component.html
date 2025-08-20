@@ -32,11 +32,139 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray300">
-          <tr *ngIf="paginatedProyectos.length == 0">
+          <tr *ngIf="paginatedProyectos.length == 0 && !isLoading">
             <td class="text-center text-gray-700 font-medium py-1" colspan="6">
               No hay proyectos creados.
             </td>
           </tr>
+          <ng-container *ngIf="isLoading">
+              <tr>
+                <!-- Nombre -->
+                <td class="px-1" scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Código -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Series -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Presupuesto Total -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Anticipo -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>                
+              </tr>
+              <tr>
+                <!-- Nombre -->
+                <td class="px-1" scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Código -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Series -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Presupuesto Total -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Anticipo -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>                
+              </tr>
+              <tr>
+                <!-- Nombre -->
+                <td class="px-1" scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Código -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Series -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Presupuesto Total -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Anticipo -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>                
+              </tr>
+            </ng-container>
           <tr
             *ngFor="let proyecto of paginatedProyectos"
             class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"

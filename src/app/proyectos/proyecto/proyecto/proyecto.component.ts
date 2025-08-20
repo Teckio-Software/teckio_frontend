@@ -55,6 +55,9 @@ export class ProyectoComponent implements OnInit {
   pages: number[] = [];
   visiblePages: number[] = [];
   totalPages = 0;
+
+  isLoading: boolean = true;
+
   /////////* PAGINATION */////////
 
   ngOnInit(): void {
@@ -104,6 +107,7 @@ export class ProyectoComponent implements OnInit {
         this.totalItems = proyectos.length;
         this.updatePagination();
         this.updatePaginatedData();
+        this.isLoading = false;
       });
   }
 
