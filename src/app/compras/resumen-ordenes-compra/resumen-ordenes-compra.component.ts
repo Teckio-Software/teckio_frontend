@@ -16,6 +16,7 @@ import { FormControl } from '@angular/forms';
 import { map, Observable, startWith } from 'rxjs';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { InsumoDTO } from 'src/app/catalogos/insumo/tsInsumo';
+import { tr } from 'date-fns/locale';
 
 @Component({
   selector: 'app-resumen-ordenes-compra',
@@ -115,6 +116,9 @@ export class ResumenOrdenesCompraComponent {
   importeTotalInsumosConFormato : string = "0.00";
   importeTotalInsumos : number = 0;
 
+  isLoadingOC: boolean = true;
+  isLoadingIC: boolean = false;
+
 
   constructor(
     private _ordenCompraService: OrdenCompraService,
@@ -151,6 +155,7 @@ export class ResumenOrdenesCompraComponent {
         this.ordenescompras = datos;
         this.ordenescomprasReset = datos;
         this.filtrarListaOrdenesCompra();
+        this.isLoadingOC = false;
       });
   }
 
@@ -358,6 +363,7 @@ export class ResumenOrdenesCompraComponent {
     this.descripcionInsumo = "";
     this.ordenesCommpraXInsumo = [];
     this.importeTotalInsumosConFormato = "0.00";
+    this.isLoadingOC = true;
     this._ordenCompraService
       .ObtenerInsumosComprados(this.selectedEmpresa, this.idProyectoFiltro)
       .subscribe((datos) => {
@@ -367,10 +373,12 @@ export class ResumenOrdenesCompraComponent {
           this.existenInsumosComprados = true;
           this.filtrarListaInsumos();
         }
+        this.isLoadingOC = false;
       });
   }
 
   cargarOrdenesCompraXInsumo() {
+    this.isLoadingIC = true;
     this.ordenesCommpraXInsumo = [];
     this.importeTotalInsumosConFormato = "0.00";
 
@@ -383,6 +391,7 @@ export class ResumenOrdenesCompraComponent {
           this.importeTotalInsumos += element.importeConIva;
         });
         this.importeTotalInsumosConFormato = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(this.importeTotalInsumos);
+        this.isLoadingIC = false;
       });
   }
 

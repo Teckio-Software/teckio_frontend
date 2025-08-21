@@ -122,6 +122,7 @@ export class OrdenesComprasComponent {
     idEgresosIvaGravable: 0,
     idIvaAcreditableFiscal: 0,
   };
+
   ngOnInit() {
     if (this.idCotizacionInput > 0) {
       this.todos = true;
