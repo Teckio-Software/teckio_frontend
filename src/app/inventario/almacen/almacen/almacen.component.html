@@ -56,7 +56,233 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray300">
-        <tr *ngIf="almacenes.length === 0">
+        <ng-container *ngIf="isLoading">
+          <tr>
+              <!-- Código -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Nombre Almacen -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Es Central -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-12 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Responsable -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Domicilio -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-40 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!--Colonia -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Ciudad -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-32 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Teléfono -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-32 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Acciones -->
+              <td scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-12 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+            </tr>
+            g-container *ngIf="isLoading">
+          <tr>
+              <!-- Código -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Nombre Almacen -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Es Central -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-12 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Responsable -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Domicilio -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-40 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!--Colonia -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Ciudad -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-32 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Teléfono -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-32 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Acciones -->
+              <td scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-12 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+            </tr>
+            g-container *ngIf="isLoading">
+          <tr>
+              <!-- Código -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Nombre Almacen -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Es Central -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-12 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Responsable -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Domicilio -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-40 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!--Colonia -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Ciudad -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-32 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Teléfono -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-32 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Acciones -->
+              <td scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-12 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+            </tr>
+        </ng-container>
+        <tr *ngIf="almacenes.length === 0 && !isLoading">
           <td colspan="9" class="text-center text-gray-700 font-medium py-1">
             No hay almacenes creados.
           </td>

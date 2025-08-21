@@ -80,6 +80,7 @@ export class AlmacenComponent implements OnInit {
     telefono: '',
     idProyecto: 0,
   };
+  isLoading: boolean = true;
 
   ngOnInit(): void {
     this.traerInformacion();
@@ -102,11 +103,12 @@ export class AlmacenComponent implements OnInit {
 
   traerInformacion() {
     this.proyectoSeleccionado = true;
-
+    this.isLoading = true;
     this.almacenService
       .obtenerXIdProyecto(this.idProyecto, this.selectedEmpresa)
       .subscribe((datos) => {
         this.almacenes = datos;
+        this.isLoading = false;
       });
   }
 
@@ -222,6 +224,7 @@ export class AlmacenComponent implements OnInit {
 
   cambiarSeleccion() {
     if (this.mostrarCentrales) {
+      this.isLoading = true;
       this.almacenService
         .obtenerTodosSinPaginar(this.selectedEmpresa)
         .subscribe({
@@ -231,6 +234,9 @@ export class AlmacenComponent implements OnInit {
           error: () => {
             //Mensaje de error.
           },
+          complete:()=>{
+            this.isLoading = false;
+          }
         });
     } else {
       this.traerInformacion();
