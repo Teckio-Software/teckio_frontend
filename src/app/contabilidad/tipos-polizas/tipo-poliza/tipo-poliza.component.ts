@@ -50,6 +50,8 @@ export class TipoPolizaComponent implements OnInit{
   paginaActual = 1;
   cantidadRegistrosAMostrar = 10;
 
+  isLoading: boolean = true;
+
   ngOnInit(): void {
     this.cargarRegistros(this.paginaActual, this.cantidadRegistrosAMostrar);
     this.form = this.formBuilder.group({
@@ -71,6 +73,11 @@ export class TipoPolizaComponent implements OnInit{
       },
       error: (zError: any) => {
         console.error(zError);
+        this.isLoading =false;
+
+      },
+      complete:()=>{
+        this.isLoading =false;
       }
     });
   }

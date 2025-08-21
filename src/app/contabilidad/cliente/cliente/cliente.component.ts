@@ -69,6 +69,7 @@ export class ClienteComponent implements OnInit {
     clientes!: clienteCreacionDTO[];
     cuentasContables!: cuentaContableDTO[];
 
+    
     @ViewChild('staticBackdrop')
     staticBackdrop!: ElementRef;
 

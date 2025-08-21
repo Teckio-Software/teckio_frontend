@@ -76,6 +76,9 @@ export class InsumoComponent implements OnInit {
   pageEvent!: PageEvent;
   inicioCopia = 0;
   terminoCopia = 20;
+
+  isLoading: boolean = true;
+
       /////////* PAGINATION */////////
       paginatedInsumos: InsumoDTO[] = [];
       currentPage = 1;
@@ -150,6 +153,7 @@ export class InsumoComponent implements OnInit {
       this.totalItems = insumos.length;
       this.updatePagination();
       this.updatePaginatedData();
+      this.isLoading = false;
     });
   }
 

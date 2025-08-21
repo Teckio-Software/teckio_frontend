@@ -8,6 +8,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogNewRubroComponent } from '../dialog-new-rubro/dialog-new-rubro.component';
+import { faL } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-rubro',
@@ -39,6 +40,9 @@ export class RubroComponent implements OnInit {
   paginaActual = 1;
   cantidadRegistrosAMostrar = 10;
   columnasAMostrar = ['descripcion', 'naturalezaRubro', 'incluidoReporte', 'acciones'];
+
+  isLoading: boolean = true;
+
   constructor(private rubroService: RubroService
     , private _snackBar: MatSnackBar
     , private formBuilder: FormBuilder
@@ -64,6 +68,7 @@ export class RubroComponent implements OnInit {
     .obtenerTodos(this.selectedEmpresa)
     .subscribe((respuesta) => {
       this.rubros = respuesta;
+      this.isLoading = false;
     });
   }
 

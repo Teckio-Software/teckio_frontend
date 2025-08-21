@@ -75,6 +75,7 @@ export class ConceptoComponent implements OnInit {
   proyectosReset!: proyectoDTO[];
   proyectos!: proyectoDTO[];
 
+  isLoading: boolean = true;
   
   ngOnInit(): void {
     this.cargarRegistros();
@@ -102,6 +103,7 @@ export class ConceptoComponent implements OnInit {
     .obtenerPaginado(this.idProyecto, this.selectedEmpresa)
     .subscribe((conceptos) => {
       this.conceptos = conceptos;
+      this.isLoading = false
     });
   }
 

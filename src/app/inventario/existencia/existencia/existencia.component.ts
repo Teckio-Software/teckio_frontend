@@ -28,6 +28,7 @@ export class ExistenciaComponent {
   idInsumo: number = 0;
   changeColor: any = null;
 
+  isLoading: boolean = true;
 
   // columnasAMostrarInsumos = ['codigo', 'descripcion', 'unidad', 'almacen', 'cantidadAumenta', 'cantidadRetira', 'cantidadRecibida'];
   // cantidadTotalRegistrosInsumos: any;
@@ -63,7 +64,7 @@ export class ExistenciaComponent {
     this.proyectoSeleccionado = true;
 
       this.almacenes = datos;
-
+      this.isLoading = false;
     })
   }
 

@@ -38,6 +38,110 @@
           No hay insumos registrados.
         </td>
       </tr> -->
+      <ng-container *ngIf="isLoading">
+        <tr>
+          <!-- Código -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Descripción -->
+          <td scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Unidad -->
+          <td scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Cantidad Disponible -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <!-- Código -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Descripción -->
+          <td scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Unidad -->
+          <td scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Cantidad Disponible -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <!-- Código -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Descripción -->
+          <td scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Unidad -->
+          <td scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Cantidad Disponible -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
       <tr
         *ngFor="let IE of insumosExistentes"
         (click)="verDetalles(IE.idInsumo)"

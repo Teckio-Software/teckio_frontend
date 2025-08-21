@@ -33,6 +33,86 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray300">
+        <ng-container *ngIf="isLoading">
+          <tr>
+            <!-- Descripción -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Naturaleza del Rubro -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Tipo de Reporte-->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <!-- Descripción -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Naturaleza del Rubro -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Tipo de Reporte-->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <!-- Descripción -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Naturaleza del Rubro -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Tipo de Reporte-->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
         <tr *ngIf="rubros.length == 0">
           <td class="text-center text-gray-700 font-medium py-1" colspan="6">
             No hay rubros creados.

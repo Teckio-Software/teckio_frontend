@@ -54,6 +54,9 @@ export class ContratistaComponent implements OnInit {
   idContratista: number = 0;
   contratistaSeleccionado: boolean = false;
   changeColor: any = null;
+
+  isLoading: boolean = true;
+
   /////////* PAGINATION */////////
   paginatedContratista: contratistaDTO[] = [];
   currentPage = 1;
@@ -92,6 +95,7 @@ export class ContratistaComponent implements OnInit {
         this.totalItems = contratistas.length;
         this.updatePagination();
         this.updatePaginatedData();
+        this.isLoading = false;
       })
   }
 

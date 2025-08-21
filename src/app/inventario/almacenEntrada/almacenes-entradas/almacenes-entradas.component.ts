@@ -97,6 +97,7 @@ export class AlmacenesEntradasComponent {
   explocionInsumos!: InsumoParaExplosionDTO[];
   insumos!: InsumoDTO[];
   tipoInsumos!: tipoInsumoDTO[];
+  isLoading: boolean = true;
 
   ngOnInit() {
     if (this.idOrdenCompraInput > 0) {
@@ -106,21 +107,25 @@ export class AlmacenesEntradasComponent {
       .obtenerXIdProyecto(this.idProyectoInput, this.idEmpresaInput)
       .subscribe((datos) => {
         this.almacenes = datos;
+        this.isLoading = false;
       });
     this._contratistaService
       .obtenerTodos(this.idEmpresaInput)
       .subscribe((respuesta) => {
         this.contratista = respuesta;
+        this.isLoading = false;
       });
     this._insumo
       .obtenerXIdProyecto(this.idEmpresaInput, this.idProyectoInput)
       .subscribe((datos) => {
         this.insumos = datos;
+        this.isLoading = false;
       });
     this._tipoInsumo
       .TipoInsumosParaRequisitar(this.idEmpresaInput)
       .subscribe((datos) => {
         this.tipoInsumos = datos;
+        this.isLoading = false;
       });
     this._explosionInsumos
       .explosionDeInsumos(this.idProyectoInput, this.idEmpresaInput)
@@ -132,6 +137,7 @@ export class AlmacenesEntradasComponent {
             z.idTipoInsumo != 3 &&
             z.idTipoInsumo != 10001
         );
+        this.isLoading = false;
       });
     this.cargarRegistros();
   }
