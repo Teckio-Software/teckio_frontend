@@ -116,6 +116,110 @@
       </tr>
     </thead>
     <tbody>
+        <ng-container *ngIf="isLoading">
+             <tr>
+            <!-- Clave -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-22 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Nombre -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-40 xs:w-24 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Razon Social -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-52 xs:w-24 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Acciones -->
+            <td class="px-1" scope="col">
+              <div role="status" class="flex align-items-center justify-center max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-14 xs:w-24 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <!-- Clave -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-22 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Nombre -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-40 xs:w-24 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Razon Social -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-52 xs:w-24 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Acciones -->
+            <td class="px-1" scope="col">
+              <div role="status" class="flex align-items-center justify-center max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-14 xs:w-24 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <!-- Clave -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-22 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Nombre -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-40 xs:w-24 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Razon Social -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-52 xs:w-24 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Acciones -->
+            <td class="px-1" scope="col">
+              <div role="status" class="flex align-items-center justify-center max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-14 xs:w-24 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+          </tr>
+          </ng-container>
       <tr *ngFor="let b of banco">
         <td class="" scope="col">{{ b.clave }}</td>
         <td class="" scope="col">{{ b.nombre }}</td>

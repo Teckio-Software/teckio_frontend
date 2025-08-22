@@ -19,6 +19,8 @@ export class TableCuentasContablesComponent {
   selectedEmpresa : number = 0;
   cuentasContables : cuentaContableDTO[] = [];
 
+  isLoading: boolean = true;
+
   changeColor: any = null;
 
   constructor(
@@ -40,16 +42,20 @@ export class TableCuentasContablesComponent {
   }
 
   cargarCuentasXContratista(){
+    this.isLoading = true;
     this._contatistaService.obtenerCuentasContables(this.selectedEmpresa, this.IdContratistaInput).subscribe((datos) => {
       this.cuentasContables = datos;
       console.log("estas son las cuentasContables", this.cuentasContables);
+      this.isLoading = false;
     });
   }
 
   cargarCuentasXCliente(){
+    this.isLoading = true;
     this._clienteService.obtenerCuentasContables(this.selectedEmpresa, this.IdClienteInput).subscribe((datos) => {
       this.cuentasContables = datos;
       console.log("estas son las cuentasContables", this.cuentasContables);
+      this.isLoading = false;
     });
   }
 

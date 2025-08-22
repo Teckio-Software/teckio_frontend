@@ -69,6 +69,7 @@ export class ClienteComponent implements OnInit {
     clientes!: clienteCreacionDTO[];
     cuentasContables!: cuentaContableDTO[];
 
+    // isLoading: boolean = true;
     
     @ViewChild('staticBackdrop')
     staticBackdrop!: ElementRef;
@@ -115,7 +116,8 @@ export class ClienteComponent implements OnInit {
         this.clienteService.obtenerTodos(this.selectedEmpresa)
             .subscribe((clientes) => {
                 this.clientes = clientes;
-            })
+                // this.isLoading = false;
+            });
     }
 
     formClientes() {

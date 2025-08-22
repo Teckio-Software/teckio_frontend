@@ -20,6 +20,8 @@ export class CuentasBancariasContratistaComponent {
 
   cuentasBancarias : CuentaBancariaBaseDTO[] = [];
 
+  isLoading: boolean = true;
+
   constructor(
     private _cuentaBancariaContratista : CuentabancariaContratistaService,
     private _cuentaBancariaEmpresa : CuentabancariaEmpresaService,
@@ -33,19 +35,23 @@ export class CuentasBancariasContratistaComponent {
   }
 
   cargaRegistros(){
+    this.isLoading = true;
     if(this.IdContratistaInput > 0){
       this._cuentaBancariaContratista.ObtenerXIdContratista(this.IdEmpresaInput, this.IdContratistaInput).subscribe((datos) => {
         this.cuentasBancarias = datos;
+        this.isLoading = false;
       });
     }
     if(this.IdClienteInput > 0){
       this._cuentaBancariaCliente.ObtenerXIdCliente(this.IdEmpresaInput, this.IdClienteInput).subscribe((datos) => {
         this.cuentasBancarias = datos;
+        this.isLoading = false;
       });
     }
     if(this.IdContratistaInput == 0 && this.IdClienteInput == 0){
       this._cuentaBancariaEmpresa.ObtenerTodos(this.IdEmpresaInput).subscribe((datos) => {
         this.cuentasBancarias = datos;
+        this.isLoading = false;
       });
     }
   }

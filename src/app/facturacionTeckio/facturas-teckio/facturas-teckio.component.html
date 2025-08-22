@@ -67,6 +67,254 @@
           </tr>
         </thead>
         <tbody>
+          <ng-container *ngIf="isLoading">
+            <tr>
+              <!-- CRP -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-22 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Serie -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-22 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Folio -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-22 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- UUID -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-52 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Receptor -->
+              <td class="px-1" scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-24 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Fecha Validación -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-24 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Estatus -->
+              <td class="px-1" scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-8 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Total -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Moneda -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-14 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Tipo -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-14 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <!-- CRP -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-22 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Serie -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-22 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Folio -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-22 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- UUID -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-52 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Receptor -->
+              <td class="px-1" scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-24 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Fecha Validación -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-24 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Estatus -->
+              <td class="px-1" scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-8 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Total -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Moneda -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-14 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Tipo -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-14 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <!-- CRP -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-22 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Serie -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-22 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Folio -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-22 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- UUID -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-52 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Receptor -->
+              <td class="px-1" scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-24 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Fecha Validación -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-24 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Estatus -->
+              <td class="px-1" scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-8 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Total -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Moneda -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-14 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Tipo -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-14 xs:w-24 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
           <tr
             class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
             *ngFor="let factura of paginatedFacturas"

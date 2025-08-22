@@ -69,6 +69,9 @@ export class FacturasTeckioComponent {
 
   fechafiltro !: Date;
   estatusFactura: number = 0;
+
+  isLoading: boolean = true;
+
     /////////* PAGINATION */////////
     paginatedFacturas: FacturaDTO[] = [];
     currentPage = 1;
@@ -98,6 +101,7 @@ export class FacturasTeckioComponent {
         this.totalItems = datos.length;
         this.updatePagination();
         this.updatePaginatedData();
+        this.isLoading = false;
       }
     });
   }
