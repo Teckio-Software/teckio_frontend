@@ -18,6 +18,8 @@ export class EmpleadosComponent {
   changeColor: any = null;
   appRecarga : number = 0;
 
+  isLoading: boolean = true;
+
   constructor(
     public dialog: MatDialog,
     private _empleadoService: EmpleadoServiceService,
@@ -34,6 +36,7 @@ export class EmpleadosComponent {
   cargarRegistros() {
     this._empleadoService.ObtenerTodos(this.selectedEmpresa).subscribe((datos) => {
       this.empleados = datos;
+      this.isLoading = false;
     });
   }
 

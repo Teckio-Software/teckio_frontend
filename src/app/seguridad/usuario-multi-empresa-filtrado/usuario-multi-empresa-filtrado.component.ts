@@ -59,6 +59,8 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
   clicked = false; // Variable para controlar si se ha hecho clic
   isActive: boolean = false;
 
+  isLoading: boolean = true;
+
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.checkResolution(); // Detectar cambios de tamaño de ventana
@@ -382,6 +384,7 @@ export class UsuarioMultiEmpresaFiltradoComponent implements OnInit {
           this.selectedCorporativo = this.corporativos[0].id;
           this.cargarRegistros(this.selectedCorporativo);
         }
+        this.isLoading = false;
       });
   }
   activarDesactivarUsuario(idUsuario: number, esActivo: boolean) {

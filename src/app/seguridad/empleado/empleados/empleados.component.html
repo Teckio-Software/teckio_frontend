@@ -1,83 +1,414 @@
-<div class="flex ">
-    <button (click)="abrirFormularioCrear()"
-        class="bg-[#51aec7] hover:bg-hoverButton   titular items-center bg-custom-bg flex  font-bold tracking-wider  m-0 text-center">
-        <p class=" text-[#f2f2f2] titular bg-custom-bg w-52  font-bold tracking-wider  m-0 text-center">
-            Agregar empleado</p>
-        <img src="assets/add.svg" alt="">
-    </button>
+<div class="flex">
+  <button
+    (click)="abrirFormularioCrear()"
+    class="bg-[#51aec7] hover:bg-hoverButton titular items-center bg-custom-bg flex font-bold tracking-wider m-0 text-center"
+  >
+    <p
+      class="text-[#f2f2f2] titular bg-custom-bg w-52 font-bold tracking-wider m-0 text-center"
+    >
+      Agregar empleado
+    </p>
+    <img src="assets/add.svg" alt="" />
+  </button>
 </div>
-<div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px;">
-    <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos m-0">
-        <thead>
-            <tr>
-                <th scope="col">Nombre</th>
-                <th scope="col">Apellido Paterno</th>
-                <th scope="col">Apellido Materno</th>
-                <th scope="col">CURP</th>
-                <th scope="col">RFC</th>
-                <th scope="col">Seguro Social</th>
-                <th scope="col">Relacion L.</th>
-                <th scope="col">Termino R.L.</th>
-                <th scope="col">Salario</th>
-                <th scope="col">Activo</th>
-                <th scope="col">Acción</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let empleado of empleados" (click)="SeleccionaEmpleado(empleado)"
-                [ngClass]="{'change-background-color' : empleado.id == changeColor}">
-                <td scope="col">{{empleado.nombre}}</td>
-                <td scope="col">{{empleado.apellidoPaterno}}</td>
-                <td scope="col">{{empleado.apellidoMaterno}}</td>
-                <td scope="col">{{empleado.curp}}</td>
-                <td scope="col">{{empleado.rfc}}</td>
-                <td scope="col">{{empleado.seguroSocial}}</td>
-                <td scope="col">{{empleado.fechaRelacionLaboral | date:"dd-MM-yyyy"}}</td>
-                <td scope="col">{{empleado.fechaTerminoRelacionLaboral | date:"dd-MM-yyyy"}}</td>
-                <td scope="col">{{empleado.salarioDiario}}</td>
-                <td scope="col"><input type="checkbox" id="vehicle3" name="vehicle3" value="Boat"
-                        [(ngModel)]="empleado.estatus" (change)="ActualizaEstatus(empleado)"></td>
-                <td scope="col">
-                    <div class="flex gap-2">
-                        <button placement="top" ngbTooltip="Editar" triggers="mouseenter:mouseleave" 
-                            class="bg-[#51aec7] hover:bg-hoverButton   titular items-center bg-custom-bg flex  font-bold tracking-wider  m-0 text-center w-6  h-auto"
-                            (click)="abrirDialogoFormulario(empleado)">
-                            <svg fill="#f2f2f2" viewBox="-4 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                                stroke="#f2f2f2">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <title>edit</title>
-                                    <path
-                                        d="M17.438 22.469v-4.031l2.5-2.5v7.344c0 1.469-1.219 2.688-2.656 2.688h-14.625c-1.469 0-2.656-1.219-2.656-2.688v-14.594c0-1.469 1.188-2.688 2.656-2.688h14.844v0.031l-2.5 2.469h-11.5c-0.531 0-1 0.469-1 1.031v12.938c0 0.563 0.469 1 1 1h12.938c0.531 0 1-0.438 1-1zM19.813 7.219l2.656 2.656 1.219-1.219-2.656-2.656zM10.469 16.594l2.625 2.656 8.469-8.469-2.625-2.656zM8.594 21.094l3.625-0.969-2.656-2.656z">
-                                    </path>
-                                </g>
-                            </svg>
-                        </button>
-                        <button placement="top" ngbTooltip="Asignar conceptos" triggers="mouseenter:mouseleave" *ngIf="empleado.estatus"
-                            class="bg-[#51aec7] hover:bg-hoverButton   titular items-center bg-custom-bg flex  font-bold tracking-wider  m-0 text-center w-6  h-auto"
-                            (click)="abrirDialogoPrecioUnitario(empleado)">
-                            <svg fill="#f2f2f2" viewBox="-4 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                                stroke="#f2f2f2">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <title>edit</title>
-                                    <path
-                                        d="M17.438 22.469v-4.031l2.5-2.5v7.344c0 1.469-1.219 2.688-2.656 2.688h-14.625c-1.469 0-2.656-1.219-2.656-2.688v-14.594c0-1.469 1.188-2.688 2.656-2.688h14.844v0.031l-2.5 2.469h-11.5c-0.531 0-1 0.469-1 1.031v12.938c0 0.563 0.469 1 1 1h12.938c0.531 0 1-0.438 1-1zM19.813 7.219l2.656 2.656 1.219-1.219-2.656-2.656zM10.469 16.594l2.625 2.656 8.469-8.469-2.625-2.656zM8.594 21.094l3.625-0.969-2.656-2.656z">
-                                    </path>
-                                </g>
-                            </svg>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<div
+  style="
+    overflow-x: auto;
+    white-space: nowrap;
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 0px;
+  "
+>
+  <table
+    class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos m-0"
+  >
+    <thead>
+      <tr>
+        <th scope="col">Nombre</th>
+        <th scope="col">Apellido Paterno</th>
+        <th scope="col">Apellido Materno</th>
+        <th scope="col">CURP</th>
+        <th scope="col">RFC</th>
+        <th scope="col">Seguro Social</th>
+        <th scope="col">Relacion L.</th>
+        <th scope="col">Termino R.L.</th>
+        <th scope="col">Salario</th>
+        <th scope="col">Activo</th>
+        <th scope="col">Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngIf="isLoading">
+        <tr>
+          <!-- Nombre -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Apellido Paterno -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Apellido Materno -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- CURP -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- RFC -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Seguro Social -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-24 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Relacion L. -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-24 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Termino R.L. -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-24 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Salario -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-14 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Activo -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-8 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Acción -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-16 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <!-- Nombre -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Apellido Paterno -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Apellido Materno -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- CURP -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- RFC -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Seguro Social -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-24 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Relacion L. -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-24 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Termino R.L. -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-24 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Salario -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-14 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Activo -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-8 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Acción -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-16 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <!-- Nombre -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Apellido Paterno -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Apellido Materno -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- CURP -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- RFC -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Seguro Social -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-24 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Relacion L. -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-24 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Termino R.L. -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-24 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Salario -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-14 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Activo -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-8 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Acción -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-16 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
+      <tr
+        *ngFor="let empleado of empleados"
+        (click)="SeleccionaEmpleado(empleado)"
+        [ngClass]="{ 'change-background-color': empleado.id == changeColor }"
+      >
+        <td scope="col">{{ empleado.nombre }}</td>
+        <td scope="col">{{ empleado.apellidoPaterno }}</td>
+        <td scope="col">{{ empleado.apellidoMaterno }}</td>
+        <td scope="col">{{ empleado.curp }}</td>
+        <td scope="col">{{ empleado.rfc }}</td>
+        <td scope="col">{{ empleado.seguroSocial }}</td>
+        <td scope="col">
+          {{ empleado.fechaRelacionLaboral | date : "dd-MM-yyyy" }}
+        </td>
+        <td scope="col">
+          {{ empleado.fechaTerminoRelacionLaboral | date : "dd-MM-yyyy" }}
+        </td>
+        <td scope="col">{{ empleado.salarioDiario }}</td>
+        <td scope="col">
+          <input
+            type="checkbox"
+            id="vehicle3"
+            name="vehicle3"
+            value="Boat"
+            [(ngModel)]="empleado.estatus"
+            (change)="ActualizaEstatus(empleado)"
+          />
+        </td>
+        <td scope="col">
+          <div class="flex gap-2">
+            <button
+              placement="top"
+              ngbTooltip="Editar"
+              triggers="mouseenter:mouseleave"
+              class="bg-[#51aec7] hover:bg-hoverButton titular items-center bg-custom-bg flex font-bold tracking-wider m-0 text-center w-6 h-auto"
+              (click)="abrirDialogoFormulario(empleado)"
+            >
+              <svg
+                fill="#f2f2f2"
+                viewBox="-4 0 32 32"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                stroke="#f2f2f2"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <title>edit</title>
+                  <path
+                    d="M17.438 22.469v-4.031l2.5-2.5v7.344c0 1.469-1.219 2.688-2.656 2.688h-14.625c-1.469 0-2.656-1.219-2.656-2.688v-14.594c0-1.469 1.188-2.688 2.656-2.688h14.844v0.031l-2.5 2.469h-11.5c-0.531 0-1 0.469-1 1.031v12.938c0 0.563 0.469 1 1 1h12.938c0.531 0 1-0.438 1-1zM19.813 7.219l2.656 2.656 1.219-1.219-2.656-2.656zM10.469 16.594l2.625 2.656 8.469-8.469-2.625-2.656zM8.594 21.094l3.625-0.969-2.656-2.656z"
+                  ></path>
+                </g>
+              </svg>
+            </button>
+            <button
+              placement="top"
+              ngbTooltip="Asignar conceptos"
+              triggers="mouseenter:mouseleave"
+              *ngIf="empleado.estatus"
+              class="bg-[#51aec7] hover:bg-hoverButton titular items-center bg-custom-bg flex font-bold tracking-wider m-0 text-center w-6 h-auto"
+              (click)="abrirDialogoPrecioUnitario(empleado)"
+            >
+              <svg
+                fill="#f2f2f2"
+                viewBox="-4 0 32 32"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                stroke="#f2f2f2"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <title>edit</title>
+                  <path
+                    d="M17.438 22.469v-4.031l2.5-2.5v7.344c0 1.469-1.219 2.688-2.656 2.688h-14.625c-1.469 0-2.656-1.219-2.656-2.688v-14.594c0-1.469 1.188-2.688 2.656-2.688h14.844v0.031l-2.5 2.469h-11.5c-0.531 0-1 0.469-1 1.031v12.938c0 0.563 0.469 1 1 1h12.938c0.531 0 1-0.438 1-1zM19.813 7.219l2.656 2.656 1.219-1.219-2.656-2.656zM10.469 16.594l2.625 2.656 8.469-8.469-2.625-2.656zM8.594 21.094l3.625-0.969-2.656-2.656z"
+                  ></path>
+                </g>
+              </svg>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 <div class="mt-3" *ngIf="changeColor > 0">
-    <app-tabla-empleado-precio-unitario *appRecarga="appRecarga" [IdEmpleadoInput]="changeColor">
-        
-    </app-tabla-empleado-precio-unitario>
+  <app-tabla-empleado-precio-unitario
+    *appRecarga="appRecarga"
+    [IdEmpleadoInput]="changeColor"
+  >
+  </app-tabla-empleado-precio-unitario>
 </div>

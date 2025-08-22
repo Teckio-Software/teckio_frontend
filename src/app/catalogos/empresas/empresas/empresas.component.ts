@@ -37,6 +37,8 @@ export class EmpresasComponent implements OnInit {
   totalPages = 0;
   /////////* PAGINATION */////////
 
+  isloading: boolean = true;
+
   constructor(
     private dialog: MatDialog,
     private _empresaServicio: EmpresaService,
@@ -58,6 +60,7 @@ export class EmpresasComponent implements OnInit {
       if (datos.length > 0) {
         this.selectedCorporativo = datos[0].id;
         this.obtenerEmpresa(this.selectedCorporativo);
+        this.isloading = false;
       }
     });
   }

@@ -26,6 +26,8 @@ export class CorporativoComponent implements OnInit {
   dataListaCorporativos2 : corporativo[] = [];
   @ViewChild(MatPaginator) paginacionTabla!: MatPaginator;
 
+  isLoading: boolean = true;
+
   constructor(
     private dialog: MatDialog,
     private _corporativoServicio: CorporativoService,
@@ -37,6 +39,7 @@ export class CorporativoComponent implements OnInit {
     this._UsuarioCorporativoService.obtenCorporativosPertenecientes().subscribe({
       next: (data) => {
         this.dataListaCorporativos2 = data;
+        this.isLoading = false;
       },
       error: (e) => {
         console.log;
