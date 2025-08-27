@@ -343,6 +343,7 @@ export class PrecioUnitarioComponent implements OnInit {
   isRendimineto: boolean = true;
   isOpereciones: boolean = false;
   isOpenModal: boolean = false;
+  isOpenModalImprimir: boolean = false;
   mostrarMenu = false;
 
   contenedorPresupuesto: boolean = true;
@@ -812,35 +813,34 @@ export class PrecioUnitarioComponent implements OnInit {
           esAdicional: false,
         };
       });
-      this.preciosUnitarios.forEach(registro => {
-          console.log("Registro: ", registro);
-          if(registro.id == this.precioUnitarioSeleccionado.id){
-            registro.esDetalle = true;
-            this.precioUnitarioSeleccionado = registro;
-            console.log("Registro seleccionado: ", registro);
-          }
-          if(registro.tipoPrecioUnitario == 0){
-            this.buscarHijoParaSeleccionar(registro);
-          }
-        });
+    this.preciosUnitarios.forEach((registro) => {
+      console.log('Registro: ', registro);
+      if (registro.id == this.precioUnitarioSeleccionado.id) {
+        registro.esDetalle = true;
+        this.precioUnitarioSeleccionado = registro;
+        console.log('Registro seleccionado: ', registro);
+      }
+      if (registro.tipoPrecioUnitario == 0) {
+        this.buscarHijoParaSeleccionar(registro);
+      }
+    });
   }
 
-  buscarHijoParaSeleccionar(
-    precioUnitario: precioUnitarioDTO,){
-      precioUnitario.hijos.forEach(registro => {
-        if(registro.id == this.precioUnitarioSeleccionado.id){
-          registro.esDetalle = true;
-          registro.cantidadEditado = true;
-          registro.costoUnitarioEditado = true;
-          registro.precioUnitarioEditado = true;
-          this.precioUnitarioSeleccionado = registro;
-          console.log("Registro seleccionado: ", registro);
-        }
-        if(registro.tipoPrecioUnitario == 0){
-          this.buscarHijoParaSeleccionar(registro);
-        }
-      });
-    }
+  buscarHijoParaSeleccionar(precioUnitario: precioUnitarioDTO) {
+    precioUnitario.hijos.forEach((registro) => {
+      if (registro.id == this.precioUnitarioSeleccionado.id) {
+        registro.esDetalle = true;
+        registro.cantidadEditado = true;
+        registro.costoUnitarioEditado = true;
+        registro.precioUnitarioEditado = true;
+        this.precioUnitarioSeleccionado = registro;
+        console.log('Registro seleccionado: ', registro);
+      }
+      if (registro.tipoPrecioUnitario == 0) {
+        this.buscarHijoParaSeleccionar(registro);
+      }
+    });
+  }
 
   expansionDominio(precioUnitario: precioUnitarioDTO): void {
     precioUnitario.expandido = !precioUnitario.expandido;
@@ -4026,7 +4026,12 @@ export class PrecioUnitarioComponent implements OnInit {
     }
   }
 
+  abrirModalImprimir() {
+    this.isOpenModalImprimir = true;
+  }
+
   closeModal() {
     this.isOpenModal = false;
+    this.isOpenModalImprimir = false;
   }
 }

@@ -160,6 +160,8 @@ import player from 'lottie-web';
 import { ModalAsigacionComponent } from './seguridad/usuario-multi-empresa-filtrado/modal-asigacion/modal-asigacion.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ProductosServiciosComponent } from './gestion-ventas/productos-servicios/productos-servicios.component';
+import { ImprimirModalComponent } from './proyectos/precio-unitario/precio-unitario/imprimir-modal/imprimir-modal.component';
+import { FieldsetModule } from 'primeng/fieldset';
 
 export function playerFactory() {
   return player;
@@ -309,6 +311,7 @@ export function playerFactory() {
     ResumenOrdenesCompraComponent,
     ModalAsigacionComponent,
     ProductosServiciosComponent,
+    ImprimirModalComponent,
   ],
 
   imports: [
@@ -330,6 +333,7 @@ export function playerFactory() {
     GanttComponentNG,
     OrdenCompraModule,
     ScrollingModule,
+    FieldsetModule,
   ],
   exports: [LeftMenuComponent],
   providers: [

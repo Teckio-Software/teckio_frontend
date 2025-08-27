@@ -2,9 +2,12 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
-@plugin "daisyui";
 
 @import "gantt.css";
+
+/* PrimeNG core and theme styles */
+@import "primeng/resources/primeng.min.css";
+@import "primeng/resources/themes/saga-blue/theme.css";
 
 body {
   margin: 0;

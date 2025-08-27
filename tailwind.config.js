@@ -1,6 +1,7 @@
 import { extend } from "jquery";
 
 /** @type {import('tailwindcss').Config} */
+
 export const content = ["./src/**/*.{html,ts}"];
 export const theme = {
   extend: {
@@ -66,10 +67,5 @@ export const theme = {
       fadeOut: "fadeOut 0.1s ease-out",
     },
   },
-
-  plugins: [
-    require("tailwindcss"),
-    require("autoprefixer"),
-    require("daisyui"),
-  ],
+  plugins: [require("tailwindcss"), require("autoprefixer")],
 };

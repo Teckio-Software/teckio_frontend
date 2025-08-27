@@ -35,8 +35,6 @@
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css",
               "node_modules/gantt-task-react/dist/index.css"
-              
-
             ],
             "scripts": [
               "node_modules/@popperjs/core/dist/umd/popper.min.js",
