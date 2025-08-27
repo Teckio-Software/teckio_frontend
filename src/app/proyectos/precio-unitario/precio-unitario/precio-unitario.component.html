@@ -91,12 +91,12 @@
               <button
                 ngbTooltip="Ver catálogo general"
                 placement="right"
-                class="hover:bg-gray-200 rounded-md transition-all delay-75"
+                class="hover:bg-gray-200 rounded-md transition-all delay-75 py-2 px-2"
                 (click)="openDialogCatalogoGeneral()"
               >
                 <img
                   src="../../../../assets/catalogo.svg"
-                  alt="Catálogo generalde conceptos"
+                  alt="Catálogo general de conceptos"
                   class="w-10"
                 />
               </button>
@@ -146,7 +146,7 @@
       <div class="flex gap-3 mb-2">
         <button
           *ngIf="contenedorCatalogoGeneral"
-          class="text-left text-sm hover:bg-gray-200 rounded-md transition-all delay-75 flex gap-2 items-center font-medium text-gray700"
+          class="text-left text-sm hover:bg-gray-200 rounded-md transition-all delay-75 flex gap-2 items-center font-medium text-gray700 px-2"
           (click)="regresarPU()"
         >
           <img src="./assets/go_back.svg" alt="Regresar" class="w-8" />
@@ -155,14 +155,14 @@
 
         <button
           *ngIf="contenedorCatalogoGeneral"
-          class="text-left text-sm hover:bg-gray-200 rounded-md transition-all delay-75 flex gap-2 items-center font-medium text-gray700"
+          class="text-left text-sm hover:bg-gray-200 rounded-md transition-all delay-75 flex gap-2 items-center font-medium text-gray700 px-2"
         >
           <img src="./assets/download.svg" alt="Importar" class="w-8" />
           Importar
         </button>
         <button
           *ngIf="contenedorCatalogoGeneral"
-          class="text-left text-sm hover:bg-gray-200 rounded-md transition-all delay-75 flex gap-2 items-center font-medium text-gray700"
+          class="text-left text-sm hover:bg-gray-200 rounded-md transition-all delay-75 flex gap-2 items-center font-medium text-gray700 px-2"
         >
           <img src="./assets/delete.svg" alt="Eliminar" class="w-8" />
           Eliminar
@@ -182,9 +182,17 @@
         </div>
       </div>
 
-      <div class="flex gap-4" *ngIf="!contenedorCatalogoGeneral">
+      <div class="flex gap-2" *ngIf="!contenedorCatalogoGeneral">
         <button
-          class="disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 rounded-md transition-all delay-75"
+          class="disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 rounded-md transition-all delay-75 py-2 px-2"
+          ngbTooltip="Imprimir"
+          placement="left"
+          (click)="abrirModalImprimir()"
+        >
+          <img src="./assets/print.svg" alt="Imprimir icono" class="w-8 h-8" />
+        </button>
+        <button
+          class="disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 rounded-md transition-all delay-75 py-2 px-2"
           ngbTooltip="Importar archivos"
           placement="left"
           (click)="nuevaImportacionPresupuesto()"
@@ -196,7 +204,7 @@
           />
         </button>
         <button
-          class="disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 rounded-md transition-all delay-75"
+          class="disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 rounded-md transition-all delay-75 py-2 px-2"
           ngbTooltip="Recalcular presupuesto"
           placement="left"
           [disabled]="displayCarga === 'flex'"
@@ -440,10 +448,11 @@
                               </li>
                               <li class="cursor-pointer">
                                 <a
-                                  (click)="
-                                    autorizarPartida(precioUnitario)
+                                  (click)="autorizarPartida(precioUnitario)"
+                                  *ngIf="
+                                    precioUnitario.nivel == 1 &&
+                                    precioUnitario.esAdicional
                                   "
-                                  *ngIf="precioUnitario.nivel == 1 && precioUnitario.esAdicional"
                                   class="dropdown-item block px-4 py-2 hover:bg-[#4eaac154] hover:text-[#000000DE]"
                                 >
                                   Autorizar
@@ -1067,7 +1076,11 @@
             class="font-medium text-gray700"
           >
             <td class="body-table" style="width: 2%">
-              <div *ngIf="detalle.id != 0 && !precioUnitarioSeleccionado.esAvanceObra">
+              <div
+                *ngIf="
+                  detalle.id != 0 && !precioUnitarioSeleccionado.esAvanceObra
+                "
+              >
                 <button
                   class="inline-flex items-center p-1 text-md font-medium text-center text-gray-900 rounded-lg"
                   type="button"
@@ -1129,7 +1142,10 @@
                 (click)="pruebaCont2(detalle)"
                 (keyup)="filtrarInsumo($event)"
                 (keydown.enter)="crearDetalle(detalle)"
-                [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                [readonly]="
+                  precioUnitarioSeleccionado.esAvanceObra ||
+                  contenedorCatalogoGeneral
+                "
                 style="
                   border: 0.5px solid #ffffff4d;
                   border-radius: 3px;
@@ -1161,7 +1177,10 @@
                 id="input-table"
                 [(ngModel)]="detalle.descripcion"
                 (keydown.enter)="crearDetalle(detalle)"
-                [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                [readonly]="
+                  precioUnitarioSeleccionado.esAvanceObra ||
+                  contenedorCatalogoGeneral
+                "
                 style="
                   border: 0.5px solid #ffffff4d;
                   border-radius: 3px;
@@ -1178,7 +1197,10 @@
                 style="width: 100%"
                 [(ngModel)]="detalle.unidad"
                 (ngModelChange)="crearDetalle(detalle)"
-                [disabled]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                [disabled]="
+                  precioUnitarioSeleccionado.esAvanceObra ||
+                  contenedorCatalogoGeneral
+                "
                 style="
                   border: 0.5px solid #ffffff4d;
                   border: none;
@@ -1242,7 +1264,10 @@
                 autoClose="outside"
                 (keydown.enter)="crearDetalle(detalle)"
                 (click)="guardarRegistro(detalle)"
-                [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                [readonly]="
+                  precioUnitarioSeleccionado.esAvanceObra ||
+                  contenedorCatalogoGeneral
+                "
                 style="
                   background-color: rgba(0, 0, 0, 0.164);
                   border: none;
@@ -1304,7 +1329,8 @@
                                 asignarCantidadDetalleRendimiento()
                               "
                               [readonly]="
-                                precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral
+                                precioUnitarioSeleccionado.esAvanceObra ||
+                                contenedorCatalogoGeneral
                               "
                             />
                           </td>
@@ -1317,7 +1343,8 @@
                                 asignarCantidadDetalleRendimiento()
                               "
                               [readonly]="
-                                precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral
+                                precioUnitarioSeleccionado.esAvanceObra ||
+                                contenedorCatalogoGeneral
                               "
                             />
                           </td>
@@ -1510,7 +1537,10 @@
                 id="input-table"
                 [(ngModel)]="detalle.costoBase"
                 (keydown.enter)="crearDetalle(detalle)"
-                [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                [readonly]="
+                  precioUnitarioSeleccionado.esAvanceObra ||
+                  contenedorCatalogoGeneral
+                "
                 style="
                   border: 0.5px solid #ffffff4d;
                   border: none;
@@ -1629,7 +1659,10 @@
                 [(ngModel)]="detalle.importe"
                 *ngIf="detalle.cantidadEditado"
                 (keydown.enter)="editarDetalleImporte(detalle)"
-                [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                [readonly]="
+                  precioUnitarioSeleccionado.esAvanceObra ||
+                  contenedorCatalogoGeneral
+                "
                 style="
                   background-color: rgba(0, 0, 0, 0.164);
                   border: none;
@@ -1646,7 +1679,10 @@
                 class="bg-transparent"
                 id="select-table"
                 style="width: 100%"
-                [disabled]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                [disabled]="
+                  precioUnitarioSeleccionado.esAvanceObra ||
+                  contenedorCatalogoGeneral
+                "
                 [(ngModel)]="detalle.idTipoInsumo"
                 (ngModelChange)="crearDetalle(detalle)"
                 style="
@@ -1667,7 +1703,10 @@
                 class="bg-transparent"
                 id="select-table"
                 style="width: 100%"
-                [disabled]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                [disabled]="
+                  precioUnitarioSeleccionado.esAvanceObra ||
+                  contenedorCatalogoGeneral
+                "
                 [(ngModel)]="detalle.idFamiliaInsumo"
                 (ngModelChange)="crearDetalle(detalle)"
                 style="border: none; border-radius: 3px"
@@ -1881,7 +1920,10 @@
                   id="input-table"
                   [(ngModel)]="generador.codigo"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                  [readonly]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
                   style="
                     border: none;
                     border-radius: 3px;
@@ -1898,7 +1940,10 @@
                   id="input-table"
                   [(ngModel)]="generador.ejeX"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                  [readonly]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
                   maxlength="20"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -1916,7 +1961,10 @@
                   id="input-table"
                   [(ngModel)]="generador.ejeY"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                  [readonly]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
                   maxlength="20"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -1934,7 +1982,10 @@
                   id="input-table"
                   [(ngModel)]="generador.ejeZ"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                  [readonly]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
                   maxlength="20"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -1952,7 +2003,10 @@
                   id="input-table"
                   [(ngModel)]="generador.cantidad"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                  [readonly]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
                   (dblclick)="abrirOperacionCantidadGenerador(generador)"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -1970,7 +2024,10 @@
                   id="input-table"
                   [(ngModel)]="generador.x"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                  [readonly]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
                   style="
                     border: 0.5px solid #ffffff4d;
                     border-radius: 3px;
@@ -1991,7 +2048,10 @@
                   id="input-table"
                   [(ngModel)]="generador.y"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                  [readonly]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
                   style="
                     border: 0.5px solid #ffffff4d;
                     border-radius: 3px;
@@ -2008,7 +2068,10 @@
                   id="input-table"
                   [(ngModel)]="generador.z"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                  [readonly]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
                   style="
                     border: 0.5px solid #ffffff4d;
                     border-radius: 3px;
@@ -2032,7 +2095,10 @@
                   class="cursor-pointer"
                   data-bs-toggle="modal"
                   (click)="eliminarGenerador(generador)"
-                  [disabled]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                  [disabled]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
                 >
                   <img src="./assets/delete.svg" alt="Eliminar" class="w-6" />
                 </button>
@@ -2873,6 +2939,13 @@
                   alt="Info Icon"
                   class="w-5"
                 />
+                <div
+                  *ngIf="tooltipVisible"
+                  class="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-sm px-3 py-1 rounded-lg shadow-lg whitespace-nowrap z-50"
+                >
+                  Para ver una guía de importación con Excel da
+                  <a class="underline" href="/assets/demo.xlsx">clic aquí.</a>
+                </div>
               </span>
               Importar Excel
             </button>
@@ -2902,4 +2975,12 @@
     [detalle]="detalle"
   >
   </app-precio-unitario-modal>
+</div>
+
+<div *ngIf="isOpenModalImprimir">
+  <app-imprimir-modal
+    [preciosUnitarios]="preciosUnitarios"
+    [isOpen]="isOpenModalImprimir"
+    (close)="closeModal()"
+  ></app-imprimir-modal>
 </div>
