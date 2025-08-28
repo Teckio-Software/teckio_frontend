@@ -10,7 +10,7 @@ export class ImagenService {
     constructor(private HttpClient: HttpClient) { }
 
     public ObtenerXId(idEmpresa: number, id: number):Observable<Imagen>{
-        return this.HttpClient.get<Imagen>(`${this.apiUrl}/${idEmpresa}/obtenerXId${id}`)
+        return this.HttpClient.get<Imagen>(`${this.apiUrl}/${idEmpresa}/obtenerXId/${id}`)
     }
     
 }

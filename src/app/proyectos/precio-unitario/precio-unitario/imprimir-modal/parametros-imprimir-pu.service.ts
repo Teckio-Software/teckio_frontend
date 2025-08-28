@@ -21,17 +21,53 @@ export class ParametrosImprimirPuService {
     idCliente: number
   ): Observable<ParametrosImpresionPu[]> {
     return this.HttpClient.get<ParametrosImpresionPu[]>(
-      `${this.apiUrl}/${idEmpresa}/obtenerXcliente${idCliente}`
+      `${this.apiUrl}/${idEmpresa}/obtenerXcliente/${idCliente}`
+    );
+  }
+
+  public crearConImagen(
+    idEmpresa: number,
+    formData: FormData
+  ): Observable<RespuestaDTO> {
+    return this.HttpClient.post<RespuestaDTO>(
+      `${this.apiUrl}/${idEmpresa}/crearConImagen`,
+      formData
+    );
+  }
+
+  public editarConImagen(
+    idEmpresa: number,
+    formData: FormData
+  ): Observable<RespuestaDTO> {
+    return this.HttpClient.put<RespuestaDTO>(
+      `${this.apiUrl}/${idEmpresa}/editarConImagen`,
+      formData
+    );
+  }
+
+  public editar(
+    idEmpresa: number,
+    parametros: ParametrosImpresionPu
+  ): Observable<RespuestaDTO> {
+    return this.HttpClient.put<RespuestaDTO>(
+      `${this.apiUrl}/${idEmpresa}/editar`,
+      parametros
+    );
+  }
+
+  public eliminar(idEmpresa: number, id: number): Observable<RespuestaDTO> {
+    return this.HttpClient.delete<RespuestaDTO>(
+      `${this.apiUrl}/${idEmpresa}/eliminar/${id}`
     );
   }
 
   public crear(
     idEmpresa: number,
-    paramsImpresion: ParametrosImpresionPu
+    parametros: ParametrosImpresionPu
   ): Observable<RespuestaDTO> {
     return this.HttpClient.post<RespuestaDTO>(
       `${this.apiUrl}/${idEmpresa}/crear`,
-      paramsImpresion
+      parametros
     );
   }
 }
