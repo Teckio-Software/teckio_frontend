@@ -11,7 +11,11 @@ export function imprimirCompleto(
   titulo: string,
   encabezadoIzq: string,
   encabezadoCentro: string,
-  encabezadoDerecha: string
+  encabezadoDerecha: string,
+  margenSuperior: number,
+  margenInferior: number,
+  margenIzquierdo: number,
+  margenDerecho: number
 ) {
   (<any>pdfMake).addVirtualFileSystem(pdfFonts);
 
@@ -231,6 +235,12 @@ export function imprimirCompleto(
   const docDefinition: any = {
     content,
     styles,
+    pageMargins: [
+      margenIzquierdo,
+      margenSuperior,
+      margenDerecho,
+      margenInferior,
+    ],
   };
 
   pdfMake.createPdf(docDefinition).download();

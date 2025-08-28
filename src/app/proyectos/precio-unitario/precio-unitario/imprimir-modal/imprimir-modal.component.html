@@ -229,13 +229,18 @@
                 <div>
                   <label for="importar">Importar opciones de impresión</label>
                   <select
+                    [(ngModel)]="selectedParamId"
+                    (change)="seleccionarParams($event)"
                     id="importar"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                   >
-                    <option selected>Elegir opción</option>
-                    |
-                    <option value="US">United States</option>
-                    <option value="CA">Canada</option>
+                    <option [ngValue]="0" selected>Elegir opción</option>
+                    <option
+                      *ngFor="let item of paramsImpresionLista"
+                      [value]="item.id"
+                    >
+                      {{ item.nombre }}
+                    </option>
                   </select>
                 </div>
               </div>
@@ -338,7 +343,7 @@
               <legend
                 class="text-base font-medium text-gray-800 tracking-wider"
               >
-                Márgenes de las páginas (por defecto 0.5)
+                Márgenes de las páginas (por defecto 30)
               </legend>
               <div class="grid grid-cols-2 gap-2">
                 <div>
@@ -346,7 +351,7 @@
                   <input
                     [(ngModel)]="paramsImpresion.margenSuperior"
                     id="margenSuperior"
-                    type="text"
+                    type="number"
                     class="w-full px-2 py-1 border border-gray-200 rounded-md"
                     placeholder="Ingresa un valor"
                   />
@@ -356,7 +361,7 @@
                   <input
                     [(ngModel)]="paramsImpresion.margenInferior"
                     id="margenInferior"
-                    type="text"
+                    type="number"
                     class="w-full px-2 py-1 border border-gray-200 rounded-md"
                     placeholder="Ingresa un valor"
                   />
@@ -366,7 +371,7 @@
                   <input
                     [(ngModel)]="paramsImpresion.margenIzquierdo"
                     id="margenIzquierdo"
-                    type="text"
+                    type="number"
                     class="w-full px-2 py-1 border border-gray-200 rounded-md"
                     placeholder="Ingresa un valor"
                   />
@@ -376,7 +381,7 @@
                   <input
                     [(ngModel)]="paramsImpresion.margenDerecho"
                     id="margenDerecho"
-                    type="text"
+                    type="number"
                     class="w-full px-2 py-1 border border-gray-200 rounded-md"
                     placeholder="Ingresa un valor"
                   />

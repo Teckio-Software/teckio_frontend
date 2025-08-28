@@ -27,11 +27,13 @@ export class ImprimirModalComponent {
   pieIzq: string = '';
   pieCentro: string = '';
   pieDerecha: string = '';
-  margenSuperior: number = 0.5;
-  margenInferior: number = 0.5;
-  margenIzquierdo: number = 0.5;
-  margenDerecho: number = 0.5;
+  margenSuperior: number = 30;
+  margenInferior: number = 30;
+  margenIzquierdo: number = 30;
+  margenDerecho: number = 30;
   selectedEmpresa: number = 0;
+  selectedParams?: ParametrosImpresionPu;
+  selectedParamId: number = 0;
 
   reportePresupuesto: boolean = false;
   isError: boolean = false;
@@ -44,9 +46,10 @@ export class ImprimirModalComponent {
     'Opciones de impresión',
   ];
 
+  paramsImpresionLista: ParametrosImpresionPu[] = [];
+
   paramsImpresion: ParametrosImpresionPu = {
     id: 0,
-    idCliente: 0,
     nombre: '',
     encabezadoIzquierdo: '',
     encabezadoCentro: '',
@@ -55,10 +58,10 @@ export class ImprimirModalComponent {
     pieCentro: '',
     pieDerecho: '',
     idImagen: 0,
-    margenSuperior: 0.5,
-    margenInferior: 0.5,
-    margenDerecho: 0.5,
-    margenIzquierdo: 0.5,
+    margenSuperior: 30,
+    margenInferior: 30,
+    margenDerecho: 30,
+    margenIzquierdo: 30,
   };
 
   constructor(
@@ -70,6 +73,27 @@ export class ImprimirModalComponent {
     );
 
     this.selectedEmpresa = idEmpresa;
+  }
+
+  ngOnInit() {
+    this.obtenerParametrosImpresion();
+  }
+
+  obtenerParametrosImpresion() {
+    this.parametrosImpresion
+      .obtenerTodos(this.selectedEmpresa)
+      .subscribe((datos) => {
+        this.paramsImpresionLista = datos;
+      });
+  }
+
+  seleccionarParams(event: any) {
+    const id = Number(event.target.value);
+    const seleccionado = this.paramsImpresionLista.find((p) => p.id === id);
+
+    if (seleccionado) {
+      this.paramsImpresion = { ...seleccionado };
+    }
   }
 
   crearConfiguracionParams() {
@@ -140,8 +164,13 @@ export class ImprimirModalComponent {
             this.paramsImpresion.nombre,
             this.paramsImpresion.encabezadoIzquierdo,
             this.paramsImpresion.encabezadoCentro,
-            this.paramsImpresion.encabezadoDerecho
+            this.paramsImpresion.encabezadoDerecho,
+            this.paramsImpresion.margenSuperior,
+            this.paramsImpresion.margenInferior,
+            this.paramsImpresion.margenIzquierdo,
+            this.paramsImpresion.margenDerecho
           );
+          console.log(this.paramsImpresion);
         }
         if (this.tipoImpresion === 'impresionMarcada') {
           imprimirMarcado();
