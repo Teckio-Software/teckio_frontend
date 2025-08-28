@@ -209,7 +209,7 @@
               </legend>
               <div class="flex gap-2">
                 <input
-                  [(ngModel)]="tituloDocumento"
+                  [(ngModel)]="paramsImpresion.nombre"
                   type="text"
                   class="w-full px-2 py-1 border border-gray-200 rounded-md"
                   placeholder="Ingresa el titulo del documento"
@@ -226,10 +226,30 @@
                 Otras opciones
               </legend>
               <div class="flex gap-2">
+                <div>
+                  <label for="importar">Importar opciones de impresión</label>
+                  <select
+                    id="importar"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  >
+                    <option selected>Elegir opción</option>
+                    |
+                    <option value="US">United States</option>
+                    <option value="CA">Canada</option>
+                  </select>
+                </div>
+              </div>
+              <div class="flex flex-row gap-2 mt-2">
                 <button
+                  (click)="crearConfiguracionParams()"
                   class="px-2 py-1 bg-colorButton hover:bg-colorButtonHover text-white rounded-md transition"
                 >
-                  Seleccionar imagen
+                  Guardar opciones
+                </button>
+                <button
+                  class="px-2 py-1 bg-red-700 hover:bg-red-600 text-white rounded-md transition"
+                >
+                  Eliminar opciones
                 </button>
               </div>
             </fieldset>
@@ -244,28 +264,28 @@
               </legend>
               <div class="grid grid-cols-3 gap-2">
                 <div>
-                  <label for="margenSuperior">Izquierda</label>
+                  <label for="encabezadoSup">Izquierda</label>
                   <textarea
-                    [(ngModel)]="encabezadoIzq"
-                    id="margenSuperior"
+                    [(ngModel)]="paramsImpresion.encabezadoIzquierdo"
+                    id="encabezadoSup"
                     class="w-full px-2 py-1 border border-gray-200 rounded-md"
                     placeholder="Ingresa una descripción"
                   ></textarea>
                 </div>
                 <div>
-                  <label for="margenInferior">Centro</label>
+                  <label for="encabezadoCentro">Centro</label>
                   <textarea
-                    [(ngModel)]="encabezadoCentro"
-                    id="margenInferior"
+                    [(ngModel)]="paramsImpresion.encabezadoCentro"
+                    id="encabezadoCentro"
                     class="w-full px-2 py-1 border border-gray-200 rounded-md"
                     placeholder="Ingresa una descripción"
                   ></textarea>
                 </div>
                 <div>
-                  <label for="margenIzquierdo">Derecha</label>
+                  <label for="encabezadoDerecha">Derecha</label>
                   <textarea
-                    [(ngModel)]="encabezadoDerecha"
-                    id="margenIzquierdo"
+                    [(ngModel)]="paramsImpresion.encabezadoDerecho"
+                    id="encabezadoDerecha"
                     class="w-full px-2 py-1 border border-gray-200 rounded-md"
                     placeholder="Ingresa una descripción"
                   ></textarea>
@@ -283,25 +303,28 @@
               </legend>
               <div class="grid grid-cols-3 gap-2">
                 <div>
-                  <label for="margenSuperior">Izquierda</label>
+                  <label for="pieIzq">Izquierda</label>
                   <textarea
-                    id="margenSuperior"
+                    [(ngModel)]="paramsImpresion.pieIzquierdo"
+                    id="pieIzq"
                     class="w-full px-2 py-1 border border-gray-200 rounded-md"
                     placeholder="Ingresa una descripción"
                   ></textarea>
                 </div>
                 <div>
-                  <label for="margenInferior">Centro</label>
+                  <label for="pieCentro">Centro</label>
                   <textarea
-                    id="margenInferior"
+                    [(ngModel)]="paramsImpresion.pieCentro"
+                    id="pieCentro"
                     class="w-full px-2 py-1 border border-gray-200 rounded-md"
                     placeholder="Ingresa una descripción"
                   ></textarea>
                 </div>
                 <div>
-                  <label for="margenIzquierdo">Derecha</label>
+                  <label for="pieDerecha">Derecha</label>
                   <textarea
-                    id="margenIzquierdo"
+                    [(ngModel)]="paramsImpresion.pieDerecho"
+                    id="pieDerecha"
                     class="w-full px-2 py-1 border border-gray-200 rounded-md"
                     placeholder="Ingresa una descripción"
                   ></textarea>
@@ -321,6 +344,7 @@
                 <div>
                   <label for="margenSuperior">Superior</label>
                   <input
+                    [(ngModel)]="paramsImpresion.margenSuperior"
                     id="margenSuperior"
                     type="text"
                     class="w-full px-2 py-1 border border-gray-200 rounded-md"
@@ -330,6 +354,7 @@
                 <div>
                   <label for="margenInferior">Inferior</label>
                   <input
+                    [(ngModel)]="paramsImpresion.margenInferior"
                     id="margenInferior"
                     type="text"
                     class="w-full px-2 py-1 border border-gray-200 rounded-md"
@@ -339,6 +364,7 @@
                 <div>
                   <label for="margenIzquierdo">Izquierdo</label>
                   <input
+                    [(ngModel)]="paramsImpresion.margenIzquierdo"
                     id="margenIzquierdo"
                     type="text"
                     class="w-full px-2 py-1 border border-gray-200 rounded-md"
@@ -348,6 +374,7 @@
                 <div>
                   <label for="margenDerecho">Derecho</label>
                   <input
+                    [(ngModel)]="paramsImpresion.margenDerecho"
                     id="margenDerecho"
                     type="text"
                     class="w-full px-2 py-1 border border-gray-200 rounded-md"

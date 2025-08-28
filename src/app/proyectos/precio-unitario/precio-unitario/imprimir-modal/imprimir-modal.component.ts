@@ -2,6 +2,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { log } from 'console';
 import { imprimirMarcado, imprimirCompleto } from './imprimirReportes';
 import { precioUnitarioDTO } from '../../tsPrecioUnitario';
+import { ParametrosImprimirPuService } from './parametros-imprimir-pu.service';
+import { SeguridadService } from 'src/app/seguridad/seguridad.service';
+import { ParametrosImpresionPu } from './ts.parametros-imprimir-pu';
 
 @Component({
   selector: 'app-imprimir-modal',
@@ -21,6 +24,14 @@ export class ImprimirModalComponent {
   encabezadoIzq: string = '';
   encabezadoCentro: string = '';
   encabezadoDerecha: string = '';
+  pieIzq: string = '';
+  pieCentro: string = '';
+  pieDerecha: string = '';
+  margenSuperior: number = 0.5;
+  margenInferior: number = 0.5;
+  margenIzquierdo: number = 0.5;
+  margenDerecho: number = 0.5;
+  selectedEmpresa: number = 0;
 
   reportePresupuesto: boolean = false;
   isError: boolean = false;
@@ -32,6 +43,45 @@ export class ImprimirModalComponent {
     'Opciones del reporte',
     'Opciones de impresión',
   ];
+
+  paramsImpresion: ParametrosImpresionPu = {
+    id: 0,
+    idCliente: 0,
+    nombre: '',
+    encabezadoIzquierdo: '',
+    encabezadoCentro: '',
+    encabezadoDerecho: '',
+    pieIzquierdo: '',
+    pieCentro: '',
+    pieDerecho: '',
+    idImagen: 0,
+    margenSuperior: 0.5,
+    margenInferior: 0.5,
+    margenDerecho: 0.5,
+    margenIzquierdo: 0.5,
+  };
+
+  constructor(
+    private parametrosImpresion: ParametrosImprimirPuService,
+    private seguridadService: SeguridadService
+  ) {
+    const idEmpresa: number = Number(
+      seguridadService.obtenIdEmpresaLocalStorage()
+    );
+
+    this.selectedEmpresa = idEmpresa;
+  }
+
+  crearConfiguracionParams() {
+    this.parametrosImpresion
+      .crear(this.selectedEmpresa, this.paramsImpresion)
+      .subscribe((datos) => {
+        console.log(datos);
+        if (datos) {
+          console.log(datos);
+        }
+      });
+  }
 
   closeModal() {
     this.close.emit();
@@ -87,10 +137,10 @@ export class ImprimirModalComponent {
         if (this.tipoImpresion === 'impresionCompleta') {
           imprimirCompleto(
             this.preciosUnitarios,
-            this.tituloDocumento,
-            this.encabezadoIzq,
-            this.encabezadoCentro,
-            this.encabezadoDerecha
+            this.paramsImpresion.nombre,
+            this.paramsImpresion.encabezadoIzquierdo,
+            this.paramsImpresion.encabezadoCentro,
+            this.paramsImpresion.encabezadoDerecho
           );
         }
         if (this.tipoImpresion === 'impresionMarcada') {

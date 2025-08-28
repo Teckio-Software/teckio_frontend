@@ -5,22 +5,33 @@ import { environment } from 'src/environments/environment.development';
 import { ParametrosImpresionPu } from './ts.parametros-imprimir-pu';
 import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class ParametrosImprimirPuService {
-    private apiUrl = environment.apiURL + "parametrosImpresionPu";
-    constructor(private HttpClient: HttpClient) { }
+  private apiUrl = environment.apiURL + 'parametrosImpresionPu';
+  constructor(private HttpClient: HttpClient) {}
 
-    public obtenerTodos(idEmpresa: number):Observable<ParametrosImpresionPu[]>{
-        return this.HttpClient.get<ParametrosImpresionPu[]>(`${this.apiUrl}/${idEmpresa}/todos`)
-    }
+  public obtenerTodos(idEmpresa: number): Observable<ParametrosImpresionPu[]> {
+    return this.HttpClient.get<ParametrosImpresionPu[]>(
+      `${this.apiUrl}/${idEmpresa}/todos`
+    );
+  }
 
-    public obtenerXCliente(idEmpresa: number, idCliente: number):Observable<ParametrosImpresionPu[]>{
-        return this.HttpClient.get<ParametrosImpresionPu[]>(`${this.apiUrl}/${idEmpresa}/obtenerXcliente${idCliente}`)
-    }
+  public obtenerXCliente(
+    idEmpresa: number,
+    idCliente: number
+  ): Observable<ParametrosImpresionPu[]> {
+    return this.HttpClient.get<ParametrosImpresionPu[]>(
+      `${this.apiUrl}/${idEmpresa}/obtenerXcliente${idCliente}`
+    );
+  }
 
-    public crear(idEmpresa: number, formData: FormData):Observable<RespuestaDTO>{
-        return this.HttpClient.post<RespuestaDTO>(`${this.apiUrl}/${idEmpresa}/crear`,formData)
-    }
-
-    
+  public crear(
+    idEmpresa: number,
+    paramsImpresion: ParametrosImpresionPu
+  ): Observable<RespuestaDTO> {
+    return this.HttpClient.post<RespuestaDTO>(
+      `${this.apiUrl}/${idEmpresa}/crear`,
+      paramsImpresion
+    );
+  }
 }

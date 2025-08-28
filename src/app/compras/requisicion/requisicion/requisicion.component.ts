@@ -15,9 +15,6 @@ import { ModalNewRequisicionComponent } from '../modal-new-requisicion/modal-new
 import { esCotizacionFuncion } from 'src/app/safe.guard';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { AlertaTipo } from 'src/app/utilidades/alert/alert.component';
-import { ModalAlertComponent } from 'src/app/utilidades/modal-alert/modal-alert.component';
-import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
-import { th } from 'date-fns/locale';
 
 @Component({
   selector: 'app-requisicion',
