@@ -18,8 +18,8 @@ export class ParametrosImprimirPuService {
         return this.HttpClient.get<ParametrosImpresionPu[]>(`${this.apiUrl}/${idEmpresa}/obtenerXcliente/${idCliente}`)
     }
 
-    public crear(idEmpresa: number, formData: FormData):Observable<RespuestaDTO>{
-        return this.HttpClient.post<RespuestaDTO>(`${this.apiUrl}/${idEmpresa}/crear`,formData)
+    public crearConImagen(idEmpresa: number, formData: FormData):Observable<RespuestaDTO>{
+        return this.HttpClient.post<RespuestaDTO>(`${this.apiUrl}/${idEmpresa}/crearConImagen`,formData)
     }
 
     public editarConImagen(idEmpresa: number, formData: FormData):Observable<RespuestaDTO>{
@@ -34,5 +34,7 @@ export class ParametrosImprimirPuService {
         return this.HttpClient.delete<RespuestaDTO>(`${this.apiUrl}/${idEmpresa}/eliminar/${id}`)
     }
 
-    
+    public crear(idEmpresa: number, parametros: ParametrosImpresionPu):Observable<RespuestaDTO>{
+        return this.HttpClient.post<RespuestaDTO>(`${this.apiUrl}/${idEmpresa}/crear`,parametros)
+    }
 }
