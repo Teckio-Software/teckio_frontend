@@ -7,7 +7,6 @@ export interface ParametrosImpresionPu {
   pieIzquierdo: string;
   pieCentro: string;
   pieDerecho: string;
-  idImagen: number;
   margenSuperior: number;
   margenInferior: number;
   margenDerecho: number;
