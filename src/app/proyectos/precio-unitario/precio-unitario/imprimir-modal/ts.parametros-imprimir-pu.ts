@@ -1,7 +1,5 @@
 export interface ParametrosImpresionPu {
   id: number;
-  idCliente: number;
-  nombre: string;
   encabezadoIzquierdo: string;
   encabezadoCentro: string;
   encabezadoDerecho: string;
