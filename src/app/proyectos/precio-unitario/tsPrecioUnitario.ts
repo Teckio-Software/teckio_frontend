@@ -35,6 +35,7 @@ export interface precioUnitarioAbstractaDTO{
     esCatalogoGeneral : boolean;
     esAvanceObra : boolean;
     esAdicional : boolean;
+    esSeleccionado : boolean;
 }
 
 export interface precioUnitarioDTO extends precioUnitarioAbstractaDTO{
@@ -50,6 +51,12 @@ export interface datosParaCopiarDTO{
     registros: precioUnitarioCopiaDTO[];
     idPrecioUnitarioBase: number;
     idProyecto: number;
+}
+
+export interface DatosParaImportarCatalogoGeneralDTO
+{
+    registros: precioUnitarioDTO[];
+    precioUnitario: precioUnitarioDTO;
 }
 
 export interface detalleDesglosadoDTO{

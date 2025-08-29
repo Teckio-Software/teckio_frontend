@@ -53,7 +53,8 @@ export class DialogExplosionInsumosComponent {
     codigoPadre: '',
     esCatalogoGeneral: false,
     esAvanceObra: false,
-    esAdicional: false
+    esAdicional: false,
+    esSeleccionado: false
   }
 
   selectedProyecto: number = 0;

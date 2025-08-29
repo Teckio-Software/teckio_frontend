@@ -126,13 +126,15 @@
                 >
                   Indirectos
                 </button>
-                <button *ngIf="!esAutorizado"
+                <button
+                  *ngIf="!esAutorizado"
                   class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   (click)="autorizarPresupuesto(); mostrarMenu = false"
                 >
                   Autorizar Presupuesto
                 </button>
-                <button *ngIf="esAutorizado"
+                <button
+                  *ngIf="esAutorizado"
                   class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   (click)="nuevaPartidaAdicional(); mostrarMenu = false"
                 >
@@ -155,6 +157,7 @@
 
         <button
           *ngIf="contenedorCatalogoGeneral"
+          (click)="importarCatalogoDesdePu()"
           class="text-left text-sm hover:bg-gray-200 rounded-md transition-all delay-75 flex gap-2 items-center font-medium text-gray700"
         >
           <img src="./assets/download.svg" alt="Importar" class="w-8" />
@@ -162,6 +165,7 @@
         </button>
         <button
           *ngIf="contenedorCatalogoGeneral"
+          (click)="eliminarDeCatalogoGeneral()"
           class="text-left text-sm hover:bg-gray-200 rounded-md transition-all delay-75 flex gap-2 items-center font-medium text-gray700"
         >
           <img src="./assets/delete.svg" alt="Eliminar" class="w-8" />
@@ -313,15 +317,12 @@
                         }}
                       </mat-icon>
                     </div>
-                    <div
-                      *ngIf="precioUnitario.tipoPrecioUnitario == 1"
-                      class="p-1"
-                    >
+                    <div class="p-1">
                       <input
                         type="checkbox"
-                        [(ngModel)]="precioUnitario.esCatalogoGeneral"
-                        [checked]="precioUnitario.esCatalogoGeneral"
-                        (click)="enviaraCatalogoGeneral(precioUnitario, $event)"
+                        [(ngModel)]="precioUnitario.esSeleccionado"
+                        [checked]="precioUnitario.esSeleccionado"
+                        (change)="seleccionarHijosPresupuesto(precioUnitario)"
                       />
                     </div>
                     <div>
@@ -440,10 +441,11 @@
                               </li>
                               <li class="cursor-pointer">
                                 <a
-                                  (click)="
-                                    autorizarPartida(precioUnitario)
+                                  (click)="autorizarPartida(precioUnitario)"
+                                  *ngIf="
+                                    precioUnitario.nivel == 1 &&
+                                    precioUnitario.esAdicional
                                   "
-                                  *ngIf="precioUnitario.nivel == 1 && precioUnitario.esAdicional"
                                   class="dropdown-item block px-4 py-2 hover:bg-[#4eaac154] hover:text-[#000000DE]"
                                 >
                                   Autorizar
@@ -1067,7 +1069,11 @@
             class="font-medium text-gray700"
           >
             <td class="body-table" style="width: 2%">
-              <div *ngIf="detalle.id != 0 && !precioUnitarioSeleccionado.esAvanceObra">
+              <div
+                *ngIf="
+                  detalle.id != 0 && !precioUnitarioSeleccionado.esAvanceObra
+                "
+              >
                 <button
                   class="inline-flex items-center p-1 text-md font-medium text-center text-gray-900 rounded-lg"
                   type="button"
@@ -1129,7 +1135,10 @@
                 (click)="pruebaCont2(detalle)"
                 (keyup)="filtrarInsumo($event)"
                 (keydown.enter)="crearDetalle(detalle)"
-                [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                [readonly]="
+                  precioUnitarioSeleccionado.esAvanceObra ||
+                  contenedorCatalogoGeneral
+                "
                 style="
                   border: 0.5px solid #ffffff4d;
                   border-radius: 3px;
@@ -1161,7 +1170,10 @@
                 id="input-table"
                 [(ngModel)]="detalle.descripcion"
                 (keydown.enter)="crearDetalle(detalle)"
-                [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                [readonly]="
+                  precioUnitarioSeleccionado.esAvanceObra ||
+                  contenedorCatalogoGeneral
+                "
                 style="
                   border: 0.5px solid #ffffff4d;
                   border-radius: 3px;
@@ -1178,7 +1190,10 @@
                 style="width: 100%"
                 [(ngModel)]="detalle.unidad"
                 (ngModelChange)="crearDetalle(detalle)"
-                [disabled]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                [disabled]="
+                  precioUnitarioSeleccionado.esAvanceObra ||
+                  contenedorCatalogoGeneral
+                "
                 style="
                   border: 0.5px solid #ffffff4d;
                   border: none;
@@ -1242,7 +1257,10 @@
                 autoClose="outside"
                 (keydown.enter)="crearDetalle(detalle)"
                 (click)="guardarRegistro(detalle)"
-                [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                [readonly]="
+                  precioUnitarioSeleccionado.esAvanceObra ||
+                  contenedorCatalogoGeneral
+                "
                 style="
                   background-color: rgba(0, 0, 0, 0.164);
                   border: none;
@@ -1304,7 +1322,8 @@
                                 asignarCantidadDetalleRendimiento()
                               "
                               [readonly]="
-                                precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral
+                                precioUnitarioSeleccionado.esAvanceObra ||
+                                contenedorCatalogoGeneral
                               "
                             />
                           </td>
@@ -1317,7 +1336,8 @@
                                 asignarCantidadDetalleRendimiento()
                               "
                               [readonly]="
-                                precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral
+                                precioUnitarioSeleccionado.esAvanceObra ||
+                                contenedorCatalogoGeneral
                               "
                             />
                           </td>
@@ -1510,7 +1530,10 @@
                 id="input-table"
                 [(ngModel)]="detalle.costoBase"
                 (keydown.enter)="crearDetalle(detalle)"
-                [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                [readonly]="
+                  precioUnitarioSeleccionado.esAvanceObra ||
+                  contenedorCatalogoGeneral
+                "
                 style="
                   border: 0.5px solid #ffffff4d;
                   border: none;
@@ -1629,7 +1652,10 @@
                 [(ngModel)]="detalle.importe"
                 *ngIf="detalle.cantidadEditado"
                 (keydown.enter)="editarDetalleImporte(detalle)"
-                [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                [readonly]="
+                  precioUnitarioSeleccionado.esAvanceObra ||
+                  contenedorCatalogoGeneral
+                "
                 style="
                   background-color: rgba(0, 0, 0, 0.164);
                   border: none;
@@ -1646,7 +1672,10 @@
                 class="bg-transparent"
                 id="select-table"
                 style="width: 100%"
-                [disabled]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                [disabled]="
+                  precioUnitarioSeleccionado.esAvanceObra ||
+                  contenedorCatalogoGeneral
+                "
                 [(ngModel)]="detalle.idTipoInsumo"
                 (ngModelChange)="crearDetalle(detalle)"
                 style="
@@ -1667,7 +1696,10 @@
                 class="bg-transparent"
                 id="select-table"
                 style="width: 100%"
-                [disabled]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                [disabled]="
+                  precioUnitarioSeleccionado.esAvanceObra ||
+                  contenedorCatalogoGeneral
+                "
                 [(ngModel)]="detalle.idFamiliaInsumo"
                 (ngModelChange)="crearDetalle(detalle)"
                 style="border: none; border-radius: 3px"
@@ -1881,7 +1913,10 @@
                   id="input-table"
                   [(ngModel)]="generador.codigo"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                  [readonly]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
                   style="
                     border: none;
                     border-radius: 3px;
@@ -1898,7 +1933,10 @@
                   id="input-table"
                   [(ngModel)]="generador.ejeX"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                  [readonly]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
                   maxlength="20"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -1916,7 +1954,10 @@
                   id="input-table"
                   [(ngModel)]="generador.ejeY"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                  [readonly]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
                   maxlength="20"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -1934,7 +1975,10 @@
                   id="input-table"
                   [(ngModel)]="generador.ejeZ"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                  [readonly]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
                   maxlength="20"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -1952,7 +1996,10 @@
                   id="input-table"
                   [(ngModel)]="generador.cantidad"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                  [readonly]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
                   (dblclick)="abrirOperacionCantidadGenerador(generador)"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -1970,7 +2017,10 @@
                   id="input-table"
                   [(ngModel)]="generador.x"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                  [readonly]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
                   style="
                     border: 0.5px solid #ffffff4d;
                     border-radius: 3px;
@@ -1991,7 +2041,10 @@
                   id="input-table"
                   [(ngModel)]="generador.y"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                  [readonly]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
                   style="
                     border: 0.5px solid #ffffff4d;
                     border-radius: 3px;
@@ -2008,7 +2061,10 @@
                   id="input-table"
                   [(ngModel)]="generador.z"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                  [readonly]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
                   style="
                     border: 0.5px solid #ffffff4d;
                     border-radius: 3px;
@@ -2032,7 +2088,10 @@
                   class="cursor-pointer"
                   data-bs-toggle="modal"
                   (click)="eliminarGenerador(generador)"
-                  [disabled]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
+                  [disabled]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
                 >
                   <img src="./assets/delete.svg" alt="Eliminar" class="w-6" />
                 </button>
@@ -2912,3 +2971,295 @@
   >
   </app-precio-unitario-modal>
 </div>
+
+<ng-template #dialogCatalogoRemplazar>
+  <section>
+    <div
+      class="fixed inset-0 z-10 w-screen overflow-y-auto"
+      (click)="limpiarRemplazarCatalogo()"
+    >
+      <div
+        class="content-center sm:flex min-h-full items-center justify-center p-4 text-center sm:p-0"
+      >
+        <div
+          class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl"
+          (click)="detenerCierre($event)"
+        >
+          <!-- header -->
+          <div class="flex justify-between items-center border-b px-4 py-3">
+            <h2 class="font-semibold text-gray-800 tracking-wider text-lg">
+              Remplazar Catalogo
+            </h2>
+            <button
+              type="button"
+              class="leading-none text-2xl px-3 py-1 text-gray-500 hover:text-gray-700"
+              (click)="limpiarRemplazarCatalogo()"
+            >
+              &times;
+            </button>
+          </div>
+
+          <!-- input de archivos -->
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div class="mb-4">
+              <div
+                class="overflow-x-auto whitespace-nowrap w-full mx-auto mt-4"
+              >
+                <table
+                      class="table-striped table-hover overflow-x-auto w-[95%] ml-[2.4%]"
+                    >
+                      <thead class="bg-primario text-white">
+                        <th></th>
+                        <th class="cabecera" style="width: 14%">Código</th>
+                        <th class="cabecera" style="width: 42%">Descripción</th>
+                        <th class="cabecera" style="width: 8%">Unidad</th>
+                        <th class="cabecera" style="width: 8%">Cantidad</th>
+                        <th class="cabecera" style="width: 8%">
+                          Costo Directo
+                        </th>
+                        <th class="cabecera" style="width: 8%">P. U.</th>
+                        <th class="cabecera" style="width: 8%">Total</th>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="let precioUnitario of preciosRemplazoCatalogo"
+                          [ngClass]="{'change-background-color': precioUnitario.esDetalle == true,
+                              'colorNivel1' :precioUnitario.nivel <= 1 && !precioUnitario.esDetalle,
+                              'colorNivel2' :precioUnitario.nivel == 2 && !precioUnitario.esDetalle,
+                              'colorNivel3' :precioUnitario.nivel == 3 && !precioUnitario.esDetalle,
+                              'colorNivel4' :precioUnitario.nivel == 4 && !precioUnitario.esDetalle,
+                              'colorNivel5' :precioUnitario.nivel == 5 && !precioUnitario.esDetalle,
+                              'colorNivel6' :precioUnitario.nivel == 6 && !precioUnitario.esDetalle,
+                              'colorNivel7' :precioUnitario.nivel == 7 && !precioUnitario.esDetalle,
+                            }"
+                          class="font-medium text-gray700"
+                        >
+                        <td><input
+                        type="checkbox"
+                        [(ngModel)]="precioUnitario.esSeleccionado"
+                        [checked]="precioUnitario.esSeleccionado"
+                      /></td>
+                          <td
+                            style="
+                              border-right: 1px solid #3f3e3e17;
+                              border-right: 1px solid #f2f2f217;
+                              width: 13%;
+                              padding-left: 0px;
+                            "
+                            class="cont-drill"
+                            *ngIf="
+                              precioUnitario.id != 0 &&
+                              precioUnitario.tipoPrecioUnitario == 1
+                            "
+                          >
+                            <input
+                              autocomplete="off"
+                              type="text"
+                              class="bg-transparent"
+                              id="input-table"
+                              [(ngModel)]="precioUnitario.codigo"
+                              readonly
+                              style="
+                                border: 0.5px solid #ffffff4d;
+                                border-radius: 3px;
+                                width: 100%;
+                              "
+                            />
+                          </td>
+                          <td
+                            style="
+                              border-right: 1px solid #3f3e3e17;
+                              border-right: 1px solid #f2f2f217;
+                              width: 42%;
+                            "
+                            class="cont-drill"
+                          >
+                            <input
+                              autocomplete="off"
+                              type="text"
+                              class="bg-transparent"
+                              id="input-table"
+                              [(ngModel)]="precioUnitario.descripcion"
+                              readonly
+                              style="
+                                border: 0.5px solid #ffffff4d;
+                                border-radius: 3px;
+                                width: 100%;
+                              "
+                            />
+                          </td>
+                          <td
+                            style="
+                              border-right: 1px solid #3f3e3e17;
+                              border-right: 1px solid #f2f2f217;
+                              width: 8%;
+                            "
+                            class="cont-drill"
+                            *ngIf="precioUnitario.tipoPrecioUnitario == 1"
+                          >
+                            <select
+                              aria-label=".form-select-sm example"
+                              id="select-table"
+                              class="input-table"
+                              disabled
+                              [(ngModel)]="precioUnitario.unidad"
+                              style="
+                                background-color: rgba(0, 0, 0, 0.041);
+                                border: 0.5px solid #ffffff79;
+                                border-radius: 3px;
+                                width: 100%;
+                              "
+                            >
+                              <option [ngValue]="precioUnitario.unidad">
+                                {{ precioUnitario.unidad }}
+                              </option>
+                              <option value="M">M.</option>
+                              <option value="M2">M2</option>
+                              <option value="M3">M3</option>
+                              <option value="Jor">Jor.</option>
+                              <option value="Litro">Litro</option>
+                              <option value="Galón">Galón</option>
+                              <option value="Pt">Pt</option>
+                              <option value="Bulto">Bulto</option>
+                              <option value="Kg">Kg.</option>
+                              <option value="Ton">Ton.</option>
+                              <option value="Hora">Hora</option>
+                              <option value="Pza">Pza.</option>
+                              <option value="Millar">Millar</option>
+                              <option value="Lote">Lote</option>
+                              <option value="Her">%(mdo)</option>
+                              <!-- <option [ngValue]="U" *ngFor="let U of Unidades">{{U}}</option> -->
+                            </select>
+                          </td>
+                          <td
+                            style="
+                              border-right: 1px solid #3f3e3e17;
+                              border-right: 1px solid #f2f2f217;
+                              width: 8%;
+                            "
+                            class="cont-drill"
+                            *ngIf="
+                              precioUnitario.tipoPrecioUnitario == 1 &&
+                              !precioUnitario.cantidadEditado
+                            "
+                          >
+                            <input
+                              autocomplete="off"
+                              type="text"
+                              class="input-table bg-transparent"
+                              id="input-table"
+                              [(ngModel)]="precioUnitario.cantidadConFormato"
+                              style="
+                                border: none;
+                                border-radius: 3px;
+                                width: 100%;
+                                text-align: right;
+                              "
+                              readonly
+                            />
+                          </td>
+                          <td
+                            style="
+                              border-right: 1px solid #3f3e3e17;
+                              border-right: 1px solid #f2f2f217;
+                              width: 8%;
+                            "
+                            class="cont-drill"
+                            *ngIf="precioUnitario.tipoPrecioUnitario == 1"
+                          >
+                            <input
+                              autocomplete="off"
+                              type="text"
+                              class="input-table bg-transparent"
+                              id="input-table"
+                              [(ngModel)]="
+                                precioUnitario.costoUnitarioConFormato
+                              "
+                              id="displayName"
+                              style="
+                                border: 0.5px solid #ffffff4d;
+                                border-radius: 3px;
+                                width: 100%;
+                                text-align: right;
+                              "
+                              readonly
+                            />
+                          </td>
+                          <td
+                            style="
+                              border-right: 1px solid #3f3e3e17;
+                              border-right: 1px solid #f2f2f217;
+                              width: 8%;
+                            "
+                            class="cont-drill"
+                            *ngIf="precioUnitario.tipoPrecioUnitario == 1"
+                          >
+                            <input
+                              autocomplete="off"
+                              type="text"
+                              class="input-table bg-transparent"
+                              id="input-table"
+                              [(ngModel)]="
+                                precioUnitario.precioUnitarioConFormato
+                              "
+                              id="displayName"
+                              style="
+                                border: 0.5px solid #ffffff4d;
+                                border-radius: 3px;
+                                width: 100%;
+                                text-align: right;
+                              "
+                              readonly
+                            />
+                          </td>
+                          <td
+                            style="
+                              border-right: 1px solid #3f3e3e17;
+                              border-right: 1px solid #f2f2f217;
+                              width: 8%;
+                            "
+                            class="cont-drill"
+                          >
+                            <input
+                              autocomplete="off"
+                              type="text"
+                              class="input-table bg-transparent"
+                              id="input-table"
+                              [(ngModel)]="precioUnitario.importeConFormato"
+                              id="displayName"
+                              style="
+                                border: 0.5px solid #ffffff4d;
+                                border-radius: 3px;
+                                width: 100%;
+                                text-align: right;
+                              "
+                              readonly
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- botones -->
+          <div class="bg-gray-50 px-4 py-3 flex justify-end gap-2">
+            <button
+              class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
+              (click)="remplazarCatalogoGeneral()"
+            >
+              Remplazar
+            </button>
+            <button
+              class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
+              (click)="limpiarRemplazarCatalogo()"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ng-template>
