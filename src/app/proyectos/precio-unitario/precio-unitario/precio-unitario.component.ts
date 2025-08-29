@@ -872,8 +872,10 @@ export class PrecioUnitarioComponent implements OnInit {
         this.preciosUnitarios = preciosUnitarios;
         console.log('estos son los PUs', this.preciosUnitarios);
 
-        if (this.preciosUnitarios[0].esAvanceObra) {
-          this.esAutorizado = true;
+        if (this.preciosUnitarios.length > 0) {
+          if (this.preciosUnitarios[0].esAvanceObra) {
+            this.esAutorizado = true;
+          }
         }
 
         for (let i = 0; i < preciosUnitarios.length; i++) {
@@ -3864,6 +3866,19 @@ export class PrecioUnitarioComponent implements OnInit {
     });
     return seleccionados;
   }
+  obtenerPUSeleccionados(precios: precioUnitarioDTO[]): precioUnitarioDTO[] {
+    let seleccionados: precioUnitarioDTO[] = [];
+    precios.forEach((precio) => {
+      if (precio.hijos.length > 0) {
+        let respuesta = this.obtenerConceptosSeleccionados(precio.hijos);
+        seleccionados.push(...respuesta);
+      }
+      if (precio.esSeleccionado) {
+        seleccionados.push(precio);
+      }
+    });
+    return seleccionados;
+  }
 
   openDialogRemplazoCatalogo() {
     this.dialog.open(this.dialogRemplazarCatalogo, {
@@ -3915,22 +3930,22 @@ export class PrecioUnitarioComponent implements OnInit {
       .eliminarCatalogoGeneral(existeSeleccion, this.selectedEmpresa)
       .subscribe((datos) => {
         this.precioUnitarioService
-      .obtenerEstructurado(0, this.selectedEmpresa)
-      .pipe(finalize(() => (this.displayCarga = 'none')))
-      .subscribe({
-        next: (datos) => {
-          this.preciosUnitarios = datos;
+          .obtenerEstructurado(0, this.selectedEmpresa)
+          .pipe(finalize(() => (this.displayCarga = 'none')))
+          .subscribe({
+            next: (datos) => {
+              this.preciosUnitarios = datos;
 
-          this.contenedorPresupuesto = true;
-          this.contenedorCatalogoGeneral = true;
-          this.esquemaArbol2 = false;
-          this.esquemaArbol3 = false;
-          this.pestanas = false;
-        },
-        error: (err) => {
-          console.error('Error al cargar catálogo general', err);
-        },
-      });
+              this.contenedorPresupuesto = true;
+              this.contenedorCatalogoGeneral = true;
+              this.esquemaArbol2 = false;
+              this.esquemaArbol3 = false;
+              this.pestanas = false;
+            },
+            error: (err) => {
+              console.error('Error al cargar catálogo general', err);
+            },
+          });
       });
   }
 
