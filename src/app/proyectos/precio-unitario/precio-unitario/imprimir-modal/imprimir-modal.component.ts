@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { log } from 'console';
+
 import { imprimirMarcado, imprimirCompleto } from './imprimirReportes';
 import { precioUnitarioDTO } from '../../tsPrecioUnitario';
 import { ParametrosImprimirPuService } from './parametros-imprimir-pu.service';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import { ParametrosImpresionPu } from './ts.parametros-imprimir-pu';
+import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 
 @Component({
   selector: 'app-imprimir-modal',
@@ -20,6 +21,8 @@ export class ImprimirModalComponent {
   tipoImpresion: string = '';
   tipoPrecio: string = '';
 
+  tipoError: string = '';
+
   tituloDocumento: string = '';
   encabezadoIzq: string = '';
   encabezadoCentro: string = '';
@@ -34,6 +37,9 @@ export class ImprimirModalComponent {
   selectedEmpresa: number = 0;
   selectedParams?: ParametrosImpresionPu;
   selectedParamId: number = 0;
+
+  isParamGuardado: boolean = false;
+  isParamDeleted: boolean = false;
 
   reportePresupuesto: boolean = false;
   isError: boolean = false;
@@ -57,7 +63,6 @@ export class ImprimirModalComponent {
     pieIzquierdo: '',
     pieCentro: '',
     pieDerecho: '',
-    idImagen: 0,
     margenSuperior: 30,
     margenInferior: 30,
     margenDerecho: 30,
@@ -77,18 +82,11 @@ export class ImprimirModalComponent {
 
   ngOnInit() {
     this.obtenerParametrosImpresion();
+    console.log(this.preciosUnitarios);
   }
 
-  obtenerParametrosImpresion() {
-    this.parametrosImpresion
-      .obtenerTodos(this.selectedEmpresa)
-      .subscribe((datos) => {
-        this.paramsImpresionLista = datos;
-      });
-  }
-
-  seleccionarParams(event: any) {
-    const id = Number(event.target.value);
+  seleccionarParams(event: Event) {
+    const id = Number((event.target as HTMLSelectElement).value);
     const seleccionado = this.paramsImpresionLista.find((p) => p.id === id);
 
     if (seleccionado) {
@@ -99,12 +97,104 @@ export class ImprimirModalComponent {
   crearConfiguracionParams() {
     this.parametrosImpresion
       .crear(this.selectedEmpresa, this.paramsImpresion)
-      .subscribe((datos) => {
-        console.log(datos);
-        if (datos) {
-          console.log(datos);
-        }
+      .subscribe({
+        next: (datos: RespuestaDTO) => {
+          if (datos.estatus) {
+            this.isParamGuardado = true;
+            this.obtenerParametrosImpresion();
+          } else {
+            this.isParamGuardado = false;
+            this.tipoError = datos.descripcion || 'Ocurrió un error';
+          }
+          setTimeout(() => {
+            this.isParamGuardado = false;
+            this.tipoError = '';
+          }, 3000);
+        },
+        error: (err) => {
+          this.isParamGuardado = false;
+          this.tipoError = 'Error al conectar con el servidor';
+          console.error(err);
+
+          setTimeout(() => {
+            this.tipoError = '';
+          }, 3000);
+        },
       });
+  }
+
+  obtenerParametrosImpresion() {
+    this.parametrosImpresion
+      .obtenerTodos(this.selectedEmpresa)
+      .subscribe((datos) => {
+        this.paramsImpresionLista = datos;
+      });
+  }
+
+  editarParams(id: number) {
+    this.parametrosImpresion
+      .editar(this.selectedEmpresa, this.paramsImpresion)
+      .subscribe({
+        next: (datos) => {
+          this.paramsImpresion.id = id;
+          if (datos.estatus) {
+            this.isParamGuardado = true;
+            this.obtenerParametrosImpresion();
+          } else {
+            this.isParamGuardado = false;
+            this.tipoError = datos.descripcion || 'Ocurrió un error';
+          }
+          setTimeout(() => {
+            this.isParamGuardado = false;
+            this.tipoError = '';
+          }, 3000);
+        },
+        error: (err) => {
+          this.isParamGuardado = false;
+          this.tipoError = 'Error al conectar con el servidor';
+          console.error(err);
+        },
+      });
+  }
+
+  eliminarParams(id: number) {
+    this.parametrosImpresion.eliminar(this.selectedEmpresa, id).subscribe({
+      next: (datos) => {
+        if (datos.estatus) {
+          this.isParamDeleted = true;
+          this.paramsImpresion = {
+            id: 0,
+            nombre: '',
+            encabezadoIzquierdo: '',
+            encabezadoCentro: '',
+            encabezadoDerecho: '',
+            pieIzquierdo: '',
+            pieCentro: '',
+            pieDerecho: '',
+            margenSuperior: 30,
+            margenInferior: 30,
+            margenDerecho: 30,
+            margenIzquierdo: 30,
+          };
+          this.obtenerParametrosImpresion();
+        } else {
+          this.tipoError = datos.descripcion || 'Ocurrió un error';
+        }
+
+        setTimeout(() => {
+          this.isParamDeleted = false;
+          this.tipoError = '';
+        }, 3000);
+      },
+      error: (err) => {
+        this.tipoError = 'Error al conectar con el servidor';
+        console.error(err);
+
+        setTimeout(() => {
+          this.tipoError = '';
+        }, 3000);
+      },
+    });
   }
 
   closeModal() {
@@ -170,7 +260,6 @@ export class ImprimirModalComponent {
             this.paramsImpresion.margenIzquierdo,
             this.paramsImpresion.margenDerecho
           );
-          console.log(this.paramsImpresion);
         }
         if (this.tipoImpresion === 'impresionMarcada') {
           imprimirMarcado();
@@ -182,6 +271,5 @@ export class ImprimirModalComponent {
           `No hay lógica implementada para el tipo de reporte: ${this.tipoReporte}`
         );
     }
-    this.closeModal();
   }
 }

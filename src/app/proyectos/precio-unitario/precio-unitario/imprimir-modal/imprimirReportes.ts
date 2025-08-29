@@ -5,6 +5,7 @@ import { precioUnitarioDTO } from '../../tsPrecioUnitario';
 import { image } from './imagen';
 import { text } from 'stream/consumers';
 import { stackClasses } from '@mui/material';
+import { log } from 'console';
 
 export function imprimirCompleto(
   precioUnitario: precioUnitarioDTO[],
@@ -36,6 +37,15 @@ export function imprimirCompleto(
     small: {
       fontSize: 8,
     },
+    smallCantidad: {
+      fontSize: 8,
+      alignment: 'right',
+    },
+    smallCantidadTotal: {
+      fontSize: 8,
+      alignment: 'right',
+      bold: true,
+    },
     smallBold: {
       fontSize: 8,
       textAlign: 'center',
@@ -65,7 +75,8 @@ export function imprimirCompleto(
     },
   };
 
-  //header
+  //imagen
+
   content.push({
     columns: [
       {
@@ -123,7 +134,7 @@ export function imprimirCompleto(
 
   //tabla de proyecto - header y contenido
   const tableBodyProject = [
-    [{ text: 'Proyecto', style: 'subheader' }],
+    [{ text: 'Presupuesto', style: 'subheader' }],
     [{ text: titulo, style: 'small' }],
   ];
 
@@ -143,8 +154,8 @@ export function imprimirCompleto(
     },
   });
 
-  //tabla de partidas
-  const tableBodyProyecto = [
+  // Header de la tabla
+  const tableHeader = [
     [
       { text: 'Clave', style: 'subheader' },
       { text: 'Descripción', style: 'subheader' },
@@ -159,77 +170,114 @@ export function imprimirCompleto(
     margin: [0, 0, 0, 0],
     layout: {
       hLineColor: () => '#B9B9B9',
-
-      hLineWidth: (i: number, node: any) => {
-        // Línea superior de la tabla
-        if (i === 0) return 0.5;
-        // Línea inferior del header
-        if (i === 1) return 0.5;
-        // Nada en el body
-        return 0.5;
-      },
-
-      vLineWidth: (i: number, node: any) => {
-        // 👉 Solo líneas verticales en el header
-        if (node.table.body && node.table.body.length > 0) {
-          // pero como queremos quitar las exteriores en el body,
-          // devolvemos 0 siempre (sin importar si es borde izq/der)
-          return 0.5;
-        }
-        return 0;
-      },
-
-      vLineColor: () => 'transparent',
+      hLineWidth: () => 0.5, // todas las líneas horizontales
+      vLineColor: () => '#B9B9B9',
+      vLineWidth: () => 0.5, // todas las líneas verticales
     },
     table: {
       headerRows: 1,
+      widths: [60, '*', 30, 60, 60, 60],
+      body: tableHeader,
+    },
+  });
+
+  const tableBodyProyecto: any = [];
+
+  precioUnitario.forEach((proyecto) => {
+    const esPadreConHijos = proyecto.hijos?.length > 0;
+
+    tableBodyProyecto.push([
+      { text: proyecto.codigo, style: 'small' },
+      { text: proyecto.descripcion, style: 'small' },
+      { text: esPadreConHijos ? '' : proyecto.unidad || '', style: 'small' },
+      {
+        text: esPadreConHijos ? '' : proyecto.cantidadConFormato || '',
+        style: 'small',
+      },
+      {
+        text: esPadreConHijos ? '' : proyecto.precioUnitarioConFormato || '',
+        style: 'small',
+      },
+      {
+        text: esPadreConHijos ? '' : proyecto.importeConFormato || '',
+        style: 'small',
+      },
+    ]);
+
+    // filas de hijos
+    if (proyecto.hijos?.length > 0) {
+      const filasHijos = mapHijos(proyecto.hijos);
+      filasHijos.forEach((filaHijo) => tableBodyProyecto.push(filaHijo));
+    }
+  });
+
+  content.push({
+    margin: [0, 0, 0, 0],
+    layout: {
+      hLineWidth: () => 0, // todas las líneas horizontales = 0
+      vLineWidth: () => 0, // todas las líneas verticales = 0
+    },
+    table: {
+      headerRows: 0, // ya pusimos header aparte
       widths: [60, '*', 30, 60, 60, 60],
       body: tableBodyProyecto,
     },
   });
 
-  const tableBodyProyectoContenido = [
-    ...precioUnitario.map((item) => {
-      return [
-        { text: item.codigo, style: 'small' },
-        { text: item.descripcion, style: 'small' },
-        { text: '', style: 'small' },
-        { text: '', style: 'small' },
-        { text: '', style: 'small' },
-        { text: '', style: 'small' },
-      ];
-    }),
-  ];
-
   content.push({
-    margin: [0, 0, 0, 0],
-    layout: {
-      hLineWidth: () => 0, // todas las líneas horizontales = 0
-      vLineWidth: () => 0, // todas las líneas verticales = 0
-    },
-    table: {
-      headerRows: 1,
-      widths: ['*', '*', 30, 60, 60, 60],
-      body: tableBodyProyectoContenido,
-    },
+    text: '\n',
   });
 
-  //tabla de partidas con hijos
-  const tableBodyHijos = precioUnitario.flatMap((item) =>
-    item.hijos ? mapHijos(item.hijos) : []
-  );
+  precioUnitario.forEach((proyecto) => {
+    content.push(
+      {
+        text: `Subtotal de ${proyecto.codigo}`,
+        style: 'styleTotal',
+        colSpan: 5,
+        margin: [0, 0, 0, 0],
+      },
+      {},
+      {},
+      {},
+      {},
+      { text: `$  ${proyecto.importeConFormato}`, style: 'smallCantidadTotal' }
+    );
+  });
 
   content.push({
-    margin: [0, 0, 0, 0],
-    layout: {
-      hLineWidth: () => 0, // todas las líneas horizontales = 0
-      vLineWidth: () => 0, // todas las líneas verticales = 0
-    },
-    table: {
-      headerRows: 1,
-      widths: [60, '*', 30, 60, 60, 60],
-      body: tableBodyHijos,
-    },
+    text: '\n',
+  });
+
+  precioUnitario.forEach((proyecto) => {
+    content.push(
+      {},
+      {},
+      {},
+      {},
+      {},
+      {
+        text: `IVA 16%  $  ${proyecto.porcentajeIndirectoConFormato}`,
+        style: 'smallCantidadTotal',
+      }
+    );
+  });
+
+  content.push({
+    text: '\n',
+  });
+
+  precioUnitario.forEach((proyecto) => {
+    content.push(
+      {},
+      {},
+      {},
+      {},
+      {},
+      {
+        text: `Total  $  ${proyecto.porcentajeIndirectoConFormato}`,
+        style: 'smallCantidadTotal',
+      }
+    );
   });
 
   const docDefinition: any = {
@@ -246,60 +294,77 @@ export function imprimirCompleto(
   pdfMake.createPdf(docDefinition).download();
 }
 
-export function imprimirMarcado() {
-  console.log('Imprimiendo marcado');
-}
-
 function mapHijos(hijos: any[], nivel = 1): any[] {
   return hijos.flatMap((hijo) => {
-    const style = nivel === 1 ? 'smallColored' : 'small';
-    let fila;
-
-    if (nivel === 1) {
-      // Hijo directo (azul) → solo 2 columnas
-      fila = [
-        { text: hijo.codigo, style },
-        { text: hijo.descripcion, style },
-        { text: '', style },
-        { text: '', style },
-        { text: '', style },
-        { text: '', style },
-      ];
-    } else {
-      // Nietos → todas las columnas
-      fila = [
-        { text: hijo.codigo, style },
-        { text: hijo.descripcion, style },
-        { text: hijo.unidad, style },
-        { text: hijo.cantidadConFormato, style },
-        { text: hijo.precioUnitarioConFormato, style },
-        { text: hijo.importeConFormato, style },
-      ];
+    let color = '#000000';
+    if (hijo.hijos?.length > 0) {
+      switch (nivel) {
+        case 1:
+          color = '#1c398e'; // azul
+          break;
+        case 2:
+          color = '#0b8f5c'; // verde
+          break;
+        case 3:
+          color = '#e67e22'; // naranja
+          break;
+        default:
+          color = '#7f8c8d'; // gris
+      }
     }
 
-    // Recorremos recursivamente los hijos
+    const esPadreConHijos = hijo.hijos?.length > 0;
+
+    // asignar estilo
+    const style = esPadreConHijos
+      ? { fontSize: 8, bold: true, color }
+      : { fontSize: 8 };
+
+    // fila base (ojo: si tiene hijos → celdas numéricas vacías)
+    const fila = [
+      { text: hijo.codigo, ...style, margin: [0, 0, 0, 0] },
+      { text: hijo.descripcion, ...style, margin: [0, 0, 0, 0] },
+      { text: esPadreConHijos ? '' : hijo.unidad, ...style },
+      {
+        text: esPadreConHijos ? '' : ` $ ${hijo.cantidadConFormato}`,
+        style: { ...style, alignment: 'right' },
+      },
+      {
+        text: esPadreConHijos ? '' : ` $ ${hijo.precioUnitarioConFormato}`,
+        style: { ...style, alignment: 'right' },
+      },
+      {
+        text: esPadreConHijos ? '' : ` $ ${hijo.importeConFormato}`,
+        style: { ...style, alignment: 'right' },
+      },
+    ];
+
+    // recorrer hijos recursivamente
     const subFilas = hijo.hijos ? mapHijos(hijo.hijos, nivel + 1) : [];
 
-    // Si es hijo directo (nivel 1), agregamos una fila de total después de sus hijos
-    if (nivel === 1 && hijo.hijos && hijo.hijos.length > 0) {
-      // sumamos importes de los hijos
-
+    // fila de total si tiene hijos
+    let filas = [fila, ...subFilas];
+    if (esPadreConHijos) {
       const totalFila = [
         {
           text: `Total de ${hijo.descripcion}`,
           style: 'styleTotal',
           colSpan: 5,
-          margin: [68, 0, 0, 0],
+          margin: [0, 0, 0, 0],
         },
         {},
         {},
         {},
         {},
-        { text: hijo.importeConFormato || '0.00', style: 'styleTotal' },
+        { text: ` $ ${hijo.importeConFormato}`, style: 'smallCantidadTotal' },
       ];
-      return [fila, ...subFilas, totalFila];
+      filas.push(totalFila);
     }
 
-    return [fila, ...subFilas];
+    return filas;
   });
+}
+
+export function imprimirMarcado() {
+  console.log('Imprimiendo marcado');
 }

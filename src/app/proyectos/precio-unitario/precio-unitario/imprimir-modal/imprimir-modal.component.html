@@ -210,6 +210,7 @@
               <div class="flex gap-2">
                 <input
                   [(ngModel)]="paramsImpresion.nombre"
+                  (keydown.enter)="editarParams(selectedParamId)"
                   type="text"
                   class="w-full px-2 py-1 border border-gray-200 rounded-md"
                   placeholder="Ingresa el titulo del documento"
@@ -225,6 +226,15 @@
               >
                 Otras opciones
               </legend>
+              <p *ngIf="isParamGuardado" class="text-green-600 text-sm">
+                Parámetros guardados correctamente.
+              </p>
+              <p *ngIf="isParamDeleted" class="text-green-600 text-sm">
+                Parámetros eliminados correctamente.
+              </p>
+              <p *ngIf="tipoError" class="text-red-600 text-sm">
+                {{ tipoError }}
+              </p>
               <div class="flex gap-2">
                 <div>
                   <label for="importar">Importar opciones de impresión</label>
@@ -252,6 +262,7 @@
                   Guardar opciones
                 </button>
                 <button
+                  (click)="eliminarParams(selectedParamId)"
                   class="px-2 py-1 bg-red-700 hover:bg-red-600 text-white rounded-md transition"
                 >
                   Eliminar opciones
@@ -265,12 +276,13 @@
               <legend
                 class="text-base font-medium text-gray-800 tracking-wider"
               >
-                Encabezado
+                Encabezado (para cambiar de linea presiona Shift + Enter)
               </legend>
               <div class="grid grid-cols-3 gap-2">
                 <div>
                   <label for="encabezadoSup">Izquierda</label>
                   <textarea
+                    (keydown.enter)="editarParams(selectedParamId)"
                     [(ngModel)]="paramsImpresion.encabezadoIzquierdo"
                     id="encabezadoSup"
                     class="w-full px-2 py-1 border border-gray-200 rounded-md"
@@ -280,6 +292,7 @@
                 <div>
                   <label for="encabezadoCentro">Centro</label>
                   <textarea
+                    (keydown.enter)="editarParams(selectedParamId)"
                     [(ngModel)]="paramsImpresion.encabezadoCentro"
                     id="encabezadoCentro"
                     class="w-full px-2 py-1 border border-gray-200 rounded-md"
@@ -289,6 +302,7 @@
                 <div>
                   <label for="encabezadoDerecha">Derecha</label>
                   <textarea
+                    (keydown.enter)="editarParams(selectedParamId)"
                     [(ngModel)]="paramsImpresion.encabezadoDerecho"
                     id="encabezadoDerecha"
                     class="w-full px-2 py-1 border border-gray-200 rounded-md"
@@ -310,6 +324,7 @@
                 <div>
                   <label for="pieIzq">Izquierda</label>
                   <textarea
+                    (keydown.enter)="editarParams(selectedParamId)"
                     [(ngModel)]="paramsImpresion.pieIzquierdo"
                     id="pieIzq"
                     class="w-full px-2 py-1 border border-gray-200 rounded-md"
@@ -319,6 +334,7 @@
                 <div>
                   <label for="pieCentro">Centro</label>
                   <textarea
+                    (keydown.enter)="editarParams(selectedParamId)"
                     [(ngModel)]="paramsImpresion.pieCentro"
                     id="pieCentro"
                     class="w-full px-2 py-1 border border-gray-200 rounded-md"
@@ -328,6 +344,7 @@
                 <div>
                   <label for="pieDerecha">Derecha</label>
                   <textarea
+                    (keydown.enter)="editarParams(selectedParamId)"
                     [(ngModel)]="paramsImpresion.pieDerecho"
                     id="pieDerecha"
                     class="w-full px-2 py-1 border border-gray-200 rounded-md"
@@ -349,6 +366,7 @@
                 <div>
                   <label for="margenSuperior">Superior</label>
                   <input
+                    (keydown.enter)="editarParams(selectedParamId)"
                     [(ngModel)]="paramsImpresion.margenSuperior"
                     id="margenSuperior"
                     type="number"
@@ -359,6 +377,7 @@
                 <div>
                   <label for="margenInferior">Inferior</label>
                   <input
+                    (keydown.enter)="editarParams(selectedParamId)"
                     [(ngModel)]="paramsImpresion.margenInferior"
                     id="margenInferior"
                     type="number"
@@ -369,6 +388,7 @@
                 <div>
                   <label for="margenIzquierdo">Izquierdo</label>
                   <input
+                    (keydown.enter)="editarParams(selectedParamId)"
                     [(ngModel)]="paramsImpresion.margenIzquierdo"
                     id="margenIzquierdo"
                     type="number"
@@ -379,6 +399,7 @@
                 <div>
                   <label for="margenDerecho">Derecho</label>
                   <input
+                    (keydown.enter)="editarParams(selectedParamId)"
                     [(ngModel)]="paramsImpresion.margenDerecho"
                     id="margenDerecho"
                     type="number"

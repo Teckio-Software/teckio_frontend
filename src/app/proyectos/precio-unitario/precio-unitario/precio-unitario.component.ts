@@ -409,7 +409,7 @@ export class PrecioUnitarioComponent implements OnInit {
     esAdicional: false,
   };
 
-  esAutorizado : boolean = false;
+  esAutorizado: boolean = false;
 
   IdPrecioParaExplosion: number = 0;
   @ViewChild('InputOperacionGenerador') InputOperacionGenerador: any;
@@ -855,7 +855,7 @@ export class PrecioUnitarioComponent implements OnInit {
       .subscribe((preciosUnitarios) => {
         this.preciosUnitarios = preciosUnitarios;
 
-        if(this.preciosUnitarios[0].esAvanceObra){
+        if (this.preciosUnitarios[0].esAvanceObra) {
           this.esAutorizado = true;
         }
 
