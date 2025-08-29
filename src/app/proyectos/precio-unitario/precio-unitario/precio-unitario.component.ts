@@ -3880,6 +3880,41 @@ export class PrecioUnitarioComponent implements OnInit {
     return seleccionados;
   }
 
+  verMarcados(){
+    let marcados = this.obtenerPuSeleccionados(this.preciosUnitarios);
+    console.log("estos son los marcados", marcados);
+  }
+
+  obtenerPuSeleccionados(
+    precios: precioUnitarioDTO[]
+  ): precioUnitarioDTO[] {
+    let seleccionados: precioUnitarioDTO[] = [];
+    precios.forEach((precio) => {
+      let nuevoPU : precioUnitarioDTO;
+      if (precio.hijos.length > 0) {
+        let respuesta = this.obtenerPuSeleccionados(precio.hijos);
+        nuevoPU = precio;
+        if(respuesta.length > 0 && respuesta[0].esSeleccionado){
+          nuevoPU.hijos = respuesta;
+          nuevoPU.esSeleccionado = true;
+          nuevoPU.costoUnitario = respuesta.reduce((acumulador, valor) => acumulador + valor.costoUnitario, 0);
+          nuevoPU.costoUnitarioConFormato = new Intl.NumberFormat('es-MX', {
+            minimumFractionDigits: 4,
+          }).format(nuevoPU.costoUnitario);
+          nuevoPU.importe = respuesta.reduce((acumulador, valor) => acumulador + valor.importe, 0);
+          nuevoPU.importeConFormato = new Intl.NumberFormat('es-MX', {
+            minimumFractionDigits: 4,
+          }).format(nuevoPU.importe);
+          seleccionados.push(nuevoPU);
+        }
+      }
+      if (precio.tipoPrecioUnitario == 1 && precio.esSeleccionado) {
+        seleccionados.push(precio);
+      }
+    });
+    return seleccionados;
+  }
+
   openDialogRemplazoCatalogo() {
     this.dialog.open(this.dialogRemplazarCatalogo, {
       width: '20%',
