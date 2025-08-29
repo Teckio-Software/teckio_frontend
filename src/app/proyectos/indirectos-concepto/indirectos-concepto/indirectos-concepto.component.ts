@@ -57,7 +57,8 @@ export class IndirectosConceptoComponent {
     codigoPadre: '',
     esCatalogoGeneral: false,
     esAvanceObra: false,
-    esAdicional: false
+    esAdicional: false,
+    esSeleccionado: false
   }
 
   PUEditando: boolean = false;

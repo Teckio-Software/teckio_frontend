@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment.development';
-import { DatosParaCopiarArmadoDTO, datosParaCopiarDTO, precioUnitarioDTO, preciosParaEditarPosicionDTO } from './tsPrecioUnitario';
+import { DatosParaCopiarArmadoDTO, DatosParaImportarCatalogoGeneralDTO, datosParaCopiarDTO, precioUnitarioDTO, preciosParaEditarPosicionDTO } from './tsPrecioUnitario';
 import { Observable } from 'rxjs';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import { InsumoParaExplosionDTO } from 'src/app/catalogos/insumo/tsInsumo';
@@ -60,6 +60,22 @@ export class PrecioUnitarioService {
 
     public copiarRegistros(datos: datosParaCopiarDTO, idEmpresa: number) {
         return this.HttpClient.post<precioUnitarioDTO[]>(`${this.apiUrl}/${idEmpresa}/copiaregistros`, datos);
+    }
+
+    public importarCatalogoAPrecioUnitario(datos: DatosParaImportarCatalogoGeneralDTO, idEmpresa: number) {
+        return this.HttpClient.post(`${this.apiUrl}/${idEmpresa}/importarCatalogoAPrecioUnitario`, datos);
+    }
+
+    public eliminarCatalogoGeneral(lista: precioUnitarioDTO[], idEmpresa: number) {
+        return this.HttpClient.post(`${this.apiUrl}/${idEmpresa}/eliminarCatalogoGeneral`, lista);
+    }
+
+    public agregarCatalogoGeneral(lista: precioUnitarioDTO[], idEmpresa: number) {
+        return this.HttpClient.post<precioUnitarioDTO[]>(`${this.apiUrl}/${idEmpresa}/agregarCatalogoGeneral`, lista);
+    }
+
+    public remplazarCatalogoGeneral(lista: precioUnitarioDTO[], idEmpresa: number) {
+        return this.HttpClient.post(`${this.apiUrl}/${idEmpresa}/remplazarCatalogoGeneral`, lista);
     }
 
     public copiarArmado(datos: DatosParaCopiarArmadoDTO, idEmpresa: number) {
