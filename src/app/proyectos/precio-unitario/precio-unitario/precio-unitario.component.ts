@@ -3880,28 +3880,71 @@ export class PrecioUnitarioComponent implements OnInit {
     return seleccionados;
   }
 
-  verMarcados(){
+  verMarcados() {
     let marcados = this.obtenerPuSeleccionados(this.preciosUnitarios);
-    console.log("estos son los marcados", marcados);
+    return marcados;
   }
 
-  obtenerPuSeleccionados(
-    precios: precioUnitarioDTO[]
-  ): precioUnitarioDTO[] {
+  obtenerPuSeleccionados(precios: precioUnitarioDTO[]): precioUnitarioDTO[] {
     let seleccionados: precioUnitarioDTO[] = [];
     precios.forEach((precio) => {
-      let nuevoPU : precioUnitarioDTO;
+      let nuevoPU: precioUnitarioDTO = {
+        id: 0,
+        descripcion: '',
+        hijos: [],
+        esSeleccionado: false,
+        costoUnitario: 0,
+        costoUnitarioConFormato: '',
+        importe: 0,
+        importeConFormato: '',
+        idProyecto: 0,
+        cantidad: 0,
+        cantidadConFormato: '',
+        cantidadEditado: false,
+        cantidadExcedente: 0,
+        cantidadExcedenteConFormato: '',
+        tipoPrecioUnitario: 0,
+        porcentajeIndirecto: 0,
+        porcentajeIndirectoConFormato: '',
+        costoUnitarioEditado: false,
+        nivel: 0,
+        noSerie: 0,
+        idPrecioUnitarioBase: 0,
+        esDetalle: false,
+        idConcepto: 0,
+        codigo: '',
+        unidad: '',
+        precioUnitario: 0,
+        precioUnitarioConFormato: '',
+        precioUnitarioEditado: false,
+        importeSeries: 0,
+        importeSeriesConFormato: '',
+        expandido: false,
+        posicion: 0,
+        codigoPadre: '',
+        esCatalogoGeneral: false,
+        esAvanceObra: false,
+        esAdicional: false,
+      };
       if (precio.hijos.length > 0) {
         let respuesta = this.obtenerPuSeleccionados(precio.hijos);
-        nuevoPU = precio;
-        if(respuesta.length > 0 && respuesta[0].esSeleccionado){
+        nuevoPU.descripcion = precio.descripcion;
+        nuevoPU.codigo = precio.codigo;
+
+        if (respuesta.length > 0 && respuesta[0].esSeleccionado) {
           nuevoPU.hijos = respuesta;
           nuevoPU.esSeleccionado = true;
-          nuevoPU.costoUnitario = respuesta.reduce((acumulador, valor) => acumulador + valor.costoUnitario, 0);
+          nuevoPU.costoUnitario = respuesta.reduce(
+            (acumulador, valor) => acumulador + valor.costoUnitario,
+            0
+          );
           nuevoPU.costoUnitarioConFormato = new Intl.NumberFormat('es-MX', {
             minimumFractionDigits: 4,
           }).format(nuevoPU.costoUnitario);
-          nuevoPU.importe = respuesta.reduce((acumulador, valor) => acumulador + valor.importe, 0);
+          nuevoPU.importe = respuesta.reduce(
+            (acumulador, valor) => acumulador + valor.importe,
+            0
+          );
           nuevoPU.importeConFormato = new Intl.NumberFormat('es-MX', {
             minimumFractionDigits: 4,
           }).format(nuevoPU.importe);

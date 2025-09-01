@@ -6,8 +6,9 @@ import { image } from './imagen';
 import { text } from 'stream/consumers';
 import { stackClasses } from '@mui/material';
 import { log } from 'console';
+import { numeroALetras } from 'src/app/compras/orden-compra/NumeroALetras';
 
-export function imprimirCompleto(
+export function imprimirReporte(
   precioUnitario: precioUnitarioDTO[],
   titulo: string,
   encabezadoIzq: string,
@@ -16,9 +17,12 @@ export function imprimirCompleto(
   margenSuperior: number,
   margenInferior: number,
   margenIzquierdo: number,
-  margenDerecho: number
+  margenDerecho: number,
+  importeConLetra: boolean
 ) {
   (<any>pdfMake).addVirtualFileSystem(pdfFonts);
+
+  let totalEnLetras: string;
 
   const content: any[] = [];
 
@@ -229,19 +233,19 @@ export function imprimirCompleto(
   });
 
   precioUnitario.forEach((proyecto) => {
-    content.push(
-      {
-        text: `Subtotal de ${proyecto.codigo}`,
-        style: 'styleTotal',
-        colSpan: 5,
-        margin: [0, 0, 0, 0],
-      },
-      {},
-      {},
-      {},
-      {},
-      { text: `$  ${proyecto.importeConFormato}`, style: 'smallCantidadTotal' }
+    const totalMasIva: number = Number(
+      (Number(proyecto.importe) * 0.16).toFixed(2)
     );
+
+    const subtotal = (Number(proyecto.importe) - totalMasIva).toFixed(2);
+
+    content.push({
+      text: `Subtotal de ${proyecto.codigo}  $  ${subtotal}`,
+      style: 'styleTotal',
+      colSpan: 5,
+      margin: [0, 0, 0, 0],
+      alignment: 'right',
+    });
   });
 
   content.push({
@@ -249,6 +253,10 @@ export function imprimirCompleto(
   });
 
   precioUnitario.forEach((proyecto) => {
+    const totalMasIva: number = Number(
+      (Number(proyecto.importe) * 0.16).toFixed(2)
+    );
+
     content.push(
       {},
       {},
@@ -256,7 +264,7 @@ export function imprimirCompleto(
       {},
       {},
       {
-        text: `IVA 16%  $  ${proyecto.porcentajeIndirectoConFormato}`,
+        text: `IVA 16%  $  ${totalMasIva}`,
         style: 'smallCantidadTotal',
       }
     );
@@ -274,11 +282,32 @@ export function imprimirCompleto(
       {},
       {},
       {
-        text: `Total  $  ${proyecto.porcentajeIndirectoConFormato}`,
+        text: `Total  $  ${proyecto.costoUnitarioConFormato}`,
         style: 'smallCantidadTotal',
       }
     );
   });
+
+  content.push({
+    text: '\n',
+  });
+
+  if (importeConLetra) {
+    precioUnitario.forEach((proyecto) => {
+      totalEnLetras = numeroALetras(proyecto.costoUnitario);
+      content.push(
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          text: `${totalEnLetras}`,
+          style: 'smallCantidadTotal',
+        }
+      );
+    });
+  }
 
   const docDefinition: any = {
     content,
@@ -365,6 +394,4 @@ function mapHijos(hijos: any[], nivel = 1): any[] {
   });
 }
 
-export function imprimirMarcado() {
-  console.log('Imprimiendo marcado');
-}
+export function imprimirMarcado(puMarcado: precioUnitarioDTO[]) {}

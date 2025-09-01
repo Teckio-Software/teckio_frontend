@@ -1,6 +1,7 @@
+import { is } from 'date-fns/locale';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { imprimirMarcado, imprimirCompleto } from './imprimirReportes';
+import { imprimirReporte } from './imprimirReportes';
 import { precioUnitarioDTO } from '../../tsPrecioUnitario';
 import { ParametrosImprimirPuService } from './parametros-imprimir-pu.service';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
@@ -15,6 +16,7 @@ import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 export class ImprimirModalComponent {
   @Input() isOpen: boolean = false;
   @Input() preciosUnitarios: precioUnitarioDTO[] = [];
+  @Input() marcados: precioUnitarioDTO[] = [];
   @Output() close = new EventEmitter<void>();
 
   tipoReporte: string = '';
@@ -42,8 +44,10 @@ export class ImprimirModalComponent {
   isParamDeleted: boolean = false;
 
   reportePresupuesto: boolean = false;
+  isImporteconLetra: boolean = false;
   isError: boolean = false;
   isError2: boolean = false;
+  isError3: boolean = false;
 
   currentStep = 0;
   steps = [
@@ -206,6 +210,11 @@ export class ImprimirModalComponent {
   }
 
   nextStep() {
+    this.isError = false;
+    this.isError2 = false;
+    this.isError3 = false;
+
+    //validar si hay reporte seleccionado
     if (this.currentStep === 0 && !this.tipoReporte) {
       this.isError = true;
       return;
@@ -213,11 +222,22 @@ export class ImprimirModalComponent {
       this.isError = false;
     }
 
+    //validar si hay rango de impresion seleccionado
     if (this.currentStep === 1 && !this.tipoImpresion) {
       this.isError2 = true;
       return;
     } else {
       this.isError2 = false;
+    }
+
+    //validar si es impresion marcada y si hay marcados
+    if (
+      this.currentStep === 1 &&
+      this.tipoImpresion === 'impresionMarcada' &&
+      (!this.marcados || this.marcados.length === 0)
+    ) {
+      this.isError3 = true;
+      return;
     }
 
     if (this.currentStep >= this.steps.length - 1) return;
@@ -247,9 +267,10 @@ export class ImprimirModalComponent {
     switch (this.tipoReporte) {
       case 'presupuesto':
         this.reportePresupuesto = true;
+        console.log(this.preciosUnitarios);
 
         if (this.tipoImpresion === 'impresionCompleta') {
-          imprimirCompleto(
+          imprimirReporte(
             this.preciosUnitarios,
             this.paramsImpresion.nombre,
             this.paramsImpresion.encabezadoIzquierdo,
@@ -258,11 +279,23 @@ export class ImprimirModalComponent {
             this.paramsImpresion.margenSuperior,
             this.paramsImpresion.margenInferior,
             this.paramsImpresion.margenIzquierdo,
-            this.paramsImpresion.margenDerecho
+            this.paramsImpresion.margenDerecho,
+            this.isImporteconLetra
           );
         }
         if (this.tipoImpresion === 'impresionMarcada') {
-          imprimirMarcado();
+          imprimirReporte(
+            this.marcados,
+            this.paramsImpresion.nombre,
+            this.paramsImpresion.encabezadoIzquierdo,
+            this.paramsImpresion.encabezadoCentro,
+            this.paramsImpresion.encabezadoDerecho,
+            this.paramsImpresion.margenSuperior,
+            this.paramsImpresion.margenInferior,
+            this.paramsImpresion.margenIzquierdo,
+            this.paramsImpresion.margenDerecho,
+            this.isImporteconLetra
+          );
         }
         break;
 

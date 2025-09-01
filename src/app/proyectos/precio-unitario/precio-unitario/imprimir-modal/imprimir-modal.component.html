@@ -28,6 +28,7 @@
         <p class="text-red-600 text-base" *ngIf="isError">
           Selecciona una opción antes de continuar.
         </p>
+
         <div class="flex gap-2 items-center mb-2">
           <input
             type="radio"
@@ -84,6 +85,9 @@
       <div *ngIf="currentStep === 1">
         <p class="text-red-600 text-base" *ngIf="isError2">
           Selecciona una opción antes de continuar.
+        </p>
+        <p class="text-red-600 text-base" *ngIf="isError3">
+          Selecciona una partida o concepto antes de continuar.
         </p>
         <div *ngIf="reportePresupuesto" class="grid grid-cols-2 gap-1">
           <!-- rango de impresión -->
@@ -187,7 +191,11 @@
                 >
               </div>
               <div class="flex gap-2">
-                <input type="checkbox" id="opcion3" />
+                <input
+                  type="checkbox"
+                  id="opcion3"
+                  [(ngModel)]="isImporteconLetra"
+                />
                 <label for="opcion3" class="text-gray-600 text-base"
                   >Importe con letra</label
                 >
