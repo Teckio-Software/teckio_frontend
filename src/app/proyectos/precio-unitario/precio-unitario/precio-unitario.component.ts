@@ -223,6 +223,8 @@ export class PrecioUnitarioComponent implements OnInit {
   diasPagados = 0;
   total = 0;
   totalConFormato = '';
+  totalSinIvaConFormato = '';
+
   precioUnitarioPadreCreacion: precioUnitarioDTO = {
     hijos: [],
     id: 0,
@@ -421,6 +423,32 @@ export class PrecioUnitarioComponent implements OnInit {
   IdPrecioParaExplosion: number = 0;
 
   preciosRemplazoCatalogo: precioUnitarioDTO[] = [];
+
+  proyectoSelected : proyectoDTO = {
+    id: 0,
+    codigoProyecto: '',
+    nombre: '',
+    noSerie: 0,
+    moneda: '',
+    presupuestoSinIva: 0,
+    tipoCambio: 0,
+    presupuestoSinIvaMonedaNacional: 0,
+    porcentajeIva: 0,
+    presupuestoConIvaMonedaNacional: 0,
+    anticipo: 0,
+    codigoPostal: 0,
+    domicilio: '',
+    fechaInicio: new Date,
+    fechaFinal: new Date,
+    tipoProgramaActividad: 0,
+    inicioSemana: 0,
+    esSabado: true,
+    esDomingo: true,
+    idPadre: 0,
+    nivel: 0,
+    expandido: false,
+    hijos: []
+  };
 
   @ViewChild('InputOperacionGenerador') InputOperacionGenerador: any;
 
@@ -703,6 +731,10 @@ export class PrecioUnitarioComponent implements OnInit {
         this.totalConFormato = new Intl.NumberFormat('es-MX', {
           style: 'currency',
           currency: 'MXN',
+        }).format(this.proyectoSelected.porcentajeIva > 0 ? (this.total + (this.total * this.proyectoSelected.porcentajeIva / 100)) : this.total);
+        this.totalSinIvaConFormato = new Intl.NumberFormat('es-MX', {
+          style: 'currency',
+          currency: 'MXN',
         }).format(this.total);
       });
   }
@@ -720,6 +752,10 @@ export class PrecioUnitarioComponent implements OnInit {
         this.totalConFormato = new Intl.NumberFormat('es-MX', {
           style: 'currency',
           currency: 'MXN',
+        }).format(this.proyectoSelected.porcentajeIva > 0 ? (this.total + (this.total * this.proyectoSelected.porcentajeIva / 100)) : this.total);
+        this.totalSinIvaConFormato = new Intl.NumberFormat('es-MX', {
+          style: 'currency',
+          currency: 'MXN',
         }).format(this.total);
       });
   }
@@ -733,6 +769,9 @@ export class PrecioUnitarioComponent implements OnInit {
   @ViewChild('inputFiltrado') inputFiltrado: any;
 
   ngOnInit(): void {
+    this.proyectoService.obtenerXId(this.selectedProyecto, this.selectedEmpresa).subscribe((datos) => {
+      this.proyectoSelected = datos;
+    });
     this.estimacionesService
       .obtenerPeriodos(this.selectedProyecto, this.selectedEmpresa)
       .subscribe((datos) => {
@@ -882,6 +921,10 @@ export class PrecioUnitarioComponent implements OnInit {
           this.total = this.total + this.preciosUnitarios[i].importe;
         }
         this.totalConFormato = new Intl.NumberFormat('es-MX', {
+          style: 'currency',
+          currency: 'MXN',
+        }).format(this.proyectoSelected.porcentajeIva > 0 ? (this.total + (this.total * this.proyectoSelected.porcentajeIva / 100)) : this.total);
+        this.totalSinIvaConFormato = new Intl.NumberFormat('es-MX', {
           style: 'currency',
           currency: 'MXN',
         }).format(this.total);
@@ -1685,7 +1728,11 @@ export class PrecioUnitarioComponent implements OnInit {
       this.totalConFormato = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN',
-      }).format(this.total);
+      }).format(this.proyectoSelected.porcentajeIva > 0 ? (this.total + (this.total * this.proyectoSelected.porcentajeIva / 100)) : this.total);
+      this.totalSinIvaConFormato = new Intl.NumberFormat('es-MX', {
+          style: 'currency',
+          currency: 'MXN',
+        }).format(this.total);
     }
   }
 
@@ -4154,6 +4201,10 @@ export class PrecioUnitarioComponent implements OnInit {
           this.total = this.total + this.preciosUnitarios[i].importe;
         }
         this.totalConFormato = new Intl.NumberFormat('es-MX', {
+          style: 'currency',
+          currency: 'MXN',
+        }).format(this.proyectoSelected.porcentajeIva > 0 ? (this.total + (this.total * this.proyectoSelected.porcentajeIva / 100)) : this.total);
+        this.totalSinIvaConFormato = new Intl.NumberFormat('es-MX', {
           style: 'currency',
           currency: 'MXN',
         }).format(this.total);
