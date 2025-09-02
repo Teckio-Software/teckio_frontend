@@ -161,12 +161,12 @@ export function imprimirReporte(
   // Header de la tabla
   const tableHeader = [
     [
-      { text: 'Clave', style: 'subheader' },
-      { text: 'Descripción', style: 'subheader' },
-      { text: 'Unidad', style: 'subheader' },
-      { text: 'Cantidad', style: 'subheader' },
-      { text: 'P.U.', style: 'subheader' },
-      { text: 'Total', style: 'subheader' },
+      { text: 'Clave', style: 'subheader', alignment: 'center' },
+      { text: 'Descripción', style: 'subheader', alignment: 'center' },
+      { text: 'Unidad', style: 'subheader', alignment: 'center' },
+      { text: 'Cantidad', style: 'subheader', alignment: 'center' },
+      { text: 'P.U.', style: 'subheader', alignment: 'center' },
+      { text: 'Total', style: 'subheader', alignment: 'center' },
     ],
   ];
 
@@ -180,19 +180,20 @@ export function imprimirReporte(
     },
     table: {
       headerRows: 1,
-      widths: [60, '*', 30, 60, 60, 60],
+      widths: [85, '*', 30, 60, 60, 60],
       body: tableHeader,
     },
   });
 
   const tableBodyProyecto: any = [];
 
-  precioUnitario.forEach((proyecto) => {
+  precioUnitario.forEach((proyecto, index) => {
     const esPadreConHijos = proyecto.hijos?.length > 0;
 
     tableBodyProyecto.push([
+      { text: ``, style: 'small' },
       { text: proyecto.codigo, style: 'small' },
-      { text: proyecto.descripcion, style: 'small' },
+      { text: proyecto.descripcion, style: 'small', alignment: 'justify' },
       { text: esPadreConHijos ? '' : proyecto.unidad || '', style: 'small' },
       {
         text: esPadreConHijos ? '' : proyecto.cantidadConFormato || '',
@@ -218,12 +219,12 @@ export function imprimirReporte(
   content.push({
     margin: [0, 0, 0, 0],
     layout: {
-      hLineWidth: () => 0, // todas las líneas horizontales = 0
-      vLineWidth: () => 0, // todas las líneas verticales = 0
+      hLineWidth: () => 0, // todas las líneas horizontales
+      vLineWidth: () => 0, // todas las líneas verticales
     },
     table: {
-      headerRows: 0, // ya pusimos header aparte
-      widths: [60, '*', 30, 60, 60, 60],
+      headerRows: 0,
+      widths: [20, 60, '*', 30, 60, 60, 60],
       body: tableBodyProyecto,
     },
   });
@@ -240,72 +241,84 @@ export function imprimirReporte(
     const subtotal = (Number(proyecto.importe) - totalMasIva).toFixed(2);
 
     content.push({
-      text: `Subtotal de ${proyecto.codigo}  $  ${subtotal}`,
-      style: 'styleTotal',
-      colSpan: 5,
-      margin: [0, 0, 0, 0],
-      alignment: 'right',
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: ['auto', 'auto'],
+            body: [
+              [
+                {
+                  text: `Subtotal de ${proyecto.codigo}`,
+                  style: 'styleTotal',
+                },
+                {
+                  text: `$ ${subtotal}`,
+                  style: 'styleTotal',
+                  alignment: 'right',
+                },
+              ],
+              [
+                { text: 'IVA 16%', style: 'smallCantidadTotal' },
+                {
+                  text: `$ ${totalMasIva}`,
+                  style: 'smallCantidadTotal',
+                  alignment: 'right',
+                },
+              ],
+              [
+                { text: 'Total', style: 'smallCantidadTotal' },
+                {
+                  text: `$ ${proyecto.costoUnitarioConFormato}`,
+                  style: 'smallCantidadTotal',
+                  alignment: 'right',
+                },
+              ],
+            ],
+          },
+          layout: {
+            hLineColor: () => '#B9B9B9',
+            vLineColor: () => '#B9B9B9',
+            hLineWidth: () => 0.5,
+            vLineWidth: () => 0.5,
+          },
+          margin: [0, 0, 0, 5],
+        },
+      ],
     });
-  });
-
-  content.push({
-    text: '\n',
-  });
-
-  precioUnitario.forEach((proyecto) => {
-    const totalMasIva: number = Number(
-      (Number(proyecto.importe) * 0.16).toFixed(2)
-    );
-
-    content.push(
-      {},
-      {},
-      {},
-      {},
-      {},
-      {
-        text: `IVA 16%  $  ${totalMasIva}`,
-        style: 'smallCantidadTotal',
-      }
-    );
-  });
-
-  content.push({
-    text: '\n',
-  });
-
-  precioUnitario.forEach((proyecto) => {
-    content.push(
-      {},
-      {},
-      {},
-      {},
-      {},
-      {
-        text: `Total  $  ${proyecto.costoUnitarioConFormato}`,
-        style: 'smallCantidadTotal',
-      }
-    );
-  });
-
-  content.push({
-    text: '\n',
   });
 
   if (importeConLetra) {
     precioUnitario.forEach((proyecto) => {
       totalEnLetras = numeroALetras(proyecto.costoUnitario);
-      content.push(
-        {},
-        {},
-        {},
-        {},
-        {},
-        {
-          text: `${totalEnLetras}`,
-          style: 'smallCantidadTotal',
-        }
-      );
+
+      content.push({
+        columns: [
+          { width: '*', text: '' },
+          {
+            width: 'auto',
+            table: {
+              widths: ['auto'],
+              body: [
+                [
+                  {
+                    text: `${totalEnLetras}`,
+                    style: 'smallBold',
+                  },
+                ],
+              ],
+            },
+            layout: {
+              hLineColor: () => '#B9B9B9',
+              vLineColor: () => '#B9B9B9',
+              hLineWidth: () => 0.5,
+              vLineWidth: () => 0.5,
+            },
+            margin: [0, 5, 0, 5],
+          },
+        ],
+      });
     });
   }
 
@@ -323,8 +336,8 @@ export function imprimirReporte(
   pdfMake.createPdf(docDefinition).download();
 }
 
-function mapHijos(hijos: any[], nivel = 1): any[] {
-  return hijos.flatMap((hijo) => {
+function mapHijos(hijos: any[], nivel = 1, prefijo = ''): any[] {
+  return hijos.flatMap((hijo, index) => {
     let color = '#000000';
     if (hijo.hijos?.length > 0) {
       switch (nivel) {
@@ -344,16 +357,22 @@ function mapHijos(hijos: any[], nivel = 1): any[] {
 
     const esPadreConHijos = hijo.hijos?.length > 0;
 
-    // asignar estilo
+    const numero = prefijo ? `${prefijo}.${index + 1}` : `${index + 1}`;
+
     const style = esPadreConHijos
       ? { fontSize: 8, bold: true, color }
       : { fontSize: 8 };
 
-    // fila base (ojo: si tiene hijos → celdas numéricas vacías)
+    // fila base
     const fila = [
-      { text: hijo.codigo, ...style, margin: [0, 0, 0, 0] },
-      { text: hijo.descripcion, ...style, margin: [0, 0, 0, 0] },
-      { text: esPadreConHijos ? '' : hijo.unidad, ...style },
+      { text: `${numero}`, style: 'small' },
+      { text: hijo.codigo, ...style },
+      { text: hijo.descripcion, ...style, alignment: 'justify' },
+      {
+        text: esPadreConHijos ? '' : hijo.unidad,
+        ...style,
+        alignment: 'right',
+      },
       {
         text: esPadreConHijos ? '' : ` $ ${hijo.cantidadConFormato}`,
         style: { ...style, alignment: 'right' },
@@ -369,23 +388,24 @@ function mapHijos(hijos: any[], nivel = 1): any[] {
     ];
 
     // recorrer hijos recursivamente
-    const subFilas = hijo.hijos ? mapHijos(hijo.hijos, nivel + 1) : [];
+    const subFilas = hijo.hijos ? mapHijos(hijo.hijos, nivel + 1, numero) : [];
 
     // fila de total si tiene hijos
     let filas = [fila, ...subFilas];
     if (esPadreConHijos) {
       const totalFila = [
+        {}, // esta queda sola
         {
-          text: `Total de ${hijo.descripcion}`,
-          style: 'styleTotal',
-          colSpan: 5,
-          margin: [0, 0, 0, 0],
+          text: `Total de ${hijo.descripcion}  $  ${hijo.importeConFormato}`,
+          style: 'smallCantidadTotal',
+          alignment: 'right',
+          colSpan: 6,
         },
         {},
         {},
         {},
         {},
-        { text: ` $ ${hijo.importeConFormato}`, style: 'smallCantidadTotal' },
+        {}, // placeholders que ocupa el colspan
       ];
       filas.push(totalFila);
     }
@@ -393,5 +413,3 @@ function mapHijos(hijos: any[], nivel = 1): any[] {
     return filas;
   });
 }
-
-export function imprimirMarcado(puMarcado: precioUnitarioDTO[]) {}

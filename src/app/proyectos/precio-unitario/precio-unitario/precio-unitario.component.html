@@ -326,7 +326,13 @@
                         }}
                       </mat-icon>
                     </div>
-                    <div class="p-1">
+                    <div class="p-1 flex justify-center items-center">
+                      <div
+                        [ngClass]="{
+                          hidden: precioUnitario.hijos.length > 0
+                        }"
+                        class="w-6"
+                      ></div>
                       <input
                         type="checkbox"
                         [(ngModel)]="precioUnitario.esSeleccionado"
