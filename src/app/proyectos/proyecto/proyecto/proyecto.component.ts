@@ -283,4 +283,17 @@ export class ProyectoComponent implements OnInit {
         this.cargarRegistros();
       });
   }
+
+  editarProyecto(proyecto: proyectoDTO){
+    const dialogRef = this.dialog.open(DialogNewProyectoComponent, {
+      data: {
+        menu1: this.menu1,
+        selectedEmpresa: this.selectedEmpresa,
+        proyecto : proyecto
+      },
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      this.cargarRegistros();
+    });
+  }
 }

@@ -78,7 +78,7 @@
                       class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"
                     ></div>
                   </div>
-                </td>                
+                </td>
               </tr>
               <tr>
                 <!-- Nombre -->
@@ -120,7 +120,7 @@
                       class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"
                     ></div>
                   </div>
-                </td>                
+                </td>
               </tr>
               <tr>
                 <!-- Nombre -->
@@ -162,7 +162,7 @@
                       class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"
                     ></div>
                   </div>
-                </td>                
+                </td>
               </tr>
             </ng-container>
           <tr
@@ -214,6 +214,19 @@
             </td>
             <td class="px-1 py-[2px]">
               <div class="flex justify-center m-0.5">
+                <button
+                  ngbTooltip="Editar"
+                  placement="start"
+                  triggers="mouseenter:mouseleave"
+                  class="py-0 px-[5px] rounded-sm"
+                  (click)="editarProyecto(proyecto)"
+                >
+                  <img
+                    src="../../../../assets/delete.svg"
+                    alt="Botón de eliminar"
+                    class="w-6"
+                  />
+                </button>
                 <button
                   ngbTooltip="Eliminar"
                   placement="start"

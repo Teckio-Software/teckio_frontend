@@ -37,7 +37,7 @@ export class ProyectoService{
     }
 
     public editar(registro: proyectoDTO, idEmpresa: number){
-        return this.HttpClient.put<proyectoDTO>(`${this.zvApiUrl}/${idEmpresa}`, registro);
+        return this.HttpClient.put<RespuestaDTO>(`${this.zvApiUrl}/${idEmpresa}`, registro);
     }
 
     public eliminar(zId: number, idEmpresa: number){

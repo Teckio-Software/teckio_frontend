@@ -43,21 +43,21 @@ export class DialogNewProyectoComponent {
   };
   selectedEmpresa: number;
 
-  parametrosRol : usuarioProyectoDTO = {
+  parametrosRol: usuarioProyectoDTO = {
     id: 0,
     idUsuario: 0,
     idEmpresa: 0,
     idProyecto: 0,
     nombreProyecto: '',
-    estatus: false
-  }
+    estatus: false,
+  };
   constructor(
     public dialogRef: MatDialogRef<DialogNewProyectoComponent>,
 
     private formBuilder: FormBuilder,
     private _snackBar: MatSnackBar,
     private proyectoService: ProyectoService,
-    private _usuarioProyectoService : ProyectoUsuarioService,
+    private _usuarioProyectoService: ProyectoUsuarioService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.menu1 = this.data.menu1;
@@ -66,34 +66,59 @@ export class DialogNewProyectoComponent {
   ngOnInit(): void {
     this.dialogRef.updateSize('70%');
 
-    this.form = this.formBuilder.group({
-      id: ['', { validators: [] }],
-      codigoProyecto: ['', { validators: [] }], //
-      nombre: ['', { validators: [] }], //
-      noSerie: [1, { validators: [] }], //
-      moneda: ['MXN', { validators: [] }],
-      presupuestoSinIva: [0, { validators: [] }], //
-      tipoCambio: ['', { validators: [] }], //
-      presupuestoSinIvaMonedaNacional: ['', { validators: [] }],
-      porcentajeIva: ['', { validators: [] }], //
-      presupuestoConIvaMonedaNacional: [0, { validators: [] }],
-      anticipo: ['', { validators: [] }], //
-      codigoPostal: ['', { validators: [] }], //
-      domicilio: ['', { validators: [] }], //
-      fechaInicio: ['', { validators: [] }], //
-      fechaFinal: ['', { validators: [] }], //
-      tipoProgramaActividad: ['', { validators: [] }], //
-      inicioSemana: ['', { validators: [] }], //
-      esSabado: [false, { validators: [] }], //
-      esDomingo: [false, { validators: [] }], //
-      idPadre: ['', { validators: [] }], //
-      nivel: ['', { validators: [] }], //
-    });
+    if (!this.data.proyecto) {
+      this.form = this.formBuilder.group({
+        id: [0, { validators: [] }],
+        codigoProyecto: ['', { validators: [] }], //
+        nombre: ['', { validators: [] }], //
+        noSerie: [1, { validators: [] }], //
+        moneda: ['MXN', { validators: [] }],
+        presupuestoSinIva: [0, { validators: [] }], //
+        tipoCambio: ['', { validators: [] }], //
+        presupuestoSinIvaMonedaNacional: ['', { validators: [] }],
+        porcentajeIva: ['', { validators: [] }], //
+        presupuestoConIvaMonedaNacional: [0, { validators: [] }],
+        anticipo: ['', { validators: [] }], //
+        codigoPostal: ['', { validators: [] }], //
+        domicilio: ['', { validators: [] }], //
+        fechaInicio: ['', { validators: [] }], //
+        fechaFinal: ['', { validators: [] }], //
+        tipoProgramaActividad: ['', { validators: [] }], //
+        inicioSemana: ['', { validators: [] }], //
+        esSabado: [false, { validators: [] }], //
+        esDomingo: [false, { validators: [] }], //
+        idPadre: ['', { validators: [] }], //
+        nivel: ['', { validators: [] }], //
+      });
+    } else {
+      this.form = this.formBuilder.group({
+        id: [this.data.proyecto.id, { validators: [] }],
+        codigoProyecto: [this.data.proyecto.codigoProyecto, { validators: [] }], //
+        nombre: [this.data.proyecto.nombre, { validators: [] }], //
+        noSerie: [1, { validators: [] }], //
+        moneda: [this.data.proyecto.moneda, { validators: [] }],
+        presupuestoSinIva: [0, { validators: [] }], //
+        tipoCambio: ['', { validators: [] }], //
+        presupuestoSinIvaMonedaNacional: ['', { validators: [] }],
+        porcentajeIva: [this.data.proyecto.porcentajeIva, { validators: [] }], //
+        presupuestoConIvaMonedaNacional: [0, { validators: [] }],
+        anticipo: ['', { validators: [] }], //
+        codigoPostal: [this.data.proyecto.codigoPostal, { validators: [] }], //
+        domicilio: [this.data.proyecto.domicilio, { validators: [] }], //
+        fechaInicio: [this.data.proyecto.fechaInicio, { validators: [] }], //
+        fechaFinal: [this.data.proyecto.fechaFinal, { validators: [] }], //
+        tipoProgramaActividad: ['', { validators: [] }], //
+        inicioSemana: ['', { validators: [] }], //
+        esSabado: [false, { validators: [] }], //
+        esDomingo: [false, { validators: [] }], //
+        idPadre: ['', { validators: [] }], //
+        nivel: ['', { validators: [] }], //
+      });
+    }
   }
 
   guardar() {
     this.nuevoProyecto = this.form.value;
-    this.nuevoProyecto.id = 0;
     this.nuevoProyecto.nivel = 0;
     this.nuevoProyecto.presupuestoSinIvaMonedaNacional = 0;
     this.nuevoProyecto.nivel = 1;
@@ -105,25 +130,39 @@ export class DialogNewProyectoComponent {
     this.nuevoProyecto.esSabado = true;
     this.nuevoProyecto.esDomingo = true;
     this.nuevoProyecto.noSerie = 1;
-    this.nuevoProyecto.porcentajeIva = 16;
-    this.nuevoProyecto.moneda = 'MXN';
-    this.proyectoService
+
+    if(this.nuevoProyecto.id == 0){
+      this.proyectoService
       .crear(this.nuevoProyecto, this.selectedEmpresa)
       .subscribe((datos) => {
         if (datos.id > 0) {
           this.parametrosRol.idEmpresa = this.selectedEmpresa;
           this.parametrosRol.idProyecto = datos.id;
-          this._usuarioProyectoService.asignarRolDefault(this.parametrosRol).subscribe((datos) => {
-
-          });
+          this._usuarioProyectoService
+            .asignarRolDefault(this.parametrosRol)
+            .subscribe((datos) => {});
           this.dialogRef.close(true);
         } else {
           Swal.fire({
-            text: "No se creo el proyecto",
+            text: 'No se creo el proyecto',
             icon: 'error',
           });
         }
       });
+    }else{
+      this.proyectoService.editar(this.nuevoProyecto, this.selectedEmpresa).subscribe((datos) => {
+        if(!datos.estatus){
+          Swal.fire({
+            text: 'No se edito el proyecto',
+            icon: 'error',
+          });
+        }else{
+          this.dialogRef.close(true);
+        }
+      });
+    }
+
+
     this.form.value.reset();
   }
 
