@@ -7,6 +7,7 @@ import { text } from 'stream/consumers';
 import { stackClasses } from '@mui/material';
 import { log } from 'console';
 import { numeroALetras } from 'src/app/compras/orden-compra/NumeroALetras';
+import { proyectoDTO } from 'src/app/proyectos/proyecto/tsProyecto';
 
 export function imprimirReporte(
   precioUnitario: precioUnitarioDTO[],
@@ -18,7 +19,11 @@ export function imprimirReporte(
   margenInferior: number,
   margenIzquierdo: number,
   margenDerecho: number,
-  importeConLetra: boolean
+  importeConLetra: boolean,
+  totalSinIVA: string,
+  totalConIVA: string,
+  proyecto: proyectoDTO,
+  totalIva: string
 ) {
   (<any>pdfMake).addVirtualFileSystem(pdfFonts);
 
@@ -233,12 +238,12 @@ export function imprimirReporte(
     text: '\n',
   });
 
-  precioUnitario.forEach((proyecto) => {
+  precioUnitario.forEach((precio) => {
     const totalMasIva: number = Number(
-      (Number(proyecto.importe) * 0.16).toFixed(2)
+      (Number(precio.importe) * 0.16).toFixed(2)
     );
 
-    const subtotal = (Number(proyecto.importe) - totalMasIva).toFixed(2);
+    const subtotal = (Number(precio.importe) - totalMasIva).toFixed(2);
 
     content.push({
       columns: [
@@ -250,28 +255,12 @@ export function imprimirReporte(
             body: [
               [
                 {
-                  text: `Subtotal de ${proyecto.codigo}`,
+                  text: `Subtotal de ${precio.codigo}`,
                   style: 'styleTotal',
                 },
                 {
-                  text: `$ ${subtotal}`,
+                  text: `$ ${precio.importeConFormato}`,
                   style: 'styleTotal',
-                  alignment: 'right',
-                },
-              ],
-              [
-                { text: 'IVA 16%', style: 'smallCantidadTotal' },
-                {
-                  text: `$ ${totalMasIva}`,
-                  style: 'smallCantidadTotal',
-                  alignment: 'right',
-                },
-              ],
-              [
-                { text: 'Total', style: 'smallCantidadTotal' },
-                {
-                  text: `$ ${proyecto.costoUnitarioConFormato}`,
-                  style: 'smallCantidadTotal',
                   alignment: 'right',
                 },
               ],
@@ -287,6 +276,43 @@ export function imprimirReporte(
         },
       ],
     });
+  });
+
+  content.push({
+    columns: [
+      {
+        table: {
+          body: [
+            [
+              {
+                text: 'IVA ' + proyecto.porcentajeIva + '%',
+                style: 'smallCantidadTotal',
+              },
+              {
+                text: ` ${totalIva}`,
+                style: 'smallCantidadTotal',
+                alignment: 'right',
+              },
+            ],
+            [
+              { text: 'Total', style: 'smallCantidadTotal' },
+              {
+                text: `$ ${totalConIVA}`,
+                style: 'smallCantidadTotal',
+                alignment: 'right',
+              },
+            ],
+          ],
+        },
+        layout: {
+          hLineColor: () => '#B9B9B9',
+          vLineColor: () => '#B9B9B9',
+          hLineWidth: () => 0.5,
+          vLineWidth: () => 0.5,
+        },
+        margin: [0, 0, 0, 5],
+      },
+    ],
   });
 
   if (importeConLetra) {
