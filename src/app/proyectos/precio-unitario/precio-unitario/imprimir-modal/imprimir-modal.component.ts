@@ -1,3 +1,4 @@
+import { proyectoDTO } from './../../../proyecto/tsProyecto';
 import { is } from 'date-fns/locale';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
@@ -17,6 +18,12 @@ export class ImprimirModalComponent {
   @Input() isOpen: boolean = false;
   @Input() preciosUnitarios: precioUnitarioDTO[] = [];
   @Input() marcados: precioUnitarioDTO[] = [];
+  @Input() proyecto!: proyectoDTO;
+
+  @Input() totalSinIva!: string;
+  @Input() totalConIva!: string;
+  @Input() totalIva!: string;
+
   @Output() close = new EventEmitter<void>();
 
   tipoReporte: string = '';
@@ -269,6 +276,8 @@ export class ImprimirModalComponent {
         this.reportePresupuesto = true;
         console.log(this.preciosUnitarios);
 
+        console.log(this.totalConIva, this.totalSinIva);
+
         if (this.tipoImpresion === 'impresionCompleta') {
           imprimirReporte(
             this.preciosUnitarios,
@@ -280,7 +289,11 @@ export class ImprimirModalComponent {
             this.paramsImpresion.margenInferior,
             this.paramsImpresion.margenIzquierdo,
             this.paramsImpresion.margenDerecho,
-            this.isImporteconLetra
+            this.isImporteconLetra,
+            this.totalSinIva,
+            this.totalConIva,
+            this.proyecto,
+            this.totalIva
           );
         }
         if (this.tipoImpresion === 'impresionMarcada') {
@@ -294,7 +307,11 @@ export class ImprimirModalComponent {
             this.paramsImpresion.margenInferior,
             this.paramsImpresion.margenIzquierdo,
             this.paramsImpresion.margenDerecho,
-            this.isImporteconLetra
+            this.isImporteconLetra,
+            this.totalSinIva,
+            this.totalConIva,
+            this.proyecto,
+            this.totalIva
           );
         }
         break;
