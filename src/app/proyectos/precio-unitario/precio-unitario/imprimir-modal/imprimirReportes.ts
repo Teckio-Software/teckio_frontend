@@ -269,8 +269,8 @@ export function imprimirReporte(
           layout: {
             hLineColor: () => '#B9B9B9',
             vLineColor: () => '#B9B9B9',
-            hLineWidth: () => 0.5,
-            vLineWidth: () => 0.5,
+            hLineWidth: () => 0,
+            vLineWidth: () => 0,
           },
           margin: [0, 0, 0, 5],
         },
@@ -280,7 +280,9 @@ export function imprimirReporte(
 
   content.push({
     columns: [
+      { width: '*', text: '' },
       {
+        width: 'auto',
         table: {
           body: [
             [
@@ -420,7 +422,7 @@ function mapHijos(hijos: any[], nivel = 1, prefijo = ''): any[] {
     let filas = [fila, ...subFilas];
     if (esPadreConHijos) {
       const totalFila = [
-        {}, // esta queda sola
+        {},
         {
           text: `Total de ${hijo.descripcion}  $  ${hijo.importeConFormato}`,
           style: 'smallCantidadTotal',
@@ -431,7 +433,7 @@ function mapHijos(hijos: any[], nivel = 1, prefijo = ''): any[] {
         {},
         {},
         {},
-        {}, // placeholders que ocupa el colspan
+        {},
       ];
       filas.push(totalFila);
     }
