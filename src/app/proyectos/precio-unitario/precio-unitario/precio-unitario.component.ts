@@ -3428,8 +3428,11 @@ export class PrecioUnitarioComponent implements OnInit {
     this.detalle.idTipoInsumo = insumo.idTipoInsumo;
   }
 
-  seleccionarConcepto(concepto: precioUnitarioDTO) {
+  seleccionarConcepto(concepto: precioUnitarioDTO, precioActual : precioUnitarioDTO) {
     this.precioUnitarioSeleccionado.codigo = concepto.codigo;
+    this.precioUnitarioSeleccionado.tipoPrecioUnitario = concepto.tipoPrecioUnitario;
+    this.precioUnitarioSeleccionado.idPrecioUnitarioBase = precioActual.idPrecioUnitarioBase;
+
     this.precioUnitarioSeleccionado.esAdicional = true;
     this.precioUnitarioSeleccionado.esAvanceObra = false;
 
