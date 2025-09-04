@@ -2808,6 +2808,15 @@ export class PrecioUnitarioComponent implements OnInit {
     this.dropdown = true;
   }
 
+  abrirDropdown(detalle: precioUnitarioDetalleDTO) {
+    if (detalle.id === 0) {
+      this.dropdown2 = true;
+      this.detalle = detalle;
+    } else {
+      this.dropdown2 = false;
+    }
+  }
+
   pruebaCont2(detalle: precioUnitarioDetalleDTO) {
     if (detalle.id == 0) {
       this.dropdown2 = true;

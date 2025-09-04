@@ -1065,7 +1065,6 @@
         <thead class="bg-primario text-white">
           <tr>
             <th class="px-1 py-[2px]" scope="col" style="width: 2%"></th>
-            <!-- <th class="cabecera" scope="col" style="width: 2%;">-</th> -->
             <th class="cabecera" scope="col" style="width: 15%">Código</th>
             <th class="cabecera" scope="col" style="width: 30%">Descripcion</th>
             <th class="cabecera" scope="col" style="width: 5%">Unidad</th>
@@ -1077,7 +1076,6 @@
             <th class="cabecera" scope="col" style="width: 8%">Importe</th>
             <th class="cabecera" scope="col" style="width: 5%">Tipo</th>
             <th class="cabecera" scope="col" style="width: 5%">Familia</th>
-            <!-- <th class="cabecera" scope="col" style="width: 5%;">Acciones</th> -->
           </tr>
         </thead>
         <tbody>
@@ -1090,6 +1088,7 @@
             }"
             class="font-medium text-gray700"
           >
+            <!-- icono de opciones por concepto -->
             <td class="body-table" style="width: 2%">
               <div
                 *ngIf="
@@ -1136,15 +1135,7 @@
                 </ul>
               </div>
             </td>
-            <!-- <td class="body-table" style="width: 2%;" *ngIf="detalle.id != 0">
-              +
-            </td>
-            <td class="body-table" style="width: 2%;" *ngIf="detalle.id == 0">
-              <input width="100%" type="checkbox" id="flexCheckChecked"  checked [(ngModel)]="detalle.esCompuesto"
-                (ngModelChange)="volverCero(detalle)"
-                style=" border: .5px solid #ffffff4d; border: none; border-radius: 3px;">
-            </td> -->
-
+            <!-- código -->
             <td class="body-table" style="width: 15%">
               <input
                 autocomplete="off"
@@ -1184,6 +1175,7 @@
                 </li>
               </ul>
             </td>
+            <!-- descripción -->
             <td class="body-table" style="width: 30%">
               <input
                 autocomplete="off"
@@ -1204,6 +1196,7 @@
                 "
               />
             </td>
+            <!-- unidad -->
             <td class="body-table" style="width: 5%">
               <select
                 aria-label=".form-select-sm example"
@@ -1247,7 +1240,7 @@
                             (keydown.enter)="crearDetalle(detalle)"
                             style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;"> -->
             </td>
-
+            <!-- cantidad  -->
             <td class="body-table" style="width: 10%">
               <input
                 autocomplete="off"
@@ -1509,7 +1502,7 @@
                 </div>
               </ng-template>
             </td>
-
+            <!-- costo base -->
             <td
               class="body-table"
               style="width: 10%"
@@ -1535,7 +1528,7 @@
                 "
               />
             </td>
-
+            <!-- costo base con formato-->
             <td
               class="body-table"
               style="width: 10%"
@@ -1566,7 +1559,7 @@
                 "
               />
             </td>
-
+            <!-- costo unitario-->
             <td class="body-table" style="width: 10%">
               <input
                 autocomplete="off"
@@ -1583,7 +1576,7 @@
                 "
               />
             </td>
-
+            <!-- costo unitario con formato-->
             <td
               class="body-table"
               [ngClass]="{
@@ -1610,7 +1603,7 @@
                 "
               />
             </td>
-
+            <!-- -->
             <td
               class="body-table"
               style="width: 10%; color: blue"
@@ -1687,7 +1680,7 @@
                 "
               />
             </td>
-
+            <!-- tipo insumo -->
             <td class="body-table" style="width: 5%">
               <select
                 aria-label=".form-select-sm example"
@@ -1712,6 +1705,7 @@
                 </option>
               </select>
             </td>
+            <!-- familia insumo -->
             <td class="body-table">
               <select
                 aria-label=".form-select-sm example"
