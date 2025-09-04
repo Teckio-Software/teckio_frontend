@@ -1903,9 +1903,7 @@
                   esM3 == true ||
                   esPza == true
                 "
-              >
-                Acciones
-              </th>
+              ></th>
             </tr>
           </thead>
           <tbody
@@ -2090,15 +2088,11 @@
                 />
               </td>
 
-              <td class="body-table" style="width: 10%">
+              <td class="body-table flex justify-center" style="width: 10%">
                 {{ generador.cantidadTotal }}
               </td>
 
-              <td
-                class="body-table"
-                style="width: 10%; align-items: center"
-                *ngIf="generador.id != 0"
-              >
+              <td style="width: 10%" *ngIf="generador.id != 0">
                 <button
                   type="button"
                   class="cursor-pointer"
