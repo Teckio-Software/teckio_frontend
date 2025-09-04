@@ -39,8 +39,8 @@
                 <mat-tab class="text-labels z-10" label="Insumos FSR"></mat-tab>
               </mat-tab-group>
             </div>
-
-            <div class="flex gap-2">
+            <!-- aqui esta -->
+            <div class="flex gap-2" *ngIf="!esAutorizado">
               <div>
                 <input
                   type="text"
