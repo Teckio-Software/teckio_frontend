@@ -3817,6 +3817,7 @@ export class PrecioUnitarioComponent implements OnInit {
         diasPagados: this.diasPagados,
         fsrDetalles: this.fsrDetalles,
         porcentajePrestaciones: this.porcentajePrestaciones,
+        esAutorizado : this.esAutorizado
       },
     });
     dialogOpen.afterClosed().subscribe((respuesta) => {
