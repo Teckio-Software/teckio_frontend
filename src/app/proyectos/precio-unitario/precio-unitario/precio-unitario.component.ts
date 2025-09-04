@@ -102,6 +102,8 @@ export class PrecioUnitarioComponent implements OnInit {
   tiposInsumos!: tipoInsumoDTO[];
   familiasInsumos!: familiaInsumoDTO[];
   desglosados: detalleDesglosadoDTO[] = [];
+  detallesDesglose: precioUnitarioDetalleDTO[] = [];
+  totalDesglosados: number = 0;
   desglosadosCopia: detalleDesglosadoDTO[] = [];
   generadores!: GeneradoresDTO[];
   nombreProyecto: string = '';
@@ -2323,6 +2325,7 @@ export class PrecioUnitarioComponent implements OnInit {
               this.insumosReset = insumos;
             });
           this.cargarListaConceptos();
+          this.actualizarDesgloce();
         });
     } else {
       if (
@@ -2391,8 +2394,69 @@ export class PrecioUnitarioComponent implements OnInit {
               this.insumosReset = insumos;
             });
           this.cargarListaConceptos();
+          this.actualizarDesgloce();
         });
     }
+  }
+
+  actualizarDesgloce() {
+    this.desglosados.forEach((element) => {
+      this.totalDesglosados = 0;
+      if (element.idDetallePerteneciente == 0) {
+        this.precioUnitarioDetalleService
+          .obtenerTodos(element.idPrecioUnitario, this.selectedEmpresa)
+          .subscribe((datos) => {
+            this.detallesDesglose = datos;
+            this.totalDesglosados = this.detallesDesglose.reduce(
+              (acumulado, detalle) => acumulado + detalle.importe,
+              0
+            );
+            element.costoConFormato = new Intl.NumberFormat('es-MX', {
+              style: 'currency',
+              currency: 'MXN',
+            }).format(this.totalDesglosados);
+          });
+      } else {
+        let Detalle: precioUnitarioDetalleDTO = {
+          id: element.idDetallePerteneciente,
+          idPrecioUnitario: element.idPrecioUnitario,
+          idInsumo: 0,
+          esCompuesto: false,
+          costoUnitario: 0,
+          cantidad: 0,
+          cantidadExcedente: 0,
+          idPrecioUnitarioDetallePerteneciente: 0,
+          codigo: '',
+          descripcion: '',
+          unidad: '',
+          idTipoInsumo: 0,
+          idFamiliaInsumo: 0,
+          importe: 0,
+          costoUnitarioConFormato: '',
+          cantidadConFormato: '',
+          importeConFormato: '',
+          costoUnitarioEditado: false,
+          cantidadEditado: false,
+          costoBase: 0,
+          costoBaseConFormato: '0.00',
+          esAutorizado: false,
+        };
+
+        this.precioUnitarioDetalleService
+          .obtenerHijos(Detalle, this.selectedEmpresa)
+          .subscribe((datos) => {
+            this.detallesDesglose = datos;
+            this.totalDesglosados = this.detallesDesglose.reduce(
+              (acumulado, detalle) => acumulado + detalle.importe,
+              0
+            );
+            element.costoConFormato = new Intl.NumberFormat('es-MX', {
+              style: 'currency',
+              currency: 'MXN',
+            }).format(this.totalDesglosados);
+          });
+      }
+    });
   }
 
   editarDetalleImporte(detalle: precioUnitarioDetalleDTO) {
@@ -3479,8 +3543,16 @@ export class PrecioUnitarioComponent implements OnInit {
     this.detalle.idTipoInsumo = insumo.idTipoInsumo;
   }
 
-  seleccionarConcepto(concepto: precioUnitarioDTO) {
+  seleccionarConcepto(
+    concepto: precioUnitarioDTO,
+    precioActual: precioUnitarioDTO
+  ) {
     this.precioUnitarioSeleccionado.codigo = concepto.codigo;
+    this.precioUnitarioSeleccionado.tipoPrecioUnitario =
+      concepto.tipoPrecioUnitario;
+    this.precioUnitarioSeleccionado.idPrecioUnitarioBase =
+      precioActual.idPrecioUnitarioBase;
+
     this.precioUnitarioSeleccionado.esAdicional = true;
     this.precioUnitarioSeleccionado.esAvanceObra = false;
 
@@ -3823,6 +3895,7 @@ export class PrecioUnitarioComponent implements OnInit {
         diasPagados: this.diasPagados,
         fsrDetalles: this.fsrDetalles,
         porcentajePrestaciones: this.porcentajePrestaciones,
+        esAutorizado: this.esAutorizado,
       },
     });
     dialogOpen.afterClosed().subscribe((respuesta) => {

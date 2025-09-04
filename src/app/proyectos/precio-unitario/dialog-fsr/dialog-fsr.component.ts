@@ -80,6 +80,7 @@ export class DialogFSRComponent {
   proyectos!: proyectoDTO[];
   nombreProyecto: string = '';
   idProyectoFiltro: number = 0;
+  esAutorizado : boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<DialogFSRComponent>,
@@ -96,6 +97,7 @@ export class DialogFSRComponent {
     this.selectedEmpresa = Number(Empresa);
     let Proyecto = this._SeguridadService.obtenerIdProyectoLocalStorage();
     this.selectedProyecto = Number(Proyecto);
+    this.esAutorizado = data.esAutorizado;
   }
 
   ngOnInit(): void {
