@@ -1168,7 +1168,7 @@
                   background-color: rgba(0, 0, 0, 0.164);
                 "
               />
-              <ul
+              <ul *ngIf="insumos.length > 0 && !precioUnitarioSeleccionado.esAvanceObra"
                 class="dropdown-menu"
                 style="z-index: 9999; position: absolute"
               >
