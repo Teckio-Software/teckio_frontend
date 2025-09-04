@@ -26,6 +26,7 @@
         <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
           <form [formGroup]="form" class="space-y-6">
             <div>
+              <p *ngIf="errorGlobal" class="text-red-700" >*Todos los campos son obligatorios</p>
               <label
                 for="razonSocial"
                 class="block text-sm font-medium text-gray-700"
@@ -36,8 +37,10 @@
                 type="text"
                 formControlName="razonSocial"
                 placeholder="Grupo Inmobiliario Teckio S.a. De C.v."
+                (change)="errorRs = false"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
+              <p *ngIf="errorRs" class="text-red-700" >*El campo Razon social es obligatorio</p>
             </div>
 
             <div>
@@ -49,8 +52,10 @@
                 type="text"
                 formControlName="rfc"
                 placeholder="PAMA010724HFSO"
+                (change)="errorRfc = false"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
+              <p *ngIf="errorRfc" class="text-red-700" >*El campo RFC es obligatorio</p>
             </div>
 
             <div>
@@ -64,8 +69,10 @@
                 type="email"
                 formControlName="representanteLegal"
                 placeholder="Fernando"
+                (change)="errorRl = false"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
+              <p *ngIf="errorRl" class="text-red-700" >*El campo Representante legal es obligatorio</p>
             </div>
 
             <div>
@@ -78,6 +85,7 @@
                     type="checkbox"
                     class="form-checkbox rounded text-indigo-600 focus:ring-indigo-500"
                     formControlName="esProveedorServicio"
+                    (change)="errorTp = false"
                   />
                   <span>Destajo</span>
                 </label>
@@ -90,6 +98,7 @@
                   <span>Proveedor</span>
                 </label>
               </div>
+              <p *ngIf="errorTp" class="text-red-700" >*Selecciona un tipo de proveedor</p>
             </div>
 
             <div>
@@ -101,8 +110,10 @@
                 type="email"
                 formControlName="email"
                 placeholder="name@overwatch.com"
+                (change)="errorCe = false"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
+              <p *ngIf="errorCe" class="text-red-700" >*El campo Correo electrónico es obligatorio</p>
             </div>
 
             <div>
@@ -116,8 +127,10 @@
                 type="text"
                 formControlName="domicilio"
                 placeholder="Av. Metepec"
+                (change)="errorDm = false"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
+              <p *ngIf="errorDm" class="text-red-700" >*El campo Domicilio es obligatorio</p>
             </div>
 
             <div class="flex gap-4">
@@ -132,8 +145,10 @@
                   type="text"
                   formControlName="telefono"
                   placeholder="7221234567"
+                  (change)="errorTe = false"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+              <p *ngIf="errorTe" class="text-red-700" >*El campo Teléfono es obligatorio</p>
               </div>
               <div class="flex-1">
                 <label
@@ -146,8 +161,10 @@
                   type="text"
                   formControlName="nExterior"
                   placeholder="24-A"
+                  (change)="errorNE = false"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+              <p *ngIf="errorNE" class="text-red-700" >*El campo Número exterior es obligatorio</p>
               </div>
             </div>
           </form>

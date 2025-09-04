@@ -2011,7 +2011,7 @@
                 />
               </td>
 
-              <td class="body-table" style="width: 10%">
+              <td class="body-table" style="width: 10%" *ngIf="selectedGenerador == generador.id">
                 <input
                   autocomplete="off"
                   type="text"
@@ -2032,13 +2032,53 @@
                 />
               </td>
 
-              <td class="body-table" style="width: 10%" *ngIf="esPza == false">
+              <td class="body-table" style="width: 10%" *ngIf="selectedGenerador != generador.id">
                 <input
                   autocomplete="off"
                   type="text"
                   id="input-table"
+                  [(ngModel)]="generador.cantidadDecimal"
+                  (click)="seleccionarGenerador(generador)"
+                  [readonly]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
+                  (dblclick)="abrirOperacionCantidadGenerador(generador)"
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                    background-color: rgba(0, 0, 0, 0.164);
+                  "
+                />
+              </td>
+
+              <td class="body-table" style="width: 10%" *ngIf="esPza == false && selectedGenerador == generador.id">
+                <input
+                  autocomplete="off"
+                  type="number"
+                  id="input-table"
                   [(ngModel)]="generador.x"
                   (keydown.enter)="crearGenerador(generador)"
+                  [readonly]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                    background-color: rgba(0, 0, 0, 0.164);
+                  "
+                />
+              </td>
+              <td class="body-table" style="width: 10%" *ngIf="esPza == false && selectedGenerador != generador.id">
+                <input
+                  autocomplete="off"
+                  type="text"
+                  id="input-table"
+                  (click)="seleccionarGenerador(generador)"
+                  [(ngModel)]="generador.xDecimal"
                   [readonly]="
                     precioUnitarioSeleccionado.esAvanceObra ||
                     contenedorCatalogoGeneral
@@ -2055,11 +2095,11 @@
               <td
                 class="body-table"
                 style="width: 10%"
-                *ngIf="esM2 == true || esM3 == true"
+                *ngIf="(esM2 == true || esM3 == true) && selectedGenerador == generador.id"
               >
                 <input
                   autocomplete="off"
-                  type="text"
+                  type="number"
                   id="input-table"
                   [(ngModel)]="generador.y"
                   (keydown.enter)="crearGenerador(generador)"
@@ -2075,11 +2115,34 @@
                   "
                 />
               </td>
-
-              <td class="body-table" style="width: 10%" *ngIf="esM3 == true">
+              <td
+                class="body-table"
+                style="width: 10%"
+                *ngIf="(esM2 == true || esM3 == true) && selectedGenerador != generador.id"
+              >
                 <input
                   autocomplete="off"
                   type="text"
+                  id="input-table"
+                  (click)="seleccionarGenerador(generador)"
+                  [(ngModel)]="generador.yDecimal"
+                  (keydown.enter)="crearGenerador(generador)"
+                  [readonly]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                    background-color: rgba(0, 0, 0, 0.164);
+                  "
+                />
+              </td>
+              <td class="body-table" style="width: 10%" *ngIf="esM3 == true && selectedGenerador == generador.id">
+                <input
+                  autocomplete="off"
+                  type="number"
                   id="input-table"
                   [(ngModel)]="generador.z"
                   (keydown.enter)="crearGenerador(generador)"
@@ -2096,8 +2159,28 @@
                 />
               </td>
 
+              <td class="body-table" style="width: 10%" *ngIf="esM3 == true && selectedGenerador != generador.id">
+                <input
+                  autocomplete="off"
+                  type="text"
+                  id="input-table"
+                  (click)="seleccionarGenerador(generador)"
+                  [(ngModel)]="generador.zDecimal"
+                  [readonly]="
+                    precioUnitarioSeleccionado.esAvanceObra ||
+                    contenedorCatalogoGeneral
+                  "
+                  style="
+                    border: 0.5px solid #ffffff4d;
+                    border-radius: 3px;
+                    width: 100%;
+                    background-color: rgba(0, 0, 0, 0.164);
+                  "
+                />
+              </td>
+
               <td class="body-table" style="width: 10%">
-                {{ generador.cantidadTotal }}
+                {{ generador.totalDecimal }}
               </td>
 
               <td
