@@ -2872,6 +2872,15 @@ export class PrecioUnitarioComponent implements OnInit {
     this.dropdown = true;
   }
 
+  abrirDropdown(detalle: precioUnitarioDetalleDTO) {
+    if (detalle.id === 0) {
+      this.dropdown2 = true;
+      this.detalle = detalle;
+    } else {
+      this.dropdown2 = false;
+    }
+  }
+
   pruebaCont2(detalle: precioUnitarioDetalleDTO) {
     if (detalle.id == 0) {
       this.dropdown2 = true;
@@ -4157,18 +4166,57 @@ export class PrecioUnitarioComponent implements OnInit {
 
   importarCatalogoDesdePu() {
     if (this.precioUnitarioSeleccionado.esAvanceObra) {
-      console.log('El elemento seleccionado ya ha sido autorizado');
+      Swal.fire({
+        confirmButtonText: 'Aceptar',
+        html: `
+            <div>
+              <div class="mb-2 mt-2"><p style="margin : 0px;">El elemento seleccionado ya ha sido autorizado.</p></div>
+            </div>
+          `,
+        imageWidth: 50,
+        customClass: {
+          icon: 'no-border',
+          cancelButton: 'SweetAlert2CancelButtonError',
+          confirmButton: 'SweetAlert2ConfirmButton',
+        },
+      });
       return;
     }
-    if (this.precioUnitarioSeleccionado.id == 0) {
-      console.log('No se ha seleccionado un elemnto destino');
+    if (this.precioUnitarioSeleccionado.id === 0) {
+      Swal.fire({
+        confirmButtonText: 'Aceptar',
+        html: `
+            <div>
+              <div class="mb-2 mt-2"><p style="margin : 0px;">No se ha seleccionado un campo destino.</p></div>
+            </div>
+          `,
+        imageWidth: 50,
+        customClass: {
+          icon: 'no-border',
+          cancelButton: 'SweetAlert2CancelButtonError',
+          confirmButton: 'SweetAlert2ConfirmButton',
+        },
+      });
       return;
     }
     let catalogoSeleccion = this.preciosUnitarios.filter(
       (z) => z.esSeleccionado
     );
     if (catalogoSeleccion.length == 0) {
-      console.log('no se ha seleccionado elementos a importar');
+      Swal.fire({
+        confirmButtonText: 'Aceptar',
+        html: `
+            <div>
+              <div class="mb-2 mt-2"><p style="margin : 0px;">No se ha seleccionado un elemento a importar.</p></div>
+            </div>
+          `,
+        imageWidth: 50,
+        customClass: {
+          icon: 'no-border',
+          cancelButton: 'SweetAlert2CancelButtonError',
+          confirmButton: 'SweetAlert2ConfirmButton',
+        },
+      });
       return;
     }
 
@@ -4177,19 +4225,42 @@ export class PrecioUnitarioComponent implements OnInit {
       precioUnitario: this.precioUnitarioSeleccionado,
     };
 
-    this.precioUnitarioService
-      .importarCatalogoAPrecioUnitario(parametros, this.selectedEmpresa)
-      .subscribe((datos) => {
-        this.contenedorCatalogoGeneral = false;
-        this.contenedorPresupuesto = true;
-        this.cargarRegistros();
-        this.recalcularPresupuesto();
-      });
+    Swal.fire({
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      showCancelButton: true,
+      html: `<p>¿Desea importar al presupuesto?</p>`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.precioUnitarioService
+          .importarCatalogoAPrecioUnitario(parametros, this.selectedEmpresa)
+          .subscribe((datos) => {
+            this.contenedorCatalogoGeneral = false;
+            this.contenedorPresupuesto = true;
+            this.cargarRegistros();
+            this.recalcularPresupuesto();
+          });
+      }
+    });
   }
 
   eliminarDeCatalogoGeneral() {
     let existeSeleccion = this.preciosUnitarios.filter((z) => z.esSeleccionado);
     if (existeSeleccion.length <= 0) {
+      Swal.fire({
+        confirmButtonText: 'Aceptar',
+        html: `
+            <div>
+              <div class="mb-2 mt-2"><p style="margin : 0px;">No se ha seleccionado un elemento a eliminar.</p></div>
+            </div>
+          `,
+        imageWidth: 50,
+        customClass: {
+          icon: 'no-border',
+          cancelButton: 'SweetAlert2CancelButtonError',
+          confirmButton: 'SweetAlert2ConfirmButton',
+        },
+      });
       return;
     }
 
