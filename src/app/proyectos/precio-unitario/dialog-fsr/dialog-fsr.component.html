@@ -182,7 +182,7 @@
                 </table>
               </div>
             </div>
-            <div class="flex w-full justify-end items-center mb-4 mt-4 gap-1">
+            <div class="flex w-full justify-end items-center mb-2 mt-2 gap-1">
               <p class="m-0 text-gray-700 text-sm font-medium">
                 Días no laborales (DNLA):
               </p>
@@ -291,7 +291,7 @@
                 </div>
               </div>
             </div>
-            <div class="flex w-full justify-end items-center mb-4 mt-4 gap-1">
+            <div class="flex w-full justify-end items-center mb-2 mt-2 gap-1">
               <p class="m-0 text-gray-700 text-sm font-medium">
                 Días pagados (DP):
               </p>
@@ -306,8 +306,8 @@
 
             <h2>FSI = DP / (365.25 - DNLA) = {{ fsi.fsi }}</h2>
 
-            <div>
-              <label for="">Es compuesto</label>
+            <div class="flex items-center gap-2 mt-4 mb-2">
+              <label for="" class="text-gray-700">Es compuesto</label>
               <input
                 type="checkbox"
                 name=""
@@ -318,44 +318,36 @@
               />
             </div>
 
-            <div
-              style="
-                overflow-x: auto;
-                white-space: nowrap;
-                width: 100%;
-                margin: 0 auto;
-                margin-top: 0px;
-              "
-            >
-              <div class="style-encabezado-ac-act" *ngIf="!fsr.esCompuesto">
-                Obligaciones patronales
-              </div>
-              <div
-                style="
-                  overflow-y: auto;
-                  white-space: nowrap;
-                  margin: 0 auto;
-                  cursor: pointer;
-                  max-height: 150px;
-                "
-                *ngIf="!fsr.esCompuesto"
-              >
-                <table
-                  class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos"
+            <div class="rounded-lg shadow-md overflow-hidden">
+              <div class="overflow-x-auto w-full" *ngIf="!fsr.esCompuesto">
+                <div
+                  class="bg-[#4eaac138] py-px px-5 flex justify-center items-center"
+                  *ngIf="!fsr.esCompuesto"
                 >
-                  <thead style="position: sticky; top: 0">
+                  <p class="text-gray-700 m-0 font-medium text-base">
+                    Obligaciones patronales
+                  </p>
+                </div>
+                <table
+                  class="w-full text-sm table-auto divide-y divide-gray300"
+                >
+                  <thead class="bg-primario text-white sticky top-0">
                     <tr>
-                      <th style="width: 30%">Articulos de ley</th>
-                      <th style="width: 20%">Código</th>
-                      <th style="width: 30%">Descripcion</th>
-                      <th style="width: 10%">Porcentaje</th>
-                      <th style="width: 10%">Acción</th>
+                      <th class="px-1 py-[2px] w-[30%]">Articulos de ley</th>
+                      <th class="px-1 py-[2px] w-[20%]">Código</th>
+                      <th class="px-1 py-[2px] w-[30%]">Descripcion</th>
+                      <th class="px-1 py-[2px] w-[10%]">Porcentaje</th>
+                      <th class="px-1 py-[2px] w-[10%]"></th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr *ngFor="let detalle of fsrDetalles">
-                      <td class="body-table" style="width: 30%">
+                  <tbody class="divide-y divide-gray300">
+                    <tr
+                      *ngFor="let detalle of fsrDetalles"
+                      class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+                    >
+                      <td class="px-1 py-[2px] w-[30%]">
                         <input
+                          placeholder="Artículo..."
                           autocomplete="off"
                           type="text"
                           class="bg-[#f2f2f2] w-full border-none"
@@ -367,8 +359,9 @@
                           [disabled]="esAutorizado"
                         />
                       </td>
-                      <td class="body-table" style="width: 20%">
+                      <td class="px-1 py-[2px] w-[20%]">
                         <input
+                          placeholder="Código..."
                           autocomplete="off"
                           type="text"
                           class="bg-[#f2f2f2] w-full border-none"
@@ -380,8 +373,9 @@
                           [disabled]="esAutorizado"
                         />
                       </td>
-                      <td class="body-table" style="width: 30%">
+                      <td class="px-1 py-[2px] w-[30%]">
                         <input
+                          placeholder="Descripción..."
                           autocomplete="off"
                           type="text"
                           class="bg-[#f2f2f2] w-full border-none"
@@ -393,7 +387,7 @@
                           [disabled]="esAutorizado"
                         />
                       </td>
-                      <td class="body-table" style="width: 10%">
+                      <td class="px-1 py-[2px] w-[10%]">
                         <input
                           autocomplete="off"
                           type="text"
@@ -407,7 +401,6 @@
                       </td>
                       <td *ngIf="detalle.id != 0 && !esAutorizado">
                         <button
-                          class="button-filt"
                           placement="start"
                           ngbTooltip="Eliminar"
                           triggers="mouseenter:mouseleave"
@@ -421,170 +414,231 @@
                   </tbody>
                 </table>
               </div>
+
               <div
-                class="flex w-full justify-end items-center"
-                *ngIf="!fsr.esCompuesto"
-              >
-                Porcentaje de obligaciones patronales (%OP):
-                <input
-                  autocomplete="off"
-                  type="text"
-                  class="bg-[#f2f2f2] w-full border-none"
-                  id="input-table"
-                  [(ngModel)]="porcentajePrestaciones"
-                  readonly
-                  class="bg-[#f2f2f2] text-center"
-                />
-              </div>
-              <div class="style-encabezado-ac-act" *ngIf="fsr.esCompuesto">
-                Parametros FSR
-              </div>
-              <div
-                style="
-                  overflow-y: auto;
-                  white-space: nowrap;
-                  margin: 0 auto;
-                  cursor: pointer;
-                  max-height: 150px;
-                "
+                class="rounded-lg shadow-md overflow-hidden"
                 *ngIf="fsr.esCompuesto"
               >
+                <div class="overflow-x-auto w-full">
+                  <div
+                    class="bg-[#4eaac138] py-px px-5 flex justify-center items-center"
+                  >
+                    <p class="text-gray-700 m-0 font-medium text-base">
+                      Parametros FSR
+                    </p>
+                  </div>
+                  <table
+                    class="w-full text-sm table-auto divide-y divide-gray300"
+                  >
+                    <thead class="bg-primario text-white sticky top-0">
+                      <tr>
+                        <th class="px-1 py-[2px] w-[10%]">R.Trabajo</th>
+                        <th class="px-1 py-[2px] w-[10%]">C.Fija</th>
+                        <th class="px-1 py-[2px] w-[10%]">A.Excedente</th>
+                        <th class="px-1 py-[2px] w-[10%]">P.Dinero</th>
+                        <th class="px-1 py-[2px] w-[10%]">G.Medico</th>
+                        <th class="px-1 py-[2px] w-[10%]">I.Vida</th>
+                        <th class="px-1 py-[2px] w-[10%]">Retiro</th>
+                        <th class="px-1 py-[2px] w-[10%]">P.Social</th>
+                        <th class="px-1 py-[2px] w-[10%]">Infonavit</th>
+                        <th class="px-1 py-[2px] w-[10%]">UMA</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray300">
+                      <tr
+                        class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+                      >
+                        <td class="px-1 py-[2px] w-[10%]">
+                          <input
+                            autocomplete="off"
+                            type="number"
+                            class="bg-[#f2f2f2] w-full border-none"
+                            id="input-table"
+                            class="w-full bg-transparent"
+                            [(ngModel)]="ParametrosFsrDTO.riesgoTrabajo"
+                            (keydown.enter)="crearParametro()"
+                            [disabled]="esAutorizado"
+                          />
+                        </td>
+                        <td class="px-1 py-[2px] w-[10%]">
+                          <input
+                            autocomplete="off"
+                            type="number"
+                            class="bg-[#f2f2f2] w-full border-none"
+                            id="input-table"
+                            class="w-full bg-transparent"
+                            [(ngModel)]="ParametrosFsrDTO.cuotaFija"
+                            (keydown.enter)="crearParametro()"
+                            [disabled]="esAutorizado"
+                          />
+                        </td>
+                        <td class="px-1 py-[2px] w-[10%]">
+                          <input
+                            autocomplete="off"
+                            type="number"
+                            class="bg-[#f2f2f2] w-full border-none"
+                            id="input-table"
+                            class="w-full bg-transparent"
+                            [(ngModel)]="ParametrosFsrDTO.aplicacionExcedente"
+                            (keydown.enter)="crearParametro()"
+                            [disabled]="esAutorizado"
+                          />
+                        </td>
+                        <td class="px-1 py-[2px] w-[10%]">
+                          <input
+                            autocomplete="off"
+                            type="number"
+                            class="bg-[#f2f2f2] w-full border-none"
+                            id="input-table"
+                            class="w-full bg-transparent"
+                            [(ngModel)]="ParametrosFsrDTO.prestacionDinero"
+                            (keydown.enter)="crearParametro()"
+                            [disabled]="esAutorizado"
+                          />
+                        </td>
+                        <td class="px-1 py-[2px] w-[10%]">
+                          <input
+                            autocomplete="off"
+                            type="number"
+                            class="bg-[#f2f2f2] w-full border-none"
+                            id="input-table"
+                            class="w-full bg-transparent"
+                            [(ngModel)]="ParametrosFsrDTO.gastoMedico"
+                            (keydown.enter)="crearParametro()"
+                            [disabled]="esAutorizado"
+                          />
+                        </td>
+                        <td class="px-1 py-[2px] w-[10%]">
+                          <input
+                            autocomplete="off"
+                            type="number"
+                            class="bg-[#f2f2f2] w-full border-none"
+                            id="input-table"
+                            class="w-full bg-transparent"
+                            [(ngModel)]="ParametrosFsrDTO.invalidezVida"
+                            (keydown.enter)="crearParametro()"
+                            [disabled]="esAutorizado"
+                          />
+                        </td>
+                        <td class="px-1 py-[2px] w-[10%]">
+                          <input
+                            autocomplete="off"
+                            type="number"
+                            class="bg-[#f2f2f2] w-full border-none"
+                            id="input-table"
+                            class="w-full bg-transparent"
+                            [(ngModel)]="ParametrosFsrDTO.retiro"
+                            (keydown.enter)="crearParametro()"
+                            [disabled]="esAutorizado"
+                          />
+                        </td>
+                        <td class="px-1 py-[2px] w-[10%]">
+                          <input
+                            autocomplete="off"
+                            type="number"
+                            class="bg-[#f2f2f2] w-full border-none"
+                            id="input-table"
+                            class="w-full bg-transparent"
+                            [(ngModel)]="ParametrosFsrDTO.prestaconSocial"
+                            (keydown.enter)="crearParametro()"
+                            [disabled]="esAutorizado"
+                          />
+                        </td>
+                        <td class="px-1 py-[2px] w-[10%]">
+                          <input
+                            autocomplete="off"
+                            type="number"
+                            class="bg-[#f2f2f2] w-full border-none"
+                            id="input-table"
+                            class="w-full bg-transparent"
+                            [(ngModel)]="ParametrosFsrDTO.infonavit"
+                            (keydown.enter)="crearParametro()"
+                            [disabled]="esAutorizado"
+                          />
+                        </td>
+                        <td class="px-1 py-[2px] w-[10%]">
+                          <input
+                            autocomplete="off"
+                            type="number"
+                            class="bg-[#f2f2f2] w-full border-none"
+                            id="input-table"
+                            class="w-full bg-transparent"
+                            [(ngModel)]="ParametrosFsrDTO.uma"
+                            (keydown.enter)="crearParametro()"
+                            [disabled]="esAutorizado"
+                          />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flex w-full justify-end items-center mb-2 mt-2 gap-1"
+              *ngIf="!fsr.esCompuesto"
+            >
+              <p class="m-0 text-gray-700 text-sm font-medium">
+                Porcentaje de obligaciones patronales (%OP):
+              </p>
+              <input
+                autocomplete="off"
+                type="text"
+                class="rounded-lg bg-gray300 text-gray-700 text-center"
+                id="input-table"
+                [(ngModel)]="porcentajePrestaciones"
+                readonly
+              />
+            </div>
+            <h2 *ngIf="fsr.esCompuesto" class="mt-4">
+              FSR = FSI + %OP = {{ fsr.porcentajeFsr }}
+            </h2>
+          </div>
+
+          <div *ngIf="selectedIndex == 1">
+            <div class="rounded-lg shadow-md overflow-hidden mt-2">
+              <div class="overflow-x-auto w-full">
                 <table
-                  class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos"
+                  class="w-full text-sm table-auto divide-y divide-gray300"
                 >
-                  <thead style="position: sticky; top: 0">
+                  <thead class="bg-primario text-white sticky top-0">
                     <tr>
-                      <th style="width: 10%">R.Trabajo</th>
-                      <th style="width: 10%">C.Fija</th>
-                      <th style="width: 10%">A.Excedente</th>
-                      <th style="width: 10%">P.Dinero</th>
-                      <th style="width: 10%">G.Medico</th>
-                      <th style="width: 10%">I.Vida</th>
-                      <th style="width: 10%">Retiro</th>
-                      <th style="width: 10%">P.Social</th>
-                      <th style="width: 10%">Infonavit</th>
-                      <th style="width: 10%">UMA</th>
+                      <th class="px-1 py-[2px] w-1/2">Rango</th>
+                      <th class="px-1 py-[2px] w-1/2">Porcentaje</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td class="body-table" style="width: 10%">
+                  <tbody class="divide-y divide-gray300">
+                    <tr
+                      *ngFor="let porcentaje of porcentajesCesantiaEdad"
+                      class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+                    >
+                      <td class="px-1 py-[2px] w-[50%]">
                         <input
                           autocomplete="off"
-                          type="number"
+                          type="text"
                           class="bg-[#f2f2f2] w-full border-none"
                           id="input-table"
                           class="w-full bg-transparent"
-                          [(ngModel)]="ParametrosFsrDTO.riesgoTrabajo"
-                          (keydown.enter)="crearParametro()"
+                          [(ngModel)]="porcentaje.rangoUMA"
+                          (keydown.enter)="
+                            crearPorcentajeCensantiaEdad(porcentaje)
+                          "
+                          maxlength="50"
                           [disabled]="esAutorizado"
                         />
                       </td>
-                      <td class="body-table" style="width: 10%">
+                      <td class="px-1 py-[2px] w-[50%]">
                         <input
                           autocomplete="off"
-                          type="number"
+                          type="text"
                           class="bg-[#f2f2f2] w-full border-none"
                           id="input-table"
                           class="w-full bg-transparent"
-                          [(ngModel)]="ParametrosFsrDTO.cuotaFija"
-                          (keydown.enter)="crearParametro()"
-                          [disabled]="esAutorizado"
-                        />
-                      </td>
-                      <td class="body-table" style="width: 10%">
-                        <input
-                          autocomplete="off"
-                          type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
-                          [(ngModel)]="ParametrosFsrDTO.aplicacionExcedente"
-                          (keydown.enter)="crearParametro()"
-                          [disabled]="esAutorizado"
-                        />
-                      </td>
-                      <td class="body-table" style="width: 10%">
-                        <input
-                          autocomplete="off"
-                          type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
-                          [(ngModel)]="ParametrosFsrDTO.prestacionDinero"
-                          (keydown.enter)="crearParametro()"
-                          [disabled]="esAutorizado"
-                        />
-                      </td>
-                      <td class="body-table" style="width: 10%">
-                        <input
-                          autocomplete="off"
-                          type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
-                          [(ngModel)]="ParametrosFsrDTO.gastoMedico"
-                          (keydown.enter)="crearParametro()"
-                          [disabled]="esAutorizado"
-                        />
-                      </td>
-                      <td class="body-table" style="width: 10%">
-                        <input
-                          autocomplete="off"
-                          type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
-                          [(ngModel)]="ParametrosFsrDTO.invalidezVida"
-                          (keydown.enter)="crearParametro()"
-                          [disabled]="esAutorizado"
-                        />
-                      </td>
-                      <td class="body-table" style="width: 10%">
-                        <input
-                          autocomplete="off"
-                          type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
-                          [(ngModel)]="ParametrosFsrDTO.retiro"
-                          (keydown.enter)="crearParametro()"
-                          [disabled]="esAutorizado"
-                        />
-                      </td>
-                      <td class="body-table" style="width: 10%">
-                        <input
-                          autocomplete="off"
-                          type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
-                          [(ngModel)]="ParametrosFsrDTO.prestaconSocial"
-                          (keydown.enter)="crearParametro()"
-                          [disabled]="esAutorizado"
-                        />
-                      </td>
-                      <td class="body-table" style="width: 10%">
-                        <input
-                          autocomplete="off"
-                          type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
-                          [(ngModel)]="ParametrosFsrDTO.infonavit"
-                          (keydown.enter)="crearParametro()"
-                          [disabled]="esAutorizado"
-                        />
-                      </td>
-                      <td class="body-table" style="width: 10%">
-                        <input
-                          autocomplete="off"
-                          type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
-                          [(ngModel)]="ParametrosFsrDTO.uma"
-                          (keydown.enter)="crearParametro()"
+                          [(ngModel)]="porcentaje.porcentaje"
+                          (keydown.enter)="
+                            crearPorcentajeCensantiaEdad(porcentaje)
+                          "
+                          maxlength="15"
                           [disabled]="esAutorizado"
                         />
                       </td>
@@ -593,295 +647,190 @@
                 </table>
               </div>
             </div>
-            <h2>FSR = FSI + %OP = {{ fsr.porcentajeFsr }}</h2>
-          </div>
-
-          <div *ngIf="selectedIndex == 1">
-            <div
-              style="
-                overflow-y: auto;
-                white-space: nowrap;
-                margin: 0 auto;
-                cursor: pointer;
-                max-height: 150px;
-              "
-            >
-              <table
-                class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos"
-              >
-                <thead style="position: sticky; top: 0">
-                  <tr class="bg-zinc-400 text-white">
-                    <th style="width: 50%">Rango</th>
-                    <th style="width: 50%">Porcentaje</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let porcentaje of porcentajesCesantiaEdad">
-                    <td style="width: 50%">
-                      <input
-                        autocomplete="off"
-                        type="text"
-                        class="bg-[#f2f2f2] w-full border-none"
-                        id="input-table"
-                        class="w-full bg-transparent"
-                        [(ngModel)]="porcentaje.rangoUMA"
-                        (keydown.enter)="
-                          crearPorcentajeCensantiaEdad(porcentaje)
-                        "
-                        maxlength="50"
-                        [disabled]="esAutorizado"
-                      />
-                    </td>
-                    <td style="width: 50%">
-                      <input
-                        autocomplete="off"
-                        type="text"
-                        class="bg-[#f2f2f2] w-full border-none"
-                        id="input-table"
-                        class="w-full bg-transparent"
-                        [(ngModel)]="porcentaje.porcentaje"
-                        (keydown.enter)="
-                          crearPorcentajeCensantiaEdad(porcentaje)
-                        "
-                        maxlength="15"
-                        [disabled]="esAutorizado"
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
           </div>
 
           <div *ngIf="selectedIndex == 2">
-            <div
-              style="
-                overflow-x: auto;
-                white-space: nowrap;
-                width: 100%;
-                margin: 0 auto;
-                margin-top: 0px;
-              "
-            >
-              <div
-                style="
-                  overflow-y: auto;
-                  white-space: nowrap;
-                  margin: 0 auto;
-                  cursor: pointer;
-                  max-height: 150px;
-                "
-              >
+            <div class="rounded-lg shadow-md overflow-hidden mt-2 max-h-96">
+              <div class="overflow-x-auto overflow-y-auto w-full max-h-96">
                 <table
-                  class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos"
+                  class="min-w-[1800px] text-sm table-auto divide-y divide-gray-300 h-auto"
                 >
-                  <thead style="position: sticky; top: 0">
+                  <thead class="bg-primario text-white sticky top-0">
                     <tr>
-                      <th style="width: 20%">Insumo</th>
-                      <th style="width: 5%">C.Base</th>
-                      <th style="width: 5%">C.Unitario</th>
-                      <th style="width: 5%">SBC</th>
-                      <th style="width: 5%">R.Trabajo</th>
-                      <th style="width: 5%">C.Fija</th>
-                      <th style="width: 5%">A.Excedente</th>
-                      <th style="width: 5%">P.Dinero</th>
-                      <th style="width: 5%">G.Medico</th>
-                      <th style="width: 5%">I.Vida</th>
-                      <th style="width: 5%">Retiro</th>
-                      <th style="width: 5%">Censantia</th>
-                      <th style="width: 5%">P.Social</th>
-                      <th style="width: 5%">Infonavit</th>
-                      <th style="width: 5%">S.Prestaciones</th>
-                      <th style="width: 5%">SP/SBC</th>
-                      <th style="width: 5%">FSR</th>
+                      <th class="px-2 py-1 w-[250px]">Insumo</th>
+                      <th class="px-2 py-1 w-[120px]">C.Base*</th>
+                      <th class="px-2 py-1 w-[120px]">C.Unitario</th>
+                      <th class="px-2 py-1 w-[120px]">SBC</th>
+                      <th class="px-2 py-1 w-[120px]">R.Trabajo</th>
+                      <th class="px-2 py-1 w-[120px]">C.Fija</th>
+                      <th class="px-2 py-1 w-[120px]">A.Excedente</th>
+                      <th class="px-2 py-1 w-[120px]">P.Dinero</th>
+                      <th class="px-2 py-1 w-[120px]">G.Medico</th>
+                      <th class="px-2 py-1 w-[120px]">I.Vida</th>
+                      <th class="px-2 py-1 w-[120px]">Retiro</th>
+                      <th class="px-2 py-1 w-[120px]">Cesantía</th>
+                      <th class="px-2 py-1 w-[120px]">P.Social</th>
+                      <th class="px-2 py-1 w-[120px]">Infonavit</th>
+                      <th class="px-2 py-1 w-[150px]">S.Prestaciones</th>
+                      <th class="px-2 py-1 w-[120px]">SP/SBC</th>
+                      <th class="px-2 py-1 w-[120px]">FSR</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr *ngFor="let insumo of parametrosXInsumo">
-                      <td class="body-table" style="width: 20%">
+                  <tbody class="divide-y divide-gray-300">
+                    <tr
+                      *ngFor="let insumo of parametrosXInsumo"
+                      class="font-medium text-gray-700 hover:bg-gray-200 transition duration-200"
+                    >
+                      <td class="px-2 py-1">
                         <input
                           autocomplete="off"
                           type="text"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
+                          class="w-full border-none rounded bg-transparent"
                           [(ngModel)]="insumo.descripcion"
                           [disabled]="true"
                         />
                       </td>
-                      <td class="body-table" style="width: 5%">
+                      <td class="px-2 py-1">
                         <input
                           autocomplete="off"
                           type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
+                          class="w-full border-none rounded bg-transparent"
                           [(ngModel)]="insumo.costoBase"
                           [disabled]="esAutorizado"
                           (keydown.enter)="actualizarCostoBaseInsumo(insumo)"
                         />
                       </td>
-                      <td class="body-table" style="width: 5%">
+                      <td class="px-2 py-1">
                         <input
                           autocomplete="off"
                           type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
+                          class="w-full border-none rounded bg-transparent"
                           [(ngModel)]="insumo.costoUnitario"
                           [disabled]="true"
                         />
                       </td>
-                      <td class="body-table" style="width: 5%">
+                      <td class="px-2 py-1">
                         <input
                           autocomplete="off"
                           type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
+                          class="w-full border-none rounded bg-transparent"
                           [(ngModel)]="insumo.salarioBaseCotizacion"
                           [disabled]="true"
                         />
                       </td>
-                      <td class="body-table" style="width: 5%">
+                      <td class="px-2 py-1">
                         <input
                           autocomplete="off"
                           type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
+                          class="w-full border-none rounded bg-transparent"
                           [(ngModel)]="insumo.riesgoTrabajo"
                           [disabled]="true"
                         />
                       </td>
-                      <td class="body-table" style="width: 5%">
+                      <td class="px-2 py-1">
                         <input
                           autocomplete="off"
                           type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
+                          class="w-full border-none rounded bg-transparent"
                           [(ngModel)]="insumo.cuotaFija"
                           [disabled]="true"
                         />
                       </td>
-                      <td class="body-table" style="width: 5%">
+                      <td class="px-2 py-1">
                         <input
                           autocomplete="off"
                           type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
+                          class="w-full border-none rounded bg-transparent"
                           [(ngModel)]="insumo.aplicacionExcedente"
                           [disabled]="true"
                         />
                       </td>
-                      <td class="body-table" style="width: 5%">
+                      <td class="px-2 py-1">
                         <input
                           autocomplete="off"
                           type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
+                          class="w-full border-none rounded bg-transparent"
                           [(ngModel)]="insumo.prestacionDinero"
                           [disabled]="true"
                         />
                       </td>
-                      <td class="body-table" style="width: 5%">
+                      <td class="px-2 py-1">
                         <input
                           autocomplete="off"
                           type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
+                          class="w-full border-none rounded bg-transparent"
                           [(ngModel)]="insumo.gastoMedico"
                           [disabled]="true"
                         />
                       </td>
-                      <td class="body-table" style="width: 5%">
+                      <td class="px-2 py-1">
                         <input
                           autocomplete="off"
                           type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
+                          class="w-full border-none rounded bg-transparent"
                           [(ngModel)]="insumo.invalidezVida"
                           [disabled]="true"
                         />
                       </td>
-                      <td class="body-table" style="width: 5%">
+                      <td class="px-2 py-1">
                         <input
                           autocomplete="off"
                           type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
+                          class="w-full border-none rounded bg-transparent"
                           [(ngModel)]="insumo.retiro"
                           [disabled]="true"
                         />
                       </td>
-                      <td class="body-table" style="width: 5%">
+                      <td class="px-2 py-1">
                         <input
                           autocomplete="off"
                           type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
+                          class="w-full border-none rounded bg-transparent"
                           [(ngModel)]="insumo.cesantiaEdad"
                           [disabled]="true"
                         />
                       </td>
-                      <td class="body-table" style="width: 5%">
+                      <td class="px-2 py-1">
                         <input
                           autocomplete="off"
                           type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
+                          class="w-full border-none rounded bg-transparent"
                           [(ngModel)]="insumo.prestaconSocial"
                           [disabled]="true"
                         />
                       </td>
-                      <td class="body-table" style="width: 5%">
+                      <td class="px-2 py-1">
                         <input
                           autocomplete="off"
                           type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
+                          class="w-full border-none rounded bg-transparent"
                           [(ngModel)]="insumo.infonavit"
                           [disabled]="true"
                         />
                       </td>
-                      <td class="body-table" style="width: 5%">
+                      <td class="px-2 py-1">
                         <input
                           autocomplete="off"
                           type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
+                          class="w-full border-none rounded bg-transparent"
                           [(ngModel)]="insumo.sumaPrestaciones"
                           [disabled]="true"
                         />
                       </td>
-                      <td class="body-table" style="width: 5%">
+                      <td class="px-2 py-1">
                         <input
                           autocomplete="off"
                           type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
+                          class="w-full border-none rounded bg-transparent"
                           [(ngModel)]="insumo.sumaSOBRECostoBase"
                           [disabled]="true"
                         />
                       </td>
-                      <td class="body-table" style="width: 5%">
+                      <td class="px-2 py-1">
                         <input
                           autocomplete="off"
                           type="number"
-                          class="bg-[#f2f2f2] w-full border-none"
-                          id="input-table"
-                          class="w-full bg-transparent"
+                          class="w-full border-none rounded bg-transparent"
                           [(ngModel)]="insumo.fsrInsumo"
                           [disabled]="true"
                         />
