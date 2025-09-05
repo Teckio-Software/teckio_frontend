@@ -376,10 +376,15 @@ export class PrecioUnitarioComponent implements OnInit {
     ejeY: '',
     ejeZ: '',
     cantidad: 0,
-    x: 0,
-    y: 0,
-    z: 0,
+    x: 1,
+    xDecimal: '1.00',
+    y: 1,
+    yDecimal: '1.00',
+    z: 1,
+    zDecimal: '1.00',
+    totalDecimal: '0.00',
     cantidadTotal: 0,
+    cantidadDecimal: '0.00',
     cantidadOperacion: '',
   };
 
@@ -455,6 +460,8 @@ export class PrecioUnitarioComponent implements OnInit {
     expandido: false,
     hijos: [],
   };
+
+  selectedGenerador: number = 0;
 
   @ViewChild('InputOperacionGenerador') InputOperacionGenerador: any;
 
@@ -1833,6 +1840,7 @@ export class PrecioUnitarioComponent implements OnInit {
   }
 
   cargarDetallesXIdPrecioUnitario(PrecioUnitario: precioUnitarioDTO) {
+    this.selectedGenerador = -1;
     let detalleVacio: precioUnitarioDetalleDTO = {
       id: 0,
       idPrecioUnitario: 0,
@@ -2247,9 +2255,14 @@ export class PrecioUnitarioComponent implements OnInit {
           ejeZ: '',
           cantidad: 0,
           x: 1,
+          xDecimal: '1.00',
           y: 1,
+          yDecimal: '1.00',
           z: 1,
+          zDecimal: '1.00',
           cantidadTotal: 0,
+          totalDecimal: '0.00',
+          cantidadDecimal: '0.00',
           cantidadOperacion: '',
         });
       });
@@ -2662,9 +2675,14 @@ export class PrecioUnitarioComponent implements OnInit {
                 ejeZ: '',
                 cantidad: 0,
                 x: 1,
+                xDecimal: '1.00',
                 y: 1,
+                yDecimal: '1.00',
                 z: 1,
+                zDecimal: '1.00',
+                totalDecimal: '0.00',
                 cantidadTotal: 0,
+                cantidadDecimal: '0.00',
                 cantidadOperacion: '',
               });
             });
@@ -2695,9 +2713,14 @@ export class PrecioUnitarioComponent implements OnInit {
                 ejeZ: '',
                 cantidad: 0,
                 x: 1,
+                xDecimal: '1.00',
                 y: 1,
+                yDecimal: '1.00',
                 z: 1,
+                zDecimal: '1.00',
+                totalDecimal: '0.00',
                 cantidadTotal: 0,
+                cantidadDecimal: '0.00',
                 cantidadOperacion: '',
               });
             });
@@ -2743,9 +2766,14 @@ export class PrecioUnitarioComponent implements OnInit {
               ejeZ: '',
               cantidad: 0,
               x: 1,
+              xDecimal: '1.00',
               y: 1,
+              yDecimal: '1.00',
               z: 1,
+              zDecimal: '1.00',
+              totalDecimal: '0.00',
               cantidadTotal: 0,
+              cantidadDecimal: '0.00',
               cantidadOperacion: '',
             });
           });
@@ -3332,6 +3360,11 @@ export class PrecioUnitarioComponent implements OnInit {
       precioUnitario.esDetalle = true;
       this.precioUnitarioSeleccionado = precioUnitario;
     }
+  }
+
+  seleccionarGenerador(generador: GeneradoresDTO) {
+    if (this.selectedGenerador != generador.id)
+      this.selectedGenerador = generador.id;
   }
 
   // seleccionarPUCantidad(precioUnitario: precioUnitarioDTO) {

@@ -73,10 +73,10 @@
                   class="bg-transparent w-[90%]"
                 />
               </td>
-              <td scope="col" class="text-center">
-                {{ p.debe }}
+              <td scope="col" class="text-end">
+                {{ p.debe | number: '1.2-2' }}
               </td>
-              <td scope="col" class="text-center">{{ p.haber }}</td>
+              <td scope="col" class="text-end">{{ p.haber | number: '1.2-2' }}</td>
             </tr>
           </tbody>
         </table>
@@ -89,8 +89,8 @@
         <div class="rounded-lg shadow-md p-2">
           <div class="flex gap-8 justify-end mr-6">
             <p class="font-bold m-0 xs:text-xs">SUMAS IGUALES:</p>
-            <p class="xs:text-xs">{{ totalDebe }}</p>
-            <p class="xs:text-xs">{{ totalHaber }}</p>
+            <p class="xs:text-xs text-end">{{ totalDebe | number: '1.2-2' }}</p>
+            <p class="xs:text-xs text-end">{{ totalHaber | number: '1.2-2' }}</p>
           </div>
         </div>
         <!-- Observaciones end-->
