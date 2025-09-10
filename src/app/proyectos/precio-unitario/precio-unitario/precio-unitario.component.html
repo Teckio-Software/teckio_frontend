@@ -1159,7 +1159,10 @@
                   background-color: rgba(0, 0, 0, 0.164);
                 "
               />
-              <ul *ngIf="insumos.length > 0 && !precioUnitarioSeleccionado.esAvanceObra"
+              <ul
+                *ngIf="
+                  insumos.length > 0 && !precioUnitarioSeleccionado.esAvanceObra
+                "
                 class="dropdown-menu"
                 style="z-index: 9999; position: absolute"
               >
@@ -2003,7 +2006,11 @@
                 />
               </td>
 
-              <td class="body-table" style="width: 10%" *ngIf="selectedGenerador == generador.id">
+              <td
+                class="body-table"
+                style="width: 10%"
+                *ngIf="selectedGenerador == generador.id"
+              >
                 <input
                   autocomplete="off"
                   type="text"
@@ -2024,7 +2031,11 @@
                 />
               </td>
 
-              <td class="body-table" style="width: 10%" *ngIf="selectedGenerador != generador.id">
+              <td
+                class="body-table"
+                style="width: 10%"
+                *ngIf="selectedGenerador != generador.id"
+              >
                 <input
                   autocomplete="off"
                   type="text"
@@ -2045,7 +2056,11 @@
                 />
               </td>
 
-              <td class="body-table" style="width: 10%" *ngIf="esPza == false && selectedGenerador == generador.id">
+              <td
+                class="body-table"
+                style="width: 10%"
+                *ngIf="esPza == false && selectedGenerador == generador.id"
+              >
                 <input
                   autocomplete="off"
                   type="number"
@@ -2064,7 +2079,11 @@
                   "
                 />
               </td>
-              <td class="body-table" style="width: 10%" *ngIf="esPza == false && selectedGenerador != generador.id">
+              <td
+                class="body-table"
+                style="width: 10%"
+                *ngIf="esPza == false && selectedGenerador != generador.id"
+              >
                 <input
                   autocomplete="off"
                   type="text"
@@ -2087,7 +2106,10 @@
               <td
                 class="body-table"
                 style="width: 10%"
-                *ngIf="(esM2 == true || esM3 == true) && selectedGenerador == generador.id"
+                *ngIf="
+                  (esM2 == true || esM3 == true) &&
+                  selectedGenerador == generador.id
+                "
               >
                 <input
                   autocomplete="off"
@@ -2110,7 +2132,10 @@
               <td
                 class="body-table"
                 style="width: 10%"
-                *ngIf="(esM2 == true || esM3 == true) && selectedGenerador != generador.id"
+                *ngIf="
+                  (esM2 == true || esM3 == true) &&
+                  selectedGenerador != generador.id
+                "
               >
                 <input
                   autocomplete="off"
@@ -2131,7 +2156,11 @@
                   "
                 />
               </td>
-              <td class="body-table" style="width: 10%" *ngIf="esM3 == true && selectedGenerador == generador.id">
+              <td
+                class="body-table"
+                style="width: 10%"
+                *ngIf="esM3 == true && selectedGenerador == generador.id"
+              >
                 <input
                   autocomplete="off"
                   type="number"
@@ -2151,7 +2180,11 @@
                 />
               </td>
 
-              <td class="body-table" style="width: 10%" *ngIf="esM3 == true && selectedGenerador != generador.id">
+              <td
+                class="body-table"
+                style="width: 10%"
+                *ngIf="esM3 == true && selectedGenerador != generador.id"
+              >
                 <input
                   autocomplete="off"
                   type="text"
@@ -3069,6 +3102,7 @@
     [marcados]="preciosMarcados"
     [totalConIva]="totalConFormato"
     [totalSinIva]="totalSinIvaConFormato"
+    [totalSinFormato]="totalConIva"
     [totalIva]="totalIvaConFormato"
     [proyecto]="proyectoSelected"
     [isOpen]="isOpenModalImprimir"

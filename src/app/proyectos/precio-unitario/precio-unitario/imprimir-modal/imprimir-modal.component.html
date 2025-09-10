@@ -178,14 +178,13 @@
               >
                 Otras opciones
               </legend>
+
               <div class="flex gap-2">
-                <input type="checkbox" id="opcion1" />
-                <label for="opcion1" class="text-gray-600 text-base"
-                  >Totalizar el reporte</label
-                >
-              </div>
-              <div class="flex gap-2">
-                <input type="checkbox" id="opcion2" />
+                <input
+                  type="checkbox"
+                  id="opcion2"
+                  [(ngModel)]="isImprimirImpuestos"
+                />
                 <label for="opcion2" class="text-gray-600 text-base"
                   >Imprimir impuesto</label
                 >
@@ -321,7 +320,7 @@
             </fieldset>
           </div>
           <!-- pie de página -->
-          <div class="card flex justify-content-center col-span-2">
+          <!-- <div class="card flex justify-content-center col-span-2">
             <fieldset class="p-2">
               <legend
                 class="text-base font-medium text-gray-800 tracking-wider"
@@ -361,7 +360,7 @@
                 </div>
               </div>
             </fieldset>
-          </div>
+          </div> -->
           <!-- márgenes de las páginas -->
           <div class="card flex justify-content-center col-span-2">
             <fieldset class="p-2">
@@ -420,39 +419,38 @@
           </div>
         </div>
       </div>
+    </div>
+    <!-- botones -->
+    <div class="bg-gray-50 px-4 py-3 flex justify-between items-center gap-4">
+      <button
+        class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all disabled:opacity-50"
+        (click)="prevStep()"
+        [disabled]="currentStep === 0"
+      >
+        Atrás
+      </button>
 
-      <!-- botones -->
-      <div class="bg-gray-50 px-4 py-3 flex justify-between items-center gap-4">
+      <div class="ml-auto flex gap-3">
         <button
-          class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all disabled:opacity-50"
-          (click)="prevStep()"
-          [disabled]="currentStep === 0"
+          *ngIf="currentStep < steps.length - 1"
+          class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md shadow-sm transition cursor-pointer"
+          (click)="nextStep()"
         >
-          Atrás
+          Siguiente
         </button>
 
-        <div class="ml-auto flex gap-3">
-          <button
-            *ngIf="currentStep < steps.length - 1"
-            class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md shadow-sm transition cursor-pointer"
-            (click)="nextStep()"
-          >
-            Siguiente
-          </button>
-
-          <button
-            *ngIf="currentStep === steps.length - 1"
-            (click)="finish()"
-            class="flex items-center gap-3 text-white py-2 px-6 rounded-lg font-medium bg-colorButton hover:bg-colorButtonHover transition 200ms xs:text-xs"
-          >
-            Descargar
-            <img
-              class="w-8 h-8 xs:w-5 xs:h-5"
-              src="./assets/pdf_icon.svg"
-              alt="icono pdf"
-            />
-          </button>
-        </div>
+        <button
+          *ngIf="currentStep === steps.length - 1"
+          (click)="finish()"
+          class="flex items-center gap-3 text-white py-2 px-6 rounded-lg font-medium bg-colorButton hover:bg-colorButtonHover transition 200ms xs:text-xs"
+        >
+          Descargar
+          <img
+            class="w-8 h-8 xs:w-5 xs:h-5"
+            src="./assets/pdf_icon.svg"
+            alt="icono pdf"
+          />
+        </button>
       </div>
     </div>
   </div>
