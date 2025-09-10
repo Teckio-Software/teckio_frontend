@@ -1479,7 +1479,7 @@ export class PrecioUnitarioComponent implements OnInit {
   crearPartidaAlMismoNivel(precioUnitario: precioUnitarioDTO) {
     if (this.existeCaptura == false) {
       if (precioUnitario.idPrecioUnitarioBase == 0) {
-        this.preciosUnitarios.push({
+        let nuevaPartida : precioUnitarioDTO = {
           id: 0,
           idProyecto: precioUnitario.idProyecto,
           cantidad: 1,
@@ -1510,17 +1510,20 @@ export class PrecioUnitarioComponent implements OnInit {
           precioUnitarioEditado: false,
           porcentajeIndirecto: 0,
           porcentajeIndirectoConFormato: '',
-          posicion: 0,
+          posicion: precioUnitario.posicion +1 ,
           codigoPadre: '',
           esCatalogoGeneral: false,
           esAvanceObra: false,
           esAdicional: precioUnitario.esAdicional,
           esSeleccionado: false,
-        });
+        }
+
+        this.preciosUnitarios = this.insertarEnPosicion(this.preciosUnitarios, nuevaPartida, precioUnitario.posicion+1);
+
         this.precioUnitarioPadreCreacion.hijos = this.preciosUnitarios;
       } else {
         this.buscarNodo(precioUnitario.idPrecioUnitarioBase);
-        this.precioUnitarioPadre.hijos.push({
+        let nuevaPartida : precioUnitarioDTO = {
           id: 0,
           idProyecto: precioUnitario.idProyecto,
           cantidad: 1,
@@ -1551,13 +1554,15 @@ export class PrecioUnitarioComponent implements OnInit {
           precioUnitarioEditado: false,
           porcentajeIndirecto: 0,
           porcentajeIndirectoConFormato: '',
-          posicion: 0,
+          posicion: precioUnitario.posicion +1 ,
           codigoPadre: '',
           esCatalogoGeneral: false,
           esAvanceObra: false,
           esAdicional: precioUnitario.esAdicional,
           esSeleccionado: false,
-        });
+        }
+
+        this.precioUnitarioPadre.hijos = this.insertarEnPosicion(this.precioUnitarioPadre.hijos, nuevaPartida, precioUnitario.posicion+1);
         this.precioUnitarioPadreCreacion = this.precioUnitarioPadre;
       }
       this.existeCaptura = true;
@@ -1592,6 +1597,8 @@ export class PrecioUnitarioComponent implements OnInit {
     if (this.existeCaptura == false) {
       if (precioUnitario.tipoPrecioUnitario != 0) {
         this.buscarNodo(precioUnitario.idPrecioUnitarioBase);
+        let posicionFinal = this.precioUnitarioPadre.hijos.length;
+
         this.precioUnitarioPadre.hijos.push({
           id: 0,
           idProyecto: precioUnitario.idProyecto,
@@ -1623,7 +1630,7 @@ export class PrecioUnitarioComponent implements OnInit {
           precioUnitarioEditado: false,
           porcentajeIndirecto: 0,
           porcentajeIndirectoConFormato: '',
-          posicion: 0,
+          posicion: posicionFinal +1 ,
           codigoPadre: '',
           esCatalogoGeneral: false,
           esAvanceObra: false,
@@ -1632,6 +1639,7 @@ export class PrecioUnitarioComponent implements OnInit {
         });
         this.precioUnitarioPadreCreacion = this.precioUnitarioPadre;
       } else {
+        let posicionFinal = precioUnitario.hijos.length;
         precioUnitario.hijos.push({
           id: 0,
           idProyecto: precioUnitario.idProyecto,
@@ -1663,7 +1671,7 @@ export class PrecioUnitarioComponent implements OnInit {
           precioUnitarioEditado: false,
           porcentajeIndirecto: 0,
           porcentajeIndirectoConFormato: '',
-          posicion: 0,
+          posicion: posicionFinal + 1,
           codigoPadre: '',
           esCatalogoGeneral: false,
           esAvanceObra: false,
@@ -1677,11 +1685,13 @@ export class PrecioUnitarioComponent implements OnInit {
   }
 
   crearConcepto(precioUnitario: precioUnitarioDTO) {
+        console.log("precio unitario concepto",precioUnitario);
+
     precioUnitario.expandido = true;
     if (this.existeCaptura == false) {
       if (precioUnitario.tipoPrecioUnitario != 0) {
         this.buscarNodo(precioUnitario.idPrecioUnitarioBase);
-        this.precioUnitarioPadre.hijos.push({
+        let nuevoConcepto : precioUnitarioDTO = {
           id: 0,
           idProyecto: precioUnitario.idProyecto,
           cantidad: 0,
@@ -1712,15 +1722,18 @@ export class PrecioUnitarioComponent implements OnInit {
           precioUnitarioEditado: false,
           porcentajeIndirecto: 0,
           porcentajeIndirectoConFormato: '',
-          posicion: 0,
+          posicion: precioUnitario.posicion + 1,
           codigoPadre: '',
           esCatalogoGeneral: false,
           esAvanceObra: false,
           esAdicional: precioUnitario.esAdicional,
           esSeleccionado: false,
-        });
+        }
+        console.log("ver posiciones", this.precioUnitarioPadre.hijos);
+        this.precioUnitarioPadre.hijos = this.insertarEnPosicion(this.precioUnitarioPadre.hijos, nuevoConcepto, precioUnitario.posicion+1);
         this.precioUnitarioPadreCreacion = this.precioUnitarioPadre;
       } else {
+        let posicionFinal = precioUnitario.hijos.length;
         precioUnitario.hijos.push({
           id: 0,
           idProyecto: precioUnitario.idProyecto,
@@ -1752,7 +1765,7 @@ export class PrecioUnitarioComponent implements OnInit {
           precioUnitarioEditado: false,
           porcentajeIndirecto: 0,
           porcentajeIndirectoConFormato: '',
-          posicion: 0,
+          posicion: posicionFinal + 1,
           codigoPadre: '',
           esCatalogoGeneral: false,
           esAvanceObra: false,
@@ -1764,6 +1777,26 @@ export class PrecioUnitarioComponent implements OnInit {
     }
     this.existeCaptura = true;
   }
+
+  insertarEnPosicion(lista: precioUnitarioDTO[], nuevo: precioUnitarioDTO, posicion: number) {
+  console.log("llego esta posicion", posicion);
+
+  // Aseguramos que la posición sea válida
+  if (posicion < 1) posicion = 1;
+  if (posicion > lista.length + 1) posicion = lista.length + 1;
+
+  // Insertamos en el índice correcto (posicion - 1)
+  lista.splice(posicion - 1, 0, { ...nuevo, posicion });
+
+  // Recorremos la lista y actualizamos posiciones
+  lista.forEach((item, index) => {
+    item.posicion = index + 1;
+  });
+
+  lista.sort();
+  console.log("aqui ordenando elementos", lista);
+  return lista;
+}
 
   refrescar() {
     this.preciosUnitarios = this.preciosUnitariosRefresco;
@@ -3049,7 +3082,11 @@ export class PrecioUnitarioComponent implements OnInit {
         this.seEstaEditando = false;
       } else {
         if (this.existeCaptura == true) {
-          this.precioUnitarioPadreCreacion.hijos.pop();
+          // this.precioUnitarioPadreCreacion.hijos.pop();
+          const index = this.precioUnitarioPadreCreacion.hijos.findIndex(item => item.id === 0);
+          if (index !== -1) {
+            this.precioUnitarioPadreCreacion.hijos.splice(index, 1);
+          }
           this.existeCaptura = false;
         } else {
           if (this.esquemaArbol2 == true && this.desglosados.length <= 1) {
