@@ -507,6 +507,8 @@ export class EstimacionesComponent implements OnInit {
     let totalEnLetras: string;
   
     const content: any[] = [];
+
+    const widths = [55, 95, 55, 53, 53, 53, 53, 53, 53, 53, 53, 53];
   
     const styles = {
       header: {
@@ -643,16 +645,47 @@ export class EstimacionesComponent implements OnInit {
     // Header de la tabla
     const tableHeader = [
       [
+        { text: '', style: 'subheader', alignment: 'center', colSpan:4},
+        { text: '', style: 'subheader', alignment: 'center'},
+        { text: '', style: 'subheader', alignment: 'center'},
+        { text: '', style: 'subheader', alignment: 'center'},
+        { text: 'Anterior', style: 'subheader', alignment: 'center', colSpan: 2 },
+        { text: '', style: 'subheader', alignment: 'center'},
+        { text: 'Actual', style: 'subheader', alignment: 'center', colSpan:2},
+        { text: '', style: 'subheader', alignment: 'center'},
+        { text: 'Acumulado', style: 'subheader', alignment: 'center', colSpan: 3},
+        { text: '', style: 'subheader', alignment: 'center' },
+        { text: '', style: 'subheader', alignment: 'center' },
+        { text: '', style: 'subheader', alignment: 'center' },
+
+      ]
+    ];
+  
+    content.push({
+      margin: [0, 0, 0, 0],
+      layout: {
+        hLineColor: () => '#B9B9B9',
+        hLineWidth: () => 0.5, // todas las líneas horizontales
+        vLineColor: () => '#B9B9B9',
+        vLineWidth: () => 0.5, // todas las líneas verticales
+      },
+      table: {
+        headerRows: 1,
+        widths: widths,
+        body: tableHeader,
+      },
+    });
+
+    const tableSubHeader = [
+      [
         { text: 'Código', style: 'subheader', alignment: 'center' },
         { text: 'Descripción', style: 'subheader', alignment: 'center' },
         { text: 'Unidad', style: 'subheader', alignment: 'center' },
         { text: 'Cantidad', style: 'subheader', alignment: 'center' },
         { text: 'Importe', style: 'subheader', alignment: 'center' },
         { text: 'Avance', style: 'subheader', alignment: 'center' },
-        { text: '%', style: 'subheader', alignment: 'center' },
         { text: 'Importe', style: 'subheader', alignment: 'center' },
         { text: 'Avance', style: 'subheader', alignment: 'center' },
-        { text: '%', style: 'subheader', alignment: 'center' },
         { text: 'Importe', style: 'subheader', alignment: 'center' },
         { text: 'Avance', style: 'subheader', alignment: 'center' },
         { text: '%', style: 'subheader', alignment: 'center' },
@@ -670,8 +703,8 @@ export class EstimacionesComponent implements OnInit {
       },
       table: {
         headerRows: 1,
-        widths: [35, 45, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
-        body: tableHeader,
+        widths: widths,
+        body: tableSubHeader,
       },
     });
   
@@ -685,17 +718,17 @@ export class EstimacionesComponent implements OnInit {
         { text: proyecto.codigo, style: 'small' },
         { text: proyecto.descripcion, style: 'small', alignment: 'justify' },
         { text: proyecto.unidad, style: 'small' },
-        { text: proyecto.cantidadConFormato, style: 'small',},
-        { text: proyecto.importeConFormato, style: 'small', },
-        { text: proyecto.cantidadAvanceAcumuladoConFormato, style: 'small',},
-        { text: proyecto.porcentajeAvanceAcumuladoConFormato, style: 'small',},
-        { text: proyecto.importeDeAvanceConFormato, style: 'small',},
-        { text: proyecto.cantidadAvanceConFormato, style: 'small',},
-        { text: proyecto.porcentajeAvanceConFormato, style: 'small',},
-        { text: proyecto.importeDeAvanceAcumuladoConFormato, style: 'small',},
-        { text: proyecto.cantidadAvanceTotalConFormato, style: 'small',},
-        { text: proyecto.porcentajeTotalConFormato, style: 'small',},
-        { text: proyecto.importeTotalConFormato, style: 'small',},
+        { text: proyecto.cantidadConFormato, style: 'small', alignment: 'right'},
+        { text: proyecto.importeConFormato, style: 'small',  alignment: 'right'},
+        { text: proyecto.cantidadAvanceAcumuladoConFormato, style: 'small', alignment: 'right'},
+        // { text: proyecto.porcentajeAvanceAcumuladoConFormato, style: 'small',},
+        { text: proyecto.importeDeAvanceConFormato, style: 'small', alignment: 'right'},
+        { text: proyecto.cantidadAvanceConFormato, style: 'small', alignment: 'right'},
+        // { text: proyecto.porcentajeAvanceConFormato, style: 'small',},
+        { text: proyecto.importeDeAvanceAcumuladoConFormato, style: 'small', alignment: 'right'},
+        { text: proyecto.cantidadAvanceTotalConFormato, style: 'small', alignment: 'right'},
+        { text: proyecto.porcentajeTotalConFormato, style: 'small', alignment: 'right'},
+        { text: proyecto.importeTotalConFormato, style: 'small', alignment: 'right'},
       ]);
   
       // filas de hijos
@@ -715,7 +748,7 @@ export class EstimacionesComponent implements OnInit {
       },
       table: {
         headerRows: 0,
-        widths: [35, 45, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
+        widths: widths,
         body: tableBodyProyecto,
       },
     });
@@ -785,7 +818,7 @@ export class EstimacionesComponent implements OnInit {
               [
                 { text: 'Total', style: 'smallCantidadTotal' },
                 {
-                  text: `$ ${totalConIVA}`,
+                  text: ` ${totalConIVA}`,
                   style: 'smallCantidadTotal',
                   alignment: 'right',
                 },
@@ -845,6 +878,7 @@ export class EstimacionesComponent implements OnInit {
         margenDerecho,
         margenInferior,
       ],
+      pageOrientation: 'landscape'
     };
   
     pdfMake.createPdf(docDefinition).download();
@@ -884,17 +918,17 @@ function mapHijos(hijos: any[], nivel = 1, prefijo = ''): any[] {
       { text: `${numero}`+'  '+hijo.codigo, style: 'small' },
         { text: hijo.descripcion, style: 'small', alignment: 'justify' },
         { text: hijo.unidad, style: 'small' },
-        { text: hijo.cantidadConFormato, style: 'small',},
-        { text: hijo.importeConFormato, style: 'small', },
-        { text: hijo.cantidadAvanceAcumuladoConFormato, style: 'small',},
-        { text: hijo.porcentajeAvanceAcumuladoConFormato, style: 'small',},
-        { text: hijo.importeDeAvanceConFormato, style: 'small',},
-        { text: hijo.cantidadAvanceConFormato, style: 'small',},
-        { text: hijo.porcentajeAvanceConFormato, style: 'small',},
-        { text: hijo.importeDeAvanceAcumuladoConFormato, style: 'small',},
-        { text: hijo.cantidadAvanceTotalConFormato, style: 'small',},
-        { text: hijo.porcentajeTotalConFormato, style: 'small',},
-        { text: hijo.importeTotalConFormato, style: 'small',},
+        { text: hijo.cantidadConFormato, style: 'small', alignment: 'right'},
+        { text: `$${hijo.importeConFormato}`, style: 'small', alignment: 'right' },
+        { text: `$${hijo.cantidadAvanceAcumuladoConFormato}`, style: 'small', alignment: 'right'},
+        // { text: hijo.porcentajeAvanceAcumuladoConFormato, style: 'small',},
+        { text: `$${hijo.importeDeAvanceConFormato}`, style: 'small', alignment: 'right'},
+        { text: `$${hijo.cantidadAvanceConFormato}`, style: 'small', alignment: 'right'},
+        // { text: hijo.porcentajeAvanceConFormato, style: 'small',},
+        { text: `$${hijo.importeDeAvanceAcumuladoConFormato}`, style: 'small', alignment: 'right'},
+        { text: `$${hijo.cantidadAvanceTotalConFormato}`, style: 'small', alignment: 'right'},
+        { text: `$${hijo.porcentajeTotalConFormato}`, style: 'small', alignment: 'right'},
+        { text: `$${hijo.importeTotalConFormato}`, style: 'small', alignment: 'right'},
     ];
 
     // recorrer hijos recursivamente
@@ -904,12 +938,11 @@ function mapHijos(hijos: any[], nivel = 1, prefijo = ''): any[] {
     let filas = [fila, ...subFilas];
     if (esPadreConHijos) {
       const totalFila = [
-        
         {
           text: `Total de ${hijo.descripcion}  $  ${hijo.importeConFormato}`,
           style: 'smallCantidadTotal',
           alignment: 'right',
-          colSpan: 14,
+          colSpan: 12,
         },
         
       ];
