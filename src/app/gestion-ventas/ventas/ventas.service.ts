@@ -17,8 +17,15 @@ export class VentasService {
     return this.HttpClient.post<RespuestaDTO>(`${this.apiUrl}/${idEmp}/crearOrdenVenta`, ordenVenta);
   }
 
+  public editar(idEmp : number, ordenVenta: OrdenVentaDTO){
+    return this.HttpClient.put<RespuestaDTO>(`${this.apiUrl}/${idEmp}/editarOrdenVenta`, ordenVenta);
+  }
+
   public obtenerTodos(idEmp: number){
     return this.HttpClient.get<OrdenVentaDTO[]>(`${this.apiUrl}/${idEmp}/todos`);
   }
+
+  public obtenerOrdenVenta(idOrdenVenta : number, idEmp: number){
+    return this.HttpClient.get<OrdenVentaDTO>(`${this.apiUrl}/${idEmp}/obtenerOrdenVenta/${idOrdenVenta}`);
+  }
 }
-  

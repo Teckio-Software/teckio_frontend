@@ -1,35 +1,26 @@
-import { color, fontSize, textAlign } from '@mui/system';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { precioUnitarioDTO } from '../../tsPrecioUnitario';
-import { image } from './imagen';
-import { text } from 'stream/consumers';
-import { stackClasses } from '@mui/material';
-import { log } from 'console';
+import { image } from './types/imagen';
+
 import { numeroALetras } from 'src/app/compras/orden-compra/NumeroALetras';
 import { proyectoDTO } from 'src/app/proyectos/proyecto/tsProyecto';
+import { Reporte } from './types/reporte';
 
-export function imprimirReporte(
-  precioUnitario: precioUnitarioDTO[],
-  titulo: string,
-  encabezadoIzq: string,
-  encabezadoCentro: string,
-  encabezadoDerecha: string,
-  margenSuperior: number,
-  margenInferior: number,
-  margenIzquierdo: number,
-  margenDerecho: number,
-  importeConLetra: boolean,
-  totalSinIVA: string,
-  totalConIVA: string,
-  proyecto: proyectoDTO,
-  totalIva: string
-) {
+/**
+ * Imprime un reporte de presupuesto en formato PDF.
+ *
+ * @param {Reporte} reporte Información del presupuesto a imprimir.
+ * @returns {void} No devuelve nada, descarga el archivo PDF.
+ */
+export function imprimirReporte(reporte: Reporte) {
   (<any>pdfMake).addVirtualFileSystem(pdfFonts);
 
   let totalEnLetras: string;
 
   const content: any[] = [];
+
+  const selectedProyectoIva = reporte.proyecto.porcentajeIva;
 
   const styles = {
     header: {
@@ -55,6 +46,7 @@ export function imprimirReporte(
       alignment: 'right',
       bold: true,
     },
+
     smallBold: {
       fontSize: 8,
       textAlign: 'center',
@@ -85,7 +77,6 @@ export function imprimirReporte(
   };
 
   //imagen
-
   content.push({
     columns: [
       {
@@ -110,7 +101,7 @@ export function imprimirReporte(
       {
         stack: [
           {
-            text: [{ text: `${encabezadoIzq}`, bold: true }],
+            text: [{ text: `${reporte.encabezadoIzq}`, bold: true }],
             style: 'header',
             alignment: 'left',
           },
@@ -119,7 +110,7 @@ export function imprimirReporte(
       {
         stack: [
           {
-            text: [{ text: `${encabezadoCentro}`, bold: true }],
+            text: [{ text: `${reporte.encabezadoCentro}`, bold: true }],
             style: 'header',
             alignment: 'center',
           },
@@ -128,7 +119,7 @@ export function imprimirReporte(
       {
         stack: [
           {
-            text: [{ text: `${encabezadoDerecha}`, bold: true }],
+            text: [{ text: `${reporte.encabezadoDerecha}`, bold: true }],
             style: 'header',
             alignment: 'right',
           },
@@ -144,7 +135,7 @@ export function imprimirReporte(
   //tabla de proyecto - header y contenido
   const tableBodyProject = [
     [{ text: 'Presupuesto', style: 'subheader' }],
-    [{ text: titulo, style: 'small' }],
+    [{ text: reporte.titulo, style: 'small' }],
   ];
 
   content.push({
@@ -192,13 +183,43 @@ export function imprimirReporte(
 
   const tableBodyProyecto: any = [];
 
-  precioUnitario.forEach((proyecto, index) => {
+  reporte.precioUnitario.forEach((proyecto, index) => {
     const esPadreConHijos = proyecto.hijos?.length > 0;
 
+    let total!: number;
+    const costoDirecto = proyecto.costoUnitario * proyecto.cantidad;
+    const precioUnitario = proyecto.precioUnitario * proyecto.cantidad;
+    const precioUnitarioMasIVA =
+      proyecto.precioUnitario * proyecto.cantidad * selectedProyectoIva;
+    const totalMasIva = proyecto.precioUnitario + precioUnitarioMasIVA;
+
+    if (reporte.imprimirConCostoDirecto) {
+      total = costoDirecto;
+    }
+
+    if (reporte.imprimirConPrecioUnitario) {
+      total = precioUnitario;
+    }
+
+    if (reporte.imprimirConPUMasIva) {
+      total = totalMasIva;
+    }
+
+    console.log(reporte);
+
     tableBodyProyecto.push([
-      { text: ``, style: 'small' },
-      { text: proyecto.codigo, style: 'small' },
-      { text: proyecto.descripcion, style: 'small', alignment: 'justify' },
+      {
+        text: '',
+      },
+      {
+        text: proyecto.codigo,
+        style: esPadreConHijos ? { fontSize: 8, bold: true } : { fontSize: 8 },
+      },
+      {
+        text: proyecto.descripcion,
+        style: esPadreConHijos ? { fontSize: 8, bold: true } : { fontSize: 8 },
+        alignment: 'justify',
+      },
       { text: esPadreConHijos ? '' : proyecto.unidad || '', style: 'small' },
       {
         text: esPadreConHijos ? '' : proyecto.cantidadConFormato || '',
@@ -209,7 +230,7 @@ export function imprimirReporte(
         style: 'small',
       },
       {
-        text: esPadreConHijos ? '' : proyecto.importeConFormato || '',
+        text: esPadreConHijos ? '' : total || '',
         style: 'small',
       },
     ]);
@@ -238,13 +259,7 @@ export function imprimirReporte(
     text: '\n',
   });
 
-  precioUnitario.forEach((precio) => {
-    const totalMasIva: number = Number(
-      (Number(precio.importe) * 0.16).toFixed(2)
-    );
-
-    const subtotal = (Number(precio.importe) - totalMasIva).toFixed(2);
-
+  reporte.precioUnitario.forEach((precio) => {
     content.push({
       columns: [
         { width: '*', text: '' },
@@ -285,21 +300,27 @@ export function imprimirReporte(
         width: 'auto',
         table: {
           body: [
-            [
-              {
-                text: 'IVA ' + proyecto.porcentajeIva + '%',
-                style: 'smallCantidadTotal',
-              },
-              {
-                text: ` ${totalIva}`,
-                style: 'smallCantidadTotal',
-                alignment: 'right',
-              },
-            ],
+            // booleano de iva opcional
+            ...(reporte.imprimirImpuesto
+              ? [
+                  [
+                    {
+                      text: 'IVA ' + reporte.proyecto.porcentajeIva + '%',
+                      style: 'smallCantidadTotal',
+                    },
+                    {
+                      text: ` ${reporte.totalIva}`,
+                      style: 'smallCantidadTotal',
+                      alignment: 'right',
+                    },
+                  ],
+                ]
+              : []),
+
             [
               { text: 'Total', style: 'smallCantidadTotal' },
               {
-                text: `$ ${totalConIVA}`,
+                text: `${reporte.totalConIVA}`,
                 style: 'smallCantidadTotal',
                 alignment: 'right',
               },
@@ -312,41 +333,39 @@ export function imprimirReporte(
           hLineWidth: () => 0.5,
           vLineWidth: () => 0.5,
         },
-        margin: [0, 0, 0, 5],
+        margin: [0, 0, 0, 0],
       },
     ],
   });
 
-  if (importeConLetra) {
-    precioUnitario.forEach((proyecto) => {
-      totalEnLetras = numeroALetras(proyecto.costoUnitario);
+  if (reporte.importeConLetra) {
+    totalEnLetras = numeroALetras(reporte.totalSinFormato);
 
-      content.push({
-        columns: [
-          { width: '*', text: '' },
-          {
-            width: 'auto',
-            table: {
-              widths: ['auto'],
-              body: [
-                [
-                  {
-                    text: `${totalEnLetras}`,
-                    style: 'smallBold',
-                  },
-                ],
+    content.push({
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: ['auto'],
+            body: [
+              [
+                {
+                  text: `${totalEnLetras}`,
+                  style: 'smallBold',
+                },
               ],
-            },
-            layout: {
-              hLineColor: () => '#B9B9B9',
-              vLineColor: () => '#B9B9B9',
-              hLineWidth: () => 0.5,
-              vLineWidth: () => 0.5,
-            },
-            margin: [0, 5, 0, 5],
+            ],
           },
-        ],
-      });
+          layout: {
+            hLineColor: () => '#B9B9B9',
+            vLineColor: () => '#B9B9B9',
+            hLineWidth: () => 0.5,
+            vLineWidth: () => 0.5,
+          },
+          margin: [0, 0, 0, 5],
+        },
+      ],
     });
   }
 
@@ -354,28 +373,39 @@ export function imprimirReporte(
     content,
     styles,
     pageMargins: [
-      margenIzquierdo,
-      margenSuperior,
-      margenDerecho,
-      margenInferior,
+      reporte.margenIzquierdo,
+      reporte.margenSuperior,
+      reporte.margenDerecho,
+      reporte.margenInferior,
     ],
   };
 
-  pdfMake.createPdf(docDefinition).download();
+  pdfMake
+    .createPdf(docDefinition)
+    .download(`Presupuesto ${reporte.titulo}.pdf`);
 }
 
-function mapHijos(hijos: any[], nivel = 1, prefijo = ''): any[] {
+/**
+ * Mapea un array de hijos (con posible propiedad de "hijos" recursiva)
+ * a un array de filas para una tabla PDF Make.
+ *
+ * @param hijos Array de hijos a mapear.
+ * @param nivel Nivel de anidamiento actual (opcional, default = 0).
+ * @param prefijo Prefijo para el numero de la fila (opcional, default = '').
+ * @returns Un array de filas para la tabla.
+ */
+function mapHijos(hijos: any[], nivel = 0, prefijo = ''): any[] {
   return hijos.flatMap((hijo, index) => {
     let color = '#000000';
     if (hijo.hijos?.length > 0) {
       switch (nivel) {
-        case 1:
+        case 0:
           color = '#1c398e'; // azul
           break;
-        case 2:
+        case 1:
           color = '#0b8f5c'; // verde
           break;
-        case 3:
+        case 2:
           color = '#e67e22'; // naranja
           break;
         default:
@@ -384,16 +414,14 @@ function mapHijos(hijos: any[], nivel = 1, prefijo = ''): any[] {
     }
 
     const esPadreConHijos = hijo.hijos?.length > 0;
-
     const numero = prefijo ? `${prefijo}.${index + 1}` : `${index + 1}`;
-
     const style = esPadreConHijos
       ? { fontSize: 8, bold: true, color }
       : { fontSize: 8 };
 
     // fila base
     const fila = [
-      { text: `${numero}`, style: 'small' },
+      { text: `${numero}`, ...style },
       { text: hijo.codigo, ...style },
       { text: hijo.descripcion, ...style, alignment: 'justify' },
       {
@@ -425,7 +453,7 @@ function mapHijos(hijos: any[], nivel = 1, prefijo = ''): any[] {
         {},
         {
           text: `Total de ${hijo.descripcion}  $  ${hijo.importeConFormato}`,
-          style: 'smallCantidadTotal',
+          style: { fontSize: 8, bold: true, color },
           alignment: 'right',
           colSpan: 6,
         },

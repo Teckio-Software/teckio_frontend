@@ -162,6 +162,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ProductosServiciosComponent } from './gestion-ventas/productos-servicios/productos-servicios.component';
 import { ImprimirModalComponent } from './proyectos/precio-unitario/precio-unitario/imprimir-modal/imprimir-modal.component';
 import { FieldsetModule } from 'primeng/fieldset';
+import { A11yModule } from "@angular/cdk/a11y";
 
 export function playerFactory() {
   return player;
@@ -334,7 +335,8 @@ export function playerFactory() {
     OrdenCompraModule,
     ScrollingModule,
     FieldsetModule,
-  ],
+    A11yModule
+],
   exports: [LeftMenuComponent],
   providers: [
     SidenavService,
