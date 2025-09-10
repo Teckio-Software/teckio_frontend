@@ -4,18 +4,18 @@ td {
   padding: 0 10px;
   height: 5px;
 }
-th {
+/* th {
   background-color: #21416e;
   height: 1px;
   color: #f2f2f2;
   border: 1px solid #4e4c4c54;
   padding: 0 10px;
-}
-.td-0 {
+} */
+/* .td-0 {
   padding: 0;
   background-color: #fffefe;
   border: .5px solid #ffffff85;
-}
+} */
 .contenedor-input{
   display: flex;
 }
@@ -148,10 +148,10 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator:hover { opacity:0.15
 .text-zinc-400 {
   color: #718096; /* Se asume que el color zinc-400 es #718096 */
 }
-.buttons-fn{
+/* .buttons-fn{
   border: none;
   background-color: #4eaac150;
-}
+} */
 .contenedor-button{
   /* flex-wrap: 1; */
   /* flex-basis: auto; */
