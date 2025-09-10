@@ -1,27 +1,45 @@
 import { proyectoDTO } from './../../../proyecto/tsProyecto';
-import { is } from 'date-fns/locale';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { imprimirReporte } from './imprimirReportes';
 import { precioUnitarioDTO } from '../../tsPrecioUnitario';
-import { ParametrosImprimirPuService } from './parametros-imprimir-pu.service';
+import { ParametrosImprimirPuService } from './services/parametros-imprimir-pu.service';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import { ParametrosImpresionPu } from './ts.parametros-imprimir-pu';
 import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
+import { Reporte } from './types/reporte';
 
+/**
+ * Modal para configurar y ejecutar la impresión de reportes
+ * del flujo de Precio Unitario.
+ *
+ * Contiene un pequeño wizard de 3 pasos para:
+ * 1) Seleccionar el tipo de reporte.
+ * 2) Configurar opciones del reporte (rango, encabezados, márgenes, totales).
+ * 3) Confirmar y generar el PDF.
+ *
+ * Entradas principales:
+ * - preciosUnitarios: lista completa a imprimir (o base para selección parcial).
+ * - marcados: subconjunto de precios seleccionados por el usuario (impresión marcada).
+ * - proyecto, totales (con/sin IVA): datos adicionales mostrados en el reporte.
+ *
+ * Servicios y utilidades:
+ * - ParametrosImprimirPuService: CRUD de parámetros de impresión por empresa.
+ * - SeguridadService: obtiene el id de empresa activo.
+ * - imprimirReporte(): genera el PDF a partir del objeto `Reporte`.
+ */
 @Component({
   selector: 'app-imprimir-modal',
   templateUrl: './imprimir-modal.component.html',
-  styleUrls: ['./imprimir-modal.component.css'],
 })
 export class ImprimirModalComponent {
   @Input() isOpen: boolean = false;
   @Input() preciosUnitarios: precioUnitarioDTO[] = [];
   @Input() marcados: precioUnitarioDTO[] = [];
   @Input() proyecto!: proyectoDTO;
-
   @Input() totalSinIva!: string;
   @Input() totalConIva!: string;
+  @Input() totalSinFormato!: number;
   @Input() totalIva!: string;
 
   @Output() close = new EventEmitter<void>();
@@ -29,42 +47,39 @@ export class ImprimirModalComponent {
   tipoReporte: string = '';
   tipoImpresion: string = '';
   tipoPrecio: string = '';
-
   tipoError: string = '';
-
-  tituloDocumento: string = '';
-  encabezadoIzq: string = '';
-  encabezadoCentro: string = '';
-  encabezadoDerecha: string = '';
   pieIzq: string = '';
   pieCentro: string = '';
   pieDerecha: string = '';
-  margenSuperior: number = 30;
-  margenInferior: number = 30;
-  margenIzquierdo: number = 30;
-  margenDerecho: number = 30;
+
   selectedEmpresa: number = 0;
   selectedParams?: ParametrosImpresionPu;
   selectedParamId: number = 0;
 
   isParamGuardado: boolean = false;
   isParamDeleted: boolean = false;
-
   reportePresupuesto: boolean = false;
-  isImporteconLetra: boolean = false;
+  isImporteconLetra: boolean = true;
+  isImprimirImpuestos: boolean = true;
+  isImprimirConCostoDirecto: boolean = false;
+  isImprimirPU: boolean = false;
+  isImprimirPuMasIVA: boolean = false;
   isError: boolean = false;
   isError2: boolean = false;
   isError3: boolean = false;
 
   currentStep = 0;
+  /** Títulos visibles del wizard de pasos del modal. */
   steps = [
     'Selecciona el reporte a imprimir',
     'Opciones del reporte',
     'Opciones de impresión',
   ];
 
+  /** Lista de configuraciones persistidas de parámetros de impresión. */
   paramsImpresionLista: ParametrosImpresionPu[] = [];
 
+  /** Modelo editable con la configuración de impresión activa. */
   paramsImpresion: ParametrosImpresionPu = {
     id: 0,
     nombre: '',
@@ -80,6 +95,16 @@ export class ImprimirModalComponent {
     margenIzquierdo: 30,
   };
 
+  /**
+   * Constructor.
+   *
+   * Obtiene el id de la empresa activa desde el servicio de seguridad y
+   * lo asigna a this.selectedEmpresa para utilizarlo en las operaciones
+   * de los parámetros de impresión.
+   *
+   * @param parametrosImpresion Servicio de parámetros de impresión.
+   * @param seguridadService Servicio de seguridad.
+   */
   constructor(
     private parametrosImpresion: ParametrosImprimirPuService,
     private seguridadService: SeguridadService
@@ -91,11 +116,16 @@ export class ImprimirModalComponent {
     this.selectedEmpresa = idEmpresa;
   }
 
+  /** Inicializa cargando los parámetros de impresión de la empresa actual. */
   ngOnInit() {
     this.obtenerParametrosImpresion();
-    console.log(this.preciosUnitarios);
   }
 
+  /**
+   * Selecciona un parámetro de impresión de la lista y lo asigna
+   * a this.paramsImpresion.
+   * @param event Evento que se lanza al cambiar el selector de parámetros.
+   */
   seleccionarParams(event: Event) {
     const id = Number((event.target as HTMLSelectElement).value);
     const seleccionado = this.paramsImpresionLista.find((p) => p.id === id);
@@ -105,6 +135,12 @@ export class ImprimirModalComponent {
     }
   }
 
+  /**
+   * Crea una configuración de parámetros de impresión para la empresa seleccionada.
+   * Si la configuración se crea correctamente, se asigna a this.paramsImpresion y se
+   * muestra un mensaje de confirmación por 3 segundos.
+   * Si ocurre un error, se muestra un mensaje de error por 3 segundos.
+   */
   crearConfiguracionParams() {
     this.parametrosImpresion
       .crear(this.selectedEmpresa, this.paramsImpresion)
@@ -134,6 +170,10 @@ export class ImprimirModalComponent {
       });
   }
 
+  /**
+   * Obtiene la lista de parámetros de impresión para la empresa seleccionada en
+   * this.selectedEmpresa y la asigna a this.paramsImpresionLista.
+   */
   obtenerParametrosImpresion() {
     this.parametrosImpresion
       .obtenerTodos(this.selectedEmpresa)
@@ -142,6 +182,11 @@ export class ImprimirModalComponent {
       });
   }
 
+  /**
+   * Edita un registro de parámetros de impresión existente.
+   *
+   * @param id El ID del registro a editar.
+   */
   editarParams(id: number) {
     this.parametrosImpresion
       .editar(this.selectedEmpresa, this.paramsImpresion)
@@ -168,6 +213,12 @@ export class ImprimirModalComponent {
       });
   }
 
+  /**
+   * Elimina un registro de parámetros de impresión existente.
+   * Si se elimina correctamente, se muestra un mensaje de confirmación por 3 segundos.
+   * Si ocurre un error, se muestra un mensaje de error por 3 segundos.
+   * @param id El ID del registro a eliminar.
+   */
   eliminarParams(id: number) {
     this.parametrosImpresion.eliminar(this.selectedEmpresa, id).subscribe({
       next: (datos) => {
@@ -208,14 +259,32 @@ export class ImprimirModalComponent {
     });
   }
 
+  /**
+   * Cierra el modal y emite un evento de cierre.
+   */
   closeModal() {
     this.close.emit();
   }
 
+  /**
+   * Detiene la propagación del evento de clic en el modal, asegurando que no se
+   * cierre el modal accidentalmente al hacer clic en el contenido del mismo.
+   * @param event El evento de clic.
+   */
   detenerCierre(event: MouseEvent) {
     event.stopPropagation();
   }
 
+  /**
+   * Avanza al siguiente paso en el modal, validando previamente que se hayan
+   * seleccionado las opciones necesarias en el paso actual.
+   *
+   * Si se intenta avanzar al siguiente paso sin haber seleccionado las opciones
+   * necesarias, se muestran mensajes de error y no se avanza.
+   *
+   * Si se ha seleccionado una opción de reporte, se habilita el paso correspondiente
+   * para ese reporte.
+   */
   nextStep() {
     this.isError = false;
     this.isError2 = false;
@@ -263,6 +332,10 @@ export class ImprimirModalComponent {
     }
   }
 
+  /**
+   * Retrocede al paso anterior en el modal, reiniciando el estado de error
+   * de selección de opciones.
+   */
   prevStep() {
     this.isError = false;
     if (this.currentStep > 0) {
@@ -270,49 +343,81 @@ export class ImprimirModalComponent {
     }
   }
 
+  /**
+   * Genera el reporte en PDF según la selección hecha en el modal.
+   *
+   * Se crea un objeto `Reporte` con los datos necesarios y se llama a la función
+   * `imprimirReporte()` para generar el PDF.
+   *
+   * Si se ha seleccionado la impresión completa, se genera el reporte para todos
+   * los precios unitarios.
+   *
+   * Si se ha seleccionado la impresión marcada, se genera el reporte solo para
+   * los precios unitarios marcados.
+   */
   finish() {
+    const reporte: Reporte = {
+      precioUnitario: this.preciosUnitarios,
+      titulo: this.paramsImpresion.nombre,
+      encabezadoIzq: this.paramsImpresion.encabezadoIzquierdo,
+      encabezadoCentro: this.paramsImpresion.encabezadoCentro,
+      encabezadoDerecha: this.paramsImpresion.encabezadoDerecho,
+      margenSuperior: this.paramsImpresion.margenSuperior,
+      margenInferior: this.paramsImpresion.margenInferior,
+      margenIzquierdo: this.paramsImpresion.margenIzquierdo,
+      margenDerecho: this.paramsImpresion.margenDerecho,
+      importeConLetra: this.isImporteconLetra,
+      totalConIVA: this.totalConIva,
+      totalSinFormato: this.totalSinFormato,
+      proyecto: this.proyecto,
+      totalIva: this.totalIva,
+      imprimirImpuesto: this.isImprimirImpuestos,
+      imprimirConCostoDirecto: this.isImprimirConCostoDirecto,
+      imprimirConPrecioUnitario: this.isImprimirPU,
+      imprimirConPUMasIva: this.isImprimirPuMasIVA,
+    };
+
+    const reporteMarcado: Reporte = {
+      precioUnitario: this.marcados,
+      titulo: this.paramsImpresion.nombre,
+      encabezadoIzq: this.paramsImpresion.encabezadoIzquierdo,
+      encabezadoCentro: this.paramsImpresion.encabezadoCentro,
+      encabezadoDerecha: this.paramsImpresion.encabezadoDerecho,
+      margenSuperior: this.paramsImpresion.margenSuperior,
+      margenInferior: this.paramsImpresion.margenInferior,
+      margenIzquierdo: this.paramsImpresion.margenIzquierdo,
+      margenDerecho: this.paramsImpresion.margenDerecho,
+      importeConLetra: this.isImporteconLetra,
+      totalConIVA: this.totalConIva,
+      totalSinFormato: this.totalSinFormato,
+      proyecto: this.proyecto,
+      totalIva: this.totalIva,
+      imprimirImpuesto: this.isImprimirImpuestos,
+      imprimirConCostoDirecto: this.isImprimirConCostoDirecto,
+      imprimirConPrecioUnitario: this.isImprimirPU,
+      imprimirConPUMasIva: this.isImprimirPuMasIVA,
+    };
+
     switch (this.tipoReporte) {
       case 'presupuesto':
         this.reportePresupuesto = true;
-        console.log(this.preciosUnitarios);
-
-        console.log(this.totalConIva, this.totalSinIva);
 
         if (this.tipoImpresion === 'impresionCompleta') {
-          imprimirReporte(
-            this.preciosUnitarios,
-            this.paramsImpresion.nombre,
-            this.paramsImpresion.encabezadoIzquierdo,
-            this.paramsImpresion.encabezadoCentro,
-            this.paramsImpresion.encabezadoDerecho,
-            this.paramsImpresion.margenSuperior,
-            this.paramsImpresion.margenInferior,
-            this.paramsImpresion.margenIzquierdo,
-            this.paramsImpresion.margenDerecho,
-            this.isImporteconLetra,
-            this.totalSinIva,
-            this.totalConIva,
-            this.proyecto,
-            this.totalIva
-          );
+          if (this.tipoPrecio === 'costoDirecto') {
+            reporte.imprimirConCostoDirecto = true;
+            imprimirReporte(reporte);
+          }
+          if (this.tipoPrecio === 'precioUnitario') {
+            reporte.imprimirConPrecioUnitario = true;
+            imprimirReporte(reporte);
+          }
+          if (this.tipoPrecio === 'precioUnitarioIVA') {
+            reporte.imprimirConPUMasIva = true;
+            imprimirReporte(reporte);
+          }
         }
         if (this.tipoImpresion === 'impresionMarcada') {
-          imprimirReporte(
-            this.marcados,
-            this.paramsImpresion.nombre,
-            this.paramsImpresion.encabezadoIzquierdo,
-            this.paramsImpresion.encabezadoCentro,
-            this.paramsImpresion.encabezadoDerecho,
-            this.paramsImpresion.margenSuperior,
-            this.paramsImpresion.margenInferior,
-            this.paramsImpresion.margenIzquierdo,
-            this.paramsImpresion.margenDerecho,
-            this.isImporteconLetra,
-            this.totalSinIva,
-            this.totalConIva,
-            this.proyecto,
-            this.totalIva
-          );
+          imprimirReporte(reporteMarcado);
         }
         break;
 
