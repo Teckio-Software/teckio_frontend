@@ -24,7 +24,8 @@ import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-import { image } from '../../precio-unitario/precio-unitario/imprimir-modal/imagen';
+import { image } from '../../precio-unitario/precio-unitario/imprimir-modal/types/imagen';
+// import { image } from '../../precio-unitario/precio-unitario/imprimir-modal/imagen';
 import { numeroALetras } from 'src/app/compras/orden-compra/NumeroALetras';
 
 
