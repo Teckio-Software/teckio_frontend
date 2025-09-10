@@ -4,6 +4,7 @@ export interface OrdenVentaDTO {
     numeroOrdenVenta: string;
     autorizo: string;
     idCliente: number;
+    razonSocialCliente : string;
     fechaRegistro: Date
     estatus: number;
     importeTotal: number;
@@ -20,6 +21,7 @@ export interface DetalleOrdenVentaDTO {
     id: number;
     idOrdenVenta: number;
     idProductoYservicio: number;
+    descripcion : string;
     idEstimacion: number;
     cantitdad: number;
     precioUnitario: number;
@@ -32,9 +34,13 @@ export interface ImpuestoDetalleOrdenVentaDTO {
     id: number;
     idDetalleOrdenVenta: number;
     idTipoImpuesto: number;
+    descripcionTipoImpuesto: string;
     idTipoFactor: number;
+    descripcionTipoFactor: string;
     idCategoriaImpuesto: number;
+    descripcionCategoriaImpuesto: string;
     idClasificacionImpuesto: number;
+    descripcionClasificacionImpuesto: string;
     tasaCuota: number;
     importeTotal: number;
 }

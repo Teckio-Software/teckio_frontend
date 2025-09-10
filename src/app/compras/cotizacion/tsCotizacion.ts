@@ -111,3 +111,13 @@ export interface TipoImpuestoDTO {
   claveImpuesto: string;
   descripcionImpuesto: string;
 }
+
+export interface TipoFactorDTO {
+  id : number;
+  descripcion : string;
+}
+
+export interface CategoriaImpuestoDTO{
+  id : number;
+  tipo : string;
+}
