@@ -321,13 +321,13 @@
     display: none;
   }
   
-  .cabecera {
+  /* .cabecera {
     background-color: #7A8DA8;
     color: #f2f2f2;
     padding: 1px;
     font-size: 14px;
     font-weight: 600;
-  }
+  } */
   
   .cabecera2 {
     background-color: #7A8DA8;
@@ -387,7 +387,7 @@
     min-width: 12vw;
     border-radius: 0 3px 3px 0;
   }
-  .style-encabezado-ac-act{
+  /* .style-encabezado-ac-act{
     background-color: #4eaac138;
     padding: 1px 20px;
     color: #000000;
@@ -397,7 +397,7 @@
     border-right: 1.5px solid #ffffff;    
     font-weight: 500;   
  
-  }
+  } */
   .lista{
     overflow: scroll;
     width: 100%;
