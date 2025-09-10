@@ -55,21 +55,20 @@
         </div>
     </div>
 
-  <div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto;" class="overflow-y-auto w-[500px]">
-    
-    <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos mb-0">
-      <thead>
+  <div style="white-space: nowrap; margin: 0 auto;" class="overflow-y-auto overflow-x-auto w-full rounded-lg shadow-md">
+    <table class="text-sm w-full mb-0">
+      <thead class="bg-primario text-white ">
         <tr>
-          <th scope="col">Descripción</th>
-          <th scope="col">Avance Estimación</th>
-          <th scope="col">Importe Destajo</th>
-          <th scope="col">Importe</th>
-          <th scope="col">% Avance</th>
-          <th scope="col">% Acumulado</th>
+          <th scope="col" class="px-1 py-[2px] xs:w-[75px]">Descripción</th>
+          <th scope="col" class="px-1 py-[2px] xs:w-[75px]">Avance Estimación</th>
+          <th scope="col" class="px-1 py-[2px] xs:w-[75px]">Importe Destajo</th>
+          <th scope="col" class="px-1 py-[2px] xs:w-[75px]">Importe</th>
+          <th scope="col" class="px-1 py-[2px] xs:w-[75px]">% Avance</th>
+          <th scope="col" class="px-1 py-[2px] xs:w-[75px]">% Acumulado</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let d of destajos">
+        <tr *ngFor="let d of destajos" class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]" >
           <td scope="col"><input disabled class="w-full bg-transparent" type="text" 
             [(ngModel)]="d.descripcion"
             ></td>
