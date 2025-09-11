@@ -484,7 +484,7 @@ export class EstimacionesComponent implements OnInit {
   }
 
   imprimir(){
-    this.imprimirReporte(this.estimaciones,'','','','',30,30,30,30,false,this.totalEstimacionesConFormato,this.totalEstimacionesConIvaConFormato,this.proyectos[0],this.ivaEstimacionesConFormato)
+    this.imprimirReporte(this.estimaciones,'','','','',30,30,30,30,true,this.totalEstimacionesConFormato,this.totalEstimacionesConIvaConFormato,this.proyectos[0],this.ivaEstimacionesConFormato, this.totalEstimacionesConIva)
   }
 
   imprimirReporte(
@@ -501,7 +501,8 @@ export class EstimacionesComponent implements OnInit {
     totalSinIVA: string,
     totalConIVA: string,
     proyecto: proyectoDTO,
-    totalIva: string
+    totalIva: string,
+    totalConIVAnumber: number
   ) {
     (<any>pdfMake).addVirtualFileSystem(pdfFonts);
   
@@ -509,45 +510,45 @@ export class EstimacionesComponent implements OnInit {
   
     const content: any[] = [];
 
-    const widths = [55, 95, 55, 53, 53, 53, 53, 53, 53, 53, 53, 53];
+    const widths = [53, 130, 40, 51, 51, 51, 51, 51, 51, 51, 51, 51];
   
     const styles = {
       header: {
         fontSize: 10,
       },
       subheader: {
-        fontSize: 8,
+        fontSize: 6,
         bold: true,
       },
       quote: {
         italics: true,
-        fontSize: 8,
+        fontSize: 6,
       },
       small: {
-        fontSize: 8,
+        fontSize: 6,
       },
       smallCantidad: {
-        fontSize: 8,
+        fontSize: 6,
         alignment: 'right',
       },
       smallCantidadTotal: {
-        fontSize: 8,
+        fontSize: 6,
         alignment: 'right',
         bold: true,
       },
       smallBold: {
-        fontSize: 8,
+        fontSize: 6,
         textAlign: 'center',
         bold: true,
       },
       smallColored: {
-        fontSize: 8,
+        fontSize: 6,
         textAlign: 'center',
         bold: true,
         color: '#1c398e',
       },
       styleTotal: {
-        fontSize: 8,
+        fontSize: 6,
         textAlign: 'center',
         bold: true,
       },
@@ -555,11 +556,11 @@ export class EstimacionesComponent implements OnInit {
         bold: true,
       },
       rounded: {
-        rounded: 10,
+        rounded: 8,
       },
       tableHeader: {
         bold: true,
-        fontSize: 12,
+        fontSize: 10,
         color: 'black',
       },
     };
@@ -720,16 +721,16 @@ export class EstimacionesComponent implements OnInit {
         { text: proyecto.descripcion, style: 'small', alignment: 'justify' },
         { text: proyecto.unidad, style: 'small' },
         { text: proyecto.cantidadConFormato, style: 'small', alignment: 'right'},
-        { text: proyecto.importeConFormato, style: 'small',  alignment: 'right'},
-        { text: proyecto.cantidadAvanceAcumuladoConFormato, style: 'small', alignment: 'right'},
+        { text: `$${proyecto.importeConFormato}`, style: 'small',  alignment: 'right'},
+        { text: `$${proyecto.cantidadAvanceAcumuladoConFormato}`, style: 'small', alignment: 'right'},
         // { text: proyecto.porcentajeAvanceAcumuladoConFormato, style: 'small',},
-        { text: proyecto.importeDeAvanceConFormato, style: 'small', alignment: 'right'},
-        { text: proyecto.cantidadAvanceConFormato, style: 'small', alignment: 'right'},
+        { text: `$${proyecto.importeDeAvanceConFormato}`, style: 'small', alignment: 'right'},
+        { text: `$${proyecto.cantidadAvanceConFormato}`, style: 'small', alignment: 'right'},
         // { text: proyecto.porcentajeAvanceConFormato, style: 'small',},
-        { text: proyecto.importeDeAvanceAcumuladoConFormato, style: 'small', alignment: 'right'},
-        { text: proyecto.cantidadAvanceTotalConFormato, style: 'small', alignment: 'right'},
-        { text: proyecto.porcentajeTotalConFormato, style: 'small', alignment: 'right'},
-        { text: proyecto.importeTotalConFormato, style: 'small', alignment: 'right'},
+        { text: `$${proyecto.importeDeAvanceAcumuladoConFormato}`, style: 'small', alignment: 'right'},
+        { text: `$${proyecto.cantidadAvanceTotalConFormato}`, style: 'small', alignment: 'right'},
+        { text: `$${proyecto.porcentajeTotalConFormato}`, style: 'small', alignment: 'right'},
+        { text: `$${proyecto.importeTotalConFormato}`, style: 'small', alignment: 'right'},
       ]);
   
       // filas de hijos
@@ -743,9 +744,9 @@ export class EstimacionesComponent implements OnInit {
       margin: [0, 0, 0, 0],
       layout: {
         hLineColor: () => '#B9B9B9',
-        hLineWidth: () => 0.5, // todas las líneas horizontales
+        hLineWidth: () => 0, // todas las líneas horizontales
         vLineColor: () => '#B9B9B9',
-        vLineWidth: () => 0.5, // todas las líneas verticales
+        vLineWidth: () => 0, // todas las líneas verticales
       },
       table: {
         headerRows: 0,
@@ -763,48 +764,91 @@ export class EstimacionesComponent implements OnInit {
         (Number(precio.importe) * 0.16).toFixed(2)
       );
   
-      const subtotal = (Number(precio.importe) - totalMasIva).toFixed(2);
+      // const subtotal = (Number(precio.importe) - totalMasIva).toFixed(2);
   
-      content.push({
-        columns: [
-          { width: '*', text: '' },
-          {
-            width: 'auto',
-            table: {
-              widths: ['auto', 'auto'],
-              body: [
-                [
-                  {
-                    text: `Subtotal de ${precio.codigo}`,
-                    style: 'styleTotal',
-                  },
-                  {
-                    text: `$ ${precio.importeConFormato}`,
-                    style: 'styleTotal',
-                    alignment: 'right',
-                  },
-                ],
-              ],
-            },
-            layout: {
-              hLineColor: () => '#B9B9B9',
-              vLineColor: () => '#B9B9B9',
-              hLineWidth: () => 0,
-              vLineWidth: () => 0,
-            },
-            margin: [0, 0, 0, 5],
-          },
-        ],
-      });
+      // content.push({
+      //   columns: [
+      //     { width: '*', text: '' },
+      //     {
+      //       width: 'auto',
+      //       table: {
+      //         widths: ['auto', 'auto'],
+      //         body: [
+      //           [
+      //             {
+      //               text: `Subtotal de ${precio.codigo}`,
+      //               style: 'styleTotal',
+      //             },
+      //             {
+      //               text: `$ ${precio.importeConFormato}`,
+      //               style: 'styleTotal',
+      //               alignment: 'right',
+      //             },
+      //           ],
+      //         ],
+      //       },
+      //       layout: {
+      //         hLineColor: () => '#B9B9B9',
+      //         vLineColor: () => '#B9B9B9',
+      //         hLineWidth: () => 0,
+      //         vLineWidth: () => 0,
+      //       },
+      //       margin: [0, 0, 0, 5],
+      //     },
+      //   ],
+      // });
     });
+
+    // content.push({
+    //   columns: [
+    //     { width: '*', text: '' },
+    //     {
+    //       width: 'auto',
+    //       table: {
+    //         body: [
+    //           [
+                
+    //             {
+    //               text: `Total:`,
+    //               style: 'smallCantidadTotal',
+    //               alignment: 'right',
+    //             },
+    //             { text: numeroALetras(totalConIVAnumber), style: 'smallCantidadTotal'},
+    //           ],
+    //         ],
+    //       },
+    //       layout: {
+    //         hLineColor: () => '#B9B9B9',
+    //         vLineColor: () => '#B9B9B9',
+    //         hLineWidth: () => 0.5,
+    //         vLineWidth: () => 0.5,
+    //       },
+    //       margin: [0, 0, 0, 5],
+    //     },
+    //   ],
+      
+    // })
   
     content.push({
       columns: [
+        { width: '*', text: '' },
         { width: '*', text: '' },
         {
           width: 'auto',
           table: {
             body: [
+              [
+                {
+                  text: 'Subtotal ',
+                  style: 'smallCantidadTotal',
+                },
+                {
+                  text: ` ${totalSinIVA}`,
+                  style: 'smallCantidadTotal',
+                  alignment: 'right',
+                },
+                {}
+              ],
               [
                 {
                   text: 'IVA ' + proyecto.porcentajeIva + '%',
@@ -815,6 +859,7 @@ export class EstimacionesComponent implements OnInit {
                   style: 'smallCantidadTotal',
                   alignment: 'right',
                 },
+                {}
               ],
               [
                 { text: 'Total', style: 'smallCantidadTotal' },
@@ -823,6 +868,7 @@ export class EstimacionesComponent implements OnInit {
                   style: 'smallCantidadTotal',
                   alignment: 'right',
                 },
+                {text: numeroALetras(totalConIVAnumber), style: 'smallCantidadTotal'}
               ],
             ],
           },
@@ -837,38 +883,38 @@ export class EstimacionesComponent implements OnInit {
       ],
     });
   
-    if (importeConLetra) {
-      precioUnitario.forEach((proyecto) => {
-        totalEnLetras = numeroALetras(proyecto.costoUnitario);
+    // if (importeConLetra) {
+    //   precioUnitario.forEach((proyecto) => {
+    //     totalEnLetras = numeroALetras(proyecto.costoUnitario);
   
-        content.push({
-          columns: [
-            { width: '*', text: '' },
-            {
-              width: 'auto',
-              table: {
-                widths: ['auto'],
-                body: [
-                  [
-                    {
-                      text: `${totalEnLetras}`,
-                      style: 'smallBold',
-                    },
-                  ],
-                ],
-              },
-              layout: {
-                hLineColor: () => '#B9B9B9',
-                vLineColor: () => '#B9B9B9',
-                hLineWidth: () => 0.5,
-                vLineWidth: () => 0.5,
-              },
-              margin: [0, 5, 0, 5],
-            },
-          ],
-        });
-      });
-    }
+    //     content.push({
+    //       columns: [
+    //         { width: '*', text: '' },
+    //         {
+    //           width: 'auto',
+    //           table: {
+    //             widths: ['auto'],
+    //             body: [
+    //               [
+    //                 {
+    //                   text: `${totalEnLetras}`,
+    //                   style: 'smallBold',
+    //                 },
+    //               ],
+    //             ],
+    //           },
+    //           layout: {
+    //             hLineColor: () => '#B9B9B9',
+    //             vLineColor: () => '#B9B9B9',
+    //             hLineWidth: () => 0.5,
+    //             vLineWidth: () => 0.5,
+    //           },
+    //           margin: [0, 5, 0, 5],
+    //         },
+    //       ],
+    //     });
+    //   });
+    // }
   
     const docDefinition: any = {
       content,
@@ -910,13 +956,13 @@ function mapHijos(hijos: any[], nivel = 1, prefijo = ''): any[] {
     const numero = prefijo ? `${prefijo}.${index + 1}` : `${index + 1}`;
 
     const style = esPadreConHijos
-      ? { fontSize: 8, bold: true, color }
-      : { fontSize: 8 };
+      ? { fontSize: 6, bold: true, color }
+      : { fontSize: 6 };
 
     // fila base
     const fila = [
       // { text: `${numero}`, style: 'small' },
-      { text: `${numero}`+'  '+hijo.codigo, style: 'small' },
+      { text: `${numero}`+'  '+hijo.codigo, ...style },
         { text: hijo.descripcion, style: 'small', alignment: 'justify' },
         { text: hijo.unidad, style: 'small' },
         { text: hijo.cantidadConFormato, style: 'small', alignment: 'right'},
@@ -937,18 +983,18 @@ function mapHijos(hijos: any[], nivel = 1, prefijo = ''): any[] {
 
     // fila de total si tiene hijos
     let filas = [fila, ...subFilas];
-    if (esPadreConHijos) {
-      const totalFila = [
-        {
-          text: `Total de ${hijo.descripcion}  $  ${hijo.importeConFormato}`,
-          style: 'smallCantidadTotal',
-          alignment: 'right',
-          colSpan: 12,
-        },
+    // if (esPadreConHijos) {
+    //   const totalFila = [
+    //     {
+    //       text: `Total de ${hijo.descripcion}  $  ${hijo.importeConFormato}`,
+    //       style: 'smallCantidadTotal',
+    //       alignment: 'right',
+    //       colSpan: 12,
+    //     },
         
-      ];
-      filas.push(totalFila);
-    }
+    //   ];
+    //   filas.push(totalFila);
+    // }
 
     return filas;
   });
