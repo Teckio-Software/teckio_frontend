@@ -131,17 +131,27 @@
                   {{ orden.fechaRegistro | date : "dd/MM/yyyy HH:mm:ss" }}
                 </td>
                 <td class="px-1 py-[2px]" scope="col">
-                  <div class="flex">
-                    <div>
+                  <div class="flex gap-2">
+                    <button>
                       <img
                         ngbTooltip="Ver detalles"
                         triggers="mouseenter:mouseleave"
-                        class="cursor-pointer mx-auto xs:w-4"
+                        class="cursor-pointer"
                         src="./assets/visibility_btn.svg"
                         alt="ver detalles"
                         (click)="openModal(orden)"
                       />
-                    </div>
+                    </button>
+                    <button>
+                      <img
+                        ngbTooltip="Cancelar"
+                        triggers="mouseenter:mouseleave"
+                        class="cursor-pointer w-6"
+                        src="./assets/cancel.svg"
+                        alt="eliminar"
+                        (click)="eliminarOrdenVenta(orden)"
+                      />
+                    </button>
                   </div>
                 </td>
               </tr>
