@@ -451,7 +451,7 @@ export class VentasComponent {
         )
         .subscribe({
           next: () => {
-            this.cargarOrdenesVenta();
+            this.cargarOrdenVenta();
             this.noEliminar();
           },
         });
@@ -461,7 +461,7 @@ export class VentasComponent {
         .eliminarImpuesto(this.selectedImpuesto.id, this.selectedEmpresa)
         .subscribe({
           next: () => {
-            this.cargarOrdenesVenta();
+            this.cargarOrdenVenta();
             this.noEliminar();
           },
         });
@@ -546,7 +546,7 @@ export class VentasComponent {
         .crearImpuesto(impuesto, this.selectedEmpresa)
         .subscribe({
           next: () => {
-            this.cargarOrdenesVenta();
+            this.cargarOrdenVenta();
           },
         });
     } else {
@@ -554,7 +554,7 @@ export class VentasComponent {
         .editarImpuesto(impuesto, this.selectedEmpresa)
         .subscribe({
           next: () => {
-            this.cargarOrdenesVenta();
+            this.cargarOrdenVenta();
           },
         });
     }
