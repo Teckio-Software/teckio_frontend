@@ -123,7 +123,7 @@
             </option>
           </select>
         </td>
-        <td class="px-1 py-[2px] xs:hidden" scope="col" [formGroup]="form">
+        <td class="px-1 py-[2px] xs:hidden text-end" scope="col" [formGroup]="form">
           <!-- <input
             autocomplete="off"
             class="dropdown1 bg-transparent"
@@ -133,9 +133,9 @@
             formControlName="cUnitario"
             [disabled]="false"
           /> -->
-          {{ form.get("cUnitario")?.value | number : "1.2-2" }}
+          ${{ form.get("cUnitario")?.value | number : "1.2-2" }}
         </td>
-        <td class="px-1 py-[2px] xs:hidden" scope="col" [formGroup]="form">
+        <td class="px-1 py-[2px] xs:hidden text-end" scope="col" [formGroup]="form">
           <!-- <input
             autocomplete="off"
             class="dropdown1 bg-transparent"
@@ -145,7 +145,7 @@
             formControlName="cPresupuestada"
             [disabled]="true"
           /> -->
-          {{ form.get("cPresupuestada")?.value | number : "1.4-4" }}
+          ${{ form.get("cPresupuestada")?.value | number : "1.4-4" }}
         </td>
         <td
           class="px-1 py-[2px] w-[20%] xs:w-[5%]"
@@ -156,7 +156,7 @@
             min="1"
             placeholder="Cantidad..."
             autocomplete="off"
-            class="dropdown1 bg-transparent w-[75%] xs:w-[100%]"
+            class="dropdown1 bg-transparent w-[75%] xs:w-[100%] text-end"
             type="number"
             data-bs-toggle="dropdown"
             (keydown.enter)="agregarNuevoInsumo()"
@@ -304,7 +304,7 @@
             <input
               min="1"
               autocomplete="off"
-              class="bg-transparent xs:w-[75%]"
+              class="bg-transparent xs:w-[75%] text-end"
               type="number"
               data-bs-toggle="dropdown"
               (keydown.enter)="actualizarIXR(i)"

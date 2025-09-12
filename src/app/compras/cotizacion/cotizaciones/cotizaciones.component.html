@@ -38,13 +38,13 @@
             />
           </td>
           <td class="px-1 py-[4px] xs:py-[5px]" scope="col">{{ i.unidad }}</td>
-          <td class="px-1 py-[4px] xs:py-[5px]" scope="col">
+          <td class="px-1 py-[4px] xs:py-[5px] text-end" scope="col">
             {{ i.cantidad | number:'1.4-4' }}
           </td>
-          <td class="px-1 py-[4px] xs:py-[5px]" scope="col">
-            {{ i.precioUnitario | number:'1.2-2' }}
+          <td class="px-1 py-[4px] xs:py-[5px] text-end" scope="col">
+            ${{ i.precioUnitario | number:'1.2-2' }}
           </td>
-          <td class="px-1 py-[4px] xs:py-[5px]" scope="col">{{ i.importe | number:'1.2-2'}}</td>
+          <td class="px-1 py-[4px] xs:py-[5px] text-end" scope="col">${{ i.importe | number:'1.2-2'}}</td>
         </tr>
       </tbody>
     </table>
@@ -117,38 +117,39 @@
           class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
           *ngFor="let ic of c.insumoXCotizacion"
         >
-          <td scope="col" [ngClass]="{ estilo2: ic.estatus > 1 }" *ngIf="ic.estatus <= 1">
+          <td scope="col" [ngClass]="{ estilo2: ic.estatus > 1 }" *ngIf="ic.estatus <= 1" >
             <input
               type="number"
               [(ngModel)]="ic.cantidad"
-              class="bg-transparent"
+              class="bg-transparent text-end"
               [ngClass]="{ estilo2: ic.estatus > 1 }"
               [disabled]="ic.estatus > 1"
               (keydown.enter)="ActualizarInsumoCotizado(ic)"
             />
           </td>
-          <td scope="col" [ngClass]="{ estilo2: ic.estatus > 1 }" *ngIf="ic.estatus > 1">
-            {{ic.cantidad | number:'1.4-4'}}
+          <td class="text-end" scope="col" [ngClass]="{ estilo2: ic.estatus > 1 }" *ngIf="ic.estatus > 1">
+            ${{ic.cantidad | number:'1.4-4'}}
           </td>
           <td scope="col" [ngClass]="{ estilo2: ic.estatus > 1 }" *ngIf="ic.estatus <= 1">
             <input
               type="number"
               [(ngModel)]="ic.precioUnitario"
-              class="bg-transparent"
+              class="bg-transparent text-end"
               [ngClass]="{ estilo2: ic.estatus > 1 }"
               [disabled]="ic.estatus > 1"
               (keydown.enter)="ActualizarInsumoCotizado(ic)"
             />
           </td>
-          <td scope="col" [ngClass]="{ estilo2: ic.estatus > 1 }" *ngIf="ic.estatus > 1">
-            {{ic.precioUnitario | number:'1.2-2'}}
+          <td scope="col" [ngClass]="{ estilo2: ic.estatus > 1 }" *ngIf="ic.estatus > 1" class="text-end">
+            ${{ic.precioUnitario | number:'1.2-2'}}
           </td>
           <td
             scope="col"
             [ngClass]="{ estilo2: ic.estatus > 1 }"
             (click)="VerImpuestos(ic)"
+            class="text-end"
           >
-            {{ ic.importe | number:'1.2-2' }}
+            ${{ ic.importe | number:'1.2-2' }}
           </td>
           <td
             class="text-center"

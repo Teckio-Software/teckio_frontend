@@ -312,6 +312,7 @@ export class RequisicionComponent implements OnInit {
     this.observacion = requisicion.observaciones;
   }
 
+
   VerInsumosRequisicion() {
     this.idCotizacion = 0;
     this.esInsumos = true;
@@ -486,6 +487,12 @@ export class RequisicionComponent implements OnInit {
 
   getPaginationInfo() {
     return `Página ${this.currentPage} de ${this.totalPages}`;
+  }
+
+  regresarARequisiciones(){
+    this.veiewInsumos = false; 
+    this.cargarRegistros(); 
+    this.insumosEstado = false;
   }
   ///////////* PAGINATION */////////
 }
