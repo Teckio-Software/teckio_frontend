@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment.development';
-import { DetalleOrdenVentaDTO, ImpuestoDetalleOrdenVentaDTO, OrdenVentaDTO } from './ordenVenta';
+import { CancelarOrdenVentaDTO, DetalleOrdenVentaDTO, ImpuestoDetalleOrdenVentaDTO, OrdenVentaDTO } from './ordenVenta';
 import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 
 @Injectable({
@@ -19,6 +19,16 @@ export class VentasService {
 
   public editar(idEmp : number, ordenVenta: OrdenVentaDTO){
     return this.HttpClient.put<RespuestaDTO>(`${this.apiUrl}/${idEmp}/editarOrdenVenta`, ordenVenta);
+  }
+
+  /**
+   * Cancelar una orden de venta.
+   * @param {number} idEmp - Id de la empresa.
+   * @param {CancelarOrdenVentaDTO} ordenVenta - La orden de venta que se va a cancelar.
+   * @returns {Observable<RespuestaDTO>} - Un RespuestaDTO que expresa si la operación fue exitosa.
+   */
+  public cancelar(idEmp : number, ordenVenta: CancelarOrdenVentaDTO){
+    return this.HttpClient.put<RespuestaDTO>(`${this.apiUrl}/${idEmp}/cancelar`, ordenVenta);
   }
 
   public eliminarOrdenVenta(IdOrdenVenta : number, idEmp: number){

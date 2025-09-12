@@ -3,6 +3,7 @@ import { Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
 import { VentasService } from './ventas.service';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import {
+  CancelarOrdenVentaDTO,
   DetalleOrdenVentaDTO,
   ImpuestoDetalleOrdenVentaDTO,
   OrdenVentaDTO,
@@ -45,6 +46,11 @@ export class VentasComponent {
     detalleOrdenVenta: [],
     elaboro: '',
     razonSocialCliente: '',
+  };
+
+  cancelarOrdenVentaDTO: CancelarOrdenVentaDTO = {
+    idOrdenVenta: 0,
+    idAlmacenDestino: 0,
   };
 
   ordenesVenta: OrdenVentaDTO[] = [];
@@ -120,6 +126,7 @@ export class VentasComponent {
   elimandoDatalle: boolean = false;
   elimandoImpuesto: boolean = false;
   ChangeDetectorRef: any;
+  permiteCrear: boolean = true;
 
   constructor(
     private _seguridadService: SeguridadService,
@@ -348,17 +355,50 @@ export class VentasComponent {
     }
   }
 
-  eliminarOrdenVenta(ordenVenta: OrdenVentaDTO) {
+  // eliminarOrdenVenta(ordenVenta: OrdenVentaDTO) {
+  //   Swal.fire({
+  //     confirmButtonText: 'Aceptar',
+  //     cancelButtonText: 'Cancelar',
+  //     showCancelButton: true,
+  //     html: `<p>¿Desea eliminar la orden de venta?</p>`,
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       this._ordenVentaService.eliminarOrdenVenta(ordenVenta.id, this.selectedEmpresa).subscribe((respuesta) => {
+  //         this.cargarOrdenesVenta();
+  //       });
+  //     } else {
+  //       return;
+  //     }
+  //     this.ChangeDetectorRef.detectChanges();
+  //   });
+  // }
+
+  cancelarOrdenVenta(id: number) {
     Swal.fire({
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
       showCancelButton: true,
-      html: `<p>¿Desea eliminar la orden de venta?</p>`,
+      html: `<p>¿Desea cancelar la orden de venta?</p>`,
     }).then((result) => {
       if (result.isConfirmed) {
-        this._ordenVentaService.eliminarOrdenVenta(ordenVenta.id, this.selectedEmpresa).subscribe((respuesta) => {
-          this.cargarOrdenesVenta();
-        });
+        this.cancelarOrdenVentaDTO = {
+          idOrdenVenta: id,
+          idAlmacenDestino: 0,
+        };
+        this._ordenVentaService
+          .cancelar(this.selectedEmpresa, this.cancelarOrdenVentaDTO)
+          .subscribe({
+            next: (resp) => {
+              this.cancelarOrdenVentaDTO = {
+                idOrdenVenta: 0,
+                idAlmacenDestino: 0,
+              };
+              console.log(resp);
+            },
+            error: () => {
+              //Mensaje de error
+            },
+          });
       } else {
         return;
       }
@@ -569,6 +609,64 @@ export class VentasComponent {
     this.esEliminar = true;
     this.elimandoDatalle = false;
     this.elimandoImpuesto = true;
+  }
+
+  /**
+   * Crea una orden de venta.
+   */
+  crearOrdenVenta() {
+    //Revisa si crear esta permitido
+    if (this.permiteCrear) {
+      // Establece la fecha de registro actual
+      this.ordenVenta = {
+        id: 0,
+        numeroOrdenVenta: '',
+        autorizo: '',
+        idCliente: 0,
+        fechaRegistro: new Date(),
+        estatus: 0,
+        importeTotal: 0,
+        subtotal: 0,
+        estatusSaldado: 0,
+        totalSaldado: 0,
+        descuento: 0,
+        observaciones: '',
+        detalleOrdenVenta: [],
+        elaboro: '',
+        razonSocialCliente: '',
+      };
+
+      // Llama al servicio de ordenes de venta para crear una orden
+      this._ordenVentaService
+        .crear(this.selectedEmpresa, this.ordenVenta)
+        .subscribe({
+          /**
+           * Se llama cuando se crea correctamente la orden de venta.
+           * @param resp La respuesta del servidor.
+           */
+          next: (resp) => {
+            // Carga la lista de ordenes de venta
+            this.cargarOrdenesVenta();
+            this.bloquearBotonCrear();
+          },
+          /**
+           * Se llama cuando se produce un error al crear la orden de venta.
+           * @param error El error producido.
+           */
+          error: () => {
+            // Mensaje de error
+          },
+        });
+    } else {
+      console.log('No se permiten crear ordenes de venta seguidas.');
+    }
+  }
+
+  bloquearBotonCrear() {
+    this.permiteCrear = false;
+    setTimeout(() => {
+      this.permiteCrear = true;
+    }, 1000);
   }
 
   guardarOrdenVenta() {

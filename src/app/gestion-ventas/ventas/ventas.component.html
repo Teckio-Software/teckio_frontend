@@ -4,7 +4,7 @@
       <!-- Button cotainer -->
       <div class="flex mt-1 mb-2">
         <button
-          (click)="guardarOrdenVenta()"
+          (click)="crearOrdenVenta()"
           class="flex align-items-center rounded-md bg-colorButton transition-colors delay-75 hover:bg-colorButtonHover font-light text-white p-1"
         >
           <p
@@ -149,7 +149,7 @@
                         class="cursor-pointer w-6"
                         src="./assets/cancel.svg"
                         alt="eliminar"
-                        (click)="eliminarOrdenVenta(orden)"
+                        (click)="cancelarOrdenVenta(orden.id)"
                       />
                     </button>
                   </div>
