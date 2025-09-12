@@ -1,7 +1,7 @@
 <div class="flex">
   <button
     (click)="abrirFormularioCrear()"
-    class="bg-[#51aec7] hover:bg-hoverButton titular items-center bg-custom-bg flex font-bold tracking-wider m-0 text-center"
+    class="bg-[#51aec7] hover:bg-hoverButton titular items-center bg-custom-bg flex font-bold tracking-wider m-0 text-center rounded-lg mb-2"
   >
     <p
       class="text-[#f2f2f2] titular bg-custom-bg w-52 font-bold tracking-wider m-0 text-center"
@@ -12,30 +12,24 @@
   </button>
 </div>
 <div
-  style="
-    overflow-x: auto;
-    white-space: nowrap;
-    width: 100%;
-    margin: 0 auto;
-    margin-top: 0px;
-  "
+  class="overflow-y-auto overflow-x-auto w-full rounded-lg shadow-md whitespace-nowrap mx-auto"
 >
   <table
-    class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos m-0"
+    class="text-sm w-full mb-0"
   >
-    <thead>
+    <thead class="bg-primario text-white ">
       <tr>
-        <th scope="col">Nombre</th>
-        <th scope="col">Apellido Paterno</th>
-        <th scope="col">Apellido Materno</th>
-        <th scope="col">CURP</th>
-        <th scope="col">RFC</th>
-        <th scope="col">Seguro Social</th>
-        <th scope="col">Relacion L.</th>
-        <th scope="col">Termino R.L.</th>
-        <th scope="col">Salario</th>
-        <th scope="col">Activo</th>
-        <th scope="col">Acción</th>
+        <th scope="col"  class="px-1 py-[2px] xs:w-[75px]" >Nombre</th>
+        <th scope="col"  class="px-1 py-[2px] xs:w-[75px]" >Apellido Paterno</th>
+        <th scope="col"  class="px-1 py-[2px] xs:w-[75px]" >Apellido Materno</th>
+        <th scope="col"  class="px-1 py-[2px] xs:w-[75px]" >CURP</th>
+        <th scope="col"  class="px-1 py-[2px] xs:w-[75px]" >RFC</th>
+        <th scope="col"  class="px-1 py-[2px] xs:w-[75px]" >Seguro Social</th>
+        <th scope="col"  class="px-1 py-[2px] xs:w-[75px]" >Relacion L.</th>
+        <th scope="col"  class="px-1 py-[2px] xs:w-[75px]" >Termino R.L.</th>
+        <th scope="col"  class="px-1 py-[2px] xs:w-[75px]" >Salario</th>
+        <th scope="col"  class="px-1 py-[2px] xs:w-[75px]" >Activo</th>
+        <th scope="col"  class="px-1 py-[2px] xs:w-[75px]" >Acción</th>
       </tr>
     </thead>
     <tbody>
@@ -311,7 +305,7 @@
           </td>
         </tr>
       </ng-container>
-      <tr
+      <tr class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
         *ngFor="let empleado of empleados"
         (click)="SeleccionaEmpleado(empleado)"
         [ngClass]="{ 'change-background-color': empleado.id == changeColor }"
@@ -338,6 +332,7 @@
             [(ngModel)]="empleado.estatus"
             (change)="ActualizaEstatus(empleado)"
           />
+
         </td>
         <td scope="col">
           <div class="flex gap-2">

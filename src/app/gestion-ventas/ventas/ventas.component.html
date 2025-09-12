@@ -4,7 +4,7 @@
       <!-- Button cotainer -->
       <div class="flex mt-1 mb-2">
         <button
-          (click)="guardarOrdenVenta()"
+          (click)="crearOrdenVenta()"
           class="flex align-items-center rounded-md bg-colorButton transition-colors delay-75 hover:bg-colorButtonHover font-light text-white p-1"
         >
           <p
@@ -131,17 +131,27 @@
                   {{ orden.fechaRegistro | date : "dd/MM/yyyy HH:mm:ss" }}
                 </td>
                 <td class="px-1 py-[2px]" scope="col">
-                  <div class="flex">
-                    <div>
+                  <div class="flex gap-2">
+                    <button>
                       <img
                         ngbTooltip="Ver detalles"
                         triggers="mouseenter:mouseleave"
-                        class="cursor-pointer mx-auto xs:w-4"
+                        class="cursor-pointer"
                         src="./assets/visibility_btn.svg"
                         alt="ver detalles"
                         (click)="openModal(orden)"
                       />
-                    </div>
+                    </button>
+                    <button>
+                      <img
+                        ngbTooltip="Cancelar"
+                        triggers="mouseenter:mouseleave"
+                        class="cursor-pointer w-6"
+                        src="./assets/cancel.svg"
+                        alt="eliminar"
+                        (click)="cancelarOrdenVenta(orden.id)"
+                      />
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -191,32 +201,33 @@
                 for="almacen"
                 >Cliente</label
               >
-              <input
-                autocomplete="off"
-                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                id="myInput"
-                type="text"
-                style="margin: 5px"
-                placeholder="Seleccionar..."
-                [(ngModel)]="ordenVenta.razonSocialCliente"
-                data-bs-toggle="dropdown"
-                (keyup)="filtrarCliente($event)"
-              />
-              <ul
-                class="dropdown-menu"
-                style="z-index: 9999; position: absolute"
-              >
-                <li style="overflow-y: scroll; height: 80px">
-                  <option
-                    class="option-hover"
-                    *ngFor="let cliente of clientes"
-                    [value]="cliente.id"
-                    (click)="seleccionarCliente(cliente)"
+              <div class="relative w-full" #lista>
+                <input
+                  type="text"
+                  placeholder="Seleccionar..."
+                  autocomplete="off"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  (input)="filtrarCliente($event)"
+                  (keydown.enter)="guardarOrdenVenta()"
+                  (click)="listaClientes = !listaClientes"
+                  [(ngModel)]="this.ordenVenta.razonSocialCliente"
+                />
+                <div *ngIf="listaClientes">
+                  <cdk-virtual-scroll-viewport
+                    itemSize="36"
+                    class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-[300px] h-36 overflow-auto shadow-lg"
                   >
-                    {{ cliente.razonSocial }}
-                  </option>
-                </li>
-              </ul>
+                    <div
+                      *cdkVirtualFor="let cliente of clientes"
+                      (click)="seleccionarCliente(cliente)"
+                      class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                      style="height: 36px; box-sizing: border-box"
+                    >
+                      {{ cliente.razonSocial }}
+                    </div>
+                  </cdk-virtual-scroll-viewport>
+                </div>
+              </div>
             </div>
             <div class="mb-3">
               <label
@@ -229,6 +240,7 @@
                 id=""
                 [(ngModel)]="ordenVenta.observaciones"
                 rows="2"
+                (keydown.enter)="guardarOrdenVenta()"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               ></textarea>
             </div>
@@ -244,9 +256,27 @@
                 </p>
                 <img class="xs:w-4" src="assets/add.svg" alt="botón agregar" />
               </button> -->
-              <p class="text-red-600 font-normal px-2 text-xs mt-1">
-                {{ mensajeAlerta }}
-              </p>
+              <div class="flex gap-4 items-center">
+                <p class="text-red-600 font-normal text-xs m-0">
+                  {{ mensajeAlerta }}
+                </p>
+                <div class="flex gap-4">
+                  <button
+                    *ngIf="esEliminar"
+                    class="text-red-600 font-normal text-xs underline"
+                    (click)="eliminarRegistro()"
+                  >
+                    Si
+                  </button>
+                  <button
+                    *ngIf="esEliminar"
+                    class="text-red-600 font-normal text-xs underline"
+                    (click)="noEliminar()"
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
           <div>
@@ -289,6 +319,7 @@
                               listaProductoYServicio = !listaProductoYServicio
                             "
                             [(ngModel)]="nuevoDetalleOrdenVenta.descripcion"
+                            [disabled]="esEliminar"
                           />
                           <div *ngIf="listaProductoYServicio">
                             <cdk-virtual-scroll-viewport
@@ -376,6 +407,7 @@
                               class="form-contrtrol w-full"
                               [(ngModel)]="detalle.descripcion"
                               readonly
+                              [disabled]="esEliminar"
                             />
                           </div>
                         </td>
@@ -391,6 +423,7 @@
                               guardarDetalle(nuevoDetalleOrdenVenta)
                             "
                             [(ngModel)]="detalle.cantitdad"
+                            [disabled]="esEliminar"
                           />
                         </td>
                         <td class="px-1 py-[2px] w-[15%]" scope="col">
@@ -405,6 +438,7 @@
                               guardarDetalle(nuevoDetalleOrdenVenta)
                             "
                             [(ngModel)]="detalle.precioUnitario"
+                            [disabled]="esEliminar"
                           />
                         </td>
                         <td class="px-1 py-[2px] w-[15%]" scope="col">
@@ -419,30 +453,37 @@
                               guardarDetalle(nuevoDetalleOrdenVenta)
                             "
                             [(ngModel)]="detalle.descuento"
+                            [disabled]="esEliminar"
                           />
                         </td>
                         <td class="px-1 py-[2px] w-[15%]" scope="col">
                           <div class="flex gap-2">
-                            <div>
+                            <button
+                              ngbTooltip="Ver Impuestos"
+                              triggers="mouseenter:mouseleave"
+                              (click)="verImpuestos(detalle)"
+                              [disabled]="esEliminar"
+                            >
                               <img
-                                ngbTooltip="Ver Impuestos"
-                                triggers="mouseenter:mouseleave"
                                 class="cursor-pointer mx-auto xs:w-4"
                                 src="./assets/visibility_btn.svg"
                                 alt="ver insumos"
-                                (click)="verImpuestos(detalle)"
                               />
-                            </div>
-                            <div class="flex">
+                            </button>
+                            <button
+                              ngbTooltip="Ver Impuestos"
+                              triggers="mouseenter:mouseleave"
+                              [disabled]="esEliminar"
+                              (click)="eliminarDetalle(detalle)"
+                            >
                               <img
                                 ngbTooltip="Eliminar detalle"
                                 triggers="mouseenter:mouseleave"
                                 class="cursor-pointer mx-auto xs:w-4"
                                 src="assets/delete.svg"
                                 alt="ver insumos"
-                                (click)="eliminarDetalle(detalle)"
                               />
-                            </div>
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -483,15 +524,21 @@
                               type="text"
                               placeholder="Impuesto..."
                               autocomplete="off"
-                              class="bg-transparent w-[75%] px-2 py-1"
+                              class="form-contrtrol w-full"
                               (click)="
-                              mostrarListaImpuestos = !mostrarListaImpuestos
-                            "
+                                mostrarListaImpuestos = !mostrarListaImpuestos
+                              "
                               [(ngModel)]="impuesto.descripcionTipoImpuesto"
                               readonly
+                              [disabled]="esEliminar"
                             />
 
-                            <div *ngIf="mostrarListaImpuestos && impuesto.id == selectedImpuesto.id">
+                            <div
+                              *ngIf="
+                                mostrarListaImpuestos &&
+                                impuesto.id == selectedImpuesto.id
+                              "
+                            >
                               <ul
                                 class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-auto max-h-48 overflow-y-auto shadow-lg"
                               >
@@ -512,15 +559,21 @@
                               type="text"
                               placeholder="Factor..."
                               autocomplete="off"
-                              class="bg-transparent w-[75%] px-2 py-1"
+                              class="form-contrtrol w-full"
                               (click)="
-                              mostrarListaFactores = !mostrarListaFactores
-                            "
+                                mostrarListaFactores = !mostrarListaFactores
+                              "
                               [(ngModel)]="impuesto.descripcionTipoFactor"
                               readonly
+                              [disabled]="esEliminar"
                             />
 
-                            <div *ngIf="mostrarListaFactores && impuesto.id == selectedImpuesto.id">
+                            <div
+                              *ngIf="
+                                mostrarListaFactores &&
+                                impuesto.id == selectedImpuesto.id
+                              "
+                            >
                               <ul
                                 class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-auto max-h-48 overflow-y-auto shadow-lg"
                               >
@@ -541,21 +594,31 @@
                               type="text"
                               placeholder="Categoria.."
                               autocomplete="off"
-                              class="bg-transparent w-[75%] px-2 py-1"
+                              class="form-contrtrol w-full"
                               (click)="
-                              mostrarListaCategoria = !mostrarListaCategoria
-                            "
-                              [(ngModel)]="impuesto.descripcionCategoriaImpuesto"
+                                mostrarListaCategoria = !mostrarListaCategoria
+                              "
+                              [(ngModel)]="
+                                impuesto.descripcionCategoriaImpuesto
+                              "
                               readonly
+                              [disabled]="esEliminar"
                             />
 
-                            <div *ngIf="mostrarListaCategoria && impuesto.id == selectedImpuesto.id">
+                            <div
+                              *ngIf="
+                                mostrarListaCategoria &&
+                                impuesto.id == selectedImpuesto.id
+                              "
+                            >
                               <ul
                                 class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-auto max-h-48 overflow-y-auto shadow-lg"
                               >
                                 <li
                                   *ngFor="let categoria of categoriaImpuesto"
-                                  (click)="seleccionarCategorias(categoria, impuesto)"
+                                  (click)="
+                                    seleccionarCategorias(categoria, impuesto)
+                                  "
                                   class="px-4 py-2 cursor-pointer hover:bg-gray-100"
                                 >
                                   {{ categoria.tipo }}
@@ -569,23 +632,28 @@
                             min="1"
                             placeholder="Categoria.."
                             autocomplete="off"
-                            class="dropdown1 bg-transparent w-[75%] xs:w-[100%] text-right"
+                            class="form-contrtrol w-full"
                             type="number"
                             data-bs-toggle="dropdown"
                             (keydown.enter)="agregarImpuesto(impuesto)"
                             [(ngModel)]="impuesto.tasaCuota"
+                            [disabled]="esEliminar"
                           />
                         </td>
                         <td class="px-1 py-[2px]" scope="col">
                           <div class="flex">
-                            <img
-                              ngbTooltip="Eliminar impuesto"
+                            <button
+                              ngbTooltip="Ver Impuestos"
                               triggers="mouseenter:mouseleave"
-                              class="cursor-pointer mx-auto xs:w-4"
-                              src="assets/delete.svg"
-                              alt="ver insumos"
+                              [disabled]="esEliminar"
                               (click)="eliminarImpuesto(impuesto)"
-                            />
+                            >
+                              <img
+                                class="cursor-pointer mx-auto xs:w-4"
+                                src="assets/delete.svg"
+                                alt="ver insumos"
+                              />
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -597,12 +665,12 @@
           </div>
         </div>
         <div class="px-4 py-3 flex justify-end gap-4">
-          <button
+          <!-- <button
             class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
             (click)="guardarOrdenVenta()"
           >
             Aceptar
-          </button>
+          </button> -->
           <button
             class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
             (click)="closeModal()"
