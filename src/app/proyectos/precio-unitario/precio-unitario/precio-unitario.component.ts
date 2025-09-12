@@ -4637,6 +4637,7 @@ export class PrecioUnitarioComponent implements OnInit {
       return;
     }
 
+    this.limpiarCargarExcel();
     this.displayCarga = 'flex';
 
     this.precioUnitarioService
@@ -4649,10 +4650,11 @@ export class PrecioUnitarioComponent implements OnInit {
         next: (datos) => {
           this.displayCarga = 'none';
 
+          console.log(datos, "UwU")
           if (datos.estatus) {
             // se subio
             this.cargarRegistros();
-            this.limpiarCargarExcel();
+            
             this.recalcularPresupuesto();
           } else {
             // error back
