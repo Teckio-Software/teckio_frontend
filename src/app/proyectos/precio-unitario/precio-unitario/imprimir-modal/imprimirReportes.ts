@@ -20,8 +20,6 @@ export function imprimirReporte(reporte: Reporte) {
 
   const content: any[] = [];
 
-  const selectedProyectoIva = reporte.proyecto.porcentajeIva;
-
   const styles = {
     header: {
       fontSize: 10,
@@ -161,7 +159,11 @@ export function imprimirReporte(reporte: Reporte) {
       { text: 'Descripción', style: 'subheader', alignment: 'center' },
       { text: 'Unidad', style: 'subheader', alignment: 'center' },
       { text: 'Cantidad', style: 'subheader', alignment: 'center' },
-      { text: 'P.U.', style: 'subheader', alignment: 'center' },
+      {
+        text: reporte.imprimirConCostoDirecto ? 'Costo Directo' : 'P.U.',
+        style: 'subheader',
+        alignment: 'center',
+      },
       { text: 'Total', style: 'subheader', alignment: 'center' },
     ],
   ];
@@ -186,27 +188,6 @@ export function imprimirReporte(reporte: Reporte) {
   reporte.precioUnitario.forEach((proyecto, index) => {
     const esPadreConHijos = proyecto.hijos?.length > 0;
 
-    let total!: number;
-    const costoDirecto = proyecto.costoUnitario * proyecto.cantidad;
-    const precioUnitario = proyecto.precioUnitario * proyecto.cantidad;
-    const precioUnitarioMasIVA =
-      proyecto.precioUnitario * proyecto.cantidad * selectedProyectoIva;
-    const totalMasIva = proyecto.precioUnitario + precioUnitarioMasIVA;
-
-    if (reporte.imprimirConCostoDirecto) {
-      total = costoDirecto;
-    }
-
-    if (reporte.imprimirConPrecioUnitario) {
-      total = precioUnitario;
-    }
-
-    if (reporte.imprimirConPUMasIva) {
-      total = totalMasIva;
-    }
-
-    console.log(reporte);
-
     tableBodyProyecto.push([
       {
         text: '',
@@ -230,14 +211,14 @@ export function imprimirReporte(reporte: Reporte) {
         style: 'small',
       },
       {
-        text: esPadreConHijos ? '' : total || '',
+        text: esPadreConHijos ? '' : proyecto.importeConFormato || '',
         style: 'small',
       },
     ]);
 
     // filas de hijos
     if (proyecto.hijos?.length > 0) {
-      const filasHijos = mapHijos(proyecto.hijos);
+      const filasHijos = mapHijos(proyecto.hijos, 0, '', reporte);
       filasHijos.forEach((filaHijo) => tableBodyProyecto.push(filaHijo));
     }
   });
@@ -394,7 +375,12 @@ export function imprimirReporte(reporte: Reporte) {
  * @param prefijo Prefijo para el numero de la fila (opcional, default = '').
  * @returns Un array de filas para la tabla.
  */
-function mapHijos(hijos: any[], nivel = 0, prefijo = ''): any[] {
+function mapHijos(
+  hijos: precioUnitarioDTO[],
+  nivel = 0,
+  prefijo = '',
+  reporte: Reporte
+): any[] {
   return hijos.flatMap((hijo, index) => {
     let color = '#000000';
     if (hijo.hijos?.length > 0) {
@@ -419,6 +405,23 @@ function mapHijos(hijos: any[], nivel = 0, prefijo = ''): any[] {
       ? { fontSize: 8, bold: true, color }
       : { fontSize: 8 };
 
+    const selectedProyectoIva = reporte.proyecto.porcentajeIva;
+
+    let total!: number;
+    const costoDirecto = hijo.costoUnitario * hijo.cantidad;
+    const precioUnitario = hijo.precioUnitario * hijo.cantidad;
+    const precioUnitarioMasIVA =
+      hijo.precioUnitario * hijo.cantidad * selectedProyectoIva;
+    const totalMasIva = hijo.precioUnitario + precioUnitarioMasIVA;
+
+    if (reporte.imprimirConCostoDirecto) {
+      total = costoDirecto;
+    } else if (reporte.imprimirConPrecioUnitario) {
+      total = precioUnitario;
+    } else if (reporte.imprimirConPUMasIva) {
+      total = totalMasIva;
+    }
+
     // fila base
     const fila = [
       { text: `${numero}`, ...style },
@@ -434,17 +437,23 @@ function mapHijos(hijos: any[], nivel = 0, prefijo = ''): any[] {
         style: { ...style, alignment: 'right' },
       },
       {
-        text: esPadreConHijos ? '' : ` $ ${hijo.precioUnitarioConFormato}`,
+        text: esPadreConHijos
+          ? ''
+          : reporte.imprimirConCostoDirecto
+          ? `${hijo.costoUnitarioConFormato}`
+          : `${hijo.precioUnitarioConFormato}`,
         style: { ...style, alignment: 'right' },
       },
       {
-        text: esPadreConHijos ? '' : ` $ ${hijo.importeConFormato}`,
+        text: esPadreConHijos ? '' : ` $ ${total.toFixed(2)}`,
         style: { ...style, alignment: 'right' },
       },
     ];
 
     // recorrer hijos recursivamente
-    const subFilas = hijo.hijos ? mapHijos(hijo.hijos, nivel + 1, numero) : [];
+    const subFilas = hijo.hijos
+      ? mapHijos(hijo.hijos, nivel + 1, numero, reporte)
+      : [];
 
     // fila de total si tiene hijos
     let filas = [fila, ...subFilas];
