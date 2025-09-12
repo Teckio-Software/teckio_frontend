@@ -41,7 +41,6 @@ export class ImprimirModalComponent {
   @Input() totalConIva!: string;
   @Input() totalSinFormato!: number;
   @Input() totalIva!: string;
-
   @Output() close = new EventEmitter<void>();
 
   tipoReporte: string = '';
@@ -324,6 +323,7 @@ export class ImprimirModalComponent {
       switch (this.tipoReporte) {
         case 'presupuesto':
           this.reportePresupuesto = true;
+
           break;
 
         default:
