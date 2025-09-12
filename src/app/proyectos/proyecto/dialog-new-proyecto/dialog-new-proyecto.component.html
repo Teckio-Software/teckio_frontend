@@ -28,6 +28,7 @@
         <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
           <form [formGroup]="form">
             <div *ngIf="menu1">
+              <p class="text-red-600" *ngIf="errGlobal">*Debes capturar todos los campos</p>
               <div class="mb-4">
                 <label
                   for="codigoProyecto"
@@ -39,7 +40,9 @@
                   type="text"
                   id="codigoProyecto"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  (change)="errCo = false; errGlobal = false"
                 />
+              <p class="text-red-600" *ngIf="errCo">*El campo código es obligatorio</p>
               </div>
 
               <div class="mb-4">
@@ -53,7 +56,9 @@
                   type="text"
                   id="nombre"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  (change)="errNo = false; errGlobal = false"
                 />
+                <p class="text-red-600" *ngIf="errNo">*El campo nombre es obligatorio</p>
               </div>
 
               <div class="mb-4">
@@ -83,7 +88,10 @@
                   type="text"
                   id="codigoPostal"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  (change)="errCP = false; errGlobal = false"
                 />
+              <p class="text-red-600" *ngIf="errCP">*El campo código postal es obligatorio</p>
+
               </div>
 
               <div class="mb-4">
@@ -97,7 +105,9 @@
                   type="text"
                   id="domicilio"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  (change)="errDo = false; errGlobal = false"
                 />
+                <p class="text-red-600" *ngIf="errDo">*El campo domicilio es obligatorio</p>
               </div>
 
               <div class="mb-4">
@@ -111,7 +121,9 @@
                   type="number"
                   id="iva"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  (change)="errIVA = false; errGlobal = false"
                 />
+                <p class="text-red-600" *ngIf="errIVA">*El campo IVA es obligatorio</p>
               </div>
 
               <div class="flex justify-center gap-8 mb-4">
@@ -127,7 +139,9 @@
                     formControlName="fechaInicio"
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     placeholder="Insertar fecha"
+                    (change)="errFI = false; errGlobal = false"
                   />
+                  <p class="text-red-600" *ngIf="errFI">*El campo fecha de inicio es obligatorio</p>
                 </div>
 
                 <div class="flex flex-col w-1/2">
@@ -142,7 +156,9 @@
                     formControlName="fechaFinal"
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     placeholder="Insertar fecha"
+                    (change)="errFT = false; errGlobal = false"
                   />
+                  <p class="text-red-600" *ngIf="errFT">*El campo fecha de término es obligatorio</p>
                 </div>
               </div>
             </div>
