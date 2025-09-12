@@ -63,7 +63,7 @@ export class TipoPolizaComponent implements OnInit{
 
   cargarRegistros(pagina: number, cantidadElementosAMostrar: any){
     this.tipoPolizaService
-    .obtenerPaginado(pagina, cantidadElementosAMostrar)
+    .obtenerPaginado(this.selectedEmpresa, cantidadElementosAMostrar)
     .subscribe({
       next: (respuesta: HttpResponse<tipoPolizaDTO[]>) => {
 
