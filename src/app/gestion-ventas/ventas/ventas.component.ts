@@ -428,11 +428,13 @@ export class VentasComponent {
   // }
 
   abrirModalCancelarOrdenVenta(id: number){
+    this.mensajeAlerta = '';
     this.isOpenModalCancelar = true;
     this.cancelarOrdenVentaDTO.idOrdenVenta = id;
   }
 
   cerrarModalCancelarOrdenVenta(){
+    this.mensajeAlerta = '';
     this.isOpenModalCancelar = false;
     this.cancelarOrdenVentaDTO.idOrdenVenta = 0;
     this.cancelarOrdenVentaDTO.idAlmacenDestino = 0;
@@ -440,6 +442,10 @@ export class VentasComponent {
     this.SlistaAlmacenes = false;
   }
   cancelarOrdenVenta() {
+    if(this.cancelarOrdenVentaDTO.idAlmacenDestino == 0){
+      this.mensajeAlerta = 'Selecciona un almacen';
+      return;
+    }
     Swal.fire({
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
