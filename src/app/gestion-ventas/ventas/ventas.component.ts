@@ -22,6 +22,7 @@ import Swal from 'sweetalert2';
 import { AlmacenService } from 'src/app/inventario/almacen/almacen.service';
 import { almacenDTO } from 'src/app/inventario/almacen/almacen';
 import { log } from 'console';
+import { AlertaTipo } from 'src/app/utilidades/alert/alert.component';
 
 @Component({
   selector: 'app-ventas',
@@ -150,6 +151,11 @@ export class VentasComponent {
   listaAlmacenesReset: almacenDTO[] = [];
   
   nombreAlmacen: string = '';
+
+  alertaSuccess: boolean = false;
+    alertaMessage: string = '';
+    alertaTipo: AlertaTipo = AlertaTipo.none;
+    AlertaTipo = AlertaTipo;
 
   constructor(
     private _seguridadService: SeguridadService,
@@ -782,4 +788,26 @@ export class VentasComponent {
     }
     event.stopPropagation();
   }
+
+  alerta(tipo: AlertaTipo, mensaje: string = '') {
+      if (tipo === AlertaTipo.none) {
+        this.cerrarAlerta();
+        return;
+      }
+  
+      this.alertaTipo = tipo;
+      this.alertaMessage = mensaje || 'Ocurrió un error';
+      this.alertaSuccess = true;
+  
+      setTimeout(() => {
+        this.cerrarAlerta();
+      }, 3000);
+    }
+  
+    cerrarAlerta() {
+      this.alertaSuccess = false;
+      this.alertaTipo = AlertaTipo.none;
+      this.alertaMessage = '';
+    }
+
 }
