@@ -24,6 +24,7 @@ import { insumoXCotizacionDTO } from '../../insumoXCotizacion/tsInsumoXCotizacio
 import { InsumoXOrdenCompraService } from '../../insumoxordencompra/insumoxordencompra.service';
 import { insumoXOrdenCompraDTO } from '../../insumoxordencompra/tsInsumoXOrdenCompra';
 import { AlertaTipo } from 'src/app/utilidades/alert/alert.component';
+import { log } from 'node:console';
 
 @Component({
   selector: 'app-cotizaciones',
@@ -86,6 +87,7 @@ export class CotizacionesComponent {
       this._requisicionService
         .CrearObjetoRequisicion(this.idEmpresaInput, this.idRequisicionInput)
         .subscribe((datos) => {
+          console.log('objeto requisicion', datos);
           this.objetoRequisicion = datos;
           if (this.objetoRequisicion.cotizacion.length > 0) {
             this.ExistenCotizaciones = true;
@@ -269,7 +271,8 @@ export class CotizacionesComponent {
 
   limpiarFormularioNuevaEntrada() {
     this.dialog.closeAll();
-    this.recargar.emit(1);
+    this.cargarRegistros();
+    // this.recargar.emit(1);
   }
 
   detenerCierre(event: MouseEvent) {

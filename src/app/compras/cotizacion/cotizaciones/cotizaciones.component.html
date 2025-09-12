@@ -237,25 +237,26 @@
                 margin-top: 0px;
                 margin-top: 15px;
               "
+              class="overflow-y-auto max-h-[150px] w-full shadow-md rounded-lg"
             >
               <table
-                class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos"
+                class="w-full text-sm"
               >
-                <thead>
-                  <tr>
-                    <th class="cabecera1" scope="col">Tipo de Impuesto</th>
-                    <th class="cabecera1" scope="col">Procentaje</th>
-                    <th class="cabecera1" scope="col">Acion</th>
+                <thead class="bg-primario text-white sticky top-0">
+                  <tr class="xs:text-[10px]">
+                    <th class="px-1 py-[2px] w-[40%]" scope="col">Tipo de Impuesto</th>
+                    <th class="px-1 py-[2px] w-[40%]" scope="col">Porcentaje</th>
+                    <th class="px-1 py-[2px] w-[40%]" scope="col">Acción</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let iic of impuestoInsumoCotizado">
+                  <tr *ngFor="let iic of impuestoInsumoCotizado" class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]">
                     <td class="" scope="col">
                       <select
                         [(ngModel)]="iic.idImpuesto"
                         [disabled]="iic.id > 0"
                         (change)="selectOpt($event, iic)"
-                        class="bg-transparent"
+                        class="bg-transparent ml-1"
                       >
                         <option
                           *ngFor="let imp of impuestos"
@@ -268,7 +269,7 @@
                     <td class="" scope="col">
                       <input
                         autocomplete="off"
-                        class="form-contrtrol dropdown1 bg-transparent"
+                        class="form-contrtrol dropdown1 bg-transparent text-end"
                         type="number"
                         style="margin: 5px"
                         [(ngModel)]="iic.porcentaje"
@@ -277,13 +278,13 @@
                     </td>
                     <td class="" scope="col">
                       <button
-                        class="button-filt"
+                        class="button-filt mt-1 mb-1 rounded-md p-[5px] px-[5px]"
                         placement="end"
                         ngbTooltip="Eliminar"
                         triggers="mouseenter:mouseleave"
                         (click)="EliminarImpuesto(iic)"
                       >
-                        <img src="assets/delete.svg" alt="add cotizacion" />
+                        <img src="assets/borrar.svg" alt="add cotizacion" class="w-[15px] h-[15px]" />
                       </button>
                     </td>
                   </tr>
