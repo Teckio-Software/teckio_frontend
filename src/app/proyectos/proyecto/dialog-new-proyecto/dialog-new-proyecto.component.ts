@@ -127,6 +127,9 @@ export class DialogNewProyectoComponent {
     }
   }
 
+  /**
+   * Método para guardar un nuevo proyecto, validando que los campos no esten vacios
+   */
   guardar() {
     this.nuevoProyecto = this.form.value;
     this.nuevoProyecto.nivel = 0;
@@ -189,9 +192,8 @@ export class DialogNewProyectoComponent {
       return;
     }
 
-    ////
+    /////////
 
-    console.log(this.nuevoProyecto);
     if(this.nuevoProyecto.id == 0){
       this.proyectoService
       .crear(this.nuevoProyecto, this.selectedEmpresa)
@@ -222,8 +224,12 @@ export class DialogNewProyectoComponent {
         }
       });
     }
+  }
 
-
+  /**
+   * Método para limpiar el formulario
+   */
+  resetForm() {
     this.form.value.reset();
   }
 

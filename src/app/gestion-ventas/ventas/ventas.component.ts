@@ -19,6 +19,9 @@ import {
   TipoImpuestoDTO,
 } from 'src/app/compras/cotizacion/tsCotizacion';
 import Swal from 'sweetalert2';
+import { AlmacenService } from 'src/app/inventario/almacen/almacen.service';
+import { almacenDTO } from 'src/app/inventario/almacen/almacen';
+import { log } from 'console';
 
 @Component({
   selector: 'app-ventas',
@@ -113,6 +116,8 @@ export class VentasComponent {
   isLoading: boolean = true;
 
   listaClientes: boolean = false;
+  SlistaAlmacenes: boolean = false;
+
   listaProductoYServicio: boolean = false;
 
   @ViewChildren('lista') listas!: QueryList<ElementRef<HTMLElement>>;
@@ -139,11 +144,20 @@ export class VentasComponent {
   ChangeDetectorRef: any;
   permiteCrear: boolean = true;
 
+  isOpenModalCancelar: boolean = false;
+
+  listaAlmacenes: almacenDTO[] = [];
+  listaAlmacenesReset: almacenDTO[] = [];
+  
+  nombreAlmacen: string = '';
+
   constructor(
     private _seguridadService: SeguridadService,
     private _ordenVentaService: VentasService,
     private _clienteService: ClienteService,
-    private _prodYserService: ProductoYServicioService
+    private _prodYserService: ProductoYServicioService,
+    private almacenService: AlmacenService,
+    
   ) {
     let IdEmpresa = _seguridadService.obtenIdEmpresaLocalStorage();
     this.selectedEmpresa = Number(IdEmpresa);
@@ -178,6 +192,20 @@ export class VentasComponent {
       id: 1,
       tipo: 'Trasladado',
     });
+
+    this.cargarAlmacenes();
+  }
+
+  cargarAlmacenes(){
+    this.almacenService.obtenerTodosSinPaginar(this.selectedEmpresa).subscribe({
+      next: (datos) => {
+        this.listaAlmacenes = datos;
+        this.listaAlmacenesReset = datos;
+      },
+      error: () => {
+        //Imprime mensaje de error.
+      },
+    })
   }
 
   cargarOrdenesVenta() {
@@ -264,12 +292,25 @@ export class VentasComponent {
     this.ordenVenta.idCliente = 0;
     this.ordenVenta.observaciones = '';
     this.ordenVenta.detalleOrdenVenta = [];
+    this.listaClientes = false;
   }
 
   seleccionarCliente(cliente: clienteDTO) {
     this.ordenVenta.idCliente = cliente.id;
     this.ordenVenta.razonSocialCliente = cliente.razonSocial;
     this.listaClientes = false;
+  }
+
+  /**
+   * Selecciona un almacen para la orden de venta
+   * @param almacen El almacen seleccionado
+   */
+  seleccionarAlmacen(almacen: almacenDTO) {
+    // Asigna el id del almacen seleccionado a la orden de venta
+    this.cancelarOrdenVentaDTO.idAlmacenDestino = almacen.id;
+    this.nombreAlmacen = almacen.almacenNombre;
+    // Oculta la lista de almacenes
+    this.SlistaAlmacenes = false;
   }
 
   agregarDetalle() {
@@ -386,27 +427,34 @@ export class VentasComponent {
   //   });
   // }
 
-  cancelarOrdenVenta(id: number) {
+  abrirModalCancelarOrdenVenta(id: number){
+    this.isOpenModalCancelar = true;
+    this.cancelarOrdenVentaDTO.idOrdenVenta = id;
+  }
+
+  cerrarModalCancelarOrdenVenta(){
+    this.isOpenModalCancelar = false;
+    this.cancelarOrdenVentaDTO.idOrdenVenta = 0;
+    this.cancelarOrdenVentaDTO.idAlmacenDestino = 0;
+    this.nombreAlmacen = '';
+    this.SlistaAlmacenes = false;
+  }
+  cancelarOrdenVenta() {
     Swal.fire({
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
       showCancelButton: true,
-      html: `<p>¿Desea cancelar la orden de venta?</p>`,
+      html: `<p>¿Estás seguro de que deseas cancelar esta venta?</p>`,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.cancelarOrdenVentaDTO = {
-          idOrdenVenta: id,
-          idAlmacenDestino: 0,
-        };
         this._ordenVentaService
           .cancelar(this.selectedEmpresa, this.cancelarOrdenVentaDTO)
           .subscribe({
             next: (resp) => {
-              this.cancelarOrdenVentaDTO = {
-                idOrdenVenta: 0,
-                idAlmacenDestino: 0,
-              };
-              console.log(resp);
+              if(resp.estatus){
+                this.cerrarModalCancelarOrdenVenta();
+                this.cargarOrdenesVenta();
+              }
             },
             error: () => {
               //Mensaje de error
@@ -540,6 +588,16 @@ export class VentasComponent {
     ).value.toLocaleLowerCase();
     this.clientes = this.clientes.filter((cliente) =>
       cliente.razonSocial.toLocaleLowerCase().includes(filterValue)
+    );
+  }
+
+  filtrarAlmacen(event: Event) {
+    this.listaAlmacenes = this.listaAlmacenesReset;
+    const filterValue = (
+      event.target as HTMLInputElement
+    ).value.toLocaleLowerCase();
+    this.listaAlmacenes = this.listaAlmacenes.filter((almacen) =>
+      almacen.almacenNombre.toLocaleLowerCase().includes(filterValue)
     );
   }
 
