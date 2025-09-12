@@ -7,13 +7,39 @@
           (click)="crearOrdenVenta()"
           class="flex align-items-center rounded-md bg-colorButton transition-colors delay-75 hover:bg-colorButtonHover font-light text-white p-1"
         >
-          <p
-            class="text-[#f2f2f2] titular bg-custom-bg w-52 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
-          >
-            Nueva venta
-          </p>
-          <img class="xs:w-4" src="assets/add.svg" alt="botón agregar" />
+            <p
+              class="text-[#f2f2f2] titular bg-custom-bg w-52 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
+            >
+              Nueva venta
+            </p>
+            <img class="xs:w-4" src="assets/add.svg" alt="botón agregar" />
         </button>
+        </div>
+        <div>
+          <input
+            type="text"
+            placeholder="Seleccione estatus"
+            autocomplete="off"
+            class="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+
+            (click)="mostrarListaUsuario = !mostrarListaUsuario"
+            [(ngModel)]="nombreUsuario"
+            readonly
+          />
+          <div
+            *ngIf="mostrarListaUsuario"
+          >
+            <ul
+              class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-auto max-h-48 overflow-y-auto shadow-lg"
+            >
+              <li
+                class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+              >
+                Capturado
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
       <!-- Button cotainer  end -->
 
@@ -34,6 +60,9 @@
               <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">
                 Registro
               </th>
+              <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">Estatus</th>
+              <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">Total</th>
+
               <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">Accion</th>
             </tr>
           </thead>
@@ -131,6 +160,37 @@
                   {{ orden.fechaRegistro | date : "dd/MM/yyyy HH:mm:ss" }}
                 </td>
                 <td class="px-1 py-[2px]" scope="col">
+                  <div class="flex h-full">
+                    <div
+                      class="bg-red-100 rounded-lg w-28 h-5 xs:w-18"
+                      *ngIf="orden.estatus === 2"
+                    >
+                      <p class="text-red-500 text-center">Cancelada</p>
+                    </div>
+                    <div
+                      class="bg-green100 rounded-lg w-28 h-5 xs:w-18"
+                      *ngIf="orden.estatus === 3"
+                    >
+                      <p class="text-green600 text-center">Pagado</p>
+                    </div>
+                    <div
+                      class="bg-blue100 rounded-lg w-28 h-5 xs:w-18"
+                      *ngIf="orden.estatus === 1"
+                    >
+                      <p class="text-blue600 text-center">Autorizada</p>
+                    </div>
+                    <div
+                      class="bg-blue100 rounded-lg w-28 h-5 xs:w-18"
+                      *ngIf="orden.estatus === 0"
+                    >
+                      <p class="text-blue600 text-center">Capturada</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-1 py-[2px]" scope="col">
+                  {{ orden.importeTotal | currency }}
+                </td>
+                <td class="px-1 py-[2px]" scope="col">
                   <div class="flex gap-2">
                     <button>
                       <img
@@ -142,7 +202,11 @@
                         (click)="openModal(orden)"
                       />
                     </button>
-                    <button>
+                    <button
+                      *ngIf="
+                        usuarioSesion == orden.elaboro && orden.estatus == 0
+                      "
+                    >
                       <img
                         ngbTooltip="Cancelar"
                         triggers="mouseenter:mouseleave"

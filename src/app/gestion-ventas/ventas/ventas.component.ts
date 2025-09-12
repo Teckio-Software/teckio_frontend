@@ -8,7 +8,7 @@ import {
   ImpuestoDetalleOrdenVentaDTO,
   OrdenVentaDTO,
 } from './ordenVenta';
-import { da, de } from 'date-fns/locale';
+import { da, de, es } from 'date-fns/locale';
 import { ClienteService } from 'src/app/catalogos/cliente/cliente.service';
 import { clienteDTO } from 'src/app/catalogos/cliente/tsCliente';
 import { ProductoYServicioService } from './../productoyservicio.service';
@@ -29,6 +29,7 @@ export class VentasComponent {
   selectedEmpresa: number = 0;
   isModalOpen = false;
   impuestosOpen: boolean = false;
+  usuarioSesion : string = '';
 
   ordenVenta: OrdenVentaDTO = {
     id: 0,
@@ -122,6 +123,16 @@ export class VentasComponent {
   mostrarListaFactores: boolean = false;
   mostrarListaCategoria: boolean = false;
 
+  mostrarListaEstatus: boolean = false;
+  estatusDescripcion: string = '';
+  mostrarListaUsuario: boolean = false;
+  nombreUsuario: string = '';
+
+  listaImpuestos: boolean = false;
+  listaFactores: boolean = false;
+  listaCategoria: boolean = false;
+  listaClasificacion: boolean = false;
+
   esEliminar: boolean = false;
   elimandoDatalle: boolean = false;
   elimandoImpuesto: boolean = false;
@@ -136,6 +147,7 @@ export class VentasComponent {
   ) {
     let IdEmpresa = _seguridadService.obtenIdEmpresaLocalStorage();
     this.selectedEmpresa = Number(IdEmpresa);
+    this.usuarioSesion = _seguridadService.zfObtenerCampoJwt("username");
   }
 
   ngOnInit(): void {
@@ -172,6 +184,7 @@ export class VentasComponent {
     this._ordenVentaService.obtenerTodos(this.selectedEmpresa).subscribe({
       next: (datos) => {
         this.ordenesVenta = datos;
+        console.log("estas son las ordenes de venta",this.ordenesVenta);
       },
       error: () => {
         //Imprime mensaje de error.
