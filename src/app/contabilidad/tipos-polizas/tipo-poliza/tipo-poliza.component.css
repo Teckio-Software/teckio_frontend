@@ -1,12 +1,12 @@
 .flex-container {
   display: flex;
   flex-wrap: nowrap;
-  background-color: white;
+  /* background-color: white; */
 }
 
 .flex-container > .divFormulario {
   /* background-color: #f1f1f1; */
-  background-color: white;
+  /* background-color: white; */
   margin: 5px;
   text-align: center;
   line-height: 50%;
@@ -16,7 +16,7 @@
 
 .flex-container > .divTabla {
   /* background-color: #f1f1f1; */
-  background-color: white;
+  /* background-color: white; */
   margin: 5px;
   text-align: center;
   line-height: 50%;
@@ -35,11 +35,11 @@ table, th, td {
   text-align: center;
 } */
 
-table, th {
+/* table, th {
   border: 1px solid black;
   text-align: center;
   background-color: rgb(208, 206, 206);
-}
+} */
 
 h4{
   background-color: rgb(180, 199, 231);
@@ -54,7 +54,7 @@ h4{
 
 
 .tablaPanelOpciones, th{
-  background-color: white;
+  /* background-color: white; */
   border: none;
   width: 25%;
   text-align: left;
@@ -89,27 +89,27 @@ h4{
 
 }
 
-.cabecera {
+/* .cabecera {
   background-color: #7A8DA8;
   border: solid 1px #f2f2f2a4;
   color: #f2f2f2;
   font-weight: 400;
   width: 10%;
   padding: 2px;
-}
+} */
 
-.body-table {
+/* .body-table {
   padding: 0;
 }
  
 .none {
   border: solid 2px #f1f6f8;
   background-color: #f2feff ;
-}
+} */
  
-th {
+/* th {
   height: 10px;
-}
+} */
  
 .cont-table {
   width: 95%;
@@ -142,16 +142,16 @@ th {
   border-radius: 7px;
 }
 
-.btn-new {
+/* .btn-new {
   background-color: #4EAAC1;
   color: #f2f2f2;
   border: none;
   border-radius: 3px;
-}
+} */
 
-.btn-new:hover {
+/* .btn-new:hover {
   background-color: #22416E;
-}
+} */
 
 .button-modal {
   background-color: #4EAAC1;
