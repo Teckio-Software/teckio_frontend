@@ -51,6 +51,16 @@ export class DialogNewProyectoComponent {
     nombreProyecto: '',
     estatus: false,
   };
+
+  errCo: boolean = false;
+  errNo: boolean = false;
+  errCP: boolean = false;
+  errDo: boolean = false;
+  errIVA: boolean = false;
+  errFI: boolean = false;
+  errFT: boolean = false;
+  errGlobal: boolean = false;
+
   constructor(
     public dialogRef: MatDialogRef<DialogNewProyectoComponent>,
 
@@ -117,6 +127,9 @@ export class DialogNewProyectoComponent {
     }
   }
 
+  /**
+   * Método para guardar un nuevo proyecto, validando que los campos no esten vacios
+   */
   guardar() {
     this.nuevoProyecto = this.form.value;
     this.nuevoProyecto.nivel = 0;
@@ -130,6 +143,56 @@ export class DialogNewProyectoComponent {
     this.nuevoProyecto.esSabado = true;
     this.nuevoProyecto.esDomingo = true;
     this.nuevoProyecto.noSerie = 1;
+
+    let c = true;
+
+    //Validaciones
+    if((this.nuevoProyecto.codigoProyecto == null || this.nuevoProyecto.codigoProyecto.trim() == '')&&
+      (this.nuevoProyecto.nombre == null || this.nuevoProyecto.nombre.trim() == '') &&
+      (this.nuevoProyecto.codigoPostal == null || this.nuevoProyecto.codigoPostal==0) &&
+      (this.nuevoProyecto.domicilio == null || this.nuevoProyecto.domicilio.trim() == '') &&
+      (this.nuevoProyecto.porcentajeIva == null || this.nuevoProyecto.porcentajeIva==0) &&
+      (this.nuevoProyecto.fechaInicio == null || this.nuevoProyecto.fechaInicio.toString() == '') &&
+      (this.nuevoProyecto.fechaFinal == null || this.nuevoProyecto.fechaFinal.toString() == '')
+    ){
+      this.errGlobal = true;
+      return;
+    }
+
+    if(this.nuevoProyecto.codigoProyecto == null || this.nuevoProyecto.codigoProyecto.trim() == ''){
+      this.errCo = true;
+      c = false;
+    }
+    if(this.nuevoProyecto.nombre == null || this.nuevoProyecto.nombre.trim() == ''){
+      this.errNo = true;
+      c = false;
+    }
+    if(this.nuevoProyecto.codigoPostal == null || this.nuevoProyecto.codigoPostal==0){
+      this.errCP = true;
+      c = false;
+    }
+    if(this.nuevoProyecto.domicilio == null || this.nuevoProyecto.domicilio.trim() == ''){
+      this.errDo = true;
+      c = false;
+    }
+    if(this.nuevoProyecto.porcentajeIva == null || this.nuevoProyecto.porcentajeIva==0){
+      this.errIVA = true;
+      c = false;
+    }
+    if(this.nuevoProyecto.fechaInicio == null || this.nuevoProyecto.fechaInicio.toString() == ''){
+      this.errFI = true;
+      c = false;
+    }
+    if(this.nuevoProyecto.fechaFinal == null || this.nuevoProyecto.fechaFinal.toString() == ''){
+      this.errFT = true;
+      c = false;
+    }
+
+    if(!c){
+      return;
+    }
+
+    /////////
 
     if(this.nuevoProyecto.id == 0){
       this.proyectoService
@@ -161,8 +224,12 @@ export class DialogNewProyectoComponent {
         }
       });
     }
+  }
 
-
+  /**
+   * Método para limpiar el formulario
+   */
+  resetForm() {
     this.form.value.reset();
   }
 

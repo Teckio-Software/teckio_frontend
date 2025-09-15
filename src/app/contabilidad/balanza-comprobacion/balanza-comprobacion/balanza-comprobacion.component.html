@@ -50,16 +50,16 @@
   </div>
 </div>
 
-<div class="cont-arbol" style="margin-top: 30px;">
-  <table class="table table-striped table-hover titulo-arbol">
-    <thead>
-      <th style="width: 7%;" class="cabecera">-</th>
-      <th style="width: 19%;" class="cabecera">Código</th>
-      <th style="width: 22%;" class="cabecera">Descripción</th>
-      <th style="width: 22%;" class="cabecera">Saldo inicial</th>
-      <th style="width: 8.7%;" class="cabecera">Debe</th>
-      <th style="width: 8.7%;" class="cabecera">Haber</th>
-      <th class="cabecera">Saldo final</th>
+<div class="overflow-y-auto overflow-x-auto w-full rounded-lg shadow-md whitespace-nowrap mx-auto" style="margin-top: 30px;">
+  <table class="text-sm w-full mb-0">
+    <thead class="bg-primario text-white">
+      <th style="width: 7%;" class="px-1 py-[2px] xs:w-[75px]">-</th>
+      <th style="width: 19%;" class="px-1 py-[2px] xs:w-[75px]">Código</th>
+      <th style="width: 22%;" class="px-1 py-[2px] xs:w-[75px]">Descripción</th>
+      <th style="width: 22%;" class="px-1 py-[2px] xs:w-[75px]">Saldo inicial</th>
+      <th style="width: 8.7%;" class="px-1 py-[2px] xs:w-[75px]">Debe</th>
+      <th style="width: 8.7%;" class="px-1 py-[2px] xs:w-[75px]">Haber</th>
+      <th class="px-1 py-[2px] xs:w-[75px]">Saldo final</th>
     </thead>
   </table>
 
@@ -67,7 +67,7 @@
     <ng-template let-balanza>
       <table class="table table-striped table-hover table-arbol">
         <tbody>
-          <tr [ngClass]="{
+          <tr class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]" [ngClass]="{
               nivel1: balanza.nivel == 1,
               nivel2: balanza.nivel == 2,
               nivel3: balanza.nivel == 3,
@@ -126,19 +126,19 @@
               {{ balanza.cuentaContableDescripcion }}
             </td>
             <td style="border-right: 1px solid #3f3e3e17; width: 22%; border-right: 1px solid #f2f2f217"
-              class="cont-drill">
-              {{ balanza.saldoInicial }}
+              class="cont-drill text-end">
+              ${{ balanza.saldoInicial }}
             </td>
             <td style="border-right: 1px solid #3f3e3e17; width: 8.7%; border-right: 1px solid #f2f2f217"
-              class="cont-drill">
-              {{ balanza.debe }}
+              class="cont-drill text-end">
+              ${{ balanza.debe }}
             </td>
             <td style="border-right: 1px solid #3f3e3e17; width: 8.7%; border-right: 1px solid #f2f2f217"
-              class="cont-drill">
-              {{ balanza.haber }}
+              class="cont-drill text-end">
+              ${{ balanza.haber }}
             </td>
-            <td class="cont-drill" style="border-right: 1px solid #f2f2f217">
-              {{ balanza.saldoFinal }}
+            <td class="cont-drill text-end" style="border-right: 1px solid #f2f2f217">
+              ${{ balanza.saldoFinal }}
             </td>
           </tr>
         </tbody>
@@ -146,15 +146,15 @@
     </ng-template>
   </tree-view>
 
-  <table class="table table-striped table-hover titulo-arbol2">
-    <thead>
-      <th style="width: 7%;" class="cabecera2"></th>
-      <th style="width: 19%;" class="cabecera2"></th>
-      <th style="width: 22%;" class="cabecera2"></th>
-      <th style="width: 22%;" class="cabecera2">Saldo Inicial: 0</th>
-      <th style="width: 8.7%;" class="cabecera2">Debe: {{debe}}</th>
-      <th style="width: 8.7%;" class="cabecera2">Haber: {{haber}}</th>
-      <th style="width: 13.7%;" class="cabecera2">Saldo Final: 0</th>
+  <table class="text-sm w-full mb-0">
+    <thead class="bg-primario text-white">
+      <th style="width: 7%;" class="px-1 py-[2px] xs:w-[75px"></th>
+      <th style="width: 19%;" class="px-1 py-[2px] xs:w-[75px"></th>
+      <th style="width: 22%;" class="px-1 py-[2px] xs:w-[75px"></th>
+      <th style="width: 22%;" class="px-1 py-[2px] xs:w-[75px">Saldo Inicial: $0</th>
+      <th style="width: 8.7%;" class="px-1 py-[2px] xs:w-[75px">Debe: ${{debe}}</th>
+      <th style="width: 8.7%;" class="px-1 py-[2px] xs:w-[75px">Haber: ${{haber}}</th>
+      <th style="width: 13.7%;" class="px-1 py-[2px] xs:w-[75px">Saldo Final: $0</th>
       <th></th>
     </thead>
   </table>

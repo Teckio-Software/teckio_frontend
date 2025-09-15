@@ -731,10 +731,10 @@
               class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
             >
               <td class="px-1 py-[2px]" scope="col">{{ oc.noOrdenCompra }}</td>
-              <td class="px-1 py-[2px]" scope="col">{{ oc.cantidad }}</td>
-              <td class="px-1 py-[2px]" scope="col">{{ oc.precioUnitario }}</td>
-              <td class="px-1 py-[2px]" scope="col">{{ oc.importeSinIva }}</td>
-              <td class="px-1 py-[2px]" scope="col">{{ oc.importeConIva }}</td>
+              <td class="px-1 py-[2px] text-end" scope="col">{{ oc.cantidad }}</td>
+              <td class="px-1 py-[2px] text-end" scope="col">${{ oc.precioUnitario }}</td>
+              <td class="px-1 py-[2px] text-end" scope="col">${{ oc.importeSinIva }}</td>
+              <td class="px-1 py-[2px] text-end" scope="col">${{ oc.importeConIva }}</td>
             </tr>
           </ng-container>
         </tbody>

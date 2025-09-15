@@ -32,17 +32,17 @@
             <td class="px-1 py-[2px] min-w-2" scope="col">
               {{ iae.unidadInsumo }}
             </td>
-            <td class="px-1 py-[2px] min-w-2" scope="col">
+            <td class="px-1 py-[2px] min-w-2 text-end" scope="col">
               {{ iae.cantidadPorRecibir }}
             </td>
-            <td class="px-1 py-[2px] min-w-2" scope="col">
+            <td class="px-1 py-[2px] min-w-2 text-end" scope="col">
               {{ iae.cantidadRecibida }}
             </td>
-            <td class="px-1 py-[2px] min-w-2" scope="col">
-              {{
+            <td class="px-1 py-[2px] min-w-2 text-end" scope="col">
+              ${{
                 iae.cantidadPorRecibir - iae.cantidadRecibida < 0
                   ? 0
-                  : iae.cantidadPorRecibir - iae.cantidadRecibida
+                  : iae.cantidadPorRecibir - iae.cantidadRecibida | number:"1.2-2"
               }}
             </td>
           </tr>

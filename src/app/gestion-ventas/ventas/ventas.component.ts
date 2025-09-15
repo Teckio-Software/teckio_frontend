@@ -19,6 +19,10 @@ import {
   TipoImpuestoDTO,
 } from 'src/app/compras/cotizacion/tsCotizacion';
 import Swal from 'sweetalert2';
+import { AlmacenService } from 'src/app/inventario/almacen/almacen.service';
+import { almacenDTO } from 'src/app/inventario/almacen/almacen';
+import { log } from 'console';
+import { AlertaTipo } from 'src/app/utilidades/alert/alert.component';
 import { FormControl, FormGroup } from '@angular/forms';
 import { format } from 'path';
 import { formatDate } from '@angular/common';
@@ -117,6 +121,8 @@ export class VentasComponent {
   isLoading: boolean = true;
 
   listaClientes: boolean = false;
+  SlistaAlmacenes: boolean = false;
+
   listaProductoYServicio: boolean = false;
 
   @ViewChildren('lista') listas!: QueryList<ElementRef<HTMLElement>>;
@@ -143,6 +149,17 @@ export class VentasComponent {
   ChangeDetectorRef: any;
   permiteCrear: boolean = true;
 
+  isOpenModalCancelar: boolean = false;
+
+  listaAlmacenes: almacenDTO[] = [];
+  listaAlmacenesReset: almacenDTO[] = [];
+
+  nombreAlmacen: string = '';
+
+  alertaSuccess: boolean = false;
+  alertaMessage: string = '';
+  alertaTipo: AlertaTipo = AlertaTipo.none;
+  AlertaTipo = AlertaTipo;
   listaUsuarios: string[] = [];
   listaUsuariosReset: string[] = [];
 
@@ -154,7 +171,8 @@ export class VentasComponent {
     private _seguridadService: SeguridadService,
     private _ordenVentaService: VentasService,
     private _clienteService: ClienteService,
-    private _prodYserService: ProductoYServicioService
+    private _prodYserService: ProductoYServicioService,
+    private almacenService: AlmacenService
   ) {
     let IdEmpresa = _seguridadService.obtenIdEmpresaLocalStorage();
     this.selectedEmpresa = Number(IdEmpresa);
@@ -189,6 +207,33 @@ export class VentasComponent {
       id: 1,
       tipo: 'Trasladado',
     });
+
+    this.cargarAlmacenes();
+  }
+
+  /**
+   * Carga la lista de almacenes sin paginar
+   */
+  cargarAlmacenes() {
+    /**
+     * Servicio que se encarga de obtener todos los almacenes sin paginar
+     */
+    this.almacenService.obtenerTodosSinPaginar(this.selectedEmpresa).subscribe({
+      /**
+       * Callback que se ejecuta cuando se obtiene la lista de almacenes
+       * @param datos lista de almacenes
+       */
+      next: (datos: almacenDTO[]) => {
+        this.listaAlmacenes = datos;
+        this.listaAlmacenesReset = datos;
+      },
+      /**
+       * Callback que se ejecuta cuando hay un error al obtener la lista de almacenes
+       */
+      error: () => {
+        //Imprime mensaje de error.
+      },
+    });
     this.filtroEstatus = '';
   }
 
@@ -210,12 +255,25 @@ export class VentasComponent {
     });
   }
 
+  /**
+   * Carga la lista de productos y servicios
+   */
   cargarProductosYServicios() {
+    /**
+     * Servicio que se encarga de obtener todos los productos y servicios
+     */
     this._prodYserService.obtenerTodos(this.selectedEmpresa).subscribe({
+      /**
+       * Callback que se ejecuta cuando se obtiene la lista de productos y servicios
+       * @param datos lista de productos y servicios
+       */
       next: (datos) => {
         this.productosYServicio = datos;
         this.productosYServicioReset = datos;
       },
+      /**
+       * Callback que se ejecuta cuando hay un error al obtener la lista de productos y servicios
+       */
       error: () => {
         //Imprime mensaje de error.
       },
@@ -282,12 +340,25 @@ export class VentasComponent {
     this.ordenVenta.idCliente = 0;
     this.ordenVenta.observaciones = '';
     this.ordenVenta.detalleOrdenVenta = [];
+    this.listaClientes = false;
   }
 
   seleccionarCliente(cliente: clienteDTO) {
     this.ordenVenta.idCliente = cliente.id;
     this.ordenVenta.razonSocialCliente = cliente.razonSocial;
     this.listaClientes = false;
+  }
+
+  /**
+   * Selecciona un almacen para la orden de venta
+   * @param almacen El almacen seleccionado
+   */
+  seleccionarAlmacen(almacen: almacenDTO) {
+    // Asigna el id del almacen seleccionado a la orden de venta
+    this.cancelarOrdenVentaDTO.idAlmacenDestino = almacen.id;
+    this.nombreAlmacen = almacen.almacenNombre;
+    // Oculta la lista de almacenes
+    this.SlistaAlmacenes = false;
   }
 
   agregarDetalle() {
@@ -404,29 +475,84 @@ export class VentasComponent {
   //   });
   // }
 
-  cancelarOrdenVenta(id: number) {
+  abrirModalCancelarOrdenVenta(id: number) {
+    this.mensajeAlerta = '';
+    this.isOpenModalCancelar = true;
+    this.cancelarOrdenVentaDTO.idOrdenVenta = id;
+  }
+
+  cerrarModalCancelarOrdenVenta() {
+    this.mensajeAlerta = '';
+    this.isOpenModalCancelar = false;
+    this.cancelarOrdenVentaDTO.idOrdenVenta = 0;
+    this.cancelarOrdenVentaDTO.idAlmacenDestino = 0;
+    this.nombreAlmacen = '';
+    this.SlistaAlmacenes = false;
+  }
+
+  autorizarOrdenVenta(ordenVenta: OrdenVentaDTO) {
     Swal.fire({
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
       showCancelButton: true,
-      html: `<p>¿Desea cancelar la orden de venta?</p>`,
+      html: `<p>¿Estás seguro de que deseas autorizar esta venta?</p>`,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.cancelarOrdenVentaDTO = {
-          idOrdenVenta: id,
-          idAlmacenDestino: 0,
-        };
+        this._ordenVentaService
+          .autorizarOrdenVenta(ordenVenta, this.selectedEmpresa)
+          .subscribe({
+            next: (resp) => {
+              if (resp.estatus) {
+                this.alerta(AlertaTipo.save, resp.descripcion);
+                this.cargarOrdenesVenta();
+              } else {
+                this.alerta(AlertaTipo.error, resp.descripcion);
+              }
+            },
+            error: () => {
+              this.alerta(
+                AlertaTipo.error,
+                'Error al autorizar la orden de venta.'
+              );
+              //Mensaje de error
+            },
+          });
+      } else {
+        return;
+      }
+      this.ChangeDetectorRef.detectChanges();
+    });
+  }
+
+  cancelarOrdenVenta() {
+    if (this.cancelarOrdenVentaDTO.idAlmacenDestino == 0) {
+      this.mensajeAlerta = 'Selecciona un almacen';
+      return;
+    }
+    Swal.fire({
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      showCancelButton: true,
+      html: `<p>¿Estás seguro de que deseas cancelar esta venta?</p>`,
+    }).then((result) => {
+      if (result.isConfirmed) {
         this._ordenVentaService
           .cancelar(this.selectedEmpresa, this.cancelarOrdenVentaDTO)
           .subscribe({
             next: (resp) => {
-              this.cancelarOrdenVentaDTO = {
-                idOrdenVenta: 0,
-                idAlmacenDestino: 0,
-              };
-              console.log(resp);
+              if (resp.estatus) {
+                this.alerta(AlertaTipo.save, resp.descripcion);
+                this.cerrarModalCancelarOrdenVenta();
+                this.cargarOrdenesVenta();
+              } else {
+                this.alerta(AlertaTipo.error, resp.descripcion);
+              }
             },
             error: () => {
+              this.alerta(
+                AlertaTipo.error,
+                'Error al cancelar la orden de venta.'
+              );
               //Mensaje de error
             },
           });
@@ -561,6 +687,16 @@ export class VentasComponent {
     );
   }
 
+  filtrarAlmacen(event: Event) {
+    this.listaAlmacenes = this.listaAlmacenesReset;
+    const filterValue = (
+      event.target as HTMLInputElement
+    ).value.toLocaleLowerCase();
+    this.listaAlmacenes = this.listaAlmacenes.filter((almacen) =>
+      almacen.almacenNombre.toLocaleLowerCase().includes(filterValue)
+    );
+  }
+
   verImpuestos(detalle: DetalleOrdenVentaDTO) {
     if (detalle.impuestosDetalleOrdenVenta.length <= 0) {
       detalle.impuestosDetalleOrdenVenta.push({
@@ -677,19 +813,28 @@ export class VentasComponent {
            */
           next: (resp) => {
             // Carga la lista de ordenes de venta
-            this.cargarOrdenesVenta();
-            this.bloquearBotonCrear();
+            if (resp.estatus) {
+              this.alerta(AlertaTipo.save, resp.descripcion);
+              this.cargarOrdenesVenta();
+              this.bloquearBotonCrear();
+            } else {
+              this.alerta(AlertaTipo.error, resp.descripcion);
+            }
           },
           /**
            * Se llama cuando se produce un error al crear la orden de venta.
            * @param error El error producido.
            */
           error: () => {
+            this.alerta(AlertaTipo.error, 'Error al crear la orden de venta.');
             // Mensaje de error
           },
         });
     } else {
-      console.log('No se permiten crear ordenes de venta seguidas.');
+      this.alerta(
+        AlertaTipo.error,
+        'No se permiten crear ordenes de venta seguidas.'
+      );
     }
   }
 
@@ -735,6 +880,27 @@ export class VentasComponent {
       this.listaClientes = false;
     }
     event.stopPropagation();
+  }
+
+  alerta(tipo: AlertaTipo, mensaje: string = '') {
+    if (tipo === AlertaTipo.none) {
+      this.cerrarAlerta();
+      return;
+    }
+
+    this.alertaTipo = tipo;
+    this.alertaMessage = mensaje || 'Ocurrió un error';
+    this.alertaSuccess = true;
+
+    setTimeout(() => {
+      this.cerrarAlerta();
+    }, 3000);
+  }
+
+  cerrarAlerta() {
+    this.alertaSuccess = false;
+    this.alertaTipo = AlertaTipo.none;
+    this.alertaMessage = '';
   }
 
   seleccionEstatus(event: any) {
@@ -802,7 +968,7 @@ export class VentasComponent {
     const [y, m, d] = iso.split('-').map(Number);
     return new Date(y, m - 1, d); // ← local, sin saltos por zona
   }
-  
+
   limpiarFiltros() {
     this.nombreUsuario = '';
     this.filtroEstatus = '';

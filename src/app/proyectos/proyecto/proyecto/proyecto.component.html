@@ -215,17 +215,17 @@
             <td class="px-1 py-[2px]">
               <input
                 type="text"
-                class="bg-transparent w-full"
+                class="bg-transparent w-full text-end"
                 id="input-table"
                 [(ngModel)]="proyecto.presupuestoConIvaMonedaNacional"
                 readonly
                 disabled
               />
             </td>
-            <td class="px-1 py-[2px]">
+            <td class="px-1 py-[2px] text-end">
               {{ proyecto.anticipo }}
             </td>
-            <td class="px-1 py-[2px]">{{ proyecto.porcentajeIva }}%</td>
+            <td class="px-1 py-[2px] text-end">{{ proyecto.porcentajeIva }}%</td>
             <td class="px-1 py-[2px]">
               <div class="flex justify-center m-0.5">
                 <button
