@@ -8,7 +8,7 @@ import {
   ImpuestoDetalleOrdenVentaDTO,
   OrdenVentaDTO,
 } from './ordenVenta';
-import { da, de, es } from 'date-fns/locale';
+import { da, de, es, is, el } from 'date-fns/locale';
 import { ClienteService } from 'src/app/catalogos/cliente/cliente.service';
 import { clienteDTO } from 'src/app/catalogos/cliente/tsCliente';
 import { ProductoYServicioService } from './../productoyservicio.service';
@@ -23,6 +23,9 @@ import { AlmacenService } from 'src/app/inventario/almacen/almacen.service';
 import { almacenDTO } from 'src/app/inventario/almacen/almacen';
 import { log } from 'console';
 import { AlertaTipo } from 'src/app/utilidades/alert/alert.component';
+import { FormControl, FormGroup } from '@angular/forms';
+import { format } from 'path';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-ventas',
@@ -33,7 +36,7 @@ export class VentasComponent {
   selectedEmpresa: number = 0;
   isModalOpen = false;
   impuestosOpen: boolean = false;
-  usuarioSesion : string = '';
+  usuarioSesion: string = '';
 
   ordenVenta: OrdenVentaDTO = {
     id: 0,
@@ -59,6 +62,7 @@ export class VentasComponent {
   };
 
   ordenesVenta: OrdenVentaDTO[] = [];
+  ordenesVentaReset: OrdenVentaDTO[] = [];
 
   // productosYServicios: ProductoYServicioDTO[] = [];
 
@@ -156,6 +160,12 @@ export class VentasComponent {
     alertaMessage: string = '';
     alertaTipo: AlertaTipo = AlertaTipo.none;
     AlertaTipo = AlertaTipo;
+  listaUsuarios: string[] = [];
+  listaUsuariosReset: string[] = [];
+
+  fechaInicio: string = '';
+  fechaFin: string = '';
+  filtroEstatus: string = '';
 
   constructor(
     private _seguridadService: SeguridadService,
@@ -167,7 +177,7 @@ export class VentasComponent {
   ) {
     let IdEmpresa = _seguridadService.obtenIdEmpresaLocalStorage();
     this.selectedEmpresa = Number(IdEmpresa);
-    this.usuarioSesion = _seguridadService.zfObtenerCampoJwt("username");
+    this.usuarioSesion = _seguridadService.zfObtenerCampoJwt('username');
   }
 
   ngOnInit(): void {
@@ -225,13 +235,20 @@ export class VentasComponent {
         //Imprime mensaje de error.
       },
     })
+    this.filtroEstatus = '';
   }
 
   cargarOrdenesVenta() {
     this._ordenVentaService.obtenerTodos(this.selectedEmpresa).subscribe({
       next: (datos) => {
         this.ordenesVenta = datos;
-        console.log("estas son las ordenes de venta",this.ordenesVenta);
+        this.ordenesVentaReset = datos;
+        this.listaUsuarios = [
+          ...new Set(this.ordenesVenta.map((z) => z.elaboro)),
+        ];
+        this.listaUsuariosReset = [
+          ...new Set(this.ordenesVenta.map((z) => z.elaboro)),
+        ];
       },
       error: () => {
         //Imprime mensaje de error.
@@ -849,4 +866,77 @@ export class VentasComponent {
       this.alertaMessage = '';
     }
 
+  seleccionEstatus(event: any) {
+    this.filtroEstatus = event.target.value;
+    console.log('este es el estatus', this.filtroEstatus);
+    this.filtrarTablaOrdenesVenta();
+  }
+
+  filtrarUsuario(event: Event) {
+    const filterValue = (
+      event.target as HTMLInputElement
+    ).value.toLocaleLowerCase();
+    this.nombreUsuario = filterValue;
+    this.listaUsuarios = this.listaUsuariosReset.filter((z) =>
+      z.toLocaleLowerCase().includes(filterValue)
+    );
+    this.filtrarTablaOrdenesVenta();
+  }
+
+  seleccionarUsuario(usuario: string) {
+    this.nombreUsuario = usuario;
+    this.mostrarListaUsuario = false;
+    this.filtrarTablaOrdenesVenta();
+  }
+
+  filtrarTablaOrdenesVenta() {
+    this.ordenesVenta = this.ordenesVentaReset;
+    if (
+      this.filtroEstatus != undefined &&
+      this.filtroEstatus != null &&
+      this.filtroEstatus != ''
+    ) {
+      this.ordenesVenta = this.ordenesVenta.filter(
+        (z) => z.estatus == Number(this.filtroEstatus)
+      );
+    }
+    if (this.nombreUsuario != '') {
+      this.ordenesVenta = this.ordenesVenta.filter((z) =>
+        z.elaboro
+          .toLocaleLowerCase()
+          .includes(this.nombreUsuario.toLocaleLowerCase())
+      );
+    }
+
+    const start = this.parseISOToLocal(this.fechaInicio);
+    const end = this.parseISOToLocal(this.fechaFin);
+
+    if (start) start.setHours(0, 0, 0, 0);
+    if (end) end.setHours(23, 59, 59, 999);
+
+    this.ordenesVenta = this.ordenesVenta.filter((z) => {
+      const d = this.toDate(z.fechaRegistro);
+      if (!d) return false;
+      return (!start || d >= start) && (!end || d <= end);
+    });
+  }
+
+  private toDate(val: Date | string | null | undefined): Date | null {
+    if (!val) return null;
+    return val instanceof Date ? val : new Date(val);
+  }
+
+  private parseISOToLocal(iso: string): Date | null {
+    if (!iso) return null;
+    const [y, m, d] = iso.split('-').map(Number);
+    return new Date(y, m - 1, d); // ← local, sin saltos por zona
+  }
+  
+  limpiarFiltros() {
+    this.nombreUsuario = '';
+    this.filtroEstatus = '';
+    this.fechaInicio = '';
+    this.fechaFin = '';
+    this.filtrarTablaOrdenesVenta();
+  }
 }
