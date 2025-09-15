@@ -128,7 +128,7 @@
             />
           </td>
           <td class="text-end" scope="col" [ngClass]="{ estilo2: ic.estatus > 1 }" *ngIf="ic.estatus > 1">
-            ${{ic.cantidad | number:'1.4-4'}}
+            {{ic.cantidad | number:'1.4-4'}}
           </td>
           <td scope="col" [ngClass]="{ estilo2: ic.estatus > 1 }" *ngIf="ic.estatus <= 1">
             <input

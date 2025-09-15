@@ -83,8 +83,8 @@
           <tr class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]">
               <td class="td-0" scope="col">1</td>
               <td class="td-0" scope="col">29/mayo/2019</td>
-              <td class="td-0" scope="col">0.00</td>
-              <td class="td-0" scope="col">0.00</td>
+              <td class="td-0 text-end" scope="col">0.00</td>
+              <td class="td-0 text-end" scope="col">0.00</td>
               <td class="td-0 text-end" scope="col">$0.00</td>
               <td class="td-0" scope="col">
                 <input  class="input-fecha"  type="date">
@@ -218,7 +218,7 @@
                     <td
                       style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 10%; padding-left: 0px;"
                       class="cont-drill">
-                      <input autocomplete="off" type="text" class="" id="input-table"
+                      <input autocomplete="off" type="text" class="text-end" id="input-table"
                         [(ngModel)]="detalle.cantidadConFormato" readonly
                         style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;">
                     </td>
@@ -226,7 +226,7 @@
                     <td
                       style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 10%; padding-left: 0px;"
                       class="cont-drill">
-                      <input autocomplete="off" type="text" class="" id="input-table"
+                      <input autocomplete="off" type="text" class="text-end" id="input-table"
                         [(ngModel)]="detalle.importeConFormato" readonly
                         style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;">
                     </td>
@@ -234,7 +234,7 @@
                     <td
                       style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 6%; padding-left: 0px;"
                       class="cont-drill" *ngIf="!detalle.porcentajeDestajoEditando"  (click)="habilitarEdicion(detalle)">
-                      <input autocomplete="off" type="text" class="" id="input-table"
+                      <input autocomplete="off" type="text" class="text-end" id="input-table"
                         [(ngModel)]="detalle.porcentajeDestajoConFormato" readonly
                         [ngStyle]="{
                           'background-color':
@@ -249,7 +249,7 @@
                     <td
                       style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #e3292917; width: 6%; padding-left: 0px;"
                       class="cont-drill" *ngIf="detalle.porcentajeDestajoEditando">
-                      <input autocomplete="off" type="text" class="" id="input-table"
+                      <input autocomplete="off" type="text" class="text-end" id="input-table"
                         [(ngModel)]="detalle.porcentajeDestajo"
                         [ngStyle]="{
                           'background-color':
@@ -264,7 +264,7 @@
                     <td
                       style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 6%; padding-left: 0px;"
                       class="cont-drill" *ngIf="!detalle.porcentajeDestajoEditando"  (click)="habilitarEdicion(detalle)">
-                      <input autocomplete="off" type="text" class="" id="input-table"
+                      <input autocomplete="off" type="text" class="text-end" id="input-table"
                         [(ngModel)]="detalle.factorDestajoConFormato" readonly
                         [ngStyle]="{
                           'background-color': 
@@ -279,7 +279,7 @@
                     <td
                       style="border-right: 1px solid #ab090917; border-right: 1px solid #f2f2f217; width: 6%; padding-left: 0px;"
                       class="cont-drill" *ngIf="detalle.porcentajeDestajoEditando">
-                      <input autocomplete="off" type="text" class="" id="input-table"
+                      <input autocomplete="off" type="text" class="text-end" id="input-table"
                         [(ngModel)]="detalle.factorDestajo"
                         [ngStyle]="{
                           'background-color':
@@ -294,7 +294,7 @@
                     <td
                       style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 6%; padding-left: 0px;"
                       class="cont-drill">
-                      <input autocomplete="off" type="text" class="" id="input-table"
+                      <input autocomplete="off" type="text" class="text-end" id="input-table"
                         [(ngModel)]="detalle.porcentajeDestajoAcumuladoConFormato" readonly
                         [ngStyle]="{
                           'background-color':
@@ -309,7 +309,7 @@
                     <td
                       style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 10%; padding-left: 0px;"
                       class="cont-drill">
-                      <input autocomplete="off" type="text" class="" id="input-table"
+                      <input autocomplete="off" type="text" class="text-end" id="input-table"
                         [(ngModel)]="detalle.importeDestajoConFormato" readonly
                         
                         style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;">
