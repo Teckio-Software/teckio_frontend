@@ -1,6 +1,13 @@
 <section>
   <div>
     <div>
+      <app-alert
+        *ngIf="alertaTipo !== AlertaTipo.none"
+        [alertaTipo]="alertaTipo"
+        [alertaMessage]="alertaMessage"
+        (close)="cerrarAlerta()"
+      >
+      </app-alert>
       <!-- Button cotainer -->
       <div class="flex mt-1 mb-2">
         <button

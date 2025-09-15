@@ -202,12 +202,25 @@ export class VentasComponent {
     this.cargarAlmacenes();
   }
 
+  /**
+   * Carga la lista de almacenes sin paginar
+   */
   cargarAlmacenes(){
+    /**
+     * Servicio que se encarga de obtener todos los almacenes sin paginar
+     */
     this.almacenService.obtenerTodosSinPaginar(this.selectedEmpresa).subscribe({
-      next: (datos) => {
+      /**
+       * Callback que se ejecuta cuando se obtiene la lista de almacenes
+       * @param datos lista de almacenes
+       */
+      next: (datos: almacenDTO[]) => {
         this.listaAlmacenes = datos;
         this.listaAlmacenesReset = datos;
       },
+      /**
+       * Callback que se ejecuta cuando hay un error al obtener la lista de almacenes
+       */
       error: () => {
         //Imprime mensaje de error.
       },
@@ -226,15 +239,30 @@ export class VentasComponent {
     });
   }
 
+  /**
+   * Carga la lista de productos y servicios
+   */
   cargarProductosYServicios() {
-    this._prodYserService.obtenerTodos(this.selectedEmpresa).subscribe({
-      next: (datos) => {
-        this.productosYServicio = datos;
-        this.productosYServicioReset = datos;
-      },
-      error: () => {
-        //Imprime mensaje de error.
-      },
+    /**
+     * Servicio que se encarga de obtener todos los productos y servicios
+     */
+    this._prodYserService
+      .obtenerTodos(this.selectedEmpresa)
+      .subscribe({
+        /**
+         * Callback que se ejecuta cuando se obtiene la lista de productos y servicios
+         * @param datos lista de productos y servicios
+         */
+        next: (datos) => {
+          this.productosYServicio = datos;
+          this.productosYServicioReset = datos;
+        },
+        /**
+         * Callback que se ejecuta cuando hay un error al obtener la lista de productos y servicios
+         */
+        error: () => {
+          //Imprime mensaje de error.
+        },
     });
   }
 
@@ -464,11 +492,15 @@ export class VentasComponent {
           .subscribe({
             next: (resp) => {
               if(resp.estatus){
+                this.alerta(AlertaTipo.save, resp.descripcion);
                 this.cerrarModalCancelarOrdenVenta();
                 this.cargarOrdenesVenta();
+              }else{
+                this.alerta(AlertaTipo.error, resp.descripcion);
               }
             },
             error: () => {
+              this.alerta(AlertaTipo.error, 'Error al cancelar la orden de venta.');
               //Mensaje de error
             },
           });
@@ -729,19 +761,26 @@ export class VentasComponent {
            */
           next: (resp) => {
             // Carga la lista de ordenes de venta
-            this.cargarOrdenesVenta();
-            this.bloquearBotonCrear();
+            if(resp.estatus){
+              this.alerta(AlertaTipo.save, resp.descripcion);
+              this.cargarOrdenesVenta();
+              this.bloquearBotonCrear();
+            }else{
+              this.alerta(AlertaTipo.error, resp.descripcion);
+            }
+            
           },
           /**
            * Se llama cuando se produce un error al crear la orden de venta.
            * @param error El error producido.
            */
           error: () => {
+            this.alerta(AlertaTipo.error, 'Error al crear la orden de venta.');
             // Mensaje de error
           },
         });
     } else {
-      console.log('No se permiten crear ordenes de venta seguidas.');
+      this.alerta(AlertaTipo.error, 'No se permiten crear ordenes de venta seguidas.');
     }
   }
 
