@@ -271,7 +271,7 @@
                       (click)="abrirModalCancelarOrdenVenta(orden.id)"
                     />
                   </button>
-                  <button>
+                  <button *ngIf="orden.estatus == 0">
                     <img
                       ngbTooltip="Autorizar"
                       triggers="mouseenter:mouseleave"
