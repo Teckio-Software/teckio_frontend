@@ -22,6 +22,8 @@ export class DialoNewConceptoComponent {
     descripcionEspecialidad: '',
     idProyecto: 0,
     costoUnitario: 0,
+    costoUnitarioConFormato: '$0.00'
+
   };
   // selectedProyecto: number;
   idProyecto: number;

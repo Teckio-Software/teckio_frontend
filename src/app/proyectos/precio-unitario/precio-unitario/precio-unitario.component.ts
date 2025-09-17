@@ -57,6 +57,7 @@ import Swal from 'sweetalert2';
 import { ModalAlertComponent } from 'src/app/utilidades/modal-alert/modal-alert.component';
 import { operacionesXPrecioUnitarioDetalleDTO } from '../../precio-unitario-detalle/tsOperacionesXPrecioUnitarioDetalle';
 import { EstimacionesService } from '../../estimaciones/estimaciones.service';
+import { log } from 'node:console';
 
 @Component({
   selector: 'app-precio-unitario',
