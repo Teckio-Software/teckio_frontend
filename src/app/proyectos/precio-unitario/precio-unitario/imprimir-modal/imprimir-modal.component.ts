@@ -1,6 +1,5 @@
 import { proyectoDTO } from './../../../proyecto/tsProyecto';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-
 import { imprimirReporte } from './imprimirReportes';
 import { precioUnitarioDTO } from '../../tsPrecioUnitario';
 import { ParametrosImprimirPuService } from './services/parametros-imprimir-pu.service';
@@ -37,11 +36,14 @@ export class ImprimirModalComponent {
   @Input() preciosUnitarios: precioUnitarioDTO[] = [];
   @Input() marcados: precioUnitarioDTO[] = [];
   @Input() proyecto!: proyectoDTO;
+  @Input() total!: number;
   @Input() totalSinIva!: string;
   @Input() totalConIva!: string;
   @Input() totalSinFormato!: number;
   @Input() totalIva!: string;
-  @Output() close = new EventEmitter<void>();
+  @Input() totalSinFormatoIva!: number;
+  @Input() totalSinFormatoSinIva!: number;
+  @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
   tipoReporte: string = '';
   tipoImpresion: string = '';
@@ -62,14 +64,15 @@ export class ImprimirModalComponent {
   isImprimirImpuestos: boolean = true;
   isImprimirConCostoDirecto: boolean = false;
   isImprimirPU: boolean = false;
+  isImprimirPUIVA: boolean = false;
   isImprimirPuMasIVA: boolean = false;
   isError: boolean = false;
   isError2: boolean = false;
   isError3: boolean = false;
 
-  currentStep = 0;
+  currentStep: number = 0;
   /** Títulos visibles del wizard de pasos del modal. */
-  steps = [
+  steps: string[] = [
     'Selecciona el reporte a imprimir',
     'Opciones del reporte',
     'Opciones de impresión',
@@ -125,9 +128,10 @@ export class ImprimirModalComponent {
    * a this.paramsImpresion.
    * @param event Evento que se lanza al cambiar el selector de parámetros.
    */
-  seleccionarParams(event: Event) {
-    const id = Number((event.target as HTMLSelectElement).value);
-    const seleccionado = this.paramsImpresionLista.find((p) => p.id === id);
+  seleccionarParams(event: Event): void {
+    const id: number = Number((event.target as HTMLSelectElement).value);
+    const seleccionado: ParametrosImpresionPu | undefined =
+      this.paramsImpresionLista.find((p) => p.id === id);
 
     if (seleccionado) {
       this.paramsImpresion = { ...seleccionado };
@@ -140,7 +144,7 @@ export class ImprimirModalComponent {
    * muestra un mensaje de confirmación por 3 segundos.
    * Si ocurre un error, se muestra un mensaje de error por 3 segundos.
    */
-  crearConfiguracionParams() {
+  crearConfiguracionParams(): void {
     this.parametrosImpresion
       .crear(this.selectedEmpresa, this.paramsImpresion)
       .subscribe({
@@ -173,10 +177,10 @@ export class ImprimirModalComponent {
    * Obtiene la lista de parámetros de impresión para la empresa seleccionada en
    * this.selectedEmpresa y la asigna a this.paramsImpresionLista.
    */
-  obtenerParametrosImpresion() {
+  obtenerParametrosImpresion(): void {
     this.parametrosImpresion
       .obtenerTodos(this.selectedEmpresa)
-      .subscribe((datos) => {
+      .subscribe((datos: ParametrosImpresionPu[]) => {
         this.paramsImpresionLista = datos;
       });
   }
@@ -186,11 +190,11 @@ export class ImprimirModalComponent {
    *
    * @param id El ID del registro a editar.
    */
-  editarParams(id: number) {
+  editarParams(id: number): void {
     this.parametrosImpresion
       .editar(this.selectedEmpresa, this.paramsImpresion)
       .subscribe({
-        next: (datos) => {
+        next: (datos: RespuestaDTO) => {
           this.paramsImpresion.id = id;
           if (datos.estatus) {
             this.isParamGuardado = true;
@@ -218,9 +222,9 @@ export class ImprimirModalComponent {
    * Si ocurre un error, se muestra un mensaje de error por 3 segundos.
    * @param id El ID del registro a eliminar.
    */
-  eliminarParams(id: number) {
+  eliminarParams(id: number): void {
     this.parametrosImpresion.eliminar(this.selectedEmpresa, id).subscribe({
-      next: (datos) => {
+      next: (datos: RespuestaDTO) => {
         if (datos.estatus) {
           this.isParamDeleted = true;
           this.paramsImpresion = {
@@ -261,7 +265,7 @@ export class ImprimirModalComponent {
   /**
    * Cierra el modal y emite un evento de cierre.
    */
-  closeModal() {
+  closeModal(): void {
     this.close.emit();
   }
 
@@ -270,7 +274,7 @@ export class ImprimirModalComponent {
    * cierre el modal accidentalmente al hacer clic en el contenido del mismo.
    * @param event El evento de clic.
    */
-  detenerCierre(event: MouseEvent) {
+  detenerCierre(event: MouseEvent): void {
     event.stopPropagation();
   }
 
@@ -284,7 +288,7 @@ export class ImprimirModalComponent {
    * Si se ha seleccionado una opción de reporte, se habilita el paso correspondiente
    * para ese reporte.
    */
-  nextStep() {
+  nextStep(): void {
     this.isError = false;
     this.isError2 = false;
     this.isError3 = false;
@@ -336,7 +340,7 @@ export class ImprimirModalComponent {
    * Retrocede al paso anterior en el modal, reiniciando el estado de error
    * de selección de opciones.
    */
-  prevStep() {
+  prevStep(): void {
     this.isError = false;
     if (this.currentStep > 0) {
       this.currentStep--;
@@ -344,18 +348,25 @@ export class ImprimirModalComponent {
   }
 
   /**
-   * Genera el reporte en PDF según la selección hecha en el modal.
-   *
-   * Se crea un objeto `Reporte` con los datos necesarios y se llama a la función
-   * `imprimirReporte()` para generar el PDF.
-   *
-   * Si se ha seleccionado la impresión completa, se genera el reporte para todos
-   * los precios unitarios.
-   *
-   * Si se ha seleccionado la impresión marcada, se genera el reporte solo para
-   * los precios unitarios marcados.
+   * Finaliza el proceso de impresión, ejecutando la lógica definida
+   * en logicaImpresion().
    */
-  finish() {
+  finish(): void {
+    this.logicaImpresion();
+  }
+
+  /**
+   * Realiza la lógica de impresión de reportes, determinando el tipo de reporte y
+   * los totales a imprimir.
+   *
+   * Se define el tipo de reporte según el valor de tipoReporte y se llena el
+   * objeto de reporte con los valores correspondientes.
+   *
+   * Se activan las banderas de precios unitarios segun el tipo de precio seleccionado.
+   * Se envía el objeto de reporte a imprimir a la logica de impresión.
+   */
+  logicaImpresion(): void {
+    //reportes definidos de acuerdo a si es completo o marcado
     const reporte: Reporte = {
       precioUnitario: this.preciosUnitarios,
       titulo: this.paramsImpresion.nombre,
@@ -369,14 +380,16 @@ export class ImprimirModalComponent {
       importeConLetra: this.isImporteconLetra,
       totalConIVA: this.totalConIva,
       totalSinFormato: this.totalSinFormato,
+      totalSinIva: this.totalSinIva,
       proyecto: this.proyecto,
       totalIva: this.totalIva,
       imprimirImpuesto: this.isImprimirImpuestos,
       imprimirConCostoDirecto: this.isImprimirConCostoDirecto,
       imprimirConPrecioUnitario: this.isImprimirPU,
-      imprimirConPUMasIva: this.isImprimirPuMasIVA,
+      imprimirConPrecioUnitarioIVA: this.isImprimirPUIVA,
     };
 
+    //si es marcado, se llena el arreglo de marcados en lugar del completo
     const reporteMarcado: Reporte = {
       precioUnitario: this.marcados,
       titulo: this.paramsImpresion.nombre,
@@ -390,41 +403,85 @@ export class ImprimirModalComponent {
       importeConLetra: this.isImporteconLetra,
       totalConIVA: this.totalConIva,
       totalSinFormato: this.totalSinFormato,
+      totalSinIva: this.totalSinIva,
       proyecto: this.proyecto,
       totalIva: this.totalIva,
       imprimirImpuesto: this.isImprimirImpuestos,
       imprimirConCostoDirecto: this.isImprimirConCostoDirecto,
       imprimirConPrecioUnitario: this.isImprimirPU,
-      imprimirConPUMasIva: this.isImprimirPuMasIVA,
+      imprimirConPrecioUnitarioIVA: this.isImprimirPUIVA,
     };
 
+    // definir el tipo de reporte
     switch (this.tipoReporte) {
       case 'presupuesto':
         this.reportePresupuesto = true;
 
-        if (this.tipoImpresion === 'impresionCompleta') {
-          if (this.tipoPrecio === 'costoDirecto') {
-            reporte.imprimirConCostoDirecto = true;
-            imprimirReporte(reporte);
-          }
-          if (this.tipoPrecio === 'precioUnitario') {
-            reporte.imprimirConPrecioUnitario = true;
-            imprimirReporte(reporte);
-          }
-          if (this.tipoPrecio === 'precioUnitarioIVA') {
-            reporte.imprimirConPUMasIva = true;
-            imprimirReporte(reporte);
-          }
-        }
-        if (this.tipoImpresion === 'impresionMarcada') {
-          imprimirReporte(reporteMarcado);
-        }
-        break;
+        let reporteBase: Reporte = reporte;
 
+        //si es impresion marcada, se asigna el reporte marcado como base y los totales se calculan de acuerdo a los marcados
+        if (this.tipoImpresion === 'impresionMarcada') {
+          for (let i = 0; i < reporte.precioUnitario.length; i++) {
+            this.total = this.total + reporte.precioUnitario[i].importe;
+          }
+          reporteBase = reporteMarcado;
+        }
+
+        //se limpian las banderas de precios
+        flagsPreciosUnitarios(reporteBase);
+        //se activan las banderas de precios unitarios segun el tipo de precio seleccionado
+        setFlagsPorTipoPrecio(reporteBase, this.tipoPrecio);
+
+        //se envia el objeto de reporte a imprimir a la logica de impresión
+        imprimirReporte(reporteBase);
+        break;
       default:
         console.log(
           `No hay lógica implementada para el tipo de reporte: ${this.tipoReporte}`
         );
     }
+  }
+}
+
+/**
+ * Establece las banderas de impresión de precios unitarios en false.
+ *
+ * @param {Reporte} reporte - El objeto de tipo `Reporte` que se
+ *     va a imprimir.
+ */
+
+function flagsPreciosUnitarios(reporte: Reporte): void {
+  reporte.imprimirConCostoDirecto = false;
+  reporte.imprimirConPrecioUnitario = false;
+  reporte.imprimirConPrecioUnitarioIVA = false;
+}
+
+/**
+ * Establece las banderas de impresión de precios unitarios
+ * según el tipo de precio.
+ *
+ * @param {Reporte} reporte - El objeto de tipo `Reporte`
+ *     que se va a imprimir.
+ * @param {string} tipoPrecio - El tipo de precio que se va
+ *     a imprimir.
+ *
+ * Se establecerá una bandera en true según el tipo de
+ *     precio. Si el tipo de precio no es reconocido,
+ *     se mostrará un mensaje de error en la consola.
+ */
+function setFlagsPorTipoPrecio(reporte: Reporte, tipoPrecio: string): void {
+  switch (tipoPrecio) {
+    case 'costoDirecto':
+      reporte.imprimirConCostoDirecto = true;
+      break;
+    case 'precioUnitario':
+      reporte.imprimirConPrecioUnitario = true;
+      break;
+    case 'precioUnitarioIVA':
+      reporte.imprimirConPrecioUnitarioIVA = true;
+      break;
+
+    default:
+      console.log('Tipo de precio no reconocido', tipoPrecio);
   }
 }

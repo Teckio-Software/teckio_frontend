@@ -230,7 +230,7 @@ export class PrecioUnitarioComponent implements OnInit {
   porcentajePrestaciones = 0;
   diasNoLaborales = 0;
   diasPagados = 0;
-  total = 0;
+  total: number = 0;
   totalConFormato = '';
   totalSinIvaConFormato = '';
   totalIvaConFormato = '';
@@ -4699,10 +4699,6 @@ export class PrecioUnitarioComponent implements OnInit {
 
     this.preciosMarcados = this.obtenerPuSeleccionados(this.preciosUnitarios);
 
-    // this.total = 0;
-    // for (let i = 0; i < this.preciosMarcados.length; i++) {
-    //   this.total = this.total + this.preciosMarcados[i].importe;
-    // }
     this.totalConFormato = new Intl.NumberFormat('es-MX', {
       style: 'currency',
       currency: 'MXN',
