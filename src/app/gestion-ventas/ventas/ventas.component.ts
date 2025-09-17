@@ -3,11 +3,12 @@ import { Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
 import { VentasService } from './ventas.service';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import {
+  CancelarOrdenVentaDTO,
   DetalleOrdenVentaDTO,
   ImpuestoDetalleOrdenVentaDTO,
   OrdenVentaDTO,
 } from './ordenVenta';
-import { da, de } from 'date-fns/locale';
+import { da, de, es } from 'date-fns/locale';
 import { ClienteService } from 'src/app/catalogos/cliente/cliente.service';
 import { clienteDTO } from 'src/app/catalogos/cliente/tsCliente';
 import { ProductoYServicioService } from './../productoyservicio.service';
@@ -17,6 +18,7 @@ import {
   TipoFactorDTO,
   TipoImpuestoDTO,
 } from 'src/app/compras/cotizacion/tsCotizacion';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-ventas',
@@ -27,6 +29,7 @@ export class VentasComponent {
   selectedEmpresa: number = 0;
   isModalOpen = false;
   impuestosOpen: boolean = false;
+  usuarioSesion : string = '';
 
   ordenVenta: OrdenVentaDTO = {
     id: 0,
@@ -46,6 +49,11 @@ export class VentasComponent {
     razonSocialCliente: '',
   };
 
+  cancelarOrdenVentaDTO: CancelarOrdenVentaDTO = {
+    idOrdenVenta: 0,
+    idAlmacenDestino: 0,
+  };
+
   ordenesVenta: OrdenVentaDTO[] = [];
 
   // productosYServicios: ProductoYServicioDTO[] = [];
@@ -63,7 +71,7 @@ export class VentasComponent {
     descripcion: '',
   };
 
-   nuevoDetalleOrdenVenta: DetalleOrdenVentaDTO = {
+  nuevoDetalleOrdenVenta: DetalleOrdenVentaDTO = {
     id: 0,
     idOrdenVenta: 0,
     idProductoYservicio: 0,
@@ -88,7 +96,7 @@ export class VentasComponent {
     descripcionTipoImpuesto: '',
     descripcionTipoFactor: '',
     descripcionCategoriaImpuesto: '',
-    descripcionClasificacionImpuesto: ''
+    descripcionClasificacionImpuesto: '',
   };
 
   impuestosDetalleOrdenVenta: ImpuestoDetalleOrdenVentaDTO[] = [];
@@ -104,15 +112,32 @@ export class VentasComponent {
   categoriaImpuesto: CategoriaImpuestoDTO[] = [];
   isLoading: boolean = true;
 
+  listaClientes: boolean = false;
   listaProductoYServicio: boolean = false;
 
   @ViewChildren('lista') listas!: QueryList<ElementRef<HTMLElement>>;
 
   mensajeAlerta: string = '';
 
-  mostrarListaImpuestos : boolean = false;
-  mostrarListaFactores : boolean = false;
-  mostrarListaCategoria : boolean = false;
+  mostrarListaImpuestos: boolean = false;
+  mostrarListaFactores: boolean = false;
+  mostrarListaCategoria: boolean = false;
+
+  mostrarListaEstatus: boolean = false;
+  estatusDescripcion: string = '';
+  mostrarListaUsuario: boolean = false;
+  nombreUsuario: string = '';
+
+  listaImpuestos: boolean = false;
+  listaFactores: boolean = false;
+  listaCategoria: boolean = false;
+  listaClasificacion: boolean = false;
+
+  esEliminar: boolean = false;
+  elimandoDatalle: boolean = false;
+  elimandoImpuesto: boolean = false;
+  ChangeDetectorRef: any;
+  permiteCrear: boolean = true;
 
   constructor(
     private _seguridadService: SeguridadService,
@@ -122,6 +147,7 @@ export class VentasComponent {
   ) {
     let IdEmpresa = _seguridadService.obtenIdEmpresaLocalStorage();
     this.selectedEmpresa = Number(IdEmpresa);
+    this.usuarioSesion = _seguridadService.zfObtenerCampoJwt("username");
   }
 
   ngOnInit(): void {
@@ -158,6 +184,7 @@ export class VentasComponent {
     this._ordenVentaService.obtenerTodos(this.selectedEmpresa).subscribe({
       next: (datos) => {
         this.ordenesVenta = datos;
+        console.log("estas son las ordenes de venta",this.ordenesVenta);
       },
       error: () => {
         //Imprime mensaje de error.
@@ -179,22 +206,56 @@ export class VentasComponent {
 
   openModal(ordenVenta: OrdenVentaDTO) {
     this.isModalOpen = true;
+    this.ordenVenta = ordenVenta;
+    this.cargarOrdenVenta();
+  }
+
+  cargarOrdenVenta() {
     this._ordenVentaService
-      .obtenerOrdenVenta(ordenVenta.id, this.selectedEmpresa)
+      .obtenerOrdenVenta(this.ordenVenta.id, this.selectedEmpresa)
       .subscribe((datos) => {
         this.ordenVenta = datos;
+        if (this.selectedDetalleOrdenVenta.id != 0) {
+          var detalleActualizado = this.ordenVenta.detalleOrdenVenta.filter(
+            (z) => z.id == this.selectedDetalleOrdenVenta.id
+          );
+          this.impuestosDetalleOrdenVenta =
+            detalleActualizado[0].impuestosDetalleOrdenVenta;
+          if (
+            this.impuestosDetalleOrdenVenta.length == 0 &&
+            detalleActualizado.length != 0
+          ) {
+            this.impuestosDetalleOrdenVenta.push({
+              id: 0,
+              idDetalleOrdenVenta: this.selectedDetalleOrdenVenta.id,
+              idTipoImpuesto: 0,
+              idTipoFactor: 0,
+              idCategoriaImpuesto: 0,
+              idClasificacionImpuesto: 0,
+              tasaCuota: 0,
+              importeTotal: 0,
+              descripcionTipoImpuesto: '',
+              descripcionTipoFactor: '',
+              descripcionCategoriaImpuesto: '',
+              descripcionClasificacionImpuesto: '',
+            });
+            this.limpiarNuevoDetalle();
+          }
+        }
       });
-    // this.ordenVenta.detalleOrdenVenta.push({
-    //   id: 0,
-    //   idOrdenVenta: 0,
-    //   idProductoYservicio: 0,
-    //   idEstimacion: 0,
-    //   cantitdad: 0,
-    //   precioUnitario: 0,
-    //   descuento: 0,
-    //   importeTotal: 0,
-    //   impuestosDetalleOrdenVenta: [],
-    // });
+  }
+
+  limpiarNuevoDetalle() {
+    this.nuevoDetalleOrdenVenta.id = 0;
+    this.nuevoDetalleOrdenVenta.idProductoYservicio = 0;
+    this.nuevoDetalleOrdenVenta.idEstimacion = 0;
+    this.nuevoDetalleOrdenVenta.cantitdad = 0;
+    this.nuevoDetalleOrdenVenta.precioUnitario = 0;
+    this.nuevoDetalleOrdenVenta.descuento = 0;
+    this.nuevoDetalleOrdenVenta.importeTotal = 0;
+    this.nuevoDetalleOrdenVenta.impuestosDetalleOrdenVenta = [];
+    this.nuevoDetalleOrdenVenta.descripcion = '';
+    this.nuevoDetalleOrdenVenta.idOrdenVenta = this.ordenVenta.id;
   }
 
   closeModal() {
@@ -208,25 +269,10 @@ export class VentasComponent {
   seleccionarCliente(cliente: clienteDTO) {
     this.ordenVenta.idCliente = cliente.id;
     this.ordenVenta.razonSocialCliente = cliente.razonSocial;
+    this.listaClientes = false;
   }
 
   agregarDetalle() {
-    // let ultimoProducto =
-    //   this.ordenVenta.detalleOrdenVenta[
-    //     this.ordenVenta.detalleOrdenVenta.length - 1
-    //   ];
-    // if (
-    //   ultimoProducto.idProductoYservicio == 0 ||
-    //   ultimoProducto.cantitdad == 0 ||
-    //   ultimoProducto.cantitdad == undefined ||
-    //   ultimoProducto.cantitdad == null ||
-    //   ultimoProducto.precioUnitario == 0 ||
-    //   ultimoProducto.precioUnitario == undefined ||
-    //   ultimoProducto.precioUnitario == null
-    // ) {
-    //   return;
-    // }
-
     let existeNuevoDetalle = this.ordenVenta.detalleOrdenVenta.filter(
       (z) => z.id == 0
     );
@@ -248,9 +294,7 @@ export class VentasComponent {
     });
   }
 
-  seleccionarProducto(
-    producto: ProductoYServicioDTO
-  ) {
+  seleccionarProducto(producto: ProductoYServicioDTO) {
     var existeProducto = this.ordenVenta.detalleOrdenVenta.filter(
       (z) => z.idProductoYservicio == producto.id
     );
@@ -268,42 +312,111 @@ export class VentasComponent {
     this.listaProductoYServicio = false;
   }
 
-  seleccionarImpuestos(tipoImpuesto : TipoImpuestoDTO, impuesto : ImpuestoDetalleOrdenVentaDTO) {
+  seleccionarImpuestos(
+    tipoImpuesto: TipoImpuestoDTO,
+    impuesto: ImpuestoDetalleOrdenVentaDTO
+  ) {
     impuesto.idTipoImpuesto = tipoImpuesto.id;
     impuesto.descripcionTipoImpuesto = tipoImpuesto.descripcionImpuesto;
     this.agregarImpuesto(impuesto);
   }
 
-  seleccionarFactores(tipoFactor : TipoFactorDTO, impuesto : ImpuestoDetalleOrdenVentaDTO) {
+  seleccionarFactores(
+    tipoFactor: TipoFactorDTO,
+    impuesto: ImpuestoDetalleOrdenVentaDTO
+  ) {
     impuesto.idTipoFactor = tipoFactor.id;
     impuesto.descripcionTipoFactor = tipoFactor.descripcion;
     this.agregarImpuesto(impuesto);
   }
 
-  seleccionarCategorias(categorias : CategoriaImpuestoDTO, impuesto : ImpuestoDetalleOrdenVentaDTO) {
+  seleccionarCategorias(
+    categorias: CategoriaImpuestoDTO,
+    impuesto: ImpuestoDetalleOrdenVentaDTO
+  ) {
     impuesto.idCategoriaImpuesto = categorias.id;
     impuesto.descripcionCategoriaImpuesto = categorias.tipo;
     this.agregarImpuesto(impuesto);
   }
 
-  guardarDetalle(detalle : DetalleOrdenVentaDTO) {
-    if(detalle.idProductoYservicio == 0 || detalle.idProductoYservicio == undefined || detalle.idProductoYservicio == null
-      || detalle.idEstimacion == 0 || detalle.idEstimacion == undefined || detalle.idEstimacion == null
-      || detalle.cantitdad == 0 || detalle.cantitdad == undefined || detalle.cantitdad == null
-      || detalle.precioUnitario == 0 || detalle.precioUnitario == undefined || detalle.precioUnitario == null
-    ){
+  guardarDetalle(detalle: DetalleOrdenVentaDTO) {
+    if (
+      detalle.idProductoYservicio == 0 ||
+      detalle.idProductoYservicio == undefined ||
+      detalle.idProductoYservicio == null ||
+      // || detalle.idEstimacion == 0 || detalle.idEstimacion == undefined || detalle.idEstimacion == null
+      detalle.cantitdad == 0 ||
+      detalle.cantitdad == undefined ||
+      detalle.cantitdad == null ||
+      detalle.precioUnitario == 0 ||
+      detalle.precioUnitario == undefined ||
+      detalle.precioUnitario == null
+    ) {
       console.log(detalle);
       this.mensajeAlerta = 'Captura los campos obligatorios';
       return;
-    }else{
+    } else {
       this.mensajeAlerta = '';
     }
 
-    if(detalle.id == 0){
+    if (detalle.id == 0) {
       //crear nuevo detalle
-    }else{
+      this.cargarOrdenVenta();
+    } else {
       //editar detalle
+      this.cargarOrdenVenta();
     }
+  }
+
+  // eliminarOrdenVenta(ordenVenta: OrdenVentaDTO) {
+  //   Swal.fire({
+  //     confirmButtonText: 'Aceptar',
+  //     cancelButtonText: 'Cancelar',
+  //     showCancelButton: true,
+  //     html: `<p>¿Desea eliminar la orden de venta?</p>`,
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       this._ordenVentaService.eliminarOrdenVenta(ordenVenta.id, this.selectedEmpresa).subscribe((respuesta) => {
+  //         this.cargarOrdenesVenta();
+  //       });
+  //     } else {
+  //       return;
+  //     }
+  //     this.ChangeDetectorRef.detectChanges();
+  //   });
+  // }
+
+  cancelarOrdenVenta(id: number) {
+    Swal.fire({
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      showCancelButton: true,
+      html: `<p>¿Desea cancelar la orden de venta?</p>`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.cancelarOrdenVentaDTO = {
+          idOrdenVenta: id,
+          idAlmacenDestino: 0,
+        };
+        this._ordenVentaService
+          .cancelar(this.selectedEmpresa, this.cancelarOrdenVentaDTO)
+          .subscribe({
+            next: (resp) => {
+              this.cancelarOrdenVentaDTO = {
+                idOrdenVenta: 0,
+                idAlmacenDestino: 0,
+              };
+              console.log(resp);
+            },
+            error: () => {
+              //Mensaje de error
+            },
+          });
+      } else {
+        return;
+      }
+      this.ChangeDetectorRef.detectChanges();
+    });
   }
 
   editarDetalle(detalle: DetalleOrdenVentaDTO) {
@@ -369,13 +482,43 @@ export class VentasComponent {
   }
 
   eliminarDetalle(detalle: DetalleOrdenVentaDTO) {
-    let coincidencia = this.ordenVenta.detalleOrdenVenta.findIndex(
-      (z) =>
-        z.idEstimacion == detalle.idEstimacion &&
-        z.idProductoYservicio == detalle.idProductoYservicio
-    );
+    this.mensajeAlerta = 'Seguro de eliminar el detalle?';
+    this.esEliminar = true;
+    this.elimandoDatalle = true;
+    this.elimandoImpuesto = false;
+  }
 
-    this.ordenVenta.detalleOrdenVenta.splice(coincidencia, 1);
+  noEliminar() {
+    this.mensajeAlerta = '';
+    this.esEliminar = false;
+    this.elimandoDatalle = false;
+    this.elimandoImpuesto = false;
+  }
+
+  eliminarRegistro() {
+    if (this.elimandoDatalle) {
+      this._ordenVentaService
+        .eliminarDetalle(
+          this.selectedDetalleOrdenVenta.id,
+          this.selectedEmpresa
+        )
+        .subscribe({
+          next: () => {
+            this.cargarOrdenVenta();
+            this.noEliminar();
+          },
+        });
+    }
+    if (this.elimandoImpuesto) {
+      this._ordenVentaService
+        .eliminarImpuesto(this.selectedImpuesto.id, this.selectedEmpresa)
+        .subscribe({
+          next: () => {
+            this.cargarOrdenVenta();
+            this.noEliminar();
+          },
+        });
+    }
   }
 
   filtrarProducto(event: Event) {
@@ -414,7 +557,7 @@ export class VentasComponent {
         descripcionTipoImpuesto: '',
         descripcionTipoFactor: '',
         descripcionCategoriaImpuesto: '',
-        descripcionClasificacionImpuesto: ''
+        descripcionClasificacionImpuesto: '',
       });
     }
     this.impuestosOpen = true;
@@ -431,38 +574,42 @@ export class VentasComponent {
     ) {
       this.mensajeAlerta = 'Captura los campos obligatorios';
       return;
-    }else{
+    } else {
       this.mensajeAlerta = '';
     }
 
     let existeImpuesto =
       this.selectedDetalleOrdenVenta.impuestosDetalleOrdenVenta.filter(
-        (z) =>
-          z.idTipoImpuesto == impuesto.idTipoImpuesto
+        (z) => z.idTipoImpuesto == impuesto.idTipoImpuesto
       );
     if (existeImpuesto.length >= 2) {
       this.mensajeAlerta = 'El impuesto ya fue seleccionado';
       impuesto.idTipoImpuesto = 0;
       impuesto.descripcionTipoImpuesto = '';
       return;
-    }else{
+    } else {
       this.mensajeAlerta = '';
       this.mostrarListaImpuestos = false;
       this.mostrarListaFactores = false;
       this.mostrarListaCategoria = false;
     }
 
-
-
-    if(impuesto.id == 0){
-      //crear impuesto
+    if (impuesto.id == 0) {
       this._ordenVentaService
-      .obtenerOrdenVenta(this.ordenVenta.id, this.selectedEmpresa)
-      .subscribe((datos) => {
-        this.ordenVenta = datos;
-      });
-    }else{
-      //editar impuesto
+        .crearImpuesto(impuesto, this.selectedEmpresa)
+        .subscribe({
+          next: () => {
+            this.cargarOrdenVenta();
+          },
+        });
+    } else {
+      this._ordenVentaService
+        .editarImpuesto(impuesto, this.selectedEmpresa)
+        .subscribe({
+          next: () => {
+            this.cargarOrdenVenta();
+          },
+        });
     }
   }
 
@@ -471,18 +618,68 @@ export class VentasComponent {
    * @param impuesto El impuesto a eliminar.
    */
   eliminarImpuesto(impuesto: ImpuestoDetalleOrdenVentaDTO) {
-    let coincidencia =
-      this.selectedDetalleOrdenVenta.impuestosDetalleOrdenVenta.findIndex(
-        (z) =>
-          z.idCategoriaImpuesto == impuesto.idCategoriaImpuesto &&
-          z.idTipoImpuesto == impuesto.idTipoImpuesto &&
-          z.idTipoFactor == impuesto.idTipoFactor
-      );
+    this.mensajeAlerta = 'Seguro de eliminar el impuesto?';
+    this.esEliminar = true;
+    this.elimandoDatalle = false;
+    this.elimandoImpuesto = true;
+  }
 
-    this.selectedDetalleOrdenVenta.impuestosDetalleOrdenVenta.splice(
-      coincidencia,
-      1
-    );
+  /**
+   * Crea una orden de venta.
+   */
+  crearOrdenVenta() {
+    //Revisa si crear esta permitido
+    if (this.permiteCrear) {
+      // Establece la fecha de registro actual
+      this.ordenVenta = {
+        id: 0,
+        numeroOrdenVenta: '',
+        autorizo: '',
+        idCliente: 0,
+        fechaRegistro: new Date(),
+        estatus: 0,
+        importeTotal: 0,
+        subtotal: 0,
+        estatusSaldado: 0,
+        totalSaldado: 0,
+        descuento: 0,
+        observaciones: '',
+        detalleOrdenVenta: [],
+        elaboro: '',
+        razonSocialCliente: '',
+      };
+
+      // Llama al servicio de ordenes de venta para crear una orden
+      this._ordenVentaService
+        .crear(this.selectedEmpresa, this.ordenVenta)
+        .subscribe({
+          /**
+           * Se llama cuando se crea correctamente la orden de venta.
+           * @param resp La respuesta del servidor.
+           */
+          next: (resp) => {
+            // Carga la lista de ordenes de venta
+            this.cargarOrdenesVenta();
+            this.bloquearBotonCrear();
+          },
+          /**
+           * Se llama cuando se produce un error al crear la orden de venta.
+           * @param error El error producido.
+           */
+          error: () => {
+            // Mensaje de error
+          },
+        });
+    } else {
+      console.log('No se permiten crear ordenes de venta seguidas.');
+    }
+  }
+
+  bloquearBotonCrear() {
+    this.permiteCrear = false;
+    setTimeout(() => {
+      this.permiteCrear = true;
+    }, 1000);
   }
 
   guardarOrdenVenta() {
@@ -517,6 +714,7 @@ export class VentasComponent {
       this.mostrarListaImpuestos = false;
       this.mostrarListaFactores = false;
       this.mostrarListaCategoria = false;
+      this.listaClientes = false;
     }
     event.stopPropagation();
   }

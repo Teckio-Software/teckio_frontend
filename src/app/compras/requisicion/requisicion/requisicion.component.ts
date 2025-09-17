@@ -225,6 +225,7 @@ export class RequisicionComponent implements OnInit {
       .eliminar(this.selectedEmpresa, id)
       .subscribe((datos) => {
         if (datos.estatus) {
+          this.veiewInsumos = false;
           this.alerta(AlertaTipo.delete, 'Requisición eliminada');
           this.cargarRegistros();
         } else {

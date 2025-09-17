@@ -3,7 +3,7 @@
 
 <div class="flex ">
   <button (click)="openDialogWithoutRef()"
-    class="bg-[#51aec7] hover:bg-hoverButton   titular items-center bg-custom-bg flex  font-bold tracking-wider  m-0 text-center">
+    class="bg-[#51aec7] hover:bg-hoverButton   titular items-center bg-custom-bg flex  font-bold tracking-wider  m-0 text-center rounded-lg mb-2">
     <p class=" text-[#f2f2f2] titular bg-custom-bg w-52  font-bold tracking-wider  m-0 text-center">
       Nuevo Banco</p>
     <img src="assets/add.svg" alt="">
@@ -105,14 +105,14 @@
   </div>
 </div> -->
 
-<div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto;" class="overflow-y-auto max-h-[500px]">
-  <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
-    <thead>
+<div class="overflow-y-auto overflow-x-auto w-full rounded-lg shadow-md whitespace-nowrap mx-auto" >
+  <table class="text-sm w-full mb-0">
+    <thead class="bg-primario text-white">
       <tr>
-        <th class="cabecera1" scope="col">Clave</th>
-        <th class="cabecera1" scope="col">Nombre</th>
-        <th class="cabecera1" scope="col">Razon Social</th>
-        <th class="cabecera1" scope="col" style="text-align: center;">Acciones</th>
+        <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Clave</th>
+        <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Nombre</th>
+        <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Razon Social</th>
+        <th class="px-1 py-[2px] xs:w-[75px]" scope="col" style="text-align: center;">Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -220,7 +220,7 @@
             </td>
           </tr>
           </ng-container>
-      <tr *ngFor="let b of banco">
+      <tr *ngFor="let b of banco" class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]">
         <td class="" scope="col">{{ b.clave }}</td>
         <td class="" scope="col">{{ b.nombre }}</td>
         <td class="" scope="col">{{ b.razonSocial }}</td>

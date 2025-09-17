@@ -2932,7 +2932,7 @@
   </div>
 </div>
 
-<div [style.display]="displayCarga" class="contenedor-ventana">
+<div [style.display]="displayCarga" class="contenedor-ventana z-50">
   <div class="ventana-bloque"></div>
   <div class="contenedor-spinner">
     <div
@@ -2958,7 +2958,7 @@
 <ng-template #dialogPresupuestoExcel>
   <section>
     <div
-      class="fixed inset-0 z-10 w-screen overflow-y-auto"
+      class="fixed inset-0 w-screen overflow-y-auto"
       (click)="limpiarCargarExcel()"
     >
       <div
@@ -3045,7 +3045,7 @@
           <div class="bg-gray-50 px-4 py-3 flex justify-end gap-2">
             <button
               class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex items-center shadow-sm ring-1 ring-inset transition-all relative"
-              (click)="handleClick($event)"
+              (click)="handleClick($event)" [disabled]="displayCarga == 'flex'"
             >
               <span
                 class="mr-2 relative"
@@ -3070,13 +3070,13 @@
             </button>
             <button
               class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
-              (click)="cargarPresupuestoOpus()"
+              (click)="cargarPresupuestoOpus()" [disabled]="displayCarga == 'flex'"
             >
               Importar Opus
             </button>
             <button
               class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
-              (click)="limpiarCargarExcel()"
+              (click)="limpiarCargarExcel()" [disabled]="displayCarga == 'flex'"
             >
               Cancelar
             </button>
