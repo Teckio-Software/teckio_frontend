@@ -141,11 +141,21 @@ export class AlmacenesSalidasComponent {
       });
   }
 
+/**
+ * Abre el modal de transpaso y resetea los valores de los campos
+ * del registro de transpaso, así como la lista de insumos existentes
+ * y la cantidad disponible para cada insumo.
+ */
   abrirModalTranspaso() {
     this.insumosExistentes = this.insumosExistentesReset;
     this.isOpenModalTranspaso = true;
   }
 
+/**
+ * Cierra el modal de transpaso y resetea los valores de los campos
+ * del registro de transpaso, así como la lista de insumos existentes
+ * y la cantidad disponible para cada insumo.
+ */
   cerrarModalTranspaso() {
     this.transpaso.idAlmacenDestino = 0;
     this.selectedInsumo = {
@@ -170,6 +180,11 @@ export class AlmacenesSalidasComponent {
     inputElement.select();
   }
 
+/**
+ * Comprueba si la cantidad de un insumo en el registro de transpaso no supera la cantidad disponible en el almacén
+ * @param index El índice del insumo en el registro de transpaso
+ * @param insumo El insumo que se va a comprobar
+ */
   comprobarExistencia(index: number, insumo: transpasoAlmacenInsumoDTO) {
     var cantidadDisponible = this.insumosExistentesReset.find((i) => i.idInsumo == insumo.idInsumo)?.cantidadInsumos ?? 0;
     if (this.transpaso.insumos[index].cantidadExistencia > cantidadDisponible) {
@@ -177,6 +192,13 @@ export class AlmacenesSalidasComponent {
     }
   }
 
+/**
+ * Filtra la lista de almacenes
+ * @param event El evento que se lanzo
+ * @returns void
+ * @description Filtra la lista de almacenes segun el texto ingresado en el input
+ * El texto se busca en la propiedad almacenNombre de cada objeto almacen
+ */
   filtrarAlmacen(event: Event) {
     this.listaAlmacenes = this.listaAlmacenesReset;
     const filterValue = (
@@ -203,6 +225,10 @@ export class AlmacenesSalidasComponent {
     this.mensajeError.estatus = false;
   }
 
+  /**
+   * Selecciona un insumo para la orden de venta
+   * @param insumo El insumo seleccionado
+   */
   seleccionarInsumo(insumo: existenciasInsumosDTO) {    
     if(this.transpaso.insumos.filter(i=>i.idInsumo==insumo.idInsumo).length>0){
       this.SlistaInsumos = false;
@@ -216,7 +242,13 @@ export class AlmacenesSalidasComponent {
     this.SlistaInsumos = false;
   }
 
+  /**
+   * Transpasa los insumos seleccionados del almacen seleccionado a otro almacen
+   */
   transpasar() {
+    /**
+     * Valida que se haya seleccionado un almacen de destino
+     */
     if(this.transpaso.idAlmacenDestino==0){
       this.mensajeError = {
         estatus: true,
@@ -224,6 +256,9 @@ export class AlmacenesSalidasComponent {
       }
       return;
     }
+    /**
+     * Valida que se haya seleccionado al menos un insumo
+     */
     if(this.transpaso.insumos.length<=0){
       this.mensajeError = {
         estatus: true,
@@ -231,6 +266,9 @@ export class AlmacenesSalidasComponent {
       }
       return;
     }
+    /**
+     * Realiza el transpaso
+     */
     this.transpaso.idAlmacenOrigen = this.idAlmacen
     this._almacenSalida.transpasar(this.idEmpresaInput,this.transpaso).subscribe({next:resp=>{
       console.log(resp);
@@ -245,7 +283,6 @@ export class AlmacenesSalidasComponent {
       }
     }, error:()=>{
       this.alerta(AlertaTipo.error, 'Error al realizar la transpaso');
-      //Mensaje de error
     }})
   }
 
