@@ -36,7 +36,7 @@ export class ImprimirModalComponent {
   @Input() preciosUnitarios: precioUnitarioDTO[] = [];
   @Input() marcados: precioUnitarioDTO[] = [];
   @Input() proyecto!: proyectoDTO;
-  @Input() total!: number;
+  @Input() total: number = 0;
   @Input() totalSinIva!: string;
   @Input() totalConIva!: string;
   @Input() totalSinFormato!: number;
@@ -59,6 +59,7 @@ export class ImprimirModalComponent {
 
   isParamGuardado: boolean = false;
   isParamDeleted: boolean = false;
+
   reportePresupuesto: boolean = false;
   isImporteconLetra: boolean = true;
   isImprimirImpuestos: boolean = true;
@@ -109,11 +110,9 @@ export class ImprimirModalComponent {
    */
   constructor(
     private parametrosImpresion: ParametrosImprimirPuService,
-    private seguridadService: SeguridadService
+    private seguridadService: SeguridadService,
   ) {
-    const idEmpresa: number = Number(
-      seguridadService.obtenIdEmpresaLocalStorage()
-    );
+    const idEmpresa: number = Number(seguridadService.obtenIdEmpresaLocalStorage());
 
     this.selectedEmpresa = idEmpresa;
   }
@@ -130,8 +129,9 @@ export class ImprimirModalComponent {
    */
   seleccionarParams(event: Event): void {
     const id: number = Number((event.target as HTMLSelectElement).value);
-    const seleccionado: ParametrosImpresionPu | undefined =
-      this.paramsImpresionLista.find((p) => p.id === id);
+    const seleccionado: ParametrosImpresionPu | undefined = this.paramsImpresionLista.find(
+      (p) => p.id === id,
+    );
 
     if (seleccionado) {
       this.paramsImpresion = { ...seleccionado };
@@ -145,32 +145,30 @@ export class ImprimirModalComponent {
    * Si ocurre un error, se muestra un mensaje de error por 3 segundos.
    */
   crearConfiguracionParams(): void {
-    this.parametrosImpresion
-      .crear(this.selectedEmpresa, this.paramsImpresion)
-      .subscribe({
-        next: (datos: RespuestaDTO) => {
-          if (datos.estatus) {
-            this.isParamGuardado = true;
-            this.obtenerParametrosImpresion();
-          } else {
-            this.isParamGuardado = false;
-            this.tipoError = datos.descripcion || 'Ocurrió un error';
-          }
-          setTimeout(() => {
-            this.isParamGuardado = false;
-            this.tipoError = '';
-          }, 3000);
-        },
-        error: (err) => {
+    this.parametrosImpresion.crear(this.selectedEmpresa, this.paramsImpresion).subscribe({
+      next: (datos: RespuestaDTO) => {
+        if (datos.estatus) {
+          this.isParamGuardado = true;
+          this.obtenerParametrosImpresion();
+        } else {
           this.isParamGuardado = false;
-          this.tipoError = 'Error al conectar con el servidor';
-          console.error(err);
+          this.tipoError = datos.descripcion || 'Ocurrió un error';
+        }
+        setTimeout(() => {
+          this.isParamGuardado = false;
+          this.tipoError = '';
+        }, 3000);
+      },
+      error: (err) => {
+        this.isParamGuardado = false;
+        this.tipoError = 'Error al conectar con el servidor';
+        console.error(err);
 
-          setTimeout(() => {
-            this.tipoError = '';
-          }, 3000);
-        },
-      });
+        setTimeout(() => {
+          this.tipoError = '';
+        }, 3000);
+      },
+    });
   }
 
   /**
@@ -191,29 +189,27 @@ export class ImprimirModalComponent {
    * @param id El ID del registro a editar.
    */
   editarParams(id: number): void {
-    this.parametrosImpresion
-      .editar(this.selectedEmpresa, this.paramsImpresion)
-      .subscribe({
-        next: (datos: RespuestaDTO) => {
-          this.paramsImpresion.id = id;
-          if (datos.estatus) {
-            this.isParamGuardado = true;
-            this.obtenerParametrosImpresion();
-          } else {
-            this.isParamGuardado = false;
-            this.tipoError = datos.descripcion || 'Ocurrió un error';
-          }
-          setTimeout(() => {
-            this.isParamGuardado = false;
-            this.tipoError = '';
-          }, 3000);
-        },
-        error: (err) => {
+    this.parametrosImpresion.editar(this.selectedEmpresa, this.paramsImpresion).subscribe({
+      next: (datos: RespuestaDTO) => {
+        this.paramsImpresion.id = id;
+        if (datos.estatus) {
+          this.isParamGuardado = true;
+          this.obtenerParametrosImpresion();
+        } else {
           this.isParamGuardado = false;
-          this.tipoError = 'Error al conectar con el servidor';
-          console.error(err);
-        },
-      });
+          this.tipoError = datos.descripcion || 'Ocurrió un error';
+        }
+        setTimeout(() => {
+          this.isParamGuardado = false;
+          this.tipoError = '';
+        }, 3000);
+      },
+      error: (err) => {
+        this.isParamGuardado = false;
+        this.tipoError = 'Error al conectar con el servidor';
+        console.error(err);
+      },
+    });
   }
 
   /**
@@ -381,6 +377,7 @@ export class ImprimirModalComponent {
       totalConIVA: this.totalConIva,
       totalSinFormato: this.totalSinFormato,
       totalSinIva: this.totalSinIva,
+      total: this.total,
       proyecto: this.proyecto,
       totalIva: this.totalIva,
       imprimirImpuesto: this.isImprimirImpuestos,
@@ -404,6 +401,8 @@ export class ImprimirModalComponent {
       totalConIVA: this.totalConIva,
       totalSinFormato: this.totalSinFormato,
       totalSinIva: this.totalSinIva,
+      total: this.total,
+
       proyecto: this.proyecto,
       totalIva: this.totalIva,
       imprimirImpuesto: this.isImprimirImpuestos,
@@ -436,9 +435,7 @@ export class ImprimirModalComponent {
         imprimirReporte(reporteBase);
         break;
       default:
-        console.log(
-          `No hay lógica implementada para el tipo de reporte: ${this.tipoReporte}`
-        );
+        console.log(`No hay lógica implementada para el tipo de reporte: ${this.tipoReporte}`);
     }
   }
 }

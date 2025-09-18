@@ -15,6 +15,7 @@ export interface Reporte {
   totalConIVA: string;
   totalSinFormato: number;
   totalSinIva: string;
+  total: number;
   proyecto: proyectoDTO;
   totalIva: string;
   imprimirImpuesto: boolean;
