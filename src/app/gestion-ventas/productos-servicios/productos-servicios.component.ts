@@ -23,6 +23,7 @@ import { AlertaTipo } from 'src/app/utilidades/alert/alert.component';
 import { InsumoService } from 'src/app/catalogos/insumo/insumo.service';
 import { InsumoDTO } from 'src/app/catalogos/insumo/tsInsumo';
 import { InsumoXProductoYServicioService } from 'src/app/facturacion/insumoxproductoyservicio/insumoxproductoyservicio.service';
+import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 
 @Component({
   selector: 'app-productos-servicios',
@@ -104,6 +105,8 @@ export class ProductosServiciosComponent {
   alertaSuccess: boolean = false;
 
   isLoading: boolean = true;
+
+  mensajeError: RespuestaDTO = { estatus: false, descripcion: '' };
 
   ngOnInit() {
     this.cargarProductosYServicios();
@@ -310,6 +313,7 @@ export class ProductosServiciosComponent {
       idInsumo: 0,
       cantidad: 0,
     };
+    this.limpiarError();
   }
 
   detenerCierre(event: MouseEvent) {
@@ -327,7 +331,74 @@ export class ProductosServiciosComponent {
     event.stopPropagation();
   }
 
+  /**
+   * Función que se encarga de crear un nuevo producto/servicio, no sin antes validar los campos obligatorios
+   */
   crear() {
+    //Validaciones
+    if(this.productoServicio.codigo.trim() == ''){
+      this.mensajeError = {
+        estatus: true,
+        descripcion: 'El campo \'Código\' es requerido',
+      }
+      return;
+    }
+    if(this.productoServicio.codigo.length > 50){
+      this.mensajeError = {
+        estatus: true,
+        descripcion: 'El campo \'Código\' excede su longitud máxima (50 caracteres)',
+      }
+      return;
+    }
+    if(this.productoServicio.descripcion.trim() == ''){
+      this.mensajeError = {
+        estatus: true,
+        descripcion: 'El campo \'Descripción\' es requerido',
+      }
+      return;
+    }
+    if(this.productoServicio.descripcion.length > 200){
+      this.mensajeError = {
+        estatus: true,
+        descripcion: 'El campo \'Descripción\' excede su longitud máxima (200 caracteres)',
+      }
+      return;
+    }
+    if(this.productoServicio.idUnidad <= 0){
+      this.mensajeError = {
+        estatus: true,
+        descripcion: 'El campo \'Unidad\' es requerido',
+      }
+      return;
+    }
+    if(this.productoServicio.idProductoYservicioSat <= 0){
+      this.mensajeError = {
+        estatus: true,
+        descripcion: 'El campo \'Producto/Servicio SAT\' es requerido',
+      }
+      return;
+    }
+    if(this.productoServicio.idUnidadSat <= 0){
+      this.mensajeError = {
+        estatus: true,
+        descripcion: 'El campo \'Unidad SAT\' es requerido',
+      }
+      return;
+    }
+    if(this.productoServicio.idCategoriaProductoYServicio <= 0){
+      this.mensajeError = {
+        estatus: true,
+        descripcion: 'El campo \'Categoría\' es requerido',
+      }
+      return;
+    }
+    if(this.productoServicio.idSubategoriaProductoYServicio <= 0){
+      this.mensajeError = {
+        estatus: true,
+        descripcion: 'El campo \'Subcategoría\' es requerido',
+      }
+      return;
+    }
     this.productoYServicioService
       .crear(this.selectedEmpresa, this.productoServicio)
       .subscribe((resp) => {
@@ -340,6 +411,13 @@ export class ProductosServiciosComponent {
           console.error(resp.descripcion);
         }
       });
+  }
+
+  limpiarError(){
+    this.mensajeError = {
+            estatus: false,
+            descripcion: '',
+          }
   }
 
   crearInsumoXProductoyServicio(

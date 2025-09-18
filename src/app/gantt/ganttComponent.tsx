@@ -591,7 +591,7 @@ const columns: Column[] = [
   {
     component: CodigoColumn,
     width: 150,
-    title: "codigo",
+    title: "Código",
   },
   {
     component: CantidadColumn,

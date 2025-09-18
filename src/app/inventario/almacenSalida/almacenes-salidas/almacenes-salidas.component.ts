@@ -249,26 +249,44 @@ export class AlmacenesSalidasComponent {
     }})
   }
 
+  /**
+   * Carga la lista de insumos existentes en el almacen seleccionado
+   */
   cargarInsumos(){
+    // Obtiene la lista de insumos existentes en el almacen seleccionado
+    // y los filtra para que solo se muestren los que tengan cantidad mayor a cero
     this._existenciaService.obtenInsumosExistentes(this.idEmpresaInput, this.idAlmacen).subscribe((datos)=>{
+      // Asigna la lista de insumos existentes a la variable correspondiente
       this.insumosExistentes = datos;
+      // Filtra la lista de insumos existentes para que solo se muestren los que tengan cantidad mayor a cero
       this.insumosExistentes = this.insumosExistentes.filter(i=>i.cantidadInsumos>0);
+      // Asigna la lista de insumos existentes sin filtrar a la variable correspondiente
       this.insumosExistentesReset = this.insumosExistentes;
     });
   }
 
+  /**
+   * Agrega una fila al registro de transpaso
+   */
   agregarFila(){
+    // Verifica si el insumo seleccionado tiene un id mayor a cero
     if(this.selectedInsumo.idInsumo>0){
+      // Verifica si la cantidad existente del insumo seleccionado es mayor a cero
       if(this.selectedInsumo.cantidadExistencia<=0){
         return;
       }
+      // Verifica si la cantidad existente del insumo seleccionado es mayor a la cantidad disponible
       if(this.selectedInsumo.cantidadExistencia>this.cantidadDisponible){
         this.selectedInsumo.cantidadExistencia = this.cantidadDisponible;
       }
+      // Oculta el mensaje de error
       this.mensajeError.estatus = false;
+      // Agrega el insumo seleccionado al registro de transpaso
       this.transpaso.insumos.push(this.selectedInsumo);
-      this.insumosExistentes = this.insumosExistentes.filter(i=>this.transpaso.insumos.filter(insumo=>insumo.idInsumo==i.idInsumo).length==0);
+      // Filtra la lista de insumos existentes para que solo se muestren los que no estan en el registro de transpaso
+      this.insumosExistentes = this.insumosExistentesReset.filter(i=>this.transpaso.insumos.filter(insumo=>insumo.idInsumo==i.idInsumo).length==0);
 
+      // Resetea el insumo seleccionado
       this.selectedInsumo = {
         idInsumo:0,
         cantidadExistencia:0,
@@ -277,8 +295,15 @@ export class AlmacenesSalidasComponent {
     }
   }
 
+  /**
+   * Elimina un insumo del registro de transpaso
+   * @param insumo Insumo a eliminar
+   */
   eliminarInsumo(insumo:transpasoAlmacenInsumoDTO){
+    // Elimina el insumo del registro de transpaso
     this.transpaso.insumos = this.transpaso.insumos.filter(i=>i.idInsumo!=insumo.idInsumo);
+    // Filtra la lista de insumos existentes para que solo se muestren los que no estan en el registro de transpaso
+    this.insumosExistentes = this.insumosExistentesReset.filter(i=>this.transpaso.insumos.filter(insumo=>insumo.idInsumo==i.idInsumo).length==0);
   }
 
   detenerCierre(event: MouseEvent) {

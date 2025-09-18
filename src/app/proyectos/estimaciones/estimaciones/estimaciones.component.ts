@@ -226,6 +226,14 @@ export class EstimacionesComponent implements OnInit {
 
   crearPeriodo() {
     this.nuevoPeriodo.idProyecto = this.selectedProyecto;
+    if(this.nuevoPeriodo.fechaTermino < this.nuevoPeriodo.fechaInicio) {
+      console.log('es menor');
+
+      this.alertMessage = 'La fecha de inicio debe ser menor a la fecha de termino.';
+      this.alertType = 'error';
+      this.autoCloseAlert();
+      return
+    }
     this.isLoading = true;
     this.isButtonDisabled = true;
     this.estimacionesService
