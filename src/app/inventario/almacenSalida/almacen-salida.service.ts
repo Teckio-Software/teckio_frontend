@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment.development';
 import { Observable } from 'rxjs';
-import { almacenSalidaCreacionDTO, almacenSalidaDTO, insumosExistenciaDTO } from './tsAlmacenSalida';
+import { almacenSalidaCreacionDTO, almacenSalidaDTO, insumosExistenciaDTO, transpasoAlmacenDTO } from './tsAlmacenSalida';
 import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 
 @Injectable({
@@ -70,5 +70,9 @@ export class AlmacenSalidaService {
 
     public borrar(id: number){
         return this.HttpClient.delete(`${this.apiUrl}/${id}`);
+    }
+
+    public transpasar(idEmp: number, transpaso: transpasoAlmacenDTO){
+      return this.HttpClient.post<RespuestaDTO>(`${this.apiUrl}/${idEmp}/Transpaso`,transpaso);
     }
 }
