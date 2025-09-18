@@ -40,9 +40,9 @@
                   type="text"
                   id="codigoProyecto"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  (change)="errCo = false; errGlobal = false"
+                  (change)="errCo.estatus= false; errGlobal = false"
                 />
-              <p class="text-red-600" *ngIf="errCo">*El campo código es obligatorio</p>
+              <p class="text-red-600" *ngIf="errCo.estatus">*{{errCo.descripcion}}</p>
               </div>
 
               <div class="mb-4">
@@ -56,9 +56,9 @@
                   type="text"
                   id="nombre"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  (change)="errNo = false; errGlobal = false"
+                  (change)="errNo.estatus = false; errGlobal = false"
                 />
-                <p class="text-red-600" *ngIf="errNo">*El campo nombre es obligatorio</p>
+                <p class="text-red-600" *ngIf="errNo.estatus">*{{errNo.descripcion}}</p>
               </div>
 
               <div class="mb-4">
@@ -105,9 +105,9 @@
                   type="text"
                   id="domicilio"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  (change)="errDo = false; errGlobal = false"
+                  (change)="errDo.estatus = false; errGlobal = false"
                 />
-                <p class="text-red-600" *ngIf="errDo">*El campo domicilio es obligatorio</p>
+                <p class="text-red-600" *ngIf="errDo.estatus">*{{errDo.descripcion}}</p>
               </div>
 
               <div class="mb-4">

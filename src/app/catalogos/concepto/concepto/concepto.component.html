@@ -235,13 +235,22 @@
               (keydown.enter)="editar(concepto)"
             />
           </td>
-          <td class="px-1 py-[2px]">
+          <td class="px-1 py-[2px]" *ngIf="selectedConcepto == concepto.id">
             <input
               type="text"
               class="bg-transparent w-full text-end"
               id="input-table"
               [(ngModel)]="concepto.costoUnitario"
               (keydown.enter)="editar(concepto)"
+            />
+          </td>
+          <td class="px-1 py-[2px]" *ngIf="selectedConcepto != concepto.id" >
+            <input
+              type="text"
+              class="bg-transparent w-full text-end"
+              id="input-table"
+              [(ngModel)]="concepto.costoUnitarioConFormato"
+              (click)="selectConcepto(concepto.id)"
             />
           </td>
           <td class="px-1 py-[2px]">

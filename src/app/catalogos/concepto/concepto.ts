@@ -7,6 +7,8 @@ export interface conceptoDTO{
   idEspecialidad: number;
   descripcionEspecialidad:string;
   costoUnitario: number;
+  costoUnitarioConFormato: string;
+
 }
 
 

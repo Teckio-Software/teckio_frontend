@@ -7,6 +7,7 @@ import { proyectoDTO } from '../tsProyecto';
 import { ProyectoService } from '../proyecto.service';
 import Swal from 'sweetalert2';
 import { ProyectoUsuarioService } from 'src/app/seguridad/usuario-multi-empresa-filtrado/proyecto-usuario/proyecto-usuario.service';
+import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 
 @Component({
   selector: 'app-dialog-new-proyecto',
@@ -52,10 +53,10 @@ export class DialogNewProyectoComponent {
     estatus: false,
   };
 
-  errCo: boolean = false;
-  errNo: boolean = false;
+  errCo: RespuestaDTO = { estatus: false, descripcion: '' };
+  errNo: RespuestaDTO = { estatus: false, descripcion: '' };
   errCP: boolean = false;
-  errDo: boolean = false;
+  errDo: RespuestaDTO = { estatus: false, descripcion: '' };
   errIVA: boolean = false;
   errFI: boolean = false;
   errFT: boolean = false;
@@ -160,11 +161,13 @@ export class DialogNewProyectoComponent {
     }
 
     if(this.nuevoProyecto.codigoProyecto == null || this.nuevoProyecto.codigoProyecto.trim() == ''){
-      this.errCo = true;
+      this.errCo.estatus = true;
+      this.errCo.descripcion = 'El campo código es obligatorio';
       c = false;
     }
     if(this.nuevoProyecto.nombre == null || this.nuevoProyecto.nombre.trim() == ''){
-      this.errNo = true;
+      this.errNo.estatus = true;
+      this.errNo.descripcion = 'El campo nombre es obligatorio';
       c = false;
     }
     if(this.nuevoProyecto.codigoPostal == null || this.nuevoProyecto.codigoPostal==0){
@@ -172,7 +175,8 @@ export class DialogNewProyectoComponent {
       c = false;
     }
     if(this.nuevoProyecto.domicilio == null || this.nuevoProyecto.domicilio.trim() == ''){
-      this.errDo = true;
+      this.errDo.estatus = true;
+      this.errDo.descripcion = 'El campo domicilio es obligatorio';
       c = false;
     }
     if(this.nuevoProyecto.porcentajeIva == null || this.nuevoProyecto.porcentajeIva==0){
@@ -186,6 +190,21 @@ export class DialogNewProyectoComponent {
     if(this.nuevoProyecto.fechaFinal == null || this.nuevoProyecto.fechaFinal.toString() == ''){
       this.errFT = true;
       c = false;
+    }
+    if(this.nuevoProyecto.codigoProyecto.length>30){
+      this.errCo.estatus = true;
+      this.errCo.descripcion = 'La longitud del código no puede ser mayor a 30 caracteres';
+      c= false;
+    }
+    if(this.nuevoProyecto.nombre.length>100){
+      this.errNo.estatus = true;
+      this.errNo.descripcion = 'La longitud del nombre no puede ser mayor a 100 caracteres';
+      c= false;
+    }
+    if(this.nuevoProyecto.domicilio.length>100){
+      this.errDo.estatus = true;
+      this.errDo.descripcion = 'La longitud del domicilio no puede ser mayor a 100 caracteres';
+      c= false;
     }
 
     if(!c){

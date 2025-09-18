@@ -1,8 +1,18 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import {
   almacenSalidaCreacionDTO,
   almacenSalidaDTO,
   insumosExistenciaDTO,
+  transpasoAlmacenDTO,
+  transpasoAlmacenInsumoDTO,
 } from '../tsAlmacenSalida';
 import { AlmacenSalidaService } from '../almacen-salida.service';
 import { formatDate } from '@angular/common';
@@ -12,6 +22,12 @@ import Swal from 'sweetalert2';
 import { almacenSalidaInsumosCreacionDTO } from '../../almacenSalidaInsumos/tsAlmacenSalidaInsumos';
 import { AlmacenSalidaInsumosService } from '../../almacenSalidaInsumos/almacen-salida-insumos.service';
 import { faL } from '@fortawesome/free-solid-svg-icons';
+import { InsumoDTO } from 'src/app/catalogos/insumo/tsInsumo';
+import { ExistenciasService } from '../../existencia/existencias.service';
+import { existenciasInsumosDTO } from '../../existencia/tsExistencia';
+import { log } from 'console';
+import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
+import { AlertaTipo } from 'src/app/utilidades/alert/alert.component';
 
 @Component({
   selector: 'app-almacenes-salidas',
@@ -26,6 +42,13 @@ export class AlmacenesSalidasComponent {
   idEmpresaInput: number = 0;
 
   @Output() valueChangeInsumosSA = new EventEmitter();
+
+  @ViewChildren('lista') listas!: QueryList<ElementRef<HTMLElement>>;
+
+  alertaSuccess: boolean = false;
+      alertaMessage: string = '';
+      alertaTipo: AlertaTipo = AlertaTipo.none;
+      AlertaTipo = AlertaTipo;
 
   salidasalmacen!: almacenSalidaDTO[];
   salidasalmacenConPrestamos!: almacenSalidaDTO[];
@@ -69,10 +92,43 @@ export class AlmacenesSalidasComponent {
 
   isLoading: boolean = true;
 
+  isOpenModalTranspaso: boolean = false;
+
+  listaAlmacenes: almacenDTO[] = [];
+  listaAlmacenesReset: almacenDTO[] = [];
+
+  nombreAlmacen: string = '';
+  SlistaAlmacenes: boolean = false;
+  SlistaInsumos: boolean = false;
+  filtroEstatus: string = '';
+
+  transpaso: transpasoAlmacenDTO = {
+    idAlmacenOrigen: 0,
+    idAlmacenDestino: 0,
+    insumos: [],
+  };
+
+  selectedInsumo: transpasoAlmacenInsumoDTO = {
+    idInsumo: 0,
+    cantidadExistencia: 0,
+    nombreInsumo: '',
+  }
+
+    insumosExistentes !: existenciasInsumosDTO[];
+    insumosExistentesReset !: existenciasInsumosDTO[];
+
+    cantidadDisponible: number = 0;
+
+    mensajeError: RespuestaDTO = {
+      estatus: false,
+      descripcion: '',
+    };
+
   constructor(
     public _almacenSalida: AlmacenSalidaService,
     private almacenService: AlmacenService,
-    private _almacenSalidaInsumo: AlmacenSalidaInsumosService
+    private _almacenSalidaInsumo: AlmacenSalidaInsumosService,
+    private _existenciaService: ExistenciasService
   ) {}
 
   ngOnInit() {
@@ -83,6 +139,212 @@ export class AlmacenesSalidasComponent {
       .subscribe((datos) => {
         this.almacenes = datos;
       });
+  }
+
+  abrirModalTranspaso() {
+    this.insumosExistentes = this.insumosExistentesReset;
+    this.isOpenModalTranspaso = true;
+  }
+
+  cerrarModalTranspaso() {
+    this.transpaso.idAlmacenDestino = 0;
+    this.selectedInsumo = {
+      idInsumo: 0,
+      nombreInsumo: '',
+      cantidadExistencia: 0
+    }
+    this.nombreAlmacen = '';
+    this.isOpenModalTranspaso = false;
+    this.SlistaAlmacenes = false;
+    this.SlistaInsumos = false;
+    this.cantidadDisponible = 0;
+    this.transpaso = {
+      idAlmacenOrigen: 0,
+      idAlmacenDestino: 0,
+      insumos: [],
+    }
+  }
+
+  selectAll(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    inputElement.select();
+  }
+
+  comprobarExistencia(index: number, insumo: transpasoAlmacenInsumoDTO) {
+    var cantidadDisponible = this.insumosExistentesReset.find((i) => i.idInsumo == insumo.idInsumo)?.cantidadInsumos ?? 0;
+    if (this.transpaso.insumos[index].cantidadExistencia > cantidadDisponible) {
+      this.transpaso.insumos[index].cantidadExistencia = cantidadDisponible;
+    }
+  }
+
+  filtrarAlmacen(event: Event) {
+    this.listaAlmacenes = this.listaAlmacenesReset;
+    const filterValue = (
+      event.target as HTMLInputElement
+    ).value.toLocaleLowerCase();
+    this.listaAlmacenes = this.listaAlmacenes.filter((almacen) =>
+      almacen.almacenNombre.toLocaleLowerCase().includes(filterValue)
+    );
+  }
+
+  /**
+   * Selecciona un almacen para la orden de venta
+   * @param almacen El almacen seleccionado
+   */
+  seleccionarAlmacen(almacen: almacenDTO) {
+    // Asigna el id del almacen seleccionado a la orden de venta
+    //
+    //* Lógica para guardar la información del almacen de destino para el transpaso
+    //
+    this.transpaso.idAlmacenDestino = almacen.id
+    this.nombreAlmacen = almacen.almacenNombre;
+    // Oculta la lista de almacenes
+    this.SlistaAlmacenes = false;
+    this.mensajeError.estatus = false;
+  }
+
+  seleccionarInsumo(insumo: existenciasInsumosDTO) {    
+    if(this.transpaso.insumos.filter(i=>i.idInsumo==insumo.idInsumo).length>0){
+      this.SlistaInsumos = false;
+      return;
+    }
+    this.selectedInsumo.nombreInsumo = insumo.descripcion;
+    this.selectedInsumo.idInsumo = insumo.idInsumo; 
+    this.cantidadDisponible = insumo.cantidadInsumos;
+
+    // Oculta la lista de almacenes
+    this.SlistaInsumos = false;
+  }
+
+  transpasar() {
+    if(this.transpaso.idAlmacenDestino==0){
+      this.mensajeError = {
+        estatus: true,
+        descripcion: 'Seleccione un almacen de destino',
+      }
+      return;
+    }
+    if(this.transpaso.insumos.length<=0){
+      this.mensajeError = {
+        estatus: true,
+        descripcion: 'Seleccione al menos un insumo',
+      }
+      return;
+    }
+    this.transpaso.idAlmacenOrigen = this.idAlmacen
+    this._almacenSalida.transpasar(this.idEmpresaInput,this.transpaso).subscribe({next:resp=>{
+      console.log(resp);
+      if(resp.estatus){
+        this.alerta(AlertaTipo.save, resp.descripcion);
+        this.cerrarModalTranspaso();
+        this.cargarRegistros();
+        this.cargarInsumos();
+        this.cargarInsumosDisponibles();
+      }else{
+        this.alerta(AlertaTipo.error, resp.descripcion);
+      }
+    }, error:()=>{
+      this.alerta(AlertaTipo.error, 'Error al realizar la transpaso');
+      //Mensaje de error
+    }})
+  }
+
+  /**
+   * Carga la lista de insumos existentes en el almacen seleccionado
+   */
+  cargarInsumos(){
+    // Obtiene la lista de insumos existentes en el almacen seleccionado
+    // y los filtra para que solo se muestren los que tengan cantidad mayor a cero
+    this._existenciaService.obtenInsumosExistentes(this.idEmpresaInput, this.idAlmacen).subscribe((datos)=>{
+      // Asigna la lista de insumos existentes a la variable correspondiente
+      this.insumosExistentes = datos;
+      // Filtra la lista de insumos existentes para que solo se muestren los que tengan cantidad mayor a cero
+      this.insumosExistentes = this.insumosExistentes.filter(i=>i.cantidadInsumos>0);
+      // Asigna la lista de insumos existentes sin filtrar a la variable correspondiente
+      this.insumosExistentesReset = this.insumosExistentes;
+    });
+  }
+
+  /**
+   * Agrega una fila al registro de transpaso
+   */
+  agregarFila(){
+    // Verifica si el insumo seleccionado tiene un id mayor a cero
+    if(this.selectedInsumo.idInsumo>0){
+      // Verifica si la cantidad existente del insumo seleccionado es mayor a cero
+      if(this.selectedInsumo.cantidadExistencia<=0){
+        return;
+      }
+      // Verifica si la cantidad existente del insumo seleccionado es mayor a la cantidad disponible
+      if(this.selectedInsumo.cantidadExistencia>this.cantidadDisponible){
+        this.selectedInsumo.cantidadExistencia = this.cantidadDisponible;
+      }
+      // Oculta el mensaje de error
+      this.mensajeError.estatus = false;
+      // Agrega el insumo seleccionado al registro de transpaso
+      this.transpaso.insumos.push(this.selectedInsumo);
+      // Filtra la lista de insumos existentes para que solo se muestren los que no estan en el registro de transpaso
+      this.insumosExistentes = this.insumosExistentesReset.filter(i=>this.transpaso.insumos.filter(insumo=>insumo.idInsumo==i.idInsumo).length==0);
+
+      // Resetea el insumo seleccionado
+      this.selectedInsumo = {
+        idInsumo:0,
+        cantidadExistencia:0,
+        nombreInsumo:''
+      }
+    }
+  }
+
+  /**
+   * Elimina un insumo del registro de transpaso
+   * @param insumo Insumo a eliminar
+   */
+  eliminarInsumo(insumo:transpasoAlmacenInsumoDTO){
+    // Elimina el insumo del registro de transpaso
+    this.transpaso.insumos = this.transpaso.insumos.filter(i=>i.idInsumo!=insumo.idInsumo);
+    // Filtra la lista de insumos existentes para que solo se muestren los que no estan en el registro de transpaso
+    this.insumosExistentes = this.insumosExistentesReset.filter(i=>this.transpaso.insumos.filter(insumo=>insumo.idInsumo==i.idInsumo).length==0);
+  }
+
+  detenerCierre(event: MouseEvent) {
+    const clicDentro = this.listas.some((lista) =>
+      lista.nativeElement.contains(event.target as Node)
+    );
+    if (!clicDentro) {
+      // this.listaProductoYServicio = false;
+      // this.mostrarListaImpuestos = false;
+      // this.mostrarListaFactores = false;
+      // this.mostrarListaCategoria = false;
+      // this.listaClientes = false;
+    }
+    event.stopPropagation();
+  }
+
+  /**
+   * Carga la lista de almacenes sin paginar
+   */
+  cargarAlmacenes() {
+    /**
+     * Servicio que se encarga de obtener todos los almacenes sin paginar
+     */
+    this.almacenService.obtenerTodosSinPaginar(this.idEmpresaInput).subscribe({
+      /**
+       * Callback que se ejecuta cuando se obtiene la lista de almacenes
+       * @param datos lista de almacenes
+       */
+      next: (datos: almacenDTO[]) => {
+        this.listaAlmacenes = datos;
+        this.listaAlmacenes = this.listaAlmacenes.filter(a=>a.id!=this.idAlmacen);
+        this.listaAlmacenesReset = datos;
+      },
+      /**
+       * Callback que se ejecuta cuando hay un error al obtener la lista de almacenes
+       */
+      error: () => {
+        //Imprime mensaje de error.
+      },
+    });
+    this.filtroEstatus = '';
   }
 
   cargarRegistros() {
@@ -117,6 +379,9 @@ export class AlmacenesSalidasComponent {
     this.idAlmacen = idAlmacen;
     this.cargarInsumosDisponibles();
     this.fitrarTipoSA();
+    this.cargarInsumos();
+    this.cargarAlmacenes();
+
   }
 
   cargarInsumosDisponibles() {
@@ -341,4 +606,25 @@ export class AlmacenesSalidasComponent {
       this.salidasalmacen = porAlmacen;
     }
   }
+
+  alerta(tipo: AlertaTipo, mensaje: string = '') {
+      if (tipo === AlertaTipo.none) {
+        this.cerrarAlerta();
+        return;
+      }
+  
+      this.alertaTipo = tipo;
+      this.alertaMessage = mensaje || 'Ocurrió un error';
+      this.alertaSuccess = true;
+  
+      setTimeout(() => {
+        this.cerrarAlerta();
+      }, 3000);
+    }
+  
+    cerrarAlerta() {
+      this.alertaSuccess = false;
+      this.alertaTipo = AlertaTipo.none;
+      this.alertaMessage = '';
+    }
 }

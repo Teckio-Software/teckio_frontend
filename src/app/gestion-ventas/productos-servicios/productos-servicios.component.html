@@ -44,10 +44,10 @@
                 Unidad SAT
               </th>
               <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">
-                Categoria
+                Categoría
               </th>
               <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">
-                Subcategoria
+                Subcategoría
               </th>
               <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]"></th>
             </tr>
@@ -315,18 +315,21 @@
 
     <!-- contenido -->
     <div class="bg-white px-6 py-4 sm:p-6">
+      <div class="text-gray-500 font-semibold mt-2">
+          Campos obligatorios marcados con *
+        </div>
       <div class="rounded-lg shadow-md overflow-hidden">
         <div class="overflow-x-auto">
           <table class="w-full text-sm xs:table-fixed">
             <thead class="bg-primario text-white">
               <tr class="xs:text-[10px]">
-                <th class="px-1 py-[2px]" scope="col">Código</th>
-                <th class="px-1 py-[2px]" scope="col">Descripción</th>
-                <th class="px-1 py-[2px]" scope="col">Unidad</th>
-                <th class="px-1 py-[2px]" scope="col">Producto o servicio</th>
-                <th class="px-1 py-[2px]" scope="col">Unidad SAT</th>
-                <th class="px-1 py-[2px]" scope="col">Categoria</th>
-                <th class="px-1 py-[2px]" scope="col">Subcategoria</th>
+                <th class="px-1 py-[2px]" scope="col">*Código</th>
+                <th class="px-1 py-[2px]" scope="col">*Descripción</th>
+                <th class="px-1 py-[2px]" scope="col">*Unidad</th>
+                <th class="px-1 py-[2px]" scope="col">*Producto o servicio</th>
+                <th class="px-1 py-[2px]" scope="col">*Unidad SAT</th>
+                <th class="px-1 py-[2px]" scope="col">*Categoría</th>
+                <th class="px-1 py-[2px]" scope="col">*Subcategoría</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray300">
@@ -342,6 +345,7 @@
                       class="bg-transparent w-[75%] px-2 py-1"
                       type="text"
                       [(ngModel)]="productoServicio.codigo"
+                      (change)="limpiarError()"
                     />
                   </td>
                   <td class="px-1 py-[2px]" scope="col">
@@ -352,6 +356,7 @@
                       class="bg-transparent w-[75%] px-2 py-1"
                       type="text"
                       [(ngModel)]="productoServicio.descripcion"
+                      (change)="limpiarError()"
                     />
                   </td>
                   <td class="px-1 py-[2px]" scope="col">
@@ -362,7 +367,7 @@
                         autocomplete="off"
                         class="bg-transparent w-[75%] px-2 py-1"
                         (input)="filtrarUnidades($event)"
-                        (click)="abrirListaUnidades()"
+                        (click)="abrirListaUnidades(); limpiarError()"
                         [value]="textoBusquedaUnidad"
                       />
 
@@ -390,7 +395,7 @@
                         autocomplete="off"
                         class="bg-transparent w-[75%] px-2 py-1"
                         (input)="filtrarProductosYServicios($event)"
-                        (click)="abrirListaProductosYServicios()"
+                        (click)="abrirListaProductosYServicios(); limpiarError()"
                         [value]="textoBusquedaPyS"
                       />
                       <div *ngIf="mostrarListaProductosYServicios">
@@ -422,7 +427,7 @@
                         autocomplete="off"
                         class="bg-transparent w-[75%] px-2 py-1"
                         (input)="filtrarUnidadesSat($event)"
-                        (click)="abrirListaUnidadesSat()"
+                        (click)="abrirListaUnidadesSat(); limpiarError()"
                         [value]="textoBusquedaSAT"
                       />
                       <div *ngIf="mostrarListaUnidadesSat">
@@ -450,7 +455,7 @@
                         autocomplete="off"
                         class="bg-transparent w-[75%] px-2 py-1"
                         (input)="filtrarCategorias($event)"
-                        (click)="abrirListaCategorias()"
+                        (click)="abrirListaCategorias(); limpiarError()"
                         [value]="textoCategoria"
                       />
                       <div *ngIf="mostrarListaCategorias">
@@ -477,7 +482,7 @@
                         autocomplete="off"
                         class="bg-transparent w-[75%] px-2 py-1"
                         (input)="filtrarSubCategorias($event)"
-                        (click)="abrirListaSubCategorias()"
+                        (click)="abrirListaSubCategorias(); limpiarError()"
                         [value]="textoSubCategoria"
                       />
                       <div *ngIf="mostrarListaSubCategorias">
@@ -502,7 +507,11 @@
           </table>
         </div>
       </div>
+      <div class="text-red-600 font-normal text-xs mt-2" *ngIf="mensajeError.estatus">
+          *{{mensajeError.descripcion}}
+        </div>
     </div>
+    
     <!-- botones -->
     <div class="px-4 py-3 flex justify-end gap-4">
       <button
