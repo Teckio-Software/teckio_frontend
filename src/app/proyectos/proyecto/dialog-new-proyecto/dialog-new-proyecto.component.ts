@@ -173,20 +173,16 @@ export class DialogNewProyectoComponent {
       });
     } else {
       this.proyectoService.editar(this.nuevoProyecto, this.selectedEmpresa).subscribe({
-        next: (datos: RespuestaDTO) => {
-          if (!datos.estatus) {
-            Swal.fire({
-              title: 'No se pudo editar el proyecto',
-              text: datos.descripcion || 'El servidor rechazó la operacion solicitada.',
-              icon: 'error',
-            });
-            return;
-          }
+        next: (datos) => {
           this.proyectoService.OnChange.emit(this.selectedEmpresa);
           this.form.reset();
           this.dialogRef.close({
             action: 'edit',
             proyecto: { ...this.nuevoProyecto },
+          });
+          Swal.fire({
+            title: 'Proyecto editado correctamente.',
+            icon: 'success',
           });
         },
         error: (error) => {
