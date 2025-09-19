@@ -13,7 +13,7 @@
   border-end-start-radius: 5px;  
 }
 
-td {
+/* td {
   border: .5px solid #b4b1b175;
   padding: 0 10px;
   height: 5px;
@@ -24,12 +24,12 @@ th {
   color: #f2f2f2;
   border: 1px solid #4e4c4c54;
   padding: 0 10px;
-}
-.td-0 {
+} */
+/* .td-0 {
   padding: 0;
   background-color: #fffefe;
   border: .5px solid #ffffff85;
-}
+} */
 
 .button-filt {
   border: none;
