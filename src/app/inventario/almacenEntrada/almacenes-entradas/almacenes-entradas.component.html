@@ -45,7 +45,7 @@
         <p
           class="text-[#f2f2f2] titular bg-custom-bg w-52 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
         >
-          Nueva Entrada a Almacén
+          Nueva entrada a almacén
         </p>
         <img src="assets/add.svg" alt="" />
       </button>
@@ -61,7 +61,7 @@
         <p
           class="text-[#f2f2f2] titular bg-custom-bg w-52 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
         >
-          Nuevo Ajuste en Almacén
+          Nuevo ajuste en almacén
         </p>
         <img src="assets/add.svg" alt="" />
       </button>
@@ -74,12 +74,12 @@
       [(ngModel)]="tipoEntradaAlmacen"
       (change)="fitrarTipoEA()"
     >
-      <option [value]="0">Todas las Entradas</option>
-      <option [value]="1">Orden de Compra</option>
+      <option [value]="0">Todas las entradas</option>
+      <option [value]="1">Orden de compra</option>
       <option [value]="2" *ngIf="idRequisicionInput == 0">
-        Ajuste de Almacén
+        Ajuste de almacén
       </option>
-      <option [value]="3">Devolucion de Prestamos</option>
+      <option [value]="3">Devolucion de prestamos</option>
     </select>
 
     <input
@@ -113,7 +113,7 @@
             <th class="px-1 py-[1px] min-w-2" scope="col">No.Entrada</th>
             <th class="px-[2px] py-[1px] min-w-2" scope="col">Almacén</th>
             <th class="px-[2px] py-[1px] min-w-2" scope="col">
-              Persona Registro
+              Persona registro
             </th>
             <th class="px-[2px] py-[1px] min-w-2" scope="col">Registro</th>
             <th class="px-[2px] py-[1px] min-w-2" scope="col">*Proveedor</th>
@@ -434,7 +434,7 @@
             <tr>
               <th class="px-1 py-[1px] min-w-2" scope="col">Descripción</th>
               <th class="px-[2px] py-[1px] min-w-2" scope="col">Unidad</th>
-              <th class="px-[2px] py-[1px] min-w-2" scope="col">Tipo Insumo</th>
+              <th class="px-[2px] py-[1px] min-w-2" scope="col">Tipo insumo</th>
               <th class="px-[2px] py-[1px] min-w-2" scope="col">Cantidad</th>
               <!-- <th class="cabecera1" scope="col">Acciones</th> -->
             </tr>
@@ -521,12 +521,12 @@
         <table class="w-full text-sm text-left">
           <thead class="bg-primario text-white">
             <tr>
-              <th class="px-1 py-[1px] min-w-2" scope="col">No.Orden Compra</th>
+              <th class="px-1 py-[1px] min-w-2" scope="col">No.Orden compra</th>
               <th class="px-[2px] py-[1px] min-w-2" scope="col">Descripción</th>
               <th class="px-[2px] py-[1px] min-w-2" scope="col">Unidad</th>
               <th class="px-[2px] py-[1px] min-w-2" scope="col">Cantidad</th>
               <th class="px-[2px] py-[1px] min-w-2" scope="col">
-                *Cantidad Recibida
+                *Cantidad recibida
               </th>
               <!-- <th class="cabecera1" scope="col">Acciones</th> -->
             </tr>

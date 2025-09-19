@@ -108,6 +108,8 @@ export class ProductosServiciosComponent {
 
   mensajeError: RespuestaDTO = { estatus: false, descripcion: '' };
 
+  isModalEditOpen: boolean = false;
+
   ngOnInit() {
     this.cargarProductosYServicios();
     this.cargarUnidades();
@@ -291,6 +293,7 @@ export class ProductosServiciosComponent {
   cerrarModal() {
     this.isModalAddOpen = false;
     this.isModalInfoOpen = false;
+    this.isModalEditOpen = false;
     this.textoBusquedaUnidad = '';
     this.textoBusquedaPyS = '';
     this.textoBusquedaSAT = '';
@@ -336,67 +339,69 @@ export class ProductosServiciosComponent {
    */
   crear() {
     //Validaciones
-    if(this.productoServicio.codigo.trim() == ''){
+    if (this.productoServicio.codigo.trim() == '') {
       this.mensajeError = {
         estatus: true,
-        descripcion: 'El campo \'Código\' es requerido',
-      }
+        descripcion: "El campo 'Código' es requerido",
+      };
       return;
     }
-    if(this.productoServicio.codigo.length > 50){
+    if (this.productoServicio.codigo.length > 50) {
       this.mensajeError = {
         estatus: true,
-        descripcion: 'El campo \'Código\' excede su longitud máxima (50 caracteres)',
-      }
+        descripcion:
+          "El campo 'Código' excede su longitud máxima (50 caracteres)",
+      };
       return;
     }
-    if(this.productoServicio.descripcion.trim() == ''){
+    if (this.productoServicio.descripcion.trim() == '') {
       this.mensajeError = {
         estatus: true,
-        descripcion: 'El campo \'Descripción\' es requerido',
-      }
+        descripcion: "El campo 'Descripción' es requerido",
+      };
       return;
     }
-    if(this.productoServicio.descripcion.length > 200){
+    if (this.productoServicio.descripcion.length > 200) {
       this.mensajeError = {
         estatus: true,
-        descripcion: 'El campo \'Descripción\' excede su longitud máxima (200 caracteres)',
-      }
+        descripcion:
+          "El campo 'Descripción' excede su longitud máxima (200 caracteres)",
+      };
       return;
     }
-    if(this.productoServicio.idUnidad <= 0){
+    if (this.productoServicio.idUnidad <= 0) {
       this.mensajeError = {
         estatus: true,
-        descripcion: 'El campo \'Unidad\' es requerido',
-      }
+        descripcion: "El campo 'Unidad' es requerido",
+      };
       return;
     }
-    if(this.productoServicio.idProductoYservicioSat <= 0){
+    if (this.productoServicio.idProductoYservicioSat <= 0) {
       this.mensajeError = {
         estatus: true,
-        descripcion: 'El campo \'Producto/Servicio SAT\' es requerido',
-      }
+        descripcion: "El campo 'Producto/Servicio SAT' es requerido",
+      };
       return;
     }
-    if(this.productoServicio.idUnidadSat <= 0){
+    if (this.productoServicio.idUnidadSat <= 0) {
       this.mensajeError = {
         estatus: true,
-        descripcion: 'El campo \'Unidad SAT\' es requerido',
-      }
+        descripcion: "El campo 'Unidad SAT' es requerido",
+      };
       return;
     }
-    if(this.productoServicio.idCategoriaProductoYServicio <= 0){
+    if (this.productoServicio.idCategoriaProductoYServicio <= 0) {
       this.mensajeError = {
         estatus: true,
-        descripcion: 'El campo \'Categoría\' es requerido',
-      }
+        descripcion: "El campo 'Categoría' es requerido",
+      };
       return;
     }
-    if(this.productoServicio.idSubategoriaProductoYServicio <= 0){
+    if (this.productoServicio.idSubategoriaProductoYServicio <= 0) {
       this.mensajeError = {
         estatus: true,
-        descripcion: 'El campo \'Subcategoría\' es requerido',
-      }
+        descripcion: "El campo 'Subcategoría' es requerido",
+      };
       return;
     }
     this.productoYServicioService
@@ -413,11 +418,11 @@ export class ProductosServiciosComponent {
       });
   }
 
-  limpiarError(){
+  limpiarError() {
     this.mensajeError = {
-            estatus: false,
-            descripcion: '',
-          }
+      estatus: false,
+      descripcion: '',
+    };
   }
 
   crearInsumoXProductoyServicio(
@@ -559,5 +564,35 @@ export class ProductosServiciosComponent {
     (this as any)[filtradosProp] = (this as any)[listaProp].filter(
       (item: any) => item[propiedad].toLowerCase().includes(valor)
     );
+  }
+
+  editar(prdyser: ProductoYServicioConjunto) {
+    this.productoServicio = {
+      id: prdyser.id,
+      codigo: prdyser.codigoPS,
+      descripcion: prdyser.descripcionPS,
+      idUnidad: prdyser.idUnidad,
+      idProductoYservicioSat: prdyser.idPSS,
+      idUnidadSat: prdyser.idUnidad,
+      idCategoriaProductoYServicio: prdyser.idCPS,
+      idSubategoriaProductoYServicio: prdyser.idSPS,
+    };
+    this.textoCategoria = prdyser.descripcionCPS;
+    this.textoSubCategoria = prdyser.descripcionSPS;
+    this.isModalEditOpen = true;
+  }
+
+  actualizar() {
+    this.productoYServicioService
+      .editar(this.selectedEmpresa ,this.productoServicio)
+      .subscribe((resp) => {
+        if (resp.estatus) {
+          this.alerta(AlertaTipo.save, resp.descripcion);
+          this.cargarProductosYServicios();
+          this.cerrarModal();
+        } else {
+          this.alerta(AlertaTipo.error, resp.descripcion);
+        }
+      });
   }
 }

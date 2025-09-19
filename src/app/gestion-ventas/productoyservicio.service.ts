@@ -38,4 +38,11 @@ export class ProductoYServicioService {
       prodyser
     );
   }
+
+  public editar(idEmp: number, prodyser: ProductoYServicioDTO) {
+    return this.HttpClient.put<RespuestaDTO>(
+      `${this.apiUrl}/${idEmp}/editar`,
+      prodyser
+    );
+  }
 }
