@@ -7,6 +7,14 @@
   <mat-tab label="Avance de obra">
     <div *ngIf="selectedIndex === 0">
       <section class="contenedor-section">
+        <app-alert
+        *ngIf="alertaTipo !== AlertaTipo.none"
+        [alertaTipo]="alertaTipo"
+        [alertaMessage]="alertaMessage"
+        (close)="cerrarAlerta()"
+      >
+      </app-alert>
+
         <div
           class="cont-acciones"
           style="display: flex; justify-content: center; align-items: center"

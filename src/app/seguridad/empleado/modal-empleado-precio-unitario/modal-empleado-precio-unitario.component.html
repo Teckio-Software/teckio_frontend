@@ -7,18 +7,18 @@
         (click)="detenerCierre($event)">
         <!-- detenerCierre(event: MouseEvent): Método que detiene la propagación del evento de clic cuando se hace clic dentro del contenido del modal, asegurando que el modal no se cierre inadvertidamente. -->
         <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-            <div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px;">
-                <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos m-0">
-                    <thead>
-                        <tr>
-                            <th scope="col">Seleccionar</th>
-                            <th scope="col">Descripcion</th>
-                            <th scope="col">Unidad</th>
-                            <th scope="col">Cantidad</th>
+            <div class="overflow-x-auto shadow-md rounded-lg">
+                <table class="w-full text-sm xs:table-fixed">
+                    <thead class="bg-primario text-white">
+                        <tr class="xs:text-[10px]">
+                            <th scope="col" class="px-1 py-[2px] xs:w-[75px]">Seleccionar</th>
+                            <th scope="col" class="px-1 py-[2px] xs:w-[75px]">Descripción</th>
+                            <th scope="col" class="px-1 py-[2px] xs:w-[75px]">Unidad</th>
+                            <th scope="col" class="px-1 py-[2px] xs:w-[75px]">Cantidad</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr *ngFor="let PU of empleadoPrecioUnitario" 
+                    <tbody class="divide-y divide-gray300">
+                        <tr *ngFor="let PU of empleadoPrecioUnitario" class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]" 
                             [ngClass]="">
                             <td scope="col"><input type="checkbox" id="vehicle3" name="vehicle3" value="Boat"
                               [(ngModel)]="PU.seleccionado"></td>
