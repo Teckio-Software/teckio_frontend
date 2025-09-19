@@ -25,25 +25,25 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                  <label class="block text-sm font-medium text-gray-700" for="name">Apellido Paterno</label>
+                  <label class="block text-sm font-medium text-gray-700" for="name">Apellido paterno</label>
                   <input
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     type="text" name="name" id="name" formControlName="apellidoPaterno" 
                     (change)="errorAP = false; errorGlobal = false;"
                     />
                     <div *ngIf="errorAP" class="text-red-500 text-sm mb-2">
-                      *El campo 'Apellido Paterno' es requerido
+                      *El campo 'Apellido paterno' es requerido
                     </div>
                 </div>
                 <div class="mb-3">
-                  <label class="block text-sm font-medium text-gray-700" for="name">Apellido Materno</label>
+                  <label class="block text-sm font-medium text-gray-700" for="name">Apellido materno</label>
                   <input
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     type="text" name="name" id="name" formControlName="apellidoMaterno"
                     (change)="errorAM = false; errorGlobal = false;"
                      />
                     <div *ngIf="errorAM" class="text-red-500 text-sm mb-2">
-                      *El campo 'Apellido Materno' es requerido
+                      *El campo 'Apellido materno' es requerido
                     </div>
                 </div>
                 <div class="mb-3">
@@ -69,7 +69,7 @@
               </div>
               <div class="w-full">
                 <div class="mb-3">
-                  <label class="block text-sm font-medium text-gray-700" for="name">Seguro Social</label>
+                  <label class="block text-sm font-medium text-gray-700" for="name">Seguro social</label>
                   <input
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     type="text" name="name" id="name" formControlName="seguroSocial"
@@ -79,33 +79,33 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                  <label class="block text-sm font-medium text-gray-700" for="name">Relación Laboral</label>
+                  <label class="block text-sm font-medium text-gray-700" for="name">Relación laboral</label>
                   <input
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     type="date" name="fecha" id="fecha" formControlName="fechaRelacionLaboral"
                     (change)="errorFRL = false; errorGlobal = false;" />
                     <div *ngIf="errorFRL" class="text-red-500 text-sm mb-2">
-                      *El campo 'Relación Laboral' es requerido
+                      *El campo 'Relación laboral' es requerido
                     </div>
                 </div>
                 <div class="mb-3">
-                  <label class="block text-sm font-medium text-gray-700" for="name">Termino Relación Laboral</label>
+                  <label class="block text-sm font-medium text-gray-700" for="name">Termino relación laboral</label>
                   <input
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     type="date" name="name" id="name" formControlName="fechaTerminoRelacionLaboral" 
                     (change)="errorFTRL = false; errorGlobal = false;"/>
                     <div *ngIf="errorFTRL" class="text-red-500 text-sm mb-2">
-                      *El campo 'Termino Relación Laboral' es requerido
+                      *El campo 'Termino relación laboral' es requerido
                     </div>
                 </div>
                 <div class="mb-3">
-                  <label class="block text-sm font-medium text-gray-700" for="name">Salario Diario</label>
+                  <label class="block text-sm font-medium text-gray-700" for="name">Salario diario</label>
                   <input
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     type="text" name="name" id="name" formControlName="salarioDiario"
                     (change)="errorSD = false; errorGlobal = false;" />
                     <div *ngIf="errorSD" class="text-red-500 text-sm mb-2">
-                      *El campo 'Salario Diario' no puede ser 0 o un número negativo
+                      *El campo 'Salario diario' no puede ser 0 o un número negativo
                     </div>
                 </div>
               </div>

@@ -124,12 +124,12 @@ export class ModalEmpleadoComponent {
       }
       if(this.empleado.seguroSocial == "" || this.empleado.seguroSocial == undefined || this.empleado.seguroSocial == null){
         this.errorSS.estatus = true;
-        this.errorSS.descripcion = "El campo 'Seguro Social' es requerido"; 
+        this.errorSS.descripcion = "El campo 'Seguro social' es requerido"; 
         c = false;
       }else{
         if(this.empleado.seguroSocial.length > 20){
         this.errorSS.estatus = true;
-        this.errorSS.descripcion = "El campo 'Seguro Social' debe tener 20 caracteres"; 
+        this.errorSS.descripcion = "El campo 'Seguro social' debe tener 20 caracteres"; 
         c = false;
       }
       }

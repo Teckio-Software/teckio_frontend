@@ -10,7 +10,7 @@
   <div class="item flex w-full" *ngIf="cuentaSeleccionada">
     <div class="item" style="width: 100%;">
       <button class="bg-colorButton text-[#f2f2f2] rounded-lg hover:bg-hoverButton p-2" type="button"
-        (click)="abrirModalMovimientoBancario()">Nuevo Movimiento Bancario</button>
+        (click)="abrirModalMovimientoBancario()">Nuevo movimiento bancario</button>
     </div>
   </div>
 </div>
@@ -18,8 +18,8 @@
 <div *ngIf="cuentaSeleccionada">
   <mat-form-field style="margin-left: 10px; margin-top: 20px;">
     <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
-      <input matStartDate formControlName="start" placeholder="Fecha Inicial">
-      <input matEndDate formControlName="end" placeholder="Fecha Final">
+      <input matStartDate formControlName="start" placeholder="Fecha inicial">
+      <input matEndDate formControlName="end" placeholder="Fecha final">
     </mat-date-range-input>
     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-date-range-picker #picker>
@@ -38,15 +38,15 @@
       <tr class="xs:text-[10px]">
         <th class="px-1 py-[2px] xs:w-[75px]" scope="col">No. Movimiento</th>
         <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Folio</th>
-        <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Fecha Alta</th>
-        <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Fecha Aplicación </th>
-        <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Fecha Cobro</th>
+        <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Fecha alta</th>
+        <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Fecha aplicación </th>
+        <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Fecha cobro</th>
         <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Modalidad</th>
         <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Deposito</th>
         <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Retiro</th>
         <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Saldo</th>
         <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Moneda</th>
-        <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Tipo Cambio</th>
+        <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Tipo cambio</th>
         <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Concepto</th>
         <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Beneficiario</th>
         <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Estatus</th>
@@ -78,10 +78,10 @@
               <Button class="button-filt" *ngIf="mb.estatus == 0" (click)="cancelarMovimientoBancario(mb.id)">Cancelar</Button>
             </div>
             <div class="col">
-              <Button class="button-filt text-s" *ngIf="mb.estatus == 1 && (mb.idPoliza == 0 || mb.idPoliza == null)" (click)="generarPoliza(mb.id)">Generar Poliza</Button>
+              <Button class="button-filt text-s" *ngIf="mb.estatus == 1 && (mb.idPoliza == 0 || mb.idPoliza == null)" (click)="generarPoliza(mb.id)">Generar poliza</Button>
             </div>
             <div class="col">
-              <Button class="button-filt" *ngIf="mb.idPoliza > 0" (click)="eliminarPoliza(mb.id)">Eliminar Poliza</Button>
+              <Button class="button-filt" *ngIf="mb.idPoliza > 0" (click)="eliminarPoliza(mb.id)">Eliminar poliza</Button>
             </div>
           </div>
         </td>
