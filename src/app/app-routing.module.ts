@@ -81,13 +81,13 @@ const routes: Routes = [
         (module) => module.ConceptoModule
       ),
   },
-  {
-    path: 'tipopoliza',
-    loadChildren: () =>
-      import(`./contabilidad/tipos-polizas/tipo-poliza.module`).then(
-        (module) => module.TipoPolizaModule
-      ),
-  },
+  // {
+  //   path: 'tipopoliza',
+  //   loadChildren: () =>
+  //     import(`./contabilidad/tipos-polizas/tipo-poliza.module`).then(
+  //       (module) => module.TipoPolizaModule
+  //     ),
+  // },
   {
     path: 'almacen',
     loadChildren: () =>
