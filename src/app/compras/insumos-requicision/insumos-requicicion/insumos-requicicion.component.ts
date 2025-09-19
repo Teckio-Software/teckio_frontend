@@ -523,6 +523,29 @@ export class InsumosRequicicionComponent implements OnInit {
       this.form.get('cPresupuestada')?.setValue(existeInsumo[0].cantidad);
       this.form.get('descripcion')?.setValue(existeInsumo[0].descripcion);
     }
+    //  this._existencias
+    //   .existenciaYAlmacenDeInsumo(
+    //     this.idEmpresaInput,
+    //     this.form.get('idInsumo')?.value,
+    //     this.idProyecto
+    //   )
+    //   .subscribe((datos) => {
+    //     console.log(datos);
+        
+    //     if (datos.estatus) {
+    //       Swal.fire({
+    //         title: 'Insumo encontrado',
+    //         text: datos.descripcion,
+    //         icon: 'success',
+    //       });
+    //     } else {
+    //       Swal.fire({
+    //         title: 'Informacion insumo',
+    //         text: datos.descripcion,
+    //         icon: 'success',
+    //       });
+    //     }
+    //   });
   }
 
 

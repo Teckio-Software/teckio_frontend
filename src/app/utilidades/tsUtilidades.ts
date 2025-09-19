@@ -81,14 +81,14 @@ export const pages: Page[] = [
         permiso: [''],
       },
       {
-        name: 'Precio Unitario',
+        name: 'Precio unitario',
         link: '/preciounitario',
         imageUrl: 'assets/preciounitario.svg',
         permiso: [''],
         // SeccionPrecioUnitario
       },
       {
-        name: 'Programación Estimada',
+        name: 'Programación estimada',
         link: '/programacionestimada',
         imageUrl: 'assets/almacen.svg',
         permiso: [''],
@@ -156,7 +156,7 @@ export const pages: Page[] = [
         permiso: ['SeccionRequisicion'],
       },
       {
-        name: 'Ordenes de Compra',
+        name: 'Ordenes de compra',
         link: '/resumenOrdenCompra',
         imageUrl: 'assets/requisicion.svg',
         permiso: ['SeccionRequisicion'],
@@ -175,19 +175,19 @@ export const pages: Page[] = [
         permiso: ['SeccionAlmacen'],
       },
       {
-        name: 'Entrada de Almacén',
+        name: 'Entrada de almacén',
         link: '/almacenentrada',
         imageUrl: 'assets/salida.svg',
         permiso: ['SeccionEntradaAlmacen'],
       },
       {
-        name: 'Existencia en Almacén',
+        name: 'Existencia en almacén',
         link: '/existencia',
         imageUrl: 'assets/existencias.svg',
         permiso: ['SeccionExistenciaAlmacen'],
       },
       {
-        name: 'Salida Almacén',
+        name: 'Salida almacén',
         link: '/almacensalida',
         imageUrl: 'assets/salida2.svg',
         permiso: ['SeccionSalidaAlmacen'],
