@@ -242,24 +242,31 @@ export function imprimirReporte(reporte: Reporte): void {
 
   const tablaBody = [];
 
-  // subtotales por precioUnitario
+  // subtotales
   reporte.precioUnitario.forEach((precio: precioUnitarioDTO) => {
-    let subtotal: number = precio.costoUnitario * precio.cantidad;
+    const subtotal: number = precio.costoUnitario * precio.cantidad;
 
-    let subtotalconFormato: string = new Intl.NumberFormat('es-MX', {
+    const subtotalconFormato: string = new Intl.NumberFormat('es-MX', {
       style: 'currency',
       currency: 'MXN',
     }).format(subtotal);
 
+    const subtotalConIva = precio.importe * (1 + reporte.proyecto.porcentajeIva / 100);
+
+    const subtotalConIvaConFormato: string = new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+    }).format(subtotalConIva);
+
     tablaBody.push([
       { text: `Subtotal de ${precio.codigo}`, style: 'styleTotal' },
       {
-        text: `$ ${
+        text: `${
           reporte.imprimirConCostoDirecto
             ? subtotalconFormato
             : reporte.imprimirConPrecioUnitario
               ? precio.importeConFormato
-              : precio.importe * (1 + reporte.proyecto.porcentajeIva / 100)
+              : '$ ' + precio.precioUnitarioConFormato
         }`,
         style: 'styleTotal',
         alignment: 'right',
@@ -285,35 +292,33 @@ export function imprimirReporte(reporte: Reporte): void {
     ]);
   }
 
-  const totalCostoDirecto = reporte.precioUnitario.reduce(
+  const totalCostoDirecto: number = reporte.precioUnitario.reduce(
     (acc: number, precio: precioUnitarioDTO) => acc + precio.costoUnitario,
     0,
   );
 
-  const totalCostoDirectoConFormato = new Intl.NumberFormat('es-MX', {
+  const totalCostoDirectoConFormato: string = new Intl.NumberFormat('es-MX', {
     style: 'currency',
     currency: 'MXN',
   }).format(totalCostoDirecto);
 
-  const totalConIva = reporte.precioUnitario.reduce(
+  const totalConIva: number = reporte.precioUnitario.reduce(
     (acc: number, precio: precioUnitarioDTO) =>
       acc + precio.importe * (1 + reporte.proyecto.porcentajeIva / 100),
     0,
   );
 
-  const totalSeleccionadoFormateado = reporte.imprimirConCostoDirecto
+  const totalSeleccionadoFormateado: string = reporte.imprimirConCostoDirecto
     ? totalCostoDirectoConFormato
     : reporte.imprimirConPrecioUnitario
       ? reporte.totalSinIva
-      : reporte.totalIva;
+      : reporte.totalConIVA;
 
-  const totalSeleccionadoNumerico = reporte.imprimirConCostoDirecto
+  const totalSeleccionadoNumerico: number = reporte.imprimirConCostoDirecto
     ? totalCostoDirecto
     : reporte.imprimirConPrecioUnitario
       ? reporte.total
       : totalConIva;
-
-  console.log(totalSeleccionadoNumerico);
 
   tablaBody.push([
     { text: 'Total', style: 'smallCantidadTotal' },

@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { proyectoDTO } from '../tsProyecto';
 import { ProyectoService } from '../proyecto.service';
 import Swal from 'sweetalert2';
+import { parsearErroresAPI, RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 import { ProyectoUsuarioService } from 'src/app/seguridad/usuario-multi-empresa-filtrado/proyecto-usuario/proyecto-usuario.service';
 
 @Component({
@@ -16,6 +17,9 @@ import { ProyectoUsuarioService } from 'src/app/seguridad/usuario-multi-empresa-
 export class DialogNewProyectoComponent {
   form!: FormGroup;
   menu1: boolean;
+  dialogTitle = 'Nuevo proyecto';
+  primaryButtonLabel = 'Crear proyecto';
+  isEditing = false;
   nuevoProyecto: proyectoDTO = {
     id: 0,
     codigoProyecto: '',
@@ -58,10 +62,13 @@ export class DialogNewProyectoComponent {
     private _snackBar: MatSnackBar,
     private proyectoService: ProyectoService,
     private _usuarioProyectoService: ProyectoUsuarioService,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
     this.menu1 = this.data.menu1;
     this.selectedEmpresa = this.data.selectedEmpresa;
+    this.isEditing = !!this.data.proyecto;
+    this.dialogTitle = this.isEditing ? 'Editar proyecto' : 'Nuevo proyecto';
+    this.primaryButtonLabel = this.isEditing ? 'Guardar cambios' : 'Crear proyecto';
   }
   ngOnInit(): void {
     this.dialogRef.updateSize('70%');
@@ -131,46 +138,82 @@ export class DialogNewProyectoComponent {
     this.nuevoProyecto.esDomingo = true;
     this.nuevoProyecto.noSerie = 1;
 
-    if(this.nuevoProyecto.id == 0){
-      this.proyectoService
-      .crear(this.nuevoProyecto, this.selectedEmpresa)
-      .subscribe((datos) => {
-        if (datos.id > 0) {
-          this.parametrosRol.idEmpresa = this.selectedEmpresa;
-          this.parametrosRol.idProyecto = datos.id;
-          this._usuarioProyectoService
-            .asignarRolDefault(this.parametrosRol)
-            .subscribe((datos) => {});
-          this.dialogRef.close(true);
-        } else {
-          Swal.fire({
-            text: 'No se creo el proyecto',
-            icon: 'error',
-          });
-        }
+    if (this.nuevoProyecto.id == 0) {
+      this.proyectoService.crear(this.nuevoProyecto, this.selectedEmpresa).subscribe({
+        next: (datos) => {
+          if (datos.id > 0) {
+            this.parametrosRol.idEmpresa = this.selectedEmpresa;
+            this.parametrosRol.idProyecto = datos.id;
+            this._usuarioProyectoService.asignarRolDefault(this.parametrosRol).subscribe({
+              error: (error) =>
+                this.mostrarError('No se pudo asignar el rol default del proyecto', error),
+            });
+            const proyectoCreado = { ...datos, ...this.nuevoProyecto, id: datos.id };
+            this.proyectoService.OnChange.emit(this.selectedEmpresa);
+            this.form.reset();
+            this.dialogRef.close({
+              action: 'create',
+              proyecto: proyectoCreado,
+            });
+            Swal.fire({
+              title: 'Proyecto creado correctamente.',
+              icon: 'success',
+            });
+          } else {
+            Swal.fire({
+              title: 'No se pudo crear el proyecto',
+              text: 'El servidor no devolvió un identificador valido.',
+              icon: 'error',
+            });
+          }
+        },
+        error: (error) => {
+          this.mostrarError('No se pudo crear el proyecto', error);
+        },
       });
-    }else{
-      this.proyectoService.editar(this.nuevoProyecto, this.selectedEmpresa).subscribe((datos) => {
-        if(!datos.estatus){
-          Swal.fire({
-            text: 'No se edito el proyecto',
-            icon: 'error',
+    } else {
+      this.proyectoService.editar(this.nuevoProyecto, this.selectedEmpresa).subscribe({
+        next: (datos: RespuestaDTO) => {
+          if (!datos.estatus) {
+            Swal.fire({
+              title: 'No se pudo editar el proyecto',
+              text: datos.descripcion || 'El servidor rechazó la operacion solicitada.',
+              icon: 'error',
+            });
+            return;
+          }
+          this.proyectoService.OnChange.emit(this.selectedEmpresa);
+          this.form.reset();
+          this.dialogRef.close({
+            action: 'edit',
+            proyecto: { ...this.nuevoProyecto },
           });
-        }else{
-          this.dialogRef.close(true);
-        }
+        },
+        error: (error) => {
+          this.mostrarError('No se pudo editar el proyecto', error);
+        },
       });
     }
-
-
-    this.form.value.reset();
   }
 
   cerrarDialog() {
-    this.dialogRef.close(false); // Cierra el modal sin guardar
+    this.dialogRef.close(false);
   }
 
   detenerCierre(event: MouseEvent) {
     event.stopPropagation();
+  }
+
+  private mostrarError(titulo: string, error: any) {
+    const errores = parsearErroresAPI(error);
+    const mensaje =
+      errores.length > 0
+        ? errores.join('\n')
+        : 'Ocurrió un problema al comunicarse con el servidor.';
+    Swal.fire({
+      title: titulo,
+      text: mensaje,
+      icon: 'error',
+    });
   }
 }
