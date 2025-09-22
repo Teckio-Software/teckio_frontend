@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import {
   AlmacenEntradaCreacionDTO,
   AlmacenEntradaDTO,
@@ -57,6 +57,8 @@ export class AlmacenesEntradasComponent {
 
   todos: boolean = false;
   almacenes!: almacenDTO[];
+  almacenesVS!: almacenDTO[];
+
   idAlmacen: number = 0;
   insumosEstado: boolean = false;
 
@@ -99,6 +101,21 @@ export class AlmacenesEntradasComponent {
   tipoInsumos!: tipoInsumoDTO[];
   isLoading: boolean = true;
 
+  SlistaAlmacenes: boolean = false;
+  selectedAlmacen: string = '';
+
+  // Obtiene la referencia al contenedor del virtual scroll
+  @ViewChild('virtualScrollContainer') virtualScrollContainer!: ElementRef;
+
+  // Escucha los clics en todo el documento
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    // Comprueba si el virtual scroll está visible y si el clic no ocurrió dentro de él
+    if (this.SlistaAlmacenes && !this.virtualScrollContainer.nativeElement.contains(event.target)) {
+      this.SlistaAlmacenes = false;
+    }
+  }
+
   ngOnInit() {
     if (this.idOrdenCompraInput > 0) {
       this.todos = true;
@@ -107,6 +124,7 @@ export class AlmacenesEntradasComponent {
       .obtenerXIdProyecto(this.idProyectoInput, this.idEmpresaInput)
       .subscribe((datos) => {
         this.almacenes = datos;
+        this.almacenesVS = datos;
         this.isLoading = false;
       });
     this._contratistaService
@@ -179,13 +197,34 @@ export class AlmacenesEntradasComponent {
     }
   }
 
-  SeleccionaAlmacen(event: Event) {
-    const inputElement = event.target as HTMLInputElement;
-    const selectedValue = inputElement.value;
-    const idAlmacen =
-      this.almacenes.find((almacen) => almacen.almacenNombre === selectedValue)
-        ?.id || 0;
-    this.idAlmacen = idAlmacen;
+  FiltrarAlmacenes(event: Event) {
+    this.almacenesVS = this.almacenes;
+    const filterValue = (
+      event.target as HTMLInputElement
+    ).value.toLocaleLowerCase();
+    if(filterValue.trim()!=''){
+      this.almacenesVS = this.almacenes.filter(a=>
+      a.almacenNombre.toLowerCase().includes(filterValue.toLowerCase())
+    );
+    }
+    
+
+  }
+
+  // SeleccionaAlmacen(event: Event) {
+  //   const inputElement = event.target as HTMLInputElement;
+  //   const selectedValue = inputElement.value;
+  //   const idAlmacen =
+  //     this.almacenes.find((almacen) => almacen.almacenNombre === selectedValue)
+  //       ?.id || 0;
+  //   this.idAlmacen = idAlmacen;
+  //   this.fitrarTipoEA();
+  // }
+
+  SeleccionaAlmacen(id: number, nombreAlmacen: string) {
+    this.idAlmacen = id;
+    this.selectedAlmacen = nombreAlmacen;
+    this.SlistaAlmacenes = false;
     this.fitrarTipoEA();
   }
 

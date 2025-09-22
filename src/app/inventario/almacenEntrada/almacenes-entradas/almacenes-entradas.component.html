@@ -12,12 +12,13 @@
           {{ almacen.almacenNombre }}
         </option>
       </select> -->
-      <label
+
+      <!-- <label
         class="rounded-l-md bg-colorButton text-gray100 px-1 py-1 xs:text-[10px]"
         for="almacen"
         >Almacen</label
-      >
-      <input
+      > -->
+      <!-- <input
         class="xs:text-[10px] xs:w-[130px]"
         list="almacendata"
         id="almacen"
@@ -30,10 +31,38 @@
         <option *ngFor="let almacen of almacenes">
           {{ almacen.almacenNombre }}
         </option>
-      </datalist>
+      </datalist> -->
     </div>
     <!-- Almacén end-->
 
+    <div
+      class="flex-col items-end border-2 border-gray-400 rounded-lg text-left mt-3 bg-white w-[300px]"
+      #virtualScrollContainer
+    >
+      <input
+        type="text"
+        class="bg-transparent w-full p-1 text-left px-4 focus:outline-none"
+        (input)="FiltrarAlmacenes($event)"
+        [(ngModel)]="selectedAlmacen"
+        (click)="SlistaAlmacenes = !SlistaAlmacenes"
+        placeholder="Selecciona un almacén..."
+      />
+      <div *ngIf="SlistaAlmacenes">
+        <cdk-virtual-scroll-viewport
+          itemSize="50"
+          class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-[300px] h-36 overflow-auto shadow-lg"
+        >
+          <div
+            *cdkVirtualFor="let almacen of almacenesVS"
+            (click)="SeleccionaAlmacen(almacen.id, almacen.almacenNombre)"
+            class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+            style="height: 36px; box-sizing: border-box"
+          >
+            {{ almacen.almacenNombre }}
+          </div>
+        </cdk-virtual-scroll-viewport>
+      </div>
+    </div>
     <div
       *ngIf="idAlmacen != 0 && idRequisicionInput == 0"
       class="flex items-end"
@@ -544,7 +573,7 @@
                 <input
                   autocomplete="off"
                   autocomplete="off"
-                  class="form-contrtrol bg-transparent dropdown1 text-end "
+                  class="form-contrtrol bg-transparent dropdown1 text-end"
                   type="number"
                   style="margin: 5px"
                   data-bs-toggle="dropdown"

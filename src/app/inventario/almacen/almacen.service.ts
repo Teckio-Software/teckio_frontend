@@ -26,6 +26,14 @@ export class AlmacenService{
         return this.HttpClient.get<almacenDTO[]>(`${this.zvApiUrl}almacen/${idEmpresa}/ObtenTodos`);
     }
 
+    public obtenerCentrales(idEmpresa: number){
+        return this.HttpClient.get<almacenDTO[]>(`${this.zvApiUrl}almacen/${idEmpresa}/ObtenCentrales`);
+    }
+
+    public obtenerCentralesYDeProyecto(idEmpresa: number, idProyecto: number){
+        return this.HttpClient.get<almacenDTO[]>(`${this.zvApiUrl}almacen/${idEmpresa}/ObtenCentralesYDeProyecto/${idProyecto}`);
+    }
+
     public crear(registro: almacenCreacionDTO, idEmpresa: number){
         return this.HttpClient.post<RespuestaDTO>(`${this.zvApiUrl}almacen/${idEmpresa}/Crear`, registro);
     }

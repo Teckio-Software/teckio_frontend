@@ -36,7 +36,7 @@ export class AlmacenComponent implements OnInit {
   form!: FormGroup;
   ideditaAlmacen: number = 0;
   selectedEmpresa: number = 0;
-  mostrarCentrales: boolean = false;
+  // mostrarCentrales: boolean = false;
 
   panelActivado: boolean = false;
   constructor(
@@ -81,6 +81,8 @@ export class AlmacenComponent implements OnInit {
     idProyecto: 0,
   };
   isLoading: boolean = true;
+
+  filtroAlmacen: string = '0';
 
   ngOnInit(): void {
     this.traerInformacion();
@@ -223,8 +225,29 @@ export class AlmacenComponent implements OnInit {
   // }
 
   cambiarSeleccion() {
-    if (this.mostrarCentrales) {
-      this.isLoading = true;
+    this.almacenes = [];
+    switch(this.filtroAlmacen) {
+      case'0':
+        this.traerInformacion();
+        break;
+      case'1':
+        this.mostrarCentrales();
+        break;
+      case'2':
+        this.mostrarCentralesYDeProyecto();
+        break;
+    }
+  }
+
+/**
+ * Muestra todos los almacenes de la empresa seleccionada
+ * @description
+ * Muestra todos los almacenes de la empresa seleccionada.
+ * @example
+ * this.mostrarTodosAlmacenes();
+ */
+  mostrarTodosAlmacenes(){
+    this.isLoading = true;
       this.almacenService
         .obtenerTodosSinPaginar(this.selectedEmpresa)
         .subscribe({
@@ -238,8 +261,46 @@ export class AlmacenComponent implements OnInit {
             this.isLoading = false;
           }
         });
-    } else {
-      this.traerInformacion();
-    }
+  }
+
+  mostrarCentrales(){
+    this.isLoading = true;
+      this.almacenService
+        .obtenerCentrales(this.selectedEmpresa)
+        .subscribe({
+          next: (resp) => {
+            this.almacenes = resp;
+          },
+          error: () => {
+            //Mensaje de error.
+          },
+          complete:()=>{
+            this.isLoading = false;
+          }
+        });
+  }
+
+  mostrarCentralesYDeProyecto(){
+    this.isLoading = true;
+      this.almacenService
+        .obtenerCentralesYDeProyecto(this.selectedEmpresa, this.idProyecto)
+        .subscribe({
+          next: (resp) => {
+            this.almacenes = resp;
+          },
+          error: () => {
+            //Mensaje de error.
+          },
+          complete:()=>{
+            this.isLoading = false;
+          }
+        });
+  }
+
+  seleccionTipo(event: any) {
+    this.filtroAlmacen = event.target.value;
+    // console.log('este es el estatus', this.filtroAlmacen);
+    this.cambiarSeleccion();
+    // this.filtrarTablaOrdenesVenta();
   }
 }

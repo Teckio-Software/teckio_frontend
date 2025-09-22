@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { existenciasInsumosDTO } from '../tsExistencia';
 import { ExistenciasService } from '../existencias.service';
@@ -17,6 +17,8 @@ import { almacenDTO } from '../../almacen/almacen';
 export class ExistenciaComponent {
   proyectos!: proyectoDTO[];
   almacenes!: almacenDTO[];
+  almacenesVS!: almacenDTO[];
+
   insumosExistentes !: existenciasInsumosDTO[];
   selectedEmpresa : number = 0;
   viewDetalles : boolean = false;
@@ -29,6 +31,21 @@ export class ExistenciaComponent {
   changeColor: any = null;
 
   isLoading: boolean = true;
+
+   SlistaAlmacenes: boolean = false;
+    selectedAlmacen: string = '';
+  
+    // Obtiene la referencia al contenedor del virtual scroll
+    @ViewChild('virtualScrollContainer') virtualScrollContainer!: ElementRef;
+  
+    // Escucha los clics en todo el documento
+    @HostListener('document:click', ['$event'])
+    onDocumentClick(event: MouseEvent) {
+      // Comprueba si el virtual scroll está visible y si el clic no ocurrió dentro de él
+      if (this.SlistaAlmacenes && !this.virtualScrollContainer.nativeElement.contains(event.target)) {
+        this.SlistaAlmacenes = false;
+      }
+    }
 
   // columnasAMostrarInsumos = ['codigo', 'descripcion', 'unidad', 'almacen', 'cantidadAumenta', 'cantidadRetira', 'cantidadRecibida'];
   // cantidadTotalRegistrosInsumos: any;
@@ -54,6 +71,43 @@ export class ExistenciaComponent {
     })
   }
 
+/**
+ * Filtra la lista de almacenes
+ * @param event El evento que se lanzo
+ * @returns void
+ * @description Filtra la lista de almacenes segun el texto ingresado en el input
+ * El texto se busca en la propiedad almacenNombre de cada objeto almacen
+ * Si el texto es vacio, se muestra la lista completa de almacenes
+ */
+  FiltrarAlmacenes(event: Event) {
+    this.almacenesVS = this.almacenes;
+    const filterValue = (
+      event.target as HTMLInputElement
+    ).value.toLocaleLowerCase();
+    if(filterValue.trim()!=''){
+      this.almacenesVS = this.almacenes.filter(a=>
+      a.almacenNombre.toLowerCase().includes(filterValue.toLowerCase())
+    );
+    }
+  }
+
+  // SeleccionaAlmacen(event: Event) {
+  //   const inputElement = event.target as HTMLInputElement;
+  //   const selectedValue = inputElement.value;
+  //   const idAlmacen =
+  //     this.almacenes.find((almacen) => almacen.almacenNombre === selectedValue)
+  //       ?.id || 0;
+  //   this.idAlmacen = idAlmacen;
+  //   this.fitrarTipoEA();
+  // }
+
+  SeleccionaAlmacen(id: number, nombreAlmacen: string) {
+    this.idAlmacen = id;
+    this.selectedAlmacen = nombreAlmacen;
+    this.SlistaAlmacenes = false;
+    this.cargarInsumos();
+  }
+
   traerInformacion(
   ) {
    
@@ -64,15 +118,29 @@ export class ExistenciaComponent {
     this.proyectoSeleccionado = true;
 
       this.almacenes = datos;
+      this.almacenesVS = datos;
       this.isLoading = false;
     })
   }
 
-  cargarInsumos(event: Event){
-    const inputElement = event.target as HTMLInputElement;
-    const selectedValue = inputElement.value;
-    const idAlmacen = this.almacenes.find(almacen => almacen.almacenNombre === selectedValue)?.id || 0;
-    this.idAlmacen = idAlmacen;
+  // cargarInsumos(event: Event){
+  //   const inputElement = event.target as HTMLInputElement;
+  //   const selectedValue = inputElement.value;
+  //   const idAlmacen = this.almacenes.find(almacen => almacen.almacenNombre === selectedValue)?.id || 0;
+  //   this.idAlmacen = idAlmacen;
+  //   this._existenciaService.obtenInsumosExistentes(this.selectedEmpresa, this.idAlmacen).subscribe((datos)=>{
+  //     this.insumosExistentes = datos;
+  //     this.insumosExistentes.forEach(element =>{
+  //       if(element.cantidadInsumos <= 0){
+  //         element.esDisponible = true;
+  //       }else{
+  //         element.esDisponible = false;
+  //       }
+  //     });
+  //   });
+  // }
+
+  cargarInsumos(){
     this._existenciaService.obtenInsumosExistentes(this.selectedEmpresa, this.idAlmacen).subscribe((datos)=>{
       this.insumosExistentes = datos;
       this.insumosExistentes.forEach(element =>{
