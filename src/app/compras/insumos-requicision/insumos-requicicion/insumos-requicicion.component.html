@@ -16,11 +16,14 @@
   <table class="w-full text-sm text-left xs:table-fixed">
     <thead class="bg-primario text-white">
       <tr class="xs:text-[10px]">
-        <th class="py-[2px] w-3 text-center xs:w-[50px] xs:hidden" scope="col">
+        <!-- <th class="py-[2px] w-3 text-center xs:w-[50px] xs:hidden" scope="col">
           Detalles
-        </th>
+        </th> -->
         <th class="px-[2px] py-[2px] w-5 xs:w-[75px]" scope="col">
           *Descripción
+        </th>
+        <th class="px-[2px] py-[2px] w-5 xs:w-[75px]" scope="col">
+          En stock
         </th>
         <th class="px-[2px] py-[2px] w-4 xs:w-[50px]" scope="col">*Unidad</th>
         <th class="px-[2px] py-[2px] w-4 xs:w-[85px]" scope="col">
@@ -47,7 +50,7 @@
       <tr
         class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
       >
-        <td class="px-1 py-[2px] xs:hidden" scope="col">
+        <!-- <td class="px-1 py-[2px] xs:hidden" scope="col">
           <img
             ngbTooltip="Ver detalles"
             triggers="mouseenter:mouseleave"
@@ -55,7 +58,7 @@
             src="./assets/more.svg"
             (click)="verDetalleInsumo()"
           />
-        </td>
+        </td> -->
         <td class="px-1 py-[2px]" scope="col" [formGroup]="form">
           <!-- <input
             HEAD
@@ -96,6 +99,9 @@
               >{{ insumo.descripcion }}
             </mat-option>
           </mat-autocomplete>
+        </td>
+        <td class="px-1 py-[2px] text-end" [ngClass]="IdInsumo==0?'text-gray-900':disponibilidadInsumo>0?'text-yellow-500':'text-green-500'" scope="col">
+          {{ disponibilidadInsumo | number : '1.2-2' }}
         </td>
         <td class="px-1 py-[2px]" scope="col" [formGroup]="form">
           <input
