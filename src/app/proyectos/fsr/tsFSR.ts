@@ -133,3 +133,15 @@ export interface ParametrosFsrXInsumoDTO extends ParametrosFsrDTO {
   sumaSOBRECostoBase: number;
   fsrInsumo: number;
 }
+
+export interface DataFSR {
+  diasConsideradosFsiNoTrabajados: diasConsideradosDTO[];
+  selectedEmpresa: number;
+        diasConsideradosFsiPagados: diasConsideradosDTO[],
+        selectedProyecto: number;
+        diasNoLaborales: number;
+        diasPagados: number;
+        fsrDetalles: factorSalarioRealDetalleDTO[],
+        porcentajePrestaciones: number;
+        esAutorizado: boolean;
+}

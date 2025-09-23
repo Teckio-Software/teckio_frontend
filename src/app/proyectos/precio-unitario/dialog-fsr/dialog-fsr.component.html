@@ -1,25 +1,15 @@
 <section>
-  <div
-    class="fixed inset-0 z-10 w-screen overflow-y-auto"
-    (click)="detenerCierre($event)"
-  >
-    <div
-      class="content-center sm:flex min-h-full items-cen justify-center p-4 text-center sm:items-center sm:p-0"
-    >
-      <!-- Evita que el clic se propague al contenedor padre (overlay) -->
-      <div
-        class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all w-3/4 h-3/4"
-        (click)="detenerCierre($event)"
-      >
-        <!-- detenerCierre(event: MouseEvent): Método que detiene la propagación del evento de clic cuando se hace clic dentro del contenido del modal, asegurando que el modal no se cierre inadvertidamente. -->
-        <button
-          type="button"
-          class="absolute top-0 right-0 px-4 py-3 text-2xl"
-          (click)="cerrarDialog()"
-        >
-          &times;
-        </button>
+
+
+   
         <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+          <button
+          (click)="close()"
+          class="text-left text-sm hover:bg-gray-200 rounded-md transition-all delay-75 flex gap-2 items-center font-medium text-gray700 px-2 mb-3"
+        >
+          <img class="w-8" src="assets/go_back.svg" alt="Regresar" />
+            Regresar
+        </button>
           <!-- Pestañas -->
           <div class="w-[95%] mt-1 h-auto z-10 flex justify-between">
             <div>
@@ -42,7 +32,7 @@
                 ></mat-tab>
               </mat-tab-group>
             </div>
-            <div class="flex gap-2" *ngIf="!esAutorizado">
+            <div class="flex gap-2" *ngIf="!dataFSR.esAutorizado">
               <div>
                 <input
                   type="text"
@@ -125,7 +115,7 @@
                           [(ngModel)]="dias.articulosLey"
                           (keydown.enter)="crearFSIDias(dias)"
                           maxlength="50"
-                          [disabled]="esAutorizado"
+                          [disabled]="dataFSR.esAutorizado"
                         />
                       </td>
                       <td class="px-1 py-[2px] w-[20%]" scope="col">
@@ -138,7 +128,7 @@
                           [(ngModel)]="dias.codigo"
                           (keydown.enter)="crearFSIDias(dias)"
                           maxlength="15"
-                          [disabled]="esAutorizado"
+                          [disabled]="dataFSR.esAutorizado"
                         />
                       </td>
                       <td class="px-1 py-[2px] w-[30%]" scope="col">
@@ -151,7 +141,7 @@
                           [(ngModel)]="dias.descripcion"
                           (keydown.enter)="crearFSIDias(dias)"
                           maxlength="50"
-                          [disabled]="esAutorizado"
+                          [disabled]="dataFSR.esAutorizado"
                         />
                       </td>
                       <td class="px-1 py-[2px] w-[10%]" scope="col">
@@ -162,10 +152,10 @@
                           id="input-table"
                           [(ngModel)]="dias.valor"
                           (keydown.enter)="crearFSIDias(dias)"
-                          [disabled]="esAutorizado"
+                          [disabled]="dataFSR.esAutorizado"
                         />
                       </td>
-                      <td *ngIf="dias.id != 0 && !esAutorizado">
+                      <td *ngIf="dias.id != 0 && !dataFSR.esAutorizado">
                         <button
                           class="flex items-center justify-center"
                           placement="start"
@@ -176,7 +166,7 @@
                           <img src="assets/delete.svg" alt="add cotizacion" />
                         </button>
                       </td>
-                      <td *ngIf="dias.id == 0 || esAutorizado"></td>
+                      <td *ngIf="dias.id == 0 || dataFSR.esAutorizado"></td>
                     </tr>
                   </tbody>
                 </table>
@@ -233,7 +223,7 @@
                             [(ngModel)]="dias.articulosLey"
                             (keydown.enter)="crearFSIDias(dias)"
                             maxlength="50"
-                            [disabled]="esAutorizado"
+                            [disabled]="dataFSR.esAutorizado"
                           />
                         </td>
                         <td class="px-1 py-[2px] w-[20%]">
@@ -245,7 +235,7 @@
                             [(ngModel)]="dias.codigo"
                             (keydown.enter)="crearFSIDias(dias)"
                             maxlength="15"
-                            [disabled]="esAutorizado"
+                            [disabled]="dataFSR.esAutorizado"
                           />
                         </td>
                         <td class="px-1 py-[2px] w-[30%]">
@@ -257,7 +247,7 @@
                             [(ngModel)]="dias.descripcion"
                             (keydown.enter)="crearFSIDias(dias)"
                             maxlength="50"
-                            [disabled]="esAutorizado"
+                            [disabled]="dataFSR.esAutorizado"
                           />
                         </td>
                         <td class="px-1 py-[2px] w-[10%]">
@@ -267,11 +257,11 @@
                             class="bg-[#f2f2f2] w-full border-none text-center bg-transparent"
                             [(ngModel)]="dias.valor"
                             (keydown.enter)="crearFSIDias(dias)"
-                            [disabled]="esAutorizado"
+                            [disabled]="dataFSR.esAutorizado"
                           />
                         </td>
                         <td
-                          *ngIf="dias.id != 0 && !esAutorizado"
+                          *ngIf="dias.id != 0 && !dataFSR.esAutorizado"
                           class="px-1 py-[2px]"
                         >
                           <button
@@ -284,7 +274,7 @@
                             <img src="assets/delete.svg" alt="Eliminar" />
                           </button>
                         </td>
-                        <td *ngIf="dias.id == 0 || esAutorizado"></td>
+                        <td *ngIf="dias.id == 0 || dataFSR.esAutorizado"></td>
                       </tr>
                     </tbody>
                   </table>
@@ -314,7 +304,7 @@
                 id=""
                 (change)="EsCompuesto()"
                 [(ngModel)]="fsr.esCompuesto"
-                [disabled]="esAutorizado"
+                [disabled]="dataFSR.esAutorizado"
               />
             </div>
 
@@ -356,7 +346,7 @@
                           [(ngModel)]="detalle.articulosLey"
                           (keydown.enter)="crearFSRDetalle(detalle)"
                           maxlength="50"
-                          [disabled]="esAutorizado"
+                          [disabled]="dataFSR.esAutorizado"
                         />
                       </td>
                       <td class="px-1 py-[2px] w-[20%]">
@@ -370,7 +360,7 @@
                           [(ngModel)]="detalle.codigo"
                           (keydown.enter)="crearFSRDetalle(detalle)"
                           maxlength="15"
-                          [disabled]="esAutorizado"
+                          [disabled]="dataFSR.esAutorizado"
                         />
                       </td>
                       <td class="px-1 py-[2px] w-[30%]">
@@ -384,7 +374,7 @@
                           [(ngModel)]="detalle.descripcion"
                           (keydown.enter)="crearFSRDetalle(detalle)"
                           maxlength="50"
-                          [disabled]="esAutorizado"
+                          [disabled]="dataFSR.esAutorizado"
                         />
                       </td>
                       <td class="px-1 py-[2px] w-[10%]">
@@ -396,10 +386,10 @@
                           class="w-full bg-transparent"
                           [(ngModel)]="detalle.porcentajeFsrdetalle"
                           (keydown.enter)="crearFSRDetalle(detalle)"
-                          [disabled]="esAutorizado"
+                          [disabled]="dataFSR.esAutorizado"
                         />
                       </td>
-                      <td *ngIf="detalle.id != 0 && !esAutorizado">
+                      <td *ngIf="detalle.id != 0 && !dataFSR.esAutorizado">
                         <button
                           placement="start"
                           ngbTooltip="Eliminar"
@@ -409,7 +399,7 @@
                           <img src="assets/delete.svg" alt="add cotizacion" />
                         </button>
                       </td>
-                      <td *ngIf="detalle.id == 0 || esAutorizado"></td>
+                      <td *ngIf="detalle.id == 0 || dataFSR.esAutorizado"></td>
                     </tr>
                   </tbody>
                 </table>
@@ -430,16 +420,16 @@
                   <table
                     class="w-full text-sm table-auto divide-y divide-gray300"
                   >
-                    <thead class="bg-primario text-white sticky top-0">
+                    <thead class="bg-primario text-white top-0">
                       <tr>
-                        <th class="px-1 py-[2px] w-[10%]">R.Trabajo</th>
-                        <th class="px-1 py-[2px] w-[10%]">C.Fija</th>
-                        <th class="px-1 py-[2px] w-[10%]">A.Excedente</th>
-                        <th class="px-1 py-[2px] w-[10%]">P.Dinero</th>
-                        <th class="px-1 py-[2px] w-[10%]">G.Medico</th>
-                        <th class="px-1 py-[2px] w-[10%]">I.Vida</th>
+                        <th class="px-1 py-[2px] w-[10%]">Riesgo trabajo</th>
+                        <th class="px-1 py-[2px] w-[10%]">Cuota fija</th>
+                        <th class="px-1 py-[2px] w-[10%]">Aplicación excedente</th>
+                        <th class="px-1 py-[2px] w-[10%]">Prestación dinero</th>
+                        <th class="px-1 py-[2px] w-[10%]">Gasto médico</th>
+                        <th class="px-1 py-[2px] w-[10%]">Invalidez vida</th>
                         <th class="px-1 py-[2px] w-[10%]">Retiro</th>
-                        <th class="px-1 py-[2px] w-[10%]">P.Social</th>
+                        <th class="px-1 py-[2px] w-[10%]">Prestación social</th>
                         <th class="px-1 py-[2px] w-[10%]">Infonavit</th>
                         <th class="px-1 py-[2px] w-[10%]">UMA</th>
                       </tr>
@@ -457,7 +447,7 @@
                             class="w-full bg-transparent"
                             [(ngModel)]="ParametrosFsrDTO.riesgoTrabajo"
                             (keydown.enter)="crearParametro()"
-                            [disabled]="esAutorizado"
+                            [disabled]="dataFSR.esAutorizado"
                           />
                         </td>
                         <td class="px-1 py-[2px] w-[10%]">
@@ -469,7 +459,7 @@
                             class="w-full bg-transparent"
                             [(ngModel)]="ParametrosFsrDTO.cuotaFija"
                             (keydown.enter)="crearParametro()"
-                            [disabled]="esAutorizado"
+                            [disabled]="dataFSR.esAutorizado"
                           />
                         </td>
                         <td class="px-1 py-[2px] w-[10%]">
@@ -481,7 +471,7 @@
                             class="w-full bg-transparent"
                             [(ngModel)]="ParametrosFsrDTO.aplicacionExcedente"
                             (keydown.enter)="crearParametro()"
-                            [disabled]="esAutorizado"
+                            [disabled]="dataFSR.esAutorizado"
                           />
                         </td>
                         <td class="px-1 py-[2px] w-[10%]">
@@ -493,7 +483,7 @@
                             class="w-full bg-transparent"
                             [(ngModel)]="ParametrosFsrDTO.prestacionDinero"
                             (keydown.enter)="crearParametro()"
-                            [disabled]="esAutorizado"
+                            [disabled]="dataFSR.esAutorizado"
                           />
                         </td>
                         <td class="px-1 py-[2px] w-[10%]">
@@ -505,7 +495,7 @@
                             class="w-full bg-transparent"
                             [(ngModel)]="ParametrosFsrDTO.gastoMedico"
                             (keydown.enter)="crearParametro()"
-                            [disabled]="esAutorizado"
+                            [disabled]="dataFSR.esAutorizado"
                           />
                         </td>
                         <td class="px-1 py-[2px] w-[10%]">
@@ -517,7 +507,7 @@
                             class="w-full bg-transparent"
                             [(ngModel)]="ParametrosFsrDTO.invalidezVida"
                             (keydown.enter)="crearParametro()"
-                            [disabled]="esAutorizado"
+                            [disabled]="dataFSR.esAutorizado"
                           />
                         </td>
                         <td class="px-1 py-[2px] w-[10%]">
@@ -529,7 +519,7 @@
                             class="w-full bg-transparent"
                             [(ngModel)]="ParametrosFsrDTO.retiro"
                             (keydown.enter)="crearParametro()"
-                            [disabled]="esAutorizado"
+                            [disabled]="dataFSR.esAutorizado"
                           />
                         </td>
                         <td class="px-1 py-[2px] w-[10%]">
@@ -541,7 +531,7 @@
                             class="w-full bg-transparent"
                             [(ngModel)]="ParametrosFsrDTO.prestaconSocial"
                             (keydown.enter)="crearParametro()"
-                            [disabled]="esAutorizado"
+                            [disabled]="dataFSR.esAutorizado"
                           />
                         </td>
                         <td class="px-1 py-[2px] w-[10%]">
@@ -553,7 +543,7 @@
                             class="w-full bg-transparent"
                             [(ngModel)]="ParametrosFsrDTO.infonavit"
                             (keydown.enter)="crearParametro()"
-                            [disabled]="esAutorizado"
+                            [disabled]="dataFSR.esAutorizado"
                           />
                         </td>
                         <td class="px-1 py-[2px] w-[10%]">
@@ -565,7 +555,7 @@
                             class="w-full bg-transparent"
                             [(ngModel)]="ParametrosFsrDTO.uma"
                             (keydown.enter)="crearParametro()"
-                            [disabled]="esAutorizado"
+                            [disabled]="dataFSR.esAutorizado"
                           />
                         </td>
                       </tr>
@@ -624,7 +614,7 @@
                             crearPorcentajeCensantiaEdad(porcentaje)
                           "
                           maxlength="50"
-                          [disabled]="esAutorizado"
+                          [disabled]="dataFSR.esAutorizado"
                         />
                       </td>
                       <td class="px-1 py-[2px] w-[50%]">
@@ -639,7 +629,7 @@
                             crearPorcentajeCensantiaEdad(porcentaje)
                           "
                           maxlength="15"
-                          [disabled]="esAutorizado"
+                          [disabled]="dataFSR.esAutorizado"
                         />
                       </td>
                     </tr>
@@ -658,20 +648,20 @@
                   <thead class="bg-primario text-white sticky top-0">
                     <tr>
                       <th class="px-2 py-1 w-[250px]">Insumo</th>
-                      <th class="px-2 py-1 w-[120px]">*C.Base</th>
-                      <th class="px-2 py-1 w-[120px]">C.Unitario</th>
+                      <th class="px-2 py-1 w-[120px]">*Costo base</th>
+                      <th class="px-2 py-1 w-[120px]">Costo unitario</th>
                       <th class="px-2 py-1 w-[120px]">SBC</th>
-                      <th class="px-2 py-1 w-[120px]">R.Trabajo</th>
-                      <th class="px-2 py-1 w-[120px]">C.Fija</th>
-                      <th class="px-2 py-1 w-[120px]">A.Excedente</th>
-                      <th class="px-2 py-1 w-[120px]">P.Dinero</th>
-                      <th class="px-2 py-1 w-[120px]">G.Medico</th>
-                      <th class="px-2 py-1 w-[120px]">I.Vida</th>
+                      <th class="px-2 py-1 w-[120px]">Riesgo trabajo</th>
+                      <th class="px-2 py-1 w-[120px]">Cuota fija</th>
+                      <th class="px-2 py-1 w-[120px]">Aplicación excedente</th>
+                      <th class="px-2 py-1 w-[120px]">Prestación dinero</th>
+                      <th class="px-2 py-1 w-[120px]">Gasto médico</th>
+                      <th class="px-2 py-1 w-[120px]">Invalidez vida</th>
                       <th class="px-2 py-1 w-[120px]">Retiro</th>
                       <th class="px-2 py-1 w-[120px]">Cesantía</th>
-                      <th class="px-2 py-1 w-[120px]">P.Social</th>
+                      <th class="px-2 py-1 w-[120px]">Prestación social</th>
                       <th class="px-2 py-1 w-[120px]">Infonavit</th>
-                      <th class="px-2 py-1 w-[150px]">S.Prestaciones</th>
+                      <th class="px-2 py-1 w-[150px]">Suma de prestaciones</th>
                       <th class="px-2 py-1 w-[120px]">SP/SBC</th>
                       <th class="px-2 py-1 w-[120px]">FSR</th>
                     </tr>
@@ -696,7 +686,7 @@
                           type="number"
                           class="w-full border-none rounded bg-transparent"
                           [(ngModel)]="insumo.costoBase"
-                          [disabled]="esAutorizado"
+                          [disabled]="dataFSR.esAutorizado"
                           (keydown.enter)="actualizarCostoBaseInsumo(insumo)"
                         />
                       </td>
@@ -842,7 +832,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
+
+
 </section>

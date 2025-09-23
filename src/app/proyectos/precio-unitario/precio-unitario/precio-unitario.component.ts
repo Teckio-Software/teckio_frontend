@@ -35,6 +35,7 @@ import { GeneradoresService } from '../../Generadores/generadores.service';
 import { ElementRef, ChangeDetectorRef } from '@angular/core';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import {
+  DataFSR,
   diasConsideradosDTO,
   factorSalarioIntegradoDTO,
   factorSalarioRealDTO,
@@ -367,6 +368,7 @@ export class PrecioUnitarioComponent implements OnInit {
 
   contenedorPresupuesto: boolean = true;
   contenedorExplosionInsumo: boolean = false;
+  contenedorFSR: boolean = false;
   contenedorCatalogoGeneral: boolean = false;
   appRecarga: number = 0;
   mostrarBotones: boolean = false;
@@ -479,6 +481,18 @@ export class PrecioUnitarioComponent implements OnInit {
 
   @ViewChild('dialogCatalogoRemplazar', { static: true })
   dialogRemplazarCatalogo!: TemplateRef<any>;
+
+  dataFSR: DataFSR = {
+    diasConsideradosFsiNoTrabajados: [],
+    selectedEmpresa: 0,
+    diasConsideradosFsiPagados: [],
+    selectedProyecto: 0,
+    diasNoLaborales: 0,
+    diasPagados: 0,
+    fsrDetalles: [],
+    porcentajePrestaciones: 0,
+    esAutorizado: false,
+  };
 
   onMouseDown(event: MouseEvent) {
     const target = event.target as HTMLElement;
@@ -4007,22 +4021,63 @@ export class PrecioUnitarioComponent implements OnInit {
   // }
 
   openDialogFSR() {
-    const dialogOpen = this.dialog.open(DialogFSRComponent, {
-      data: {
-        diasConsideradosFsiNoTrabajados: this.diasConsideradosFsiNoTrabajados,
-        selectedEmpresa: this.selectedEmpresa,
-        diasConsideradosFsiPagados: this.diasConsideradosFsiPagados,
-        selectedProyecto: this.selectedProyecto,
-        diasNoLaborales: this.diasNoLaborales,
-        diasPagados: this.diasPagados,
-        fsrDetalles: this.fsrDetalles,
-        porcentajePrestaciones: this.porcentajePrestaciones,
-        esAutorizado: this.esAutorizado,
-      },
-    });
-    dialogOpen.afterClosed().subscribe((respuesta) => {
-      if (respuesta) {
-        this.recalcularPresupuesto();
+    this.contenedorFSR = true;
+    this.contenedorPresupuesto = false;
+    this.contenedorExplosionInsumo = false;
+
+    this.dataFSR = {
+      diasConsideradosFsiNoTrabajados: this.diasConsideradosFsiNoTrabajados,
+      selectedEmpresa: this.selectedEmpresa,
+      diasConsideradosFsiPagados: this.diasConsideradosFsiPagados,
+      selectedProyecto: this.selectedProyecto,
+      diasNoLaborales: this.diasNoLaborales,
+      diasPagados: this.diasPagados,
+      fsrDetalles: this.fsrDetalles,
+      porcentajePrestaciones: this.porcentajePrestaciones,
+      esAutorizado: this.esAutorizado,
+    }
+    // const dialogOpen = this.dialog.open(DialogFSRComponent, {
+    //   data: {
+    //     diasConsideradosFsiNoTrabajados: this.diasConsideradosFsiNoTrabajados,
+    //     selectedEmpresa: this.selectedEmpresa,
+    //     diasConsideradosFsiPagados: this.diasConsideradosFsiPagados,
+    //     selectedProyecto: this.selectedProyecto,
+    //     diasNoLaborales: this.diasNoLaborales,
+    //     diasPagados: this.diasPagados,
+    //     fsrDetalles: this.fsrDetalles,
+    //     porcentajePrestaciones: this.porcentajePrestaciones,
+    //     esAutorizado: this.esAutorizado,
+    //   },
+    // });
+    // dialogOpen.afterClosed().subscribe((respuesta) => {
+    //   if (respuesta) {
+    //     this.recalcularPresupuesto();
+    //     this.precioUnitarioService
+    //       .obtenerEstructurado(this.selectedProyecto, this.selectedEmpresa)
+    //       .subscribe((precios) => {
+    //         this.preciosUnitarios = precios;
+    //         this.esquemaArbol2 = false;
+    //         this.esquemaArbol3 = false;
+    //         this.esquemaArbol4 = false;
+    //         this.pestanas = false;
+    //       });
+    //   }
+    // });
+  }
+
+/**
+ * Cierra el dialogo de FSR y muestra el contenedor de presupuesto.
+ * Si se proporciona un evento, se vuelve a recalcular el presupuesto.
+ * Se llama a obtenerEstructurado para obtener la lista de precios unitarios.
+ * Se establecen las variables de esquemaArbol2, esquemaArbol3, esquemaArbol4 y pestanas en false.
+ * @param event - El evento que se provoca al cerrar el dialogo.
+ */
+  cerrarFSR(event: Event){
+    this.contenedorFSR = false;
+    this.contenedorPresupuesto = true;
+    this.contenedorExplosionInsumo = false;
+    if(event){
+      this.recalcularPresupuesto();
         this.precioUnitarioService
           .obtenerEstructurado(this.selectedProyecto, this.selectedEmpresa)
           .subscribe((precios) => {
@@ -4032,8 +4087,8 @@ export class PrecioUnitarioComponent implements OnInit {
             this.esquemaArbol4 = false;
             this.pestanas = false;
           });
-      }
-    });
+    }
+    
   }
 
   autorizarPresupuesto() {
@@ -4451,11 +4506,15 @@ export class PrecioUnitarioComponent implements OnInit {
 
     this.contenedorPresupuesto = false;
     this.contenedorExplosionInsumo = true;
+    this.contenedorFSR = false;
   }
 
   recalcular(event: Event) {
+    console.log('event', event);
+    
     this.contenedorPresupuesto = true;
     this.contenedorExplosionInsumo = false;
+    this.contenedorFSR = false;
     if (event) {
       console.log('recalculando');
       this.recalcularPresupuesto();

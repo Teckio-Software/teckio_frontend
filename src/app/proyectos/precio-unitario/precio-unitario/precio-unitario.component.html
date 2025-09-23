@@ -2251,6 +2251,15 @@
       (recalcular)="recalcular($event)"
     ></app-dialog-explosion-insumos>
   </div>
+  <!--Contenedor Tabla FSR-->
+  <div *ngIf="contenedorFSR">
+    <app-dialog-fsr
+      *appRecarga="appRecarga"
+      (cerrarFSR)="cerrarFSR($event)"
+      [dataFSR]="dataFSR"
+    >
+    </app-dialog-fsr>
+  </div>
   <!---------------------------Tabla Muestra Detalle------------------------------>
 
   <!--Tabla 3-->
@@ -3103,6 +3112,8 @@
   >
   </app-precio-unitario-modal>
 </div>
+
+
 
 <div *ngIf="isOpenModalImprimir">
   <app-imprimir-modal
