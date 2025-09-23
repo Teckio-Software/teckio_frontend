@@ -13,7 +13,7 @@ import { Reporte } from './types/reporte';
  * @param {Reporte} reporte Información del presupuesto a imprimir.
  * @returns {void} No devuelve nada, descarga el archivo PDF.
  */
-export function imprimirReporte(reporte: Reporte) {
+export function imprimirReporte(reporte: Reporte): void {
   (<any>pdfMake).addVirtualFileSystem(pdfFonts);
 
   let totalEnLetras: string;
@@ -185,7 +185,7 @@ export function imprimirReporte(reporte: Reporte) {
 
   const tableBodyProyecto: any = [];
 
-  reporte.precioUnitario.forEach((proyecto, index) => {
+  reporte.precioUnitario.forEach((proyecto: precioUnitarioDTO) => {
     const esPadreConHijos = proyecto.hijos?.length > 0;
 
     tableBodyProyecto.push([
@@ -219,7 +219,7 @@ export function imprimirReporte(reporte: Reporte) {
     // filas de hijos
     if (proyecto.hijos?.length > 0) {
       const filasHijos = mapHijos(proyecto.hijos, 0, '', reporte);
-      filasHijos.forEach((filaHijo) => tableBodyProyecto.push(filaHijo));
+      filasHijos.forEach((filaHijo: precioUnitarioDTO) => tableBodyProyecto.push(filaHijo));
     }
   });
 
@@ -240,39 +240,89 @@ export function imprimirReporte(reporte: Reporte) {
     text: '\n',
   });
 
-  reporte.precioUnitario.forEach((precio) => {
-    content.push({
-      columns: [
-        { width: '*', text: '' },
-        {
-          width: 'auto',
-          table: {
-            widths: ['auto', 'auto'],
-            body: [
-              [
-                {
-                  text: `Subtotal de ${precio.codigo}`,
-                  style: 'styleTotal',
-                },
-                {
-                  text: `$ ${precio.importeConFormato}`,
-                  style: 'styleTotal',
-                  alignment: 'right',
-                },
-              ],
-            ],
-          },
-          layout: {
-            hLineColor: () => '#B9B9B9',
-            vLineColor: () => '#B9B9B9',
-            hLineWidth: () => 0,
-            vLineWidth: () => 0,
-          },
-          margin: [0, 0, 0, 5],
-        },
-      ],
-    });
+  const tablaBody = [];
+
+  // subtotales por precioUnitario
+  reporte.precioUnitario.forEach((precio: precioUnitarioDTO) => {
+    let subtotal: number = precio.costoUnitario * precio.cantidad;
+
+    let subtotalconFormato: string = new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+    }).format(subtotal);
+
+    tablaBody.push([
+      { text: `Subtotal de ${precio.codigo}`, style: 'styleTotal' },
+      {
+        text: `$ ${
+          reporte.imprimirConCostoDirecto
+            ? subtotalconFormato
+            : reporte.imprimirConPrecioUnitario
+              ? precio.importeConFormato
+              : precio.importe * (1 + reporte.proyecto.porcentajeIva / 100)
+        }`,
+        style: 'styleTotal',
+        alignment: 'right',
+      },
+    ]);
   });
+
+  if (
+    reporte.imprimirImpuesto &&
+    !reporte.imprimirConCostoDirecto &&
+    !reporte.imprimirConPrecioUnitario
+  ) {
+    tablaBody.push([
+      {
+        text: 'IVA ' + reporte.proyecto.porcentajeIva + '%',
+        style: 'smallCantidadTotal',
+      },
+      {
+        text: reporte.totalIva,
+        style: 'smallCantidadTotal',
+        alignment: 'right',
+      },
+    ]);
+  }
+
+  const totalCostoDirecto = reporte.precioUnitario.reduce(
+    (acc: number, precio: precioUnitarioDTO) => acc + precio.costoUnitario,
+    0,
+  );
+
+  const totalCostoDirectoConFormato = new Intl.NumberFormat('es-MX', {
+    style: 'currency',
+    currency: 'MXN',
+  }).format(totalCostoDirecto);
+
+  const totalConIva = reporte.precioUnitario.reduce(
+    (acc: number, precio: precioUnitarioDTO) =>
+      acc + precio.importe * (1 + reporte.proyecto.porcentajeIva / 100),
+    0,
+  );
+
+  const totalSeleccionadoFormateado = reporte.imprimirConCostoDirecto
+    ? totalCostoDirectoConFormato
+    : reporte.imprimirConPrecioUnitario
+      ? reporte.totalSinIva
+      : reporte.totalIva;
+
+  const totalSeleccionadoNumerico = reporte.imprimirConCostoDirecto
+    ? totalCostoDirecto
+    : reporte.imprimirConPrecioUnitario
+      ? reporte.total
+      : totalConIva;
+
+  console.log(totalSeleccionadoNumerico);
+
+  tablaBody.push([
+    { text: 'Total', style: 'smallCantidadTotal' },
+    {
+      text: totalSeleccionadoFormateado,
+      style: 'smallCantidadTotal',
+      alignment: 'right',
+    },
+  ]);
 
   content.push({
     columns: [
@@ -280,33 +330,8 @@ export function imprimirReporte(reporte: Reporte) {
       {
         width: 'auto',
         table: {
-          body: [
-            // booleano de iva opcional
-            ...(reporte.imprimirImpuesto
-              ? [
-                  [
-                    {
-                      text: 'IVA ' + reporte.proyecto.porcentajeIva + '%',
-                      style: 'smallCantidadTotal',
-                    },
-                    {
-                      text: ` ${reporte.totalIva}`,
-                      style: 'smallCantidadTotal',
-                      alignment: 'right',
-                    },
-                  ],
-                ]
-              : []),
-
-            [
-              { text: 'Total', style: 'smallCantidadTotal' },
-              {
-                text: `${reporte.totalConIVA}`,
-                style: 'smallCantidadTotal',
-                alignment: 'right',
-              },
-            ],
-          ],
+          widths: ['auto', 'auto'],
+          body: tablaBody,
         },
         layout: {
           hLineColor: () => '#B9B9B9',
@@ -320,7 +345,7 @@ export function imprimirReporte(reporte: Reporte) {
   });
 
   if (reporte.importeConLetra) {
-    totalEnLetras = numeroALetras(reporte.totalSinFormato);
+    totalEnLetras = numeroALetras(totalSeleccionadoNumerico);
 
     content.push({
       columns: [
@@ -361,9 +386,7 @@ export function imprimirReporte(reporte: Reporte) {
     ],
   };
 
-  pdfMake
-    .createPdf(docDefinition)
-    .download(`Presupuesto ${reporte.titulo}.pdf`);
+  pdfMake.createPdf(docDefinition).download(`Presupuesto ${reporte.titulo}.pdf`);
 }
 
 /**
@@ -377,11 +400,11 @@ export function imprimirReporte(reporte: Reporte) {
  */
 function mapHijos(
   hijos: precioUnitarioDTO[],
-  nivel = 0,
-  prefijo = '',
-  reporte: Reporte
+  nivel: number = 0,
+  prefijo: string = '',
+  reporte: Reporte,
 ): any[] {
-  return hijos.flatMap((hijo, index) => {
+  return hijos.flatMap((hijo: precioUnitarioDTO, index: number) => {
     let color = '#000000';
     if (hijo.hijos?.length > 0) {
       switch (nivel) {
@@ -401,24 +424,22 @@ function mapHijos(
 
     const esPadreConHijos = hijo.hijos?.length > 0;
     const numero = prefijo ? `${prefijo}.${index + 1}` : `${index + 1}`;
-    const style = esPadreConHijos
-      ? { fontSize: 8, bold: true, color }
-      : { fontSize: 8 };
+    const style = esPadreConHijos ? { fontSize: 8, bold: true, color } : { fontSize: 8 };
 
     const selectedProyectoIva = reporte.proyecto.porcentajeIva;
 
-    let total!: number;
+    let total: number = 0;
     const costoDirecto = hijo.costoUnitario * hijo.cantidad;
     const precioUnitario = hijo.precioUnitario * hijo.cantidad;
     const precioUnitarioMasIVA =
-      hijo.precioUnitario * hijo.cantidad * selectedProyectoIva;
+      hijo.precioUnitario * hijo.cantidad * (1 + selectedProyectoIva / 100);
     const totalMasIva = hijo.precioUnitario + precioUnitarioMasIVA;
 
     if (reporte.imprimirConCostoDirecto) {
       total = costoDirecto;
     } else if (reporte.imprimirConPrecioUnitario) {
       total = precioUnitario;
-    } else if (reporte.imprimirConPUMasIva) {
+    } else if (reporte.imprimirConPrecioUnitarioIVA) {
       total = totalMasIva;
     }
 
@@ -440,8 +461,8 @@ function mapHijos(
         text: esPadreConHijos
           ? ''
           : reporte.imprimirConCostoDirecto
-          ? `${hijo.costoUnitarioConFormato}`
-          : `${hijo.precioUnitarioConFormato}`,
+            ? `${hijo.costoUnitarioConFormato}`
+            : `${hijo.precioUnitarioConFormato}`,
         style: { ...style, alignment: 'right' },
       },
       {
@@ -451,9 +472,7 @@ function mapHijos(
     ];
 
     // recorrer hijos recursivamente
-    const subFilas = hijo.hijos
-      ? mapHijos(hijo.hijos, nivel + 1, numero, reporte)
-      : [];
+    const subFilas = hijo.hijos ? mapHijos(hijo.hijos, nivel + 1, numero, reporte) : [];
 
     // fila de total si tiene hijos
     let filas = [fila, ...subFilas];
