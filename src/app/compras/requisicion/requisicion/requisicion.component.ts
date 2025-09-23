@@ -228,6 +228,7 @@ export class RequisicionComponent implements OnInit {
           this.veiewInsumos = false;
           this.alerta(AlertaTipo.delete, 'Requisición eliminada');
           this.cargarRegistros();
+          this.insumosEstado = false;
         } else {
           this.alerta(AlertaTipo.error, datos.descripcion);
         }

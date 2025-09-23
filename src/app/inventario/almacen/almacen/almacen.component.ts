@@ -216,11 +216,11 @@ export class AlmacenComponent implements OnInit {
     this.openDialogWithoutRef();
   }
 
-  get textoMostrarCentrales(): string {
-    return this.mostrarCentrales
-      ? 'Mostrar todos los almacenes'
-      : 'Mostrar centrales';
-  }
+  // get textoMostrarCentrales(): string {
+  //   return this.mostrarCentrales
+  //     ? 'Mostrar todos los almacenes'
+  //     : 'Mostrar centrales';
+  // }
 
   cambiarSeleccion() {
     if (this.mostrarCentrales) {

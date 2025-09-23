@@ -8,6 +8,7 @@ import { CuentaBancariaContratistaDTO } from '../../cuentabancaria';
 import { BancoService } from 'src/app/bancos/banco/banco.service';
 import { BancoDTO } from 'src/app/bancos/banco/tsBanco';
 import { CuentabancariaContratistaService } from '../cuentabancaria-contratista.service';
+import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 
 @Component({
   selector: 'app-cuentabancaria-contratista',
@@ -36,6 +37,11 @@ export class CuentabancariaContratistaComponent {
   }
 
   bancos : BancoDTO[] = [];
+
+  mensajeError: RespuestaDTO = {
+    estatus: false,
+    descripcion: ''
+  };
 
   constructor(
     public dialogRef: MatDialogRef<CuentabancariaContratistaComponent>, 
@@ -75,23 +81,28 @@ export class CuentabancariaContratistaComponent {
       || this.cuentaBancaria.numeroSucursal == "" || this.cuentaBancaria.numeroSucursal == undefined || this.cuentaBancaria.clabe == "" || this.cuentaBancaria.clabe == undefined
       || this.cuentaBancaria.tipoMoneda == undefined || this.cuentaBancaria.tipoMoneda <= 0
     ){
-      console.log("los datos no son correctos", this.cuentaBancaria);
+      this.mensajeError = {
+        estatus: true,
+        descripcion: 'Los datos no son correctos'
+      }
+      // console.log("Los datos no son correctos", this.cuentaBancaria);
       return;
     }else{
       this._CuentaBancaria.CrearCuentaBancaria(this.selectedEmpresa, this.cuentaBancaria).subscribe((dato) =>{
         if(dato){
-          console.log("se creo la cuenta bancaria");
+          console.log("Se creó la cuenta bancaria");
         }else{
-          console.log("ocurrio un error");
+          console.log("Ocurrió un error");
         }
       });
-      console.log("los campos estan llenos ", this.cuentaBancaria)
+      console.log("Los campos están llenos", this.cuentaBancaria)
     }
     
     this.cerrar();
   }
   
   cerrar() {
+    this.mensajeError.estatus = false;
     this.dialogRef.close(false); // Cierra el diálogo y pasa false para indicar que se canceló la operación
   }
 

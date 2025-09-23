@@ -12,6 +12,7 @@
 
             </div>
             <div class="bg-white px-4 pb-4 sm:p-2 sm:pb-4">
+                
                 <div>
                     <form [formGroup]="formulario">
 
@@ -58,6 +59,9 @@
                         </div>
                     </form>
 
+                </div>
+                <div class="text-red-600 font-normal text-md mt-2" *ngIf="mensajeError.estatus">
+                    *{{mensajeError.descripcion}}
                 </div>
             </div>
             <div class="bg-gray-50 px-2 py-2 sm:flex sm:flex-row-reverse sm:px-6 sm:gap-4">

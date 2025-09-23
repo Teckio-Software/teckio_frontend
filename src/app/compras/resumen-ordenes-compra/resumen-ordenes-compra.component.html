@@ -4,7 +4,7 @@
   (selectedTabChange)="yourFn($event)"
   [selectedIndex]="selectedIndex"
 >
-  <mat-tab label="Resumen ordenes de compra">
+  <mat-tab label="Resumen órdenes de compra">
     <div *ngIf="selectedIndex === 0"></div>
   </mat-tab>
   <mat-tab label="Insumos comprados">
@@ -341,14 +341,14 @@
               colspan="7"
               class="xs:hidden font-medium text-center text-gray700 hover:bg-gray200 animation duration-200"
             >
-              No hay ordenes de compra.
+              No hay órdenes de compra.
             </td>
             <td
               scope="col"
               colspan="5"
               class="md:hidden lg:hiddenfont-medium text-center text-gray700 hover:bg-gray200 animation duration-200 text-[8px]"
             >
-              No hay ordenes de compra.
+              No hay órdenes de compra.
             </td>
           </tr>
           <ng-container *ngFor="let oc of filteredOrdenes | async">
@@ -716,14 +716,14 @@
               colspan="7"
               class="xs:hidden font-medium text-center text-gray700 hover:bg-gray200 animation duration-200"
             >
-              No hay ordenes de compra.
+              No hay órdenes de compra.
             </td>
             <td
               scope="col"
               colspan="5"
               class="md:hidden lg:hiddenfont-medium text-center text-gray700 hover:bg-gray200 animation duration-200 text-[8px]"
             >
-              No hay ordenes de compra.
+              No hay órdenes de compra.
             </td>
           </tr>
           <ng-container *ngFor="let oc of ordenesCommpraXInsumo">

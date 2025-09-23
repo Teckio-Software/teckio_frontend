@@ -169,7 +169,7 @@ export class EspecialidadesComponent implements OnInit {
     const dialogRef = this.dialog.open(ModalAlertComponent, {
       data: {
         titulo: '',
-        mensaje: '¿Quieres eliminar el periodo?',
+        mensaje: '¿Quieres eliminar la especialidad?',
         funcionAceptarEspecialidad: this.borrar.bind(this),
         especialidadId: especialidadId,
       },
