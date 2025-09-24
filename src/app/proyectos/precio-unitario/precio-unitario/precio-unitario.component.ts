@@ -57,6 +57,7 @@ import Swal from 'sweetalert2';
 import { ModalAlertComponent } from 'src/app/utilidades/modal-alert/modal-alert.component';
 import { operacionesXPrecioUnitarioDetalleDTO } from '../../precio-unitario-detalle/tsOperacionesXPrecioUnitarioDetalle';
 import { EstimacionesService } from '../../estimaciones/estimaciones.service';
+import { AlertaTipo } from 'src/app/utilidades/alert/alert.component';
 
 @Component({
   selector: 'app-precio-unitario',
@@ -470,6 +471,11 @@ export class PrecioUnitarioComponent implements OnInit {
 
   selectedGenerador: number = 0;
 
+    alertaSuccess: boolean = false;
+    alertaMessage: string = '';
+    alertaTipo: AlertaTipo = AlertaTipo.none;
+    AlertaTipo = AlertaTipo;
+
   @ViewChild('InputOperacionGenerador') InputOperacionGenerador: any;
 
   archivosCargarExcels: FileList | null = null;
@@ -550,6 +556,27 @@ export class PrecioUnitarioComponent implements OnInit {
     this.selectedProyecto = Number(idProyecto);
     this.selectedEmpresa = Number(idEmpresa);
     this.Unidades = this.unidades.Getunidades();
+  }
+
+  alerta(tipo: AlertaTipo, mensaje: string = '') {
+    if (tipo === AlertaTipo.none) {
+      this.cerrarAlerta();
+      return;
+    }
+
+    this.alertaTipo = tipo;
+    this.alertaMessage = mensaje || 'Ocurrió un error';
+    this.alertaSuccess = true;
+
+    setTimeout(() => {
+      this.cerrarAlerta();
+    }, 3000);
+  }
+
+  cerrarAlerta() {
+    this.alertaSuccess = false;
+    this.alertaTipo = AlertaTipo.none;
+    this.alertaMessage = '';
   }
 
   draggedItem: any;
@@ -947,6 +974,8 @@ export class PrecioUnitarioComponent implements OnInit {
         if (this.preciosUnitarios.length > 0) {
           if (this.preciosUnitarios[0].esAvanceObra) {
             this.esAutorizado = true;
+          }else{
+            this.esAutorizado = false;
           }
         }
 
@@ -4045,6 +4074,22 @@ export class PrecioUnitarioComponent implements OnInit {
       });
   }
 
+  RemoverAutorizacionPresupuesto() {
+    this.displayCarga = 'flex';
+    this.precioUnitarioService
+      .removerAutorizacionPresupuesto(this.selectedProyecto, this.selectedEmpresa)
+      .subscribe((datos) => {
+        if(datos.estatus){
+          this.cargarRegistros();
+          this.displayCarga = 'none';
+        }else{
+          this.displayCarga = 'none';
+          this.alerta(AlertaTipo.error, datos.descripcion);
+        }
+      });
+  }
+
+
   nuevaPartidaAdicional() {
     var ultimoPU = this.preciosUnitarios[this.preciosUnitarios.length - 1];
     this.preciosUnitarios.push({
@@ -4670,7 +4715,7 @@ export class PrecioUnitarioComponent implements OnInit {
           if (datos.estatus) {
             // se subio
             this.cargarRegistros();
-            
+
             this.recalcularPresupuesto();
           } else {
             // error back
