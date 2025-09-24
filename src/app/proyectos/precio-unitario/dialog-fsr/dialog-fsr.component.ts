@@ -96,6 +96,8 @@ export class DialogFSRComponent {
       esAutorizado: false,
     };
 
+  existeCesantiaVejez: boolean = false;
+
   @Output() cerrarFSR = new EventEmitter();
   constructor(
 
@@ -223,6 +225,11 @@ export class DialogFSRComponent {
       )
       .subscribe((datos) => {
         this.porcentajesCesantiaEdad = datos;
+        if(this.porcentajesCesantiaEdad.length > 0){
+          this.existeCesantiaVejez = true;
+        }else{
+          this.existeCesantiaVejez = false;
+        }
         this.porcentajesCesantiaEdad.push({
           id: 0,
           idProyecto: this.selectedProyecto,
