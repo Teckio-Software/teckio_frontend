@@ -53,8 +53,8 @@ export class ImprimirModalComponent {
   pieCentro: string = '';
   pieDerecha: string = '';
 
-  selectedEmpresa: number = 0;
   selectedParams?: ParametrosImpresionPu;
+  selectedEmpresa: number = 0;
   selectedParamId: number = 0;
 
   isParamGuardado: boolean = false;
