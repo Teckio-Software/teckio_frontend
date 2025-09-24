@@ -1,20 +1,32 @@
 <section>
   <!-- Button cotainer -->
   <div
-    class="flex justify-between items-center mb-4"
+    class="flex items-center mb-4 gap-2"
     *ngIf="proyectoSeleccionado"
   >
     <button
       (click)="openDialogWithoutRef()"
-      class="flex items-center gap-2 rounded-md bg-colorButton transition-all duration-200 hover:bg-colorButtonHover text-white px-4 py-2 hover:shadow-md"
+      class="flex items-center gap-2 rounded-md bg-colorButton transition-all duration-200 hover:bg-colorButtonHover text-white px-2 py-2 hover:shadow-md"
+      ngbTooltip="Nuevo almacén"
     >
-      <span class="font-medium text-base tracking-wide xs:text-sm">
+      <!-- <span class="font-medium text-base tracking-wide xs:text-sm">
         Nuevo almacén
-      </span>
+      </span> -->
       <img class="w-5 xs:w-4" src="assets/add.svg" alt="botón agregar" />
     </button>
+    <select
+          [(ngModel)]="filtroAlmacen"
+          name=""
+          id=""
+          (input)="seleccionTipo($event)"
+          class="block h-auto px-3 py-1.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        >
+          <option value="0">Solo de Proyectos</option>
+          <option value="1">Solo Centrales</option>
+          <option value="2">Centrales y de Proyectos</option>
+        </select>
 
-    <div
+    <!-- <div
       class="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-md hover:bg-gray-100 transition-colors duration-200"
     >
       <div class="flex items-center gap-2">
@@ -28,7 +40,7 @@
           Mostrar centrales
         </p>
       </div>
-    </div>
+    </div> -->
   </div>
   <!-- Button cotainer  end -->
   <div
@@ -42,9 +54,9 @@
             Código
           </th>
           <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">
-            Nombre Almacén
+            Nombre almacén
           </th>
-          <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">Es Central</th>
+          <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">Es central</th>
           <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">Responsable</th>
           <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">Domicilio</th>
           <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">Colonia</th>

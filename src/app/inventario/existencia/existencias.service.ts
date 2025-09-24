@@ -31,6 +31,10 @@ export class ExistenciasService {
     return this.HttpClient.get<RespuestaDTO>(`${this.apiUrl}/${idEmp}/existenciaYAlmacenDeInsumo/${idInsumo}/${idProyecto}`);
   }
 
+   public existenciaYAlmacenDeInsumoCantidad (idEmp: number, idInsumo : number, idProyecto : number){
+    return this.HttpClient.get<number>(`${this.apiUrl}/${idEmp}/existenciaYAlmacenDeInsumoCantidad/${idInsumo}/${idProyecto}`);
+  }
+
   public obtenDetallesInsumosExistentes (idEmp: number, idAlmacen : number, idInsumo : number){
     return this.HttpClient.get<existenciasInsumosDTO[]>(`${this.apiUrl}/${idEmp}/obtenDetallesInsumosExistentes/${idAlmacen}/${idInsumo}`);
   }

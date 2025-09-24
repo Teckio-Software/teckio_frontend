@@ -81,6 +81,33 @@ export class ModalUsuarioCorporativoComponent implements OnInit {
       return; // Detener el proceso si las contraseñas no coinciden
     }
 
+    //Validaciones de datos
+    if((this.form.get('nombre')?.value == '') &&
+      (this.form.get('apaterno')?.value == '') &&
+      (this.form.get('amaterno')?.value == '') &&
+      (this.form.get('usuario')?.value == '') &&
+      (this.form.get('correoElectronico')?.value == '')){
+      this.AlertaCampo('Capture todos los campos');
+      return;
+    }
+
+    if(this.form.get('nombre')?.value == ''){
+      this.AlertaCampo('El campo \'Nombre\' es requerido');
+      return;}
+    if(this.form.get('apaterno')?.value == ''){
+      this.AlertaCampo('El campo \'Apellido Paterno\' es requerido');
+      return;}
+    if(this.form.get('amaterno')?.value == ''){
+      this.AlertaCampo('El campo \'Apellido Materno\' es requerido');
+      return;}
+      if(this.form.get('correoElectronico')?.value == ''){
+      this.AlertaCampo('El campo \'Correo electrónico\' es requerido');
+      return;}
+    if(this.form.get('usuario')?.value == ''){
+      this.AlertaCampo('El campo \'Nombre de usuario\' es requerido');
+      return;}
+    //////////////////////
+
     // Si las contraseñas coinciden, continuar con el guardado del usuario
     this.usuarioCorporativoService.creaUsuarioCorporativo({
       nombreCompleto: this.form.get('nombre')?.value,
@@ -95,6 +122,19 @@ export class ModalUsuarioCorporativoComponent implements OnInit {
       this.modalActual.close(true); // Cierra el modal y guarda
     });
   }
+
+  /**
+   * Muestra un mensaje de advertencia en una ventana emergente.
+   * @param {string} message - El mensaje a mostrar en la ventana emergente.
+   */
+  AlertaCampo(message: string) {
+      Swal.fire({
+        title: "Warning",
+        text: message,
+        icon: "warning"
+      });
+    }
+
   cerrarDialog() {
     this.modalActual.close(false); // Cierra el modal sin guardar
   }

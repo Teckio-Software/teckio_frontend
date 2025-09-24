@@ -12,12 +12,13 @@
           {{ almacen.almacenNombre }}
         </option>
       </select> -->
-      <label
+
+      <!-- <label
         class="rounded-l-md bg-colorButton text-gray100 px-1 py-1 xs:text-[10px]"
         for="almacen"
         >Almacen</label
-      >
-      <input
+      > -->
+      <!-- <input
         class="xs:text-[10px] xs:w-[130px]"
         list="almacendata"
         id="almacen"
@@ -30,10 +31,38 @@
         <option *ngFor="let almacen of almacenes">
           {{ almacen.almacenNombre }}
         </option>
-      </datalist>
+      </datalist> -->
     </div>
     <!-- Almacén end-->
 
+    <div
+      class="flex-col items-end border-2 border-gray-400 rounded-lg text-left mt-3 bg-white w-[300px]"
+      #virtualScrollContainer
+    >
+      <input
+        type="text"
+        class="bg-transparent w-full p-1 text-left px-4 focus:outline-none"
+        (input)="FiltrarAlmacenes($event)"
+        [(ngModel)]="selectedAlmacen"
+        (click)="SlistaAlmacenes = !SlistaAlmacenes"
+        placeholder="Selecciona un almacén..."
+      />
+      <div *ngIf="SlistaAlmacenes">
+        <cdk-virtual-scroll-viewport
+          itemSize="50"
+          class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-[300px] h-36 overflow-auto shadow-lg"
+        >
+          <div
+            *cdkVirtualFor="let almacen of almacenesVS"
+            (click)="SeleccionaAlmacen(almacen.id, almacen.almacenNombre)"
+            class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+            style="height: 36px; box-sizing: border-box"
+          >
+            {{ almacen.almacenNombre }}
+          </div>
+        </cdk-virtual-scroll-viewport>
+      </div>
+    </div>
     <div
       *ngIf="idAlmacen != 0 && idRequisicionInput == 0"
       class="flex items-end"
@@ -45,7 +74,7 @@
         <p
           class="text-[#f2f2f2] titular bg-custom-bg w-52 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
         >
-          Nueva Entrada a Almacén
+          Nueva entrada a almacén
         </p>
         <img src="assets/add.svg" alt="" />
       </button>
@@ -61,7 +90,7 @@
         <p
           class="text-[#f2f2f2] titular bg-custom-bg w-52 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
         >
-          Nuevo Ajuste en Almacén
+          Nuevo ajuste en almacén
         </p>
         <img src="assets/add.svg" alt="" />
       </button>
@@ -74,12 +103,12 @@
       [(ngModel)]="tipoEntradaAlmacen"
       (change)="fitrarTipoEA()"
     >
-      <option [value]="0">Todas las Entradas</option>
-      <option [value]="1">Orden de Compra</option>
+      <option [value]="0">Todas las entradas</option>
+      <option [value]="1">Orden de compra</option>
       <option [value]="2" *ngIf="idRequisicionInput == 0">
-        Ajuste de Almacén
+        Ajuste de almacén
       </option>
-      <option [value]="3">Devolucion de Prestamos</option>
+      <option [value]="3">Devolucion de prestamos</option>
     </select>
 
     <input
@@ -113,7 +142,7 @@
             <th class="px-1 py-[1px] min-w-2" scope="col">No.Entrada</th>
             <th class="px-[2px] py-[1px] min-w-2" scope="col">Almacén</th>
             <th class="px-[2px] py-[1px] min-w-2" scope="col">
-              Persona Registro
+              Persona registro
             </th>
             <th class="px-[2px] py-[1px] min-w-2" scope="col">Registro</th>
             <th class="px-[2px] py-[1px] min-w-2" scope="col">*Proveedor</th>
@@ -434,7 +463,7 @@
             <tr>
               <th class="px-1 py-[1px] min-w-2" scope="col">Descripción</th>
               <th class="px-[2px] py-[1px] min-w-2" scope="col">Unidad</th>
-              <th class="px-[2px] py-[1px] min-w-2" scope="col">Tipo Insumo</th>
+              <th class="px-[2px] py-[1px] min-w-2" scope="col">Tipo insumo</th>
               <th class="px-[2px] py-[1px] min-w-2" scope="col">Cantidad</th>
               <!-- <th class="cabecera1" scope="col">Acciones</th> -->
             </tr>
@@ -521,12 +550,12 @@
         <table class="w-full text-sm text-left">
           <thead class="bg-primario text-white">
             <tr>
-              <th class="px-1 py-[1px] min-w-2" scope="col">No.Orden Compra</th>
+              <th class="px-1 py-[1px] min-w-2" scope="col">No.Orden compra</th>
               <th class="px-[2px] py-[1px] min-w-2" scope="col">Descripción</th>
               <th class="px-[2px] py-[1px] min-w-2" scope="col">Unidad</th>
               <th class="px-[2px] py-[1px] min-w-2" scope="col">Cantidad</th>
               <th class="px-[2px] py-[1px] min-w-2" scope="col">
-                *Cantidad Recibida
+                *Cantidad recibida
               </th>
               <!-- <th class="cabecera1" scope="col">Acciones</th> -->
             </tr>
@@ -544,7 +573,7 @@
                 <input
                   autocomplete="off"
                   autocomplete="off"
-                  class="form-contrtrol bg-transparent dropdown1 text-end "
+                  class="form-contrtrol bg-transparent dropdown1 text-end"
                   type="number"
                   style="margin: 5px"
                   data-bs-toggle="dropdown"

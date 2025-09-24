@@ -36,6 +36,7 @@ import { Alert } from '@mui/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { map, Observable, startWith } from 'rxjs';
+import { da } from 'date-fns/locale';
 
 @Component({
   selector: 'app-insumos-requicicion',
@@ -160,6 +161,10 @@ export class InsumosRequicicionComponent implements OnInit {
 
   @ViewChild('testInput') testInput: any;
   observacion!: string;
+
+  disponibilidadInsumo: number = 0;
+
+  IdInsumo: number = 0;
 
   ngOnInit() {
     this.IdUser = Number(this._SeguridadEmpresa.zfObtenerCampoJwt('idUsuario'));
@@ -343,6 +348,19 @@ export class InsumosRequicicionComponent implements OnInit {
     );
   }
 
+/**
+ * Agrega un nuevo insumo en la requisici n
+ * Si el campo de fecha de entrega está vacío, se establece la fecha actual
+ * Se obtiene un objeto con la informaci n del insumo a crear
+ * Se verifica si el objeto cumple con los siguientes campos:
+ *   - descripcion: no está vacío y no es undefined
+ *   - unidad: no est  vac o y no es undefined
+ *   - cantidad: debe ser mayor a 0
+ *   - personaIniciales: no está vacío y no es undefined
+ *   - observaciones: no está vacío y no es undefined
+ * Si el objeto cumple con los campos mencionados, se crea el insumo
+ * Si no hay un error al crear el insumo, se muestra un mensaje de error
+ */
   agregarNuevoInsumo() {
     if (this.form.get('fechaEntrega')?.value == '') {
       this.form.get('fechaEntrega')?.setValue(new Date());
@@ -399,6 +417,11 @@ export class InsumosRequicicionComponent implements OnInit {
     }
   }
 
+/**
+ * Limpia los campos del formulario de insumos
+ * 
+ * @return void
+ */
   limpiarCampos() {
     this.form.reset();
     this.form.get('observaciones')?.setValue('Ninguna');
@@ -414,8 +437,36 @@ export class InsumosRequicicionComponent implements OnInit {
     this.form.get('cUnitario')?.setValue(0);
     this.form.get('cPresupuestada')?.setValue(0);
     this.insumoControl.setValue("");
+    this.IdInsumo = 0;
   }
 
+/**
+ * Consultar la cantidad de un insumo
+ * 
+ * @return void
+ */
+  consultarCantidad(){
+    if (this.form.get('idInsumo')?.value <= 0) {
+      Swal.fire({
+        title: 'Error',
+        text: 'No se ha especificado un insumo válido',
+        icon: 'error',
+      });
+      return;
+    }
+    this.IdInsumo = this.form.get('idInsumo')?.value;
+    this._existencias.existenciaYAlmacenDeInsumoCantidad(
+      this.idEmpresaInput,
+      this.form.get('idInsumo')?.value,
+      this.idProyecto).subscribe((datos) => {
+      this.disponibilidadInsumo = datos;
+    })
+  }
+
+/**
+ * Verifica si un insumo existe en el almacén
+ * @returns void
+ */
   verDetalleInsumo() {
     if (this.form.get('idInsumo')?.value <= 0) {
       Swal.fire({
@@ -523,6 +574,30 @@ export class InsumosRequicicionComponent implements OnInit {
       this.form.get('cPresupuestada')?.setValue(existeInsumo[0].cantidad);
       this.form.get('descripcion')?.setValue(existeInsumo[0].descripcion);
     }
+    //  this._existencias
+    //   .existenciaYAlmacenDeInsumo(
+    //     this.idEmpresaInput,
+    //     this.form.get('idInsumo')?.value,
+    //     this.idProyecto
+    //   )
+    //   .subscribe((datos) => {
+    //     console.log(datos);
+        
+    //     if (datos.estatus) {
+    //       Swal.fire({
+    //         title: 'Insumo encontrado',
+    //         text: datos.descripcion,
+    //         icon: 'success',
+    //       });
+    //     } else {
+    //       Swal.fire({
+    //         title: 'Informacion insumo',
+    //         text: datos.descripcion,
+    //         icon: 'success',
+    //       });
+    //     }
+    //   });
+    this.consultarCantidad();
   }
 
 

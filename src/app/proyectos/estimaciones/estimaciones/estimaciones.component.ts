@@ -27,6 +27,7 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { image } from '../../precio-unitario/precio-unitario/imprimir-modal/types/imagen';
 // import { image } from '../../precio-unitario/precio-unitario/imprimir-modal/imagen';
 import { numeroALetras } from 'src/app/compras/orden-compra/NumeroALetras';
+import { AlertaTipo } from 'src/app/utilidades/alert/alert.component';
 
 
 @Component({
@@ -125,6 +126,11 @@ export class EstimacionesComponent implements OnInit {
   esM2 = false;
   esM3 = false;
   esPza = false;
+
+  alertaSuccess: boolean = false;
+      alertaMessage: string = '';
+      alertaTipo: AlertaTipo = AlertaTipo.none;
+      AlertaTipo = AlertaTipo;
 
   constructor(
     private estimacionesService: EstimacionesService,
@@ -229,6 +235,7 @@ export class EstimacionesComponent implements OnInit {
     if(this.nuevoPeriodo.fechaTermino < this.nuevoPeriodo.fechaInicio) {
       console.log('es menor');
 
+      this.alerta(AlertaTipo.error, 'La fecha de inicio debe ser menor a la fecha de termino.');
       this.alertMessage = 'La fecha de inicio debe ser menor a la fecha de termino.';
       this.alertType = 'error';
       this.autoCloseAlert();
@@ -938,6 +945,27 @@ export class EstimacionesComponent implements OnInit {
   
     pdfMake.createPdf(docDefinition).download();
   }
+
+  alerta(tipo: AlertaTipo, mensaje: string = '') {
+      if (tipo === AlertaTipo.none) {
+        this.cerrarAlerta();
+        return;
+      }
+  
+      this.alertaTipo = tipo;
+      this.alertaMessage = mensaje || 'Ocurrió un error';
+      this.alertaSuccess = true;
+  
+      setTimeout(() => {
+        this.cerrarAlerta();
+      }, 3000);
+    }
+
+  cerrarAlerta() {
+      this.alertaSuccess = false;
+      this.alertaTipo = AlertaTipo.none;
+      this.alertaMessage = '';
+    }
 }
 
 function mapHijos(hijos: any[], nivel = 1, prefijo = ''): any[] {
@@ -1006,4 +1034,6 @@ function mapHijos(hijos: any[], nivel = 1, prefijo = ''): any[] {
 
     return filas;
   });
+
+  
 }

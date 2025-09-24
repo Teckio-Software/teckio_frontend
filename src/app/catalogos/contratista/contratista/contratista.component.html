@@ -21,7 +21,7 @@
       <thead class="bg-primario text-white">
         <tr>
           <th class="px-1 py-[2px]" class="px-1 py-[2px] xs:w-[75px]">
-            Razón Social
+            Razón social
           </th>
           <th class="px-1 py-[2px]" class="px-[2px] py-[2px] xs:w-[70px]">
             RFC
@@ -361,7 +361,7 @@
             <div class="flex flex-wrap justify-center gap-2">
               <button
                 (click)="abrirModalCBContratista(contratista.id)"
-                ngbTooltip="Nueva Cuenta Bancaria"
+                ngbTooltip="Nueva cuenta bancaria"
                 placement="top"
                 triggers="mouseenter:mouseleave"
                 class="bg-[#51aec7] hover:bg-hoverButton transition-colors duration-200 w-5 h-5 flex items-center justify-center rounded-md"
@@ -404,7 +404,7 @@
 
               <button
                 (click)="abrirModalCCContratista(contratista)"
-                ngbTooltip="Asignar Cuenta Contable"
+                ngbTooltip="Asignar cuenta contable"
                 placement="left"
                 triggers="mouseenter:mouseleave"
                 class="bg-[#51aec7] hover:bg-hoverButton transition-colors duration-200 w-5 h-5 flex items-center justify-center rounded-md"
@@ -472,7 +472,7 @@
     (selectedTabChange)="yourFn($event)"
     [selectedIndex]="selectedIndex"
   >
-    <mat-tab label="Cuentas Bancarias">
+    <mat-tab label="Cuentas bancarias">
       <div>
         <app-cuentas-bancarias-contratista
           *appRecarga="appRefrescar"

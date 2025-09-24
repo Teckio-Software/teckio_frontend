@@ -81,14 +81,14 @@ export const pages: Page[] = [
         permiso: [''],
       },
       {
-        name: 'Precio Unitario',
+        name: 'Precio unitario',
         link: '/preciounitario',
         imageUrl: 'assets/preciounitario.svg',
         permiso: [''],
         // SeccionPrecioUnitario
       },
       {
-        name: 'Programacion Estimada',
+        name: 'Programación estimada',
         link: '/programacionestimada',
         imageUrl: 'assets/almacen.svg',
         permiso: [''],
@@ -156,7 +156,7 @@ export const pages: Page[] = [
         permiso: ['SeccionRequisicion'],
       },
       {
-        name: 'Ordenes de Compra',
+        name: 'Ordenes de compra',
         link: '/resumenOrdenCompra',
         imageUrl: 'assets/requisicion.svg',
         permiso: ['SeccionRequisicion'],
@@ -175,19 +175,19 @@ export const pages: Page[] = [
         permiso: ['SeccionAlmacen'],
       },
       {
-        name: 'Entrada de Almacén',
+        name: 'Entrada de almacén',
         link: '/almacenentrada',
         imageUrl: 'assets/salida.svg',
         permiso: ['SeccionEntradaAlmacen'],
       },
       {
-        name: 'Existencia en Almacén',
+        name: 'Existencia en almacén',
         link: '/existencia',
         imageUrl: 'assets/existencias.svg',
         permiso: ['SeccionExistenciaAlmacen'],
       },
       {
-        name: 'Salida Almacén',
+        name: 'Salida almacén',
         link: '/almacensalida',
         imageUrl: 'assets/salida2.svg',
         permiso: ['SeccionSalidaAlmacen'],
@@ -251,7 +251,7 @@ export const pages: Page[] = [
         permiso: ['SeccionRubro'],
       },
       {
-        name: 'Tipo de Poliza',
+        name: 'Tipo de Póliza',
         link: '/tipopoliza',
         imageUrl: 'assets/tipo-poliza.svg',
         permiso: ['SeccionTipoPoliza'],
@@ -269,13 +269,13 @@ export const pages: Page[] = [
         permiso: ['SeccionCliente'],
       },
       {
-        name: 'Poliza',
+        name: 'Póliza',
         link: '/poliza',
         imageUrl: 'assets/Poliza.svg',
         permiso: ['SeccionPoliza'],
       },
       {
-        name: 'Balanza de Comporación',
+        name: 'Balanza de Comprobación',
         link: '/balanza',
         imageUrl: 'assets/balanza-comprobacion.svg',
         permiso: ['SeccionBalanzaComprobacion'],
@@ -345,7 +345,7 @@ export const pages: Page[] = [
         permiso: ['Administrador'],
       },
       {
-        name: 'Menus',
+        name: 'Menús',
         link: '/menu-empresa',
         imageUrl: 'assets/menus.png',
         permiso: ['Administrador'],

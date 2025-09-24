@@ -54,7 +54,7 @@
           </thead>
           <tbody class="divide-y divide-gray300">
             <ng-container *ngIf="isLoading">
-                <tr>
+              <tr>
                 <!-- Código -->
                 <td class="px-1" scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
@@ -94,7 +94,7 @@
                       class="h-5 bg-gray300 rounded-full w-20 mt-1 mb-1"
                     ></div>
                   </div>
-                </td>       
+                </td>
                 <!-- Categoría -->
                 <td scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
@@ -102,7 +102,7 @@
                       class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"
                     ></div>
                   </div>
-                </td>       
+                </td>
                 <!-- Subcategoría -->
                 <td scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
@@ -110,7 +110,7 @@
                       class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"
                     ></div>
                   </div>
-                </td>                
+                </td>
               </tr>
               <tr>
                 <!-- Código -->
@@ -152,7 +152,7 @@
                       class="h-5 bg-gray300 rounded-full w-20 mt-1 mb-1"
                     ></div>
                   </div>
-                </td>       
+                </td>
                 <!-- Categoría -->
                 <td scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
@@ -160,7 +160,7 @@
                       class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"
                     ></div>
                   </div>
-                </td>       
+                </td>
                 <!-- Subcategoría -->
                 <td scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
@@ -168,7 +168,7 @@
                       class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"
                     ></div>
                   </div>
-                </td>                
+                </td>
               </tr>
               <tr>
                 <!-- Código -->
@@ -210,7 +210,7 @@
                       class="h-5 bg-gray300 rounded-full w-20 mt-1 mb-1"
                     ></div>
                   </div>
-                </td>       
+                </td>
                 <!-- Categoría -->
                 <td scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
@@ -218,7 +218,7 @@
                       class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"
                     ></div>
                   </div>
-                </td>       
+                </td>
                 <!-- Subcategoría -->
                 <td scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
@@ -226,9 +226,9 @@
                       class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"
                     ></div>
                   </div>
-                </td>                
+                </td>
               </tr>
-              </ng-container>
+            </ng-container>
             <ng-container>
               <tr
                 *ngIf="listaProductosYServicios.length == 0"
@@ -268,15 +268,28 @@
                   {{ prodyser.descripcionSPS }}
                 </td>
                 <td class="px-1 py-[2px]" scope="col">
-                  <div>
-                    <img
-                      ngbTooltip="Ver insumos"
-                      triggers="mouseenter:mouseleave"
-                      class="cursor-pointer xs:w-4"
-                      src="./assets/visibility_btn.svg"
-                      alt="ver"
-                      (click)="cargarInsumopsProdySer(prodyser.id)"
-                    />
+                  <div class="flex gap-2">
+                    <div>
+                      <img
+                        ngbTooltip="Editar"
+                        triggers="mouseenter:mouseleave"
+                        class="cursor-pointer w-5 xs:w-4"
+                        src="./assets/edit.svg"
+                        alt="editar"
+                        (click)="editar(prodyser)"
+                      />
+                    </div>
+                    <div>
+                      <img
+                        ngbTooltip="Ver insumos"
+                        triggers="mouseenter:mouseleave"
+                        class="cursor-pointer xs:w-4"
+                        src="./assets/visibility_btn.svg"
+                        alt="ver"
+                        (click)="cargarInsumopsProdySer(prodyser.id)"
+                      />
+                    </div>
+                    
                   </div>
                 </td>
               </tr>
@@ -316,8 +329,8 @@
     <!-- contenido -->
     <div class="bg-white px-6 py-4 sm:p-6">
       <div class="text-gray-500 font-semibold mt-2">
-          Campos obligatorios marcados con *
-        </div>
+        Campos obligatorios marcados con *
+      </div>
       <div class="rounded-lg shadow-md overflow-hidden">
         <div class="overflow-x-auto">
           <table class="w-full text-sm xs:table-fixed">
@@ -395,7 +408,9 @@
                         autocomplete="off"
                         class="bg-transparent w-[75%] px-2 py-1"
                         (input)="filtrarProductosYServicios($event)"
-                        (click)="abrirListaProductosYServicios(); limpiarError()"
+                        (click)="
+                          abrirListaProductosYServicios(); limpiarError()
+                        "
                         [value]="textoBusquedaPyS"
                       />
                       <div *ngIf="mostrarListaProductosYServicios">
@@ -507,11 +522,14 @@
           </table>
         </div>
       </div>
-      <div class="text-red-600 font-normal text-xs mt-2" *ngIf="mensajeError.estatus">
-          *{{mensajeError.descripcion}}
-        </div>
+      <div
+        class="text-red-600 font-normal text-xs mt-2"
+        *ngIf="mensajeError.estatus"
+      >
+        *{{ mensajeError.descripcion }}
+      </div>
     </div>
-    
+
     <!-- botones -->
     <div class="px-4 py-3 flex justify-end gap-4">
       <button
@@ -701,6 +719,253 @@
         (click)="cerrarModal()"
       >
         Cerrar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- modal para editar información -->
+<div
+  *ngIf="isModalEditOpen"
+  class="fixed inset-0 z-10 bg-black bg-opacity-50 flex items-center justify-center"
+  (click)="cerrarModal()"
+>
+  <div
+    class="relative transform rounded-lg bg-white text-left shadow-xl transition-all overflow-auto h-1/3"
+    (click)="detenerCierre($event)"
+  >
+    <!-- header -->
+    <div class="flex justify-between items-center border-b px-4 py-3">
+      <h2 class="font-semibold text-gray-800 tracking-wider text-lg">
+        Editar producto o servicio
+      </h2>
+      <button
+        type="button"
+        class="leading-none text-2xl px-3 py-1 text-gray-500 hover:text-gray-700 transition"
+        (click)="cerrarModal()"
+        aria-label="Cerrar modal"
+      >
+        &times;
+      </button>
+    </div>
+
+    <!-- contenido -->
+    <div class="bg-white px-6 py-4 sm:p-6">
+      <!-- <div class="text-gray-500 font-semibold mt-2">
+        Campos obligatorios marcados con *
+      </div> -->
+      <div class="rounded-lg shadow-md overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm xs:table-fixed">
+            <thead class="bg-primario text-white">
+              <tr class="xs:text-[10px]">
+                <!-- <th class="px-1 py-[2px]" scope="col">*Código</th>
+                <th class="px-1 py-[2px]" scope="col">*Descripción</th>
+                <th class="px-1 py-[2px]" scope="col">*Unidad</th>
+                <th class="px-1 py-[2px]" scope="col">*Producto o servicio</th>
+                <th class="px-1 py-[2px]" scope="col">*Unidad SAT</th> -->
+                <th class="px-1 py-[2px]" scope="col">*Categoría</th>
+                <th class="px-1 py-[2px]" scope="col">*Subcategoría</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray300">
+              <ng-container>
+                <tr
+                  class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+                >
+                  <!-- <td class="px-1 py-[2px]" scope="col">
+                    <input
+                      min="1"
+                      placeholder="Código..."
+                      autocomplete="off"
+                      class="bg-transparent w-[75%] px-2 py-1"
+                      type="text"
+                      [(ngModel)]="productoServicio.codigo"
+                      (change)="limpiarError()"
+                    />
+                  </td>
+                  <td class="px-1 py-[2px]" scope="col">
+                    <input
+                      min="1"
+                      placeholder="Descripción..."
+                      autocomplete="off"
+                      class="bg-transparent w-[75%] px-2 py-1"
+                      type="text"
+                      [(ngModel)]="productoServicio.descripcion"
+                      (change)="limpiarError()"
+                    />
+                  </td>
+                  <td class="px-1 py-[2px]" scope="col">
+                    <div class="relative w-full" #lista>
+                      <input
+                        type="text"
+                        placeholder="Unidad..."
+                        autocomplete="off"
+                        class="bg-transparent w-[75%] px-2 py-1"
+                        (input)="filtrarUnidades($event)"
+                        (click)="abrirListaUnidades(); limpiarError()"
+                        [value]="textoBusquedaUnidad"
+                      />
+
+                      <div *ngIf="mostrarListaUnidades">
+                        <ul
+                          *ngIf="unidadesFiltradas.length > 0"
+                          class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-auto max-h-48 overflow-y-auto shadow-lg"
+                        >
+                          <li
+                            *ngFor="let unidad of unidadesFiltradas"
+                            (click)="seleccionarUnidad(unidad)"
+                            class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                          >
+                            {{ unidad.descripcion }}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-1 py-[2px]" scope="col">
+                    <div class="relative w-full" #lista>
+                      <input
+                        type="text"
+                        placeholder="Seleccionar..."
+                        autocomplete="off"
+                        class="bg-transparent w-[75%] px-2 py-1"
+                        (input)="filtrarProductosYServicios($event)"
+                        (click)="
+                          abrirListaProductosYServicios(); limpiarError()
+                        "
+                        [value]="textoBusquedaPyS"
+                      />
+                      <div *ngIf="mostrarListaProductosYServicios">
+                        <cdk-virtual-scroll-viewport
+                          itemSize="36"
+                          class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-[300px] h-48 overflow-auto shadow-lg"
+                        >
+                          <div
+                            *cdkVirtualFor="
+                              let productoServicio of productoyServFiltrados
+                            "
+                            (click)="
+                              seleccionarProductoServicio(productoServicio)
+                            "
+                            class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                            style="height: 36px; box-sizing: border-box"
+                          >
+                            {{ productoServicio.descripcion }}
+                          </div>
+                        </cdk-virtual-scroll-viewport>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-1 py-[2px]" scope="col">
+                    <div class="relative w-full" #lista>
+                      <input
+                        type="text"
+                        placeholder="Seleccionar..."
+                        autocomplete="off"
+                        class="bg-transparent w-[75%] px-2 py-1"
+                        (input)="filtrarUnidadesSat($event)"
+                        (click)="abrirListaUnidadesSat(); limpiarError()"
+                        [value]="textoBusquedaSAT"
+                      />
+                      <div *ngIf="mostrarListaUnidadesSat">
+                        <ul
+                          *ngIf="unidadSATFiltradas.length > 0"
+                          class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-auto max-h-48 overflow-y-auto shadow-lg"
+                        >
+                          <li
+                            *ngFor="let unidadSAT of unidadSATFiltradas"
+                            (click)="seleccionarUnidadSat(unidadSAT)"
+                            class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                          >
+                            {{ unidadSAT.nombre }}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </td> -->
+
+                  <td class="px-1 py-[2px]" scope="col">
+                    <div class="relative w-full" #lista>
+                      <input
+                        type="text"
+                        placeholder="Seleccionar..."
+                        autocomplete="off"
+                        class="bg-transparent w-[75%] px-2 py-1"
+                        (input)="filtrarCategorias($event)"
+                        (click)="abrirListaCategorias(); limpiarError()"
+                        [value]="textoCategoria"
+                      />
+                      <div *ngIf="mostrarListaCategorias">
+                        <ul
+                          *ngIf="categoriaFiltradas.length > 0"
+                          class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-auto max-h-48 overflow-y-auto shadow-lg"
+                        >
+                          <li
+                            *ngFor="let categoria of categoriaFiltradas"
+                            (click)="seleccionarCategoria(categoria)"
+                            class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                          >
+                            {{ categoria.descripcion }}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-1 py-[2px]" scope="col">
+                    <div class="relative w-full" #lista>
+                      <input
+                        type="text"
+                        placeholder="Seleccionar..."
+                        autocomplete="off"
+                        class="bg-transparent w-[75%] px-2 py-1"
+                        (input)="filtrarSubCategorias($event)"
+                        (click)="abrirListaSubCategorias(); limpiarError()"
+                        [value]="textoSubCategoria"
+                      />
+                      <div *ngIf="mostrarListaSubCategorias">
+                        <ul
+                          *ngIf="subcategoriaFiltradas.length > 0"
+                          class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-auto max-h-48 overflow-y-auto shadow-lg"
+                        >
+                          <li
+                            *ngFor="let subcategoria of subcategoriaFiltradas"
+                            (click)="seleccionarSubCategoria(subcategoria)"
+                            class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                          >
+                            {{ subcategoria.descripcion }}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div
+        class="text-red-600 font-normal text-xs mt-2"
+        *ngIf="mensajeError.estatus"
+      >
+        *{{ mensajeError.descripcion }}
+      </div>
+    </div>
+
+    <!-- botones -->
+    <div class="px-4 py-3 flex justify-end gap-4">
+      <button
+        (click)="actualizar()"
+        class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
+      >
+        Aceptar
+      </button>
+      <button
+        class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
+        (click)="cerrarModal()"
+      >
+        Cancelar
       </button>
     </div>
   </div>

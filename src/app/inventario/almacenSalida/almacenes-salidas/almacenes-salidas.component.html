@@ -9,7 +9,7 @@
   <!-- Selector de almacén + filtros -->
   <div class="flex flex-wrap items-end justify-between gap-4 w-full">
     <!-- Selector de almacén -->
-    <div class="flex gap-1 items-center">
+    <!-- <div class="flex gap-1 items-center">
       <label
         class="rounded-l-md bg-colorButton text-gray100 px-1 py-1 xs:text-[10px]"
         for="almacen"
@@ -29,6 +29,34 @@
           {{ almacen.almacenNombre }}
         </option>
       </datalist>
+    </div> -->
+    <div
+      class="flex-col items-end border-2 border-gray-400 rounded-lg text-left mt-3 bg-white w-[300px]"
+      #virtualScrollContainer
+    >
+      <input
+        type="text"
+        class="bg-transparent w-full p-1 text-left px-4 focus:outline-none"
+        (input)="FiltrarAlmacenes($event)"
+        [(ngModel)]="selectedAlmacen"
+        (click)="SlistaAlmacenesMain = !SlistaAlmacenesMain"
+        placeholder="Selecciona un almacén..."
+      />
+      <div *ngIf="SlistaAlmacenesMain">
+        <cdk-virtual-scroll-viewport
+          itemSize="50"
+          class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-[300px] h-36 overflow-auto shadow-lg"
+        >
+          <div
+            *cdkVirtualFor="let almacen of almacenesVS"
+            (click)="SeleccionaAlmacen(almacen.id, almacen.almacenNombre)"
+            class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+            style="height: 36px; box-sizing: border-box"
+          >
+            {{ almacen.almacenNombre }}
+          </div>
+        </cdk-virtual-scroll-viewport>
+      </div>
     </div>
 
     <!-- Filtros -->
@@ -47,8 +75,8 @@
         [(ngModel)]="tipoSalidaAlmacen"
         (change)="fitrarTipoSA()"
       >
-        <option [value]="0">Todas las Salidas</option>
-        <option [value]="1">Orden de Compra</option>
+        <option [value]="0">Todas las salidas</option>
+        <option [value]="1">Orden de compra</option>
         <option [value]="2">Bajas en almacén</option>
         <option [value]="3">Salidas con préstamos</option>
       </select>
@@ -71,7 +99,7 @@
       <p
         class="text-[#f2f2f2] titular bg-custom-bg w-52 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
       >
-        Nueva Salida en Almacén
+        Nueva salida en almacén
       </p>
       <img src="assets/add.svg" alt="" />
     </button>
@@ -83,7 +111,7 @@
       <p
         class="text-[#f2f2f2] titular bg-custom-bg w-52 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
       >
-        Nueva Baja en Almacén
+        Nueva baja en almacén
       </p>
       <img src="assets/add.svg" alt="" />
     </button>
@@ -95,7 +123,7 @@
       <p
         class="text-[#f2f2f2] titular bg-custom-bg w-56 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
       >
-        Nuevo Transpaso Almacén
+        Nuevo transpaso almacén
       </p>
       <img src="assets/add.svg" alt="" />
     </button>
@@ -112,12 +140,12 @@
     <thead class="bg-primario text-white">
       <tr>
         <th scope="col" class="px-1 py-[2px] xs:w-[75px]">
-          *No. Salida Almacén
+          *No. Salida almacén
         </th>
         <th scope="col" class="px-1 py-[2px] xs:w-[70px]">*Almacén</th>
-        <th scope="col" class="px-1 py-[2px]">*Fecha de Registro</th>
-        <th scope="col" class="px-1 py-[2px]">Persona Surtió</th>
-        <th scope="col" class="px-1 py-[2px]">Persona Recibió</th>
+        <th scope="col" class="px-1 py-[2px]">*Fecha de registro</th>
+        <th scope="col" class="px-1 py-[2px]">Persona surtió</th>
+        <th scope="col" class="px-1 py-[2px]">Persona recibió</th>
         <th scope="col" class="px-1 py-[2px]">Observaciones</th>
       </tr>
     </thead>
@@ -324,9 +352,9 @@
       <tr>
         <th scope="col" class="px-1 py-[2px]">Descripción</th>
         <th scope="col" class="px-1 py-[2px]">Unidad</th>
-        <th scope="col" class="px-1 py-[2px]">Cantidad Disponible</th>
-        <th scope="col" class="px-1 py-[2px]">*Cantidad Por Salir</th>
-        <th scope="col" class="px-1 py-[2px]">Es Préstamo</th>
+        <th scope="col" class="px-1 py-[2px]">Cantidad disponible</th>
+        <th scope="col" class="px-1 py-[2px]">*Cantidad Por salir</th>
+        <th scope="col" class="px-1 py-[2px]">Es préstamo</th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray300">
@@ -467,7 +495,7 @@
                         Cantidad
                       </th>
                       <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">
-                        Cantidad Disponible
+                        Cantidad disponible
                       </th>
                     </tr>
                   </thead>

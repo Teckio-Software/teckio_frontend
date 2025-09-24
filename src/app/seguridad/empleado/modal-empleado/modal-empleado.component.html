@@ -8,6 +8,9 @@
       <!-- detenerCierre(event: MouseEvent): Método que detiene la propagación del evento de clic cuando se hace clic dentro del contenido del modal, asegurando que el modal no se cierre inadvertidamente. -->
       <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
         <div>
+          <div *ngIf="errorGlobal" class="text-red-500 text-sm mb-2">
+            *Capure todos los campos
+          </div>
           <form action="" method="post" [formGroup]="form" class="mb-4">
             <div class="flex gap-4">
               <div class="w-full">
@@ -15,57 +18,95 @@
                   <label class="block text-sm font-medium text-gray-700" for="name">Nombre</label>
                   <input
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    (change)="errorNo = false; errorGlobal = false;"
                     type="text" name="name" id="name" formControlName="nombre" />
+                    <div *ngIf="errorNo" class="text-red-500 text-sm mb-2">
+                      *El campo 'Nombre' es requerido
+                    </div>
                 </div>
                 <div class="mb-3">
-                  <label class="block text-sm font-medium text-gray-700" for="name">Apellido Paterno</label>
+                  <label class="block text-sm font-medium text-gray-700" for="name">Apellido paterno</label>
                   <input
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    type="text" name="name" id="name" formControlName="apellidoPaterno" />
+                    type="text" name="name" id="name" formControlName="apellidoPaterno" 
+                    (change)="errorAP = false; errorGlobal = false;"
+                    />
+                    <div *ngIf="errorAP" class="text-red-500 text-sm mb-2">
+                      *El campo 'Apellido paterno' es requerido
+                    </div>
                 </div>
                 <div class="mb-3">
-                  <label class="block text-sm font-medium text-gray-700" for="name">Apellido Materno</label>
+                  <label class="block text-sm font-medium text-gray-700" for="name">Apellido materno</label>
                   <input
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    type="text" name="name" id="name" formControlName="apellidoMaterno" />
+                    type="text" name="name" id="name" formControlName="apellidoMaterno"
+                    (change)="errorAM = false; errorGlobal = false;"
+                     />
+                    <div *ngIf="errorAM" class="text-red-500 text-sm mb-2">
+                      *El campo 'Apellido materno' es requerido
+                    </div>
                 </div>
                 <div class="mb-3">
                   <label class="block text-sm font-medium text-gray-700" for="name">CURP</label>
                   <input
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    type="text" name="name" id="name" formControlName="curp" />
+                    type="text" name="name" id="name" formControlName="curp"
+                    (change)="errorCURP.estatus= false; errorGlobal = false;" />
+                    <div *ngIf="errorCURP.estatus" class="text-red-500 text-sm mb-2">
+                      *{{errorCURP.descripcion}}
+                    </div>
                 </div>
                 <div class="mb-3">
                   <label class="block text-sm font-medium text-gray-700" for="name">RFC</label>
                   <input
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    type="text" name="name" id="name" formControlName="rfc" />
+                    type="text" name="name" id="name" formControlName="rfc"
+                    (change)="errorRFC.estatus= false; errorGlobal = false;" />
+                    <div *ngIf="errorRFC.estatus" class="text-red-500 text-sm mb-2">
+                      *{{errorRFC.descripcion}}
+                    </div>
                 </div>
               </div>
               <div class="w-full">
                 <div class="mb-3">
-                  <label class="block text-sm font-medium text-gray-700" for="name">Seguro Social</label>
+                  <label class="block text-sm font-medium text-gray-700" for="name">Seguro social</label>
                   <input
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    type="text" name="name" id="name" formControlName="seguroSocial" />
+                    type="text" name="name" id="name" formControlName="seguroSocial"
+                    (change)="errorSS.estatus= false; errorGlobal = false;" />
+                    <div *ngIf="errorSS.estatus" class="text-red-500 text-sm mb-2">
+                      *{{errorSS.descripcion}}
+                    </div>
                 </div>
                 <div class="mb-3">
-                  <label class="block text-sm font-medium text-gray-700" for="name">Relacion Laboral</label>
+                  <label class="block text-sm font-medium text-gray-700" for="name">Relación laboral</label>
                   <input
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    type="date" name="fecha" id="fecha" formControlName="fechaRelacionLaboral" />
+                    type="date" name="fecha" id="fecha" formControlName="fechaRelacionLaboral"
+                    (change)="errorFRL = false; errorGlobal = false;" />
+                    <div *ngIf="errorFRL" class="text-red-500 text-sm mb-2">
+                      *El campo 'Relación laboral' es requerido
+                    </div>
                 </div>
                 <div class="mb-3">
-                  <label class="block text-sm font-medium text-gray-700" for="name">Termino Relacion Laboral</label>
+                  <label class="block text-sm font-medium text-gray-700" for="name">Termino relación laboral</label>
                   <input
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    type="date" name="name" id="name" formControlName="fechaTerminoRelacionLaboral" />
+                    type="date" name="name" id="name" formControlName="fechaTerminoRelacionLaboral" 
+                    (change)="errorFTRL = false; errorGlobal = false;"/>
+                    <div *ngIf="errorFTRL" class="text-red-500 text-sm mb-2">
+                      *El campo 'Termino relación laboral' es requerido
+                    </div>
                 </div>
                 <div class="mb-3">
-                  <label class="block text-sm font-medium text-gray-700" for="name">Salario Diario</label>
+                  <label class="block text-sm font-medium text-gray-700" for="name">Salario diario</label>
                   <input
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    type="text" name="name" id="name" formControlName="salarioDiario" />
+                    type="text" name="name" id="name" formControlName="salarioDiario"
+                    (change)="errorSD = false; errorGlobal = false;" />
+                    <div *ngIf="errorSD" class="text-red-500 text-sm mb-2">
+                      *El campo 'Salario diario' no puede ser 0 o un número negativo
+                    </div>
                 </div>
               </div>
             </div>
@@ -80,7 +121,6 @@
           class="mt-3 inline-flex w-full justify-center rounded-sm bg-[#51aec7] text-[#f2f2f2] px-3 py-2 text-sm shadow-sm ring-1 ring-inset  hover:bg-[#B05B5B] sm:mt-0 sm:w-auto  "
           (click)="cerrar()">Cancelar</button>
       </div>
-
     </div>
   </div>
 </div>

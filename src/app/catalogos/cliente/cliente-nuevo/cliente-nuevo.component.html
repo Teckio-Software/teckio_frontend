@@ -10,7 +10,7 @@
         <!-- Cabecera -->
         <div class="flex justify-between items-center border-b px-4 py-3">
           <h2 class="font-semibold text-gray-800 tracking-wider text-lg">
-            Nuevo Cliente
+            Nuevo cliente
           </h2>
           <button
             type="button"
@@ -23,21 +23,28 @@
 
         <!-- Contenido -->
         <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+          <div *ngIf="errorGlobal" class="text-red-500 text-sm mb-2">
+            *Capture todos los campos obligatorios
+          </div>
           <form [formGroup]="formulario" class="space-y-4">
             <!-- Primera columna de inputs -->
             <div>
               <label
                 class="block text-sm font-medium text-gray-700"
                 for="razonsocial"
-                >Razón Social</label
+                >Razón social</label
               >
               <input
                 id="razonsocial"
                 type="text"
                 placeholder="Escribe el nombre completo"
                 formControlName="razonsocial"
+                (change)="errorRS = false; errorGlobal = false"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
+              <div *ngIf="errorRS" class="text-red-500 text-sm mb-2">
+              *El campo 'Razón social' es requerido
+              </div>
             </div>
 
             <div>
@@ -49,21 +56,29 @@
                 type="text"
                 placeholder="Escribe el RFC"
                 formControlName="rfc"
+                (change)="errorRFC.estatus = false; errorGlobal = false"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
+              <div *ngIf="errorRFC.estatus" class="text-red-500 text-sm mb-2">
+                *{{ errorRFC.descripcion }}
+              </div>
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700" for="email"
-                >Correo Electrónico</label
+                >Correo electrónico</label
               >
               <input
                 id="email"
                 type="email"
                 placeholder="Escribe el correo electrónico"
                 formControlName="email"
+                (change)="errorCE = false; errorGlobal = false"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
+              <div *ngIf="errorCE" class="text-red-500 text-sm mb-2">
+                *El campo 'Correo electrónico' es requerido
+              </div>
             </div>
 
             <div>
@@ -77,23 +92,31 @@
                 type="text"
                 placeholder="Escribe el teléfono"
                 formControlName="telefono"
+                (change)="errorTel = false; errorGlobal = false"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
+              <div *ngIf="errorTel" class="text-red-500 text-sm mb-2">
+                *El campo 'Teléfono' es requerido
+              </div>
             </div>
 
             <div>
               <label
                 class="block text-sm font-medium text-gray-700"
                 for="representante"
-                >Representante Legal</label
+                >Representante legal</label
               >
               <input
                 id="representante"
                 type="text"
                 placeholder="Escribe el representante legal"
                 formControlName="representante"
+                (change)="errorRL = false; errorGlobal = false"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
+              <div *ngIf="errorRL" class="text-red-500 text-sm mb-2">
+                *El campo 'Representante legal' es requerido
+              </div>
             </div>
 
             <!-- Segunda columna con inputs dobles en fila -->
@@ -109,8 +132,12 @@
                   type="text"
                   placeholder="Escribe el domicilio"
                   formControlName="domicilio"
+                  (change)="errorDm = false; errorGlobal = false"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+                <div *ngIf="errorDm" class="text-red-500 text-sm mb-2">
+                  *El campo 'Domicilio' es requerido
+                </div>
               </div>
 
               <div class="flex gap-4">
@@ -118,30 +145,38 @@
                   <label
                     class="block text-sm font-medium text-gray-700"
                     for="numeroE"
-                    >Número Exterior</label
+                    >Número exterior</label
                   >
                   <input
                     id="numeroE"
                     type="text"
                     placeholder="24-A"
                     formControlName="numeroE"
+                    (change)="errorNE = false; errorGlobal = false"
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
+                  <div *ngIf="errorNE" class="text-red-500 text-sm mb-2">
+                  *El campo 'Número exterior' es requerido
+                </div>
                 </div>
 
                 <div class="w-full">
                   <label
                     class="block text-sm font-medium text-gray-700"
                     for="codigoPostal"
-                    >Código Postal</label
+                    >Código postal</label
                   >
                   <input
                     id="codigoPostal"
                     type="text"
                     placeholder="Código postal"
                     formControlName="codigoPostal"
+                    (change)="errorCP = false; errorGlobal = false"
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
+                  <div *ngIf="errorCP" class="text-red-500 text-sm mb-2">
+                  *El campo 'Código postal' es requerido
+                </div>
                 </div>
               </div>
 
@@ -157,8 +192,12 @@
                     type="text"
                     placeholder="Nombre de la colonia"
                     formControlName="colonia"
+                    (change)="errorCol = false; errorGlobal = false"
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
+                  <div *ngIf="errorCol" class="text-red-500 text-sm mb-2">
+                  *El campo 'Colonia' es requerido
+                  </div>
                 </div>
 
                 <div class="w-full">
@@ -172,8 +211,12 @@
                     type="text"
                     placeholder="Nombre del municipio"
                     formControlName="municipio"
+                    (change)="errorMun = false; errorGlobal = false"
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
+                  <div *ngIf="errorMun" class="text-red-500 text-sm mb-2">
+                  *El campo 'Municipio' es requerido
+                  </div>
                 </div>
               </div>
             </div>

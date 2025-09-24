@@ -15,29 +15,32 @@
     </div>
     <div  *ngIf="debeMostrarBoton()">
       <button (click)="nuevoUsuario()" class="btn-new-usuario flex justify-center items-center">
-        <p class="m-auto">
+        <div class="flex justify-center items-center p-2">
+          <p class="m-auto">
           Nuevo usuario
         </p>
         <svg style="margin-left: 15px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
           <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
           <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
         </svg>
+        </div>
+        
       </button>
     </div>
   </div>
 
   <div class="container-tablas">
-    <div class="cont-table orden-compra">
-      <table #tablaMenu class="table table-striped rounded table-hover orden" *ngIf="menuUsuario">
-        <thead>
-          <tr>
-            <th class="cabecera" style="width: 33%;" scope="col">Nombre de Usuario</th>
-            <th class="cabecera" style="width: 33%;" scope="col">Activar</th>
-            <th class="cabecera" style="width: 33%;" scope="col">Acciones</th>
+    <div class="overflow-x-auto shadow-md rounded-lg">
+      <table #tablaMenu class="w-full text-sm xs:table-fixed" *ngIf="menuUsuario">
+        <thead class="bg-primario text-white">
+          <tr class="xs:text-[10px]">
+            <th class="px-1 py-[2px] xs:w-[75px]" style="width: 33%;" scope="col">Nombre de usuario</th>
+            <th class="px-1 py-[2px] xs:w-[75px]" style="width: 33%;" scope="col">Activar</th>
+            <th class="px-1 py-[2px] xs:w-[75px]" style="width: 33%;" scope="col">Acciones</th>
           </tr>
         </thead>
-        <tbody>
-          <tr *ngFor="let registro of usuariosCorporativo">
+        <tbody class="divide-y divide-gray300">
+          <tr *ngFor="let registro of usuariosCorporativo" class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]">
             <td class="none" style="width: 377px;" [ngClass]="{selected: registro.nombreUsuario === descripcionUsuario}">{{ registro.nombreUsuario}}</td>
             <td class="none">
               <div class="form-check form-switch" style="padding: 0px auto;">

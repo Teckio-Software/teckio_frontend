@@ -1,11 +1,12 @@
 import {
+  DataFSR,
   ParametrosFsrDTO,
   ParametrosFsrXInsumoDTO,
   PorcentajeCesantiaEdadDTO,
 } from './../../fsr/tsFSR';
-import { Component, Inject } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+// import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   diasConsideradosDTO,
@@ -22,6 +23,7 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { proyectoDTO } from '../../proyecto/tsProyecto';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { ProyectoService } from '../../proyecto/proyecto.service';
+
 
 @Component({
   selector: 'app-dialog-fsr',
@@ -80,10 +82,23 @@ export class DialogFSRComponent {
   proyectos!: proyectoDTO[];
   nombreProyecto: string = '';
   idProyectoFiltro: number = 0;
-  esAutorizado : boolean = false;
+  // esAutorizado : boolean = false;
 
+  @Input() dataFSR: DataFSR = {
+      diasConsideradosFsiNoTrabajados: [],
+      selectedEmpresa: 0,
+      diasConsideradosFsiPagados: [],
+      selectedProyecto: 0,
+      diasNoLaborales: 0,
+      diasPagados: 0,
+      fsrDetalles: [],
+      porcentajePrestaciones: 0,
+      esAutorizado: false,
+    };
+
+  @Output() cerrarFSR = new EventEmitter();
   constructor(
-    public dialogRef: MatDialogRef<DialogFSRComponent>,
+
     private formBuilder: FormBuilder,
     private _snackBar: MatSnackBar,
     private fsrService: FSRService,
@@ -91,13 +106,15 @@ export class DialogFSRComponent {
     private estimacionesService: EstimacionesService,
     private proyectoService: ProyectoService,
 
-    @Inject(MAT_DIALOG_DATA) public data: any
+    // @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     let Empresa = this._SeguridadService.obtenIdEmpresaLocalStorage();
     this.selectedEmpresa = Number(Empresa);
     let Proyecto = this._SeguridadService.obtenerIdProyectoLocalStorage();
     this.selectedProyecto = Number(Proyecto);
-    this.esAutorizado = data.esAutorizado;
+    // console.log(this.dataFSR);
+    // this.esAutorizado = this.dataFSR.esAutorizado;
+    
   }
 
   ngOnInit(): void {
@@ -383,9 +400,9 @@ export class DialogFSRComponent {
       });
   }
 
-  cerrarDialog() {
-    this.dialogRef.close(this.existeEdicion); // Cierra el modal sin guardar
-  }
+  // cerrarDialog() {
+  //   this.dialogRef.close(this.existeEdicion); // Cierra el modal sin guardar
+  // }
 
   detenerCierre(event: MouseEvent) {
     console.log('afuera');
@@ -444,6 +461,10 @@ export class DialogFSRComponent {
         return this._filter(stringValue);
       })
     );
+  }
+
+  close(){
+    this.cerrarFSR.emit(this.existeEdicion);
   }
 
   reiniciarProyecto(event: any) {

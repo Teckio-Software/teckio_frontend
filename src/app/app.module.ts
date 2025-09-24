@@ -313,6 +313,7 @@ export function playerFactory() {
     ModalAsigacionComponent,
     ProductosServiciosComponent,
     ImprimirModalComponent,
+    
   ],
 
   imports: [

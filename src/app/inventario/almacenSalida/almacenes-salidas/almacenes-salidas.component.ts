@@ -2,9 +2,11 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostListener,
   Input,
   Output,
   QueryList,
+  ViewChild,
   ViewChildren,
 } from '@angular/core';
 import {
@@ -45,6 +47,19 @@ export class AlmacenesSalidasComponent {
 
   @ViewChildren('lista') listas!: QueryList<ElementRef<HTMLElement>>;
 
+  // Obtiene la referencia al contenedor del virtual scroll
+      @ViewChild('virtualScrollContainer') virtualScrollContainer!: ElementRef;
+    
+      // Escucha los clics en todo el documento
+      @HostListener('document:click', ['$event'])
+      onDocumentClick(event: MouseEvent) {
+        // Comprueba si el virtual scroll está visible y si el clic no ocurrió dentro de él
+        if (this.SlistaAlmacenesMain && !this.virtualScrollContainer.nativeElement.contains(event.target)) {
+          this.SlistaAlmacenesMain = false;
+        }
+      }
+  
+
   alertaSuccess: boolean = false;
       alertaMessage: string = '';
       alertaTipo: AlertaTipo = AlertaTipo.none;
@@ -72,6 +87,8 @@ export class AlmacenesSalidasComponent {
   fechafiltro!: Date;
 
   almacenes!: almacenDTO[];
+  almacenesVS!: almacenDTO[];
+
   idAlmacen: number = 0;
   esBaja: boolean = false;
 
@@ -98,6 +115,7 @@ export class AlmacenesSalidasComponent {
   listaAlmacenesReset: almacenDTO[] = [];
 
   nombreAlmacen: string = '';
+  
   SlistaAlmacenes: boolean = false;
   SlistaInsumos: boolean = false;
   filtroEstatus: string = '';
@@ -124,6 +142,9 @@ export class AlmacenesSalidasComponent {
       descripcion: '',
     };
 
+    SlistaAlmacenesMain: boolean = false;
+    selectedAlmacen: string = '';
+
   constructor(
     public _almacenSalida: AlmacenSalidaService,
     private almacenService: AlmacenService,
@@ -138,7 +159,28 @@ export class AlmacenesSalidasComponent {
       .obtenerXIdProyecto(this.idProyectoInput, this.idEmpresaInput)
       .subscribe((datos) => {
         this.almacenes = datos;
+        this.almacenesVS = datos;
       });
+  }
+
+  /**
+ * Filtra la lista de almacenes
+ * @param event El evento que se lanzo
+ * @returns void
+ * @description Filtra la lista de almacenes segun el texto ingresado en el input
+ * El texto se busca en la propiedad almacenNombre de cada objeto almacen
+ * Si el texto es vacio, se muestra la lista completa de almacenes
+ */
+  FiltrarAlmacenes(event: Event) {
+    this.almacenesVS = this.almacenes;
+    const filterValue = (
+      event.target as HTMLInputElement
+    ).value.toLocaleLowerCase();
+    if(filterValue.trim()!=''){
+      this.almacenesVS = this.almacenes.filter(a=>
+      a.almacenNombre.toLowerCase().includes(filterValue.toLowerCase())
+    );
+    }
   }
 
 /**
@@ -224,6 +266,12 @@ export class AlmacenesSalidasComponent {
     this.SlistaAlmacenes = false;
     this.mensajeError.estatus = false;
   }
+
+  // seleccionarAlmacenMain(id: number, nombreAlmacen: string) {
+  //   this.idAlmacen = id;
+  //   this.selectedAlmacen = nombreAlmacen;
+  //   this.SlistaAlmacenes = false;
+  // }
 
   /**
    * Selecciona un insumo para la orden de venta
@@ -407,18 +455,27 @@ export class AlmacenesSalidasComponent {
       });
   }
 
-  SeleccionaAlmacen(event: Event) {
-    const inputElement = event.target as HTMLInputElement;
-    const selectedValue = inputElement.value;
-    const idAlmacen =
-      this.almacenes.find((almacen) => almacen.almacenNombre === selectedValue)
-        ?.id || 0;
-    this.idAlmacen = idAlmacen;
+  // SeleccionaAlmacen(event: Event) {
+  //   const inputElement = event.target as HTMLInputElement;
+  //   const selectedValue = inputElement.value;
+  //   const idAlmacen =
+  //     this.almacenes.find((almacen) => almacen.almacenNombre === selectedValue)
+  //       ?.id || 0;
+  //   this.idAlmacen = idAlmacen;
+  //   this.cargarInsumosDisponibles();
+  //   this.fitrarTipoSA();
+  //   this.cargarInsumos();
+  //   this.cargarAlmacenes();
+  // }
+
+  SeleccionaAlmacen(id: number, nombreAlmacen: string) {
+    this.idAlmacen = id;
+    this.selectedAlmacen = nombreAlmacen;
+    this.SlistaAlmacenesMain = false;
     this.cargarInsumosDisponibles();
     this.fitrarTipoSA();
     this.cargarInsumos();
     this.cargarAlmacenes();
-
   }
 
   cargarInsumosDisponibles() {

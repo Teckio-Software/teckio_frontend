@@ -15,8 +15,7 @@
                 <div>
                     <div>
                         <div class="mb-3">
-                            <label class="block text-sm font-medium text-gray-700" for="almacen">Tipo de
-                                Beneficiario</label>
+                            <label class="block text-sm font-medium text-gray-700" for="almacen">Tipo de beneficiario</label>
                             <select class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500
                          focus:border-indigo-500 sm:text-sm" [(ngModel)]="movimientoBancario.tipoBeneficiario"
                                 (change)="TraerBeneficiarios($event)">
@@ -25,7 +24,7 @@
                                 <option value=1>Proveedor</option>
                                 <option value=2>Cliente</option>
                                 <option value=3>Empresa</option>
-                                <option value=4>Persona Externa</option>
+                                <option value=4>Persona externa</option>
                             </select>
                         </div>
                         <div class="mb-3" *ngIf="!seleccionaOtros">
@@ -41,7 +40,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="block text-sm font-medium text-gray-700" for="almacen">Cuenta
-                                Bancaria</label>
+                                bancaria</label>
                             <select class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500
                          focus:border-indigo-500 sm:text-sm" [(ngModel)]="movimientoBancario.idCuentaBancaria">
                                 <option class="text-gray-700" value="" disabled selected hidden>Selecciona una
@@ -51,16 +50,21 @@
                                     "("+cb.nombreBanco+")"}}</option>
                             </select>
                         </div>
-                        <div class="mb-3" *ngIf="tipoBeneficiario == 1">
+                        <div class="flex gap-3">
+                            <div class="mb-3 flex gap-1" *ngIf="tipoBeneficiario == 1">
+                                <input type="checkbox" name="" id="" [(ngModel)]="movimientoBancario.esFactura"
+                                    (change)="esFactura()">
                             <label class="block text-sm font-medium text-gray-700" for="almacen">Factura</label>
-                            <input type="checkbox" name="" id="" [(ngModel)]="movimientoBancario.esFactura"
-                                (change)="esFactura()">
-                        </div>
-                        <div class="mb-3" *ngIf="tipoBeneficiario == 1">
-                            <label class="block text-sm font-medium text-gray-700" for="almacen">Pedido</label>
+
+                            </div>
+                        <div class="mb-3 flex gap-1" *ngIf="tipoBeneficiario == 1">
                             <input type="checkbox" name="" id="" [(ngModel)]="movimientoBancario.esOrdenCompra"
                                 (change)="esOrdenCompra()">
+                            <label class="block text-sm font-medium text-gray-700" for="almacen">Pedido</label>
+
                         </div>
+                        </div>
+                        
                         <div class="mb-3" *ngIf="movimientoBancario.esOrdenCompra">
                             <div
                                 style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px;">
@@ -70,7 +74,7 @@
                                         <tr>
                                             <th class="cabecera1" scope="col"></th>
                                             <th class="cabecera1" scope="col">No. OC</th>
-                                            <th class="cabecera1" scope="col">Monto a Pagar</th>
+                                            <th class="cabecera1" scope="col">Monto a pagar</th>
                                             <th class="cabecera1" scope="col">Saldo</th>
                                         </tr>
                                     </thead>
@@ -101,7 +105,7 @@
                                         <tr>
                                             <th class="cabecera1" scope="col"></th>
                                             <th class="cabecera1" scope="col">Uuid</th>
-                                            <th class="cabecera1" scope="col">Monto a Pagar</th>
+                                            <th class="cabecera1" scope="col">Monto a pagar</th>
                                             <th class="cabecera1" scope="col">Saldo</th>
                                         </tr>
                                     </thead>
@@ -134,7 +138,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="block text-sm font-medium text-gray-700" for="name">Fecha de
-                                    Autorizacón</label>
+                                    autorización</label>
                                 <input
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     type="date" id="persona" name="persona" placeholder="Escribe el nombre completo"
@@ -142,7 +146,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="block text-sm font-medium text-gray-700" for="name">Fecha de
-                                    Cobro</label>
+                                    cobro</label>
                                 <input
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     type="date" id="persona" name="persona" placeholder="Escribe el nombre completo"
