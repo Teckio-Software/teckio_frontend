@@ -59,6 +59,7 @@ import { ModalAlertComponent } from 'src/app/utilidades/modal-alert/modal-alert.
 import { operacionesXPrecioUnitarioDetalleDTO } from '../../precio-unitario-detalle/tsOperacionesXPrecioUnitarioDetalle';
 import { EstimacionesService } from '../../estimaciones/estimaciones.service';
 import { log } from 'node:console';
+import { IndirectosServiceService } from '../../indirectos/indirectos-service.service';
 
 @Component({
   selector: 'app-precio-unitario',
@@ -358,6 +359,10 @@ export class PrecioUnitarioComponent implements OnInit {
   esAsignarDetalleRendimiento = false;
   cargando = false;
   tooltipVisible = false;
+  
+  existeCensatia: boolean = true;
+  existeIndirectos: boolean = true;
+
 
   operaciones: operacionesXPrecioUnitarioDetalleDTO[] = [];
   isRendimineto: boolean = true;
@@ -365,6 +370,8 @@ export class PrecioUnitarioComponent implements OnInit {
   isOpenModal: boolean = false;
   isOpenModalImprimir: boolean = false;
   mostrarMenu = false;
+  mostrarMenuAlertas = false;
+
 
   contenedorPresupuesto: boolean = true;
   contenedorExplosionInsumo: boolean = false;
@@ -558,7 +565,8 @@ export class PrecioUnitarioComponent implements OnInit {
     private insumoService: InsumoService,
     private unidades: Unidades,
     private estimacionesService: EstimacionesService,
-    private ChangeDetectorRef: ChangeDetectorRef
+    private ChangeDetectorRef: ChangeDetectorRef,
+    private _IndirectosService : IndirectosServiceService
   ) {
     let idEmpresa = _SeguridadEmpresa.obtenIdEmpresaLocalStorage();
     let idProyecto = _SeguridadEmpresa.obtenerIdProyectoLocalStorage();
@@ -873,6 +881,7 @@ export class PrecioUnitarioComponent implements OnInit {
       .subscribe((tipos) => {
         this.tiposInsumos = tipos;
       });
+
   }
 
   cargarListaConceptos() {
@@ -1043,6 +1052,8 @@ export class PrecioUnitarioComponent implements OnInit {
     this.pestanas = false;
     this.esquemaArbol4 = false;
     this.existeCaptura = false;
+    this.comprobarIndirectos();
+    this.obtenerCensatia();
   }
 
   openTooltip() {
@@ -2934,6 +2945,20 @@ export class PrecioUnitarioComponent implements OnInit {
             });
           });
       });
+    this.comprobarIndirectos();
+    this.obtenerCensatia();
+  }
+
+  obtenerCensatia(){
+        this.fsrService.obtenerPorcentajeCesantiaEdad(this.selectedProyecto, this.selectedEmpresa).subscribe((porcentaje) => {
+      if(porcentaje.length>0){
+        console.log('Comprobando censatía');
+        
+        this.existeCensatia = true;
+      }else{
+        this.existeCensatia = false;
+      }
+    })
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4616,6 +4641,22 @@ export class PrecioUnitarioComponent implements OnInit {
     dialogRef.afterClosed().subscribe((resultado: boolean) => {
       this.cargarRegistros();
       // this.recalcularPresupuesto();
+    });
+  }
+
+
+/**
+ * Comprueba si existen indirectos para el proyecto y empresa seleccionados.
+ * 
+ * @returns {void}
+ */
+  comprobarIndirectos() {
+    this._IndirectosService.ObtenerIndirectos(this.selectedEmpresa, this.selectedProyecto).subscribe((datos) => {
+      if(datos.length > 0){
+        this.existeIndirectos = true;
+      }else{
+        this.existeIndirectos = false;
+      }
     });
   }
 

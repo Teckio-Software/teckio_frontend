@@ -13,10 +13,10 @@
           type="text"
           [(ngModel)]="nombreProyecto"
           (input)="reiniciarProyecto($event)"
-          placeholder="Selecciona un proyecto"
+          placeholder="Selecciona un proyecto..."
           [formControl]="proyectoControl"
           [matAutocomplete]="auto"
-          class="border-none rounded-lg bg-gray300 text-gray700 font-medium p-1 lg:w-52 md:w-36 xms:w-28 xs:w-24 xs:text-xs"
+          class="border-none rounded-lg bg-white text-gray700 font-medium p-1 lg:w-52 md:w-36 xms:w-28 xs:w-24 xs:text-xs border-gray-800 border outline-none"
           #textoDataList
           (click)="reiniciarFiltro()"
         />
@@ -59,7 +59,7 @@
     </div>
   </div>
 
-  <div class="bg-white rounded-lg h-[50rem]">
+  <div class="bg-white rounded-lg h-[45rem]">
     <!-- Pestañas -->
     <div class="w-full mt-1 h-auto z-10 flex justify-between border-b">
       <div class="px-4 mt-3">
@@ -89,7 +89,7 @@
         <div class="rounded-lg shadow-md overflow-hidden">
           <div class="overflow-x-auto w-full">
             <div
-              class="bg-[#fff38] py-px px-5 flex justify-center items-center"
+              class="bg-[#4eaac138] py-px px-5 flex justify-center items-center"
             >
               <p class="text-gray-700 m-0 font-medium text-base">
                 Días no laborales
@@ -197,7 +197,7 @@
         <div class="rounded-lg shadow-md overflow-hidden">
           <div class="overflow-x-auto w-full">
             <div
-              class="bg-[#fff38] py-px px-5 flex justify-center items-center"
+              class="bg-[#4eaac138] py-px px-5 flex justify-center items-center"
             >
               <p class="text-gray-700 m-0 font-medium text-base">
                 Días pagados
@@ -259,7 +259,7 @@
                       <input
                         autocomplete="off"
                         type="text"
-                        class="bg-[#f2f2f2] w-full border-none text-center bg-transparent"
+                        class="bg-[#f2f2f2] w-full border-none text-left bg-transparent"
                         [(ngModel)]="dias.valor"
                         (keydown.enter)="crearFSIDias(dias)"
                         [disabled]="dataFSR.esAutorizado"
@@ -316,7 +316,7 @@
         <div class="rounded-lg shadow-md overflow-hidden">
           <div class="overflow-x-auto w-full" *ngIf="!fsr.esCompuesto">
             <div
-              class="bg-[#fff38] py-px px-5 flex justify-center items-center"
+              class="bg-[#4eaac138] py-px px-5 flex justify-center items-center"
               *ngIf="!fsr.esCompuesto"
             >
               <p class="text-gray-700 m-0 font-medium text-base">
@@ -414,7 +414,7 @@
           >
             <div class="overflow-x-auto w-full">
               <div
-                class="bg-[#fff38] py-px px-5 flex justify-center items-center"
+                class="bg-[#4eaac138] py-px px-5 flex justify-center items-center"
               >
                 <p class="text-gray-700 m-0 font-medium text-base">
                   Parametros FSR
