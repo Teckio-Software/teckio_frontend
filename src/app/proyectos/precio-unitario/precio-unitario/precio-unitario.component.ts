@@ -36,6 +36,7 @@ import { ElementRef, ChangeDetectorRef } from '@angular/core';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import {
   DataFSR,
+  ParametrosFsrXInsumoDTO,
   diasConsideradosDTO,
   factorSalarioIntegradoDTO,
   factorSalarioRealDTO,
@@ -58,7 +59,7 @@ import Swal from 'sweetalert2';
 import { ModalAlertComponent } from 'src/app/utilidades/modal-alert/modal-alert.component';
 import { operacionesXPrecioUnitarioDetalleDTO } from '../../precio-unitario-detalle/tsOperacionesXPrecioUnitarioDetalle';
 import { EstimacionesService } from '../../estimaciones/estimaciones.service';
-import { log } from 'node:console';
+import { error, log } from 'node:console';
 import { IndirectosServiceService } from '../../indirectos/indirectos-service.service';
 
 @Component({
@@ -71,6 +72,7 @@ export class PrecioUnitarioComponent implements OnInit {
   @ViewChild('tooltipContent') tooltipContent!: any;
   @ViewChild('tooltipIndirecto') tooltipIndirecto!: any;
   @ViewChild('menuContainer') containerRef!: ElementRef;
+  @ViewChild('menuContainerAlertas') containerRefAlertas!: ElementRef;
 
   @ViewChild('testInput') testInput: any;
   @ViewChild('autoSumaInput') autoSumaInput: any;
@@ -359,10 +361,9 @@ export class PrecioUnitarioComponent implements OnInit {
   esAsignarDetalleRendimiento = false;
   cargando = false;
   tooltipVisible = false;
-  
+
   existeCensatia: boolean = true;
   existeIndirectos: boolean = true;
-
 
   operaciones: operacionesXPrecioUnitarioDetalleDTO[] = [];
   isRendimineto: boolean = true;
@@ -371,7 +372,6 @@ export class PrecioUnitarioComponent implements OnInit {
   isOpenModalImprimir: boolean = false;
   mostrarMenu = false;
   mostrarMenuAlertas = false;
-
 
   contenedorPresupuesto: boolean = true;
   contenedorExplosionInsumo: boolean = false;
@@ -480,6 +480,8 @@ export class PrecioUnitarioComponent implements OnInit {
 
   selectedGenerador: number = 0;
 
+  esCompuesto: boolean = false;
+
   @ViewChild('InputOperacionGenerador') InputOperacionGenerador: any;
 
   archivosCargarExcels: FileList | null = null;
@@ -500,6 +502,8 @@ export class PrecioUnitarioComponent implements OnInit {
     porcentajePrestaciones: 0,
     esAutorizado: false,
   };
+
+  parametrosXInsumo: ParametrosFsrXInsumoDTO[] = [];
 
   onMouseDown(event: MouseEvent) {
     const target = event.target as HTMLElement;
@@ -566,7 +570,7 @@ export class PrecioUnitarioComponent implements OnInit {
     private unidades: Unidades,
     private estimacionesService: EstimacionesService,
     private ChangeDetectorRef: ChangeDetectorRef,
-    private _IndirectosService : IndirectosServiceService
+    private _IndirectosService: IndirectosServiceService
   ) {
     let idEmpresa = _SeguridadEmpresa.obtenIdEmpresaLocalStorage();
     let idProyecto = _SeguridadEmpresa.obtenerIdProyectoLocalStorage();
@@ -881,7 +885,6 @@ export class PrecioUnitarioComponent implements OnInit {
       .subscribe((tipos) => {
         this.tiposInsumos = tipos;
       });
-
   }
 
   cargarListaConceptos() {
@@ -1052,8 +1055,6 @@ export class PrecioUnitarioComponent implements OnInit {
     this.pestanas = false;
     this.esquemaArbol4 = false;
     this.existeCaptura = false;
-    this.comprobarIndirectos();
-    this.obtenerCensatia();
   }
 
   openTooltip() {
@@ -2871,6 +2872,14 @@ export class PrecioUnitarioComponent implements OnInit {
   }
 
   cambiarProyecto() {
+    this.fsrService
+      .obtenerFSR(this.selectedProyecto, this.selectedEmpresa)
+      .subscribe((fsr) => {
+        this.fsr = fsr;
+        this.esCompuesto = this.fsr.esCompuesto;
+        this.comprobarIndirectos();
+        this.obtenerCensatia();
+      });
     this.cargarRegistros();
     this.esquemaArbol2 = false;
     this.esquemaArbol3 = false;
@@ -2878,87 +2887,112 @@ export class PrecioUnitarioComponent implements OnInit {
     this.pestanas = false;
     this.dropdown = false;
     this.dropdown2 = false;
-    this.fsrService
-      .obtenerFSR(this.selectedProyecto, this.selectedEmpresa)
-      .subscribe((fsr) => {
-        this.fsr = fsr;
-        this.fsrService
-          .obtenerFSRDetalles(fsr.id, this.selectedEmpresa)
-          .subscribe((detalles) => {
-            this.porcentajePrestaciones = 0;
-            for (let i = 0; i < detalles.length; i++) {
-              this.porcentajePrestaciones =
-                this.porcentajePrestaciones + detalles[i].porcentajeFsrdetalle;
-            }
-            this.fsrDetalles = detalles;
-            this.fsrDetalles.push({
-              id: 0,
-              idFactorSalarioReal: this.fsr.id,
-              codigo: '',
-              descripcion: '',
-              porcentajeFsrdetalle: 0,
-              articulosLey: '',
-              idProyecto: 0,
-            });
-          });
-      });
-    this.fsrService
-      .obtenerFSI(this.selectedProyecto, this.selectedEmpresa)
-      .subscribe((fsi) => {
-        this.fsi = fsi;
-        this.fsrService
-          .obtenerDiasNoLaborables(fsi.id, this.selectedEmpresa)
-          .subscribe((dias) => {
-            this.diasNoLaborales = 0;
-            for (let i = 0; i < dias.length; i++) {
-              this.diasNoLaborales = this.diasNoLaborales + dias[i].valor;
-            }
-            this.diasConsideradosFsiNoTrabajados = dias;
-            this.diasConsideradosFsiNoTrabajados.push({
-              id: 0,
-              codigo: '',
-              descripcion: '',
-              valor: 0,
-              articulosLey: '',
-              esLaborableOPagado: false,
-              idFactorSalarioIntegrado: fsi.id,
-              idProyecto: 0,
-            });
-          });
-        this.fsrService
-          .obtenerDiasPagados(fsi.id, this.selectedEmpresa)
-          .subscribe((dias) => {
-            this.diasPagados = 0;
-            for (let i = 0; i < dias.length; i++) {
-              this.diasPagados = this.diasPagados + dias[i].valor;
-            }
-            this.diasConsideradosFsiPagados = dias;
-            this.diasConsideradosFsiPagados.push({
-              id: 0,
-              codigo: '',
-              descripcion: '',
-              valor: 0,
-              articulosLey: '',
-              esLaborableOPagado: true,
-              idFactorSalarioIntegrado: fsi.id,
-              idProyecto: 0,
-            });
-          });
-      });
-    this.comprobarIndirectos();
-    this.obtenerCensatia();
+
+    //   this.fsrService
+    //       .obtenerFSRDetalles(this.fsr.id, this.selectedEmpresa)
+    //       .subscribe((detalles) => {
+    //         this.porcentajePrestaciones = 0;
+    //         for (let i = 0; i < detalles.length; i++) {
+    //           this.porcentajePrestaciones =
+    //             this.porcentajePrestaciones + detalles[i].porcentajeFsrdetalle;
+    //         }
+    //         this.fsrDetalles = detalles;
+    //         this.fsrDetalles.push({
+    //           id: 0,
+    //           idFactorSalarioReal: this.fsr.id,
+    //           codigo: '',
+    //           descripcion: '',
+    //           porcentajeFsrdetalle: 0,
+    //           articulosLey: '',
+    //           idProyecto: 0,
+    //         });
+    //       });
+    // this.fsrService
+    //   .obtenerFSI(this.selectedProyecto, this.selectedEmpresa)
+    //   .subscribe((fsi) => {
+    //     this.fsi = fsi;
+
+    //   });
+
+    //   this.fsrService
+    //       .obtenerDiasNoLaborables(this.fsi.id, this.selectedEmpresa)
+    //       .subscribe((dias) => {
+    //         this.diasNoLaborales = 0;
+    //         for (let i = 0; i < dias.length; i++) {
+    //           this.diasNoLaborales = this.diasNoLaborales + dias[i].valor;
+    //         }
+    //         this.diasConsideradosFsiNoTrabajados = dias;
+    //         this.diasConsideradosFsiNoTrabajados.push({
+    //           id: 0,
+    //           codigo: '',
+    //           descripcion: '',
+    //           valor: 0,
+    //           articulosLey: '',
+    //           esLaborableOPagado: false,
+    //           idFactorSalarioIntegrado: this.fsi.id,
+    //           idProyecto: 0,
+    //         });
+    //       });
+    //     this.fsrService
+    //       .obtenerDiasPagados(this.fsi.id, this.selectedEmpresa)
+    //       .subscribe((dias) => {
+    //         this.diasPagados = 0;
+    //         for (let i = 0; i < dias.length; i++) {
+    //           this.diasPagados = this.diasPagados + dias[i].valor;
+    //         }
+    //         this.diasConsideradosFsiPagados = dias;
+    //         this.diasConsideradosFsiPagados.push({
+    //           id: 0,
+    //           codigo: '',
+    //           descripcion: '',
+    //           valor: 0,
+    //           articulosLey: '',
+    //           esLaborableOPagado: true,
+    //           idFactorSalarioIntegrado: this.fsi.id,
+    //           idProyecto: 0,
+    //         });
+    //       });
   }
 
-  obtenerCensatia(){
-        this.fsrService.obtenerPorcentajeCesantiaEdad(this.selectedProyecto, this.selectedEmpresa).subscribe((porcentaje) => {
-      if(porcentaje.length>0){
-        console.log('Comprobando censatía');
-        
-        this.existeCensatia = true;
-      }else{
-        this.existeCensatia = false;
-      }
-    })
+  /**
+   * Verifica si existe un rango de censantía para el proyecto actual
+   *
+   * @remarks
+   * Si el proyecto es compuesto, no se verifica la censatía
+   * Si existe un rango de censantía, se establece la variable existCensatia en true,
+   * de lo contrario, se establece en false
+   */
+  obtenerCensatia() {
+    this.existeCensatia = true;
+    if (!this.esCompuesto) {
+      return;
+    }
+    this.fsrService
+      .obtenerParametrosXInsumo(this.fsr, this.selectedEmpresa)
+      .subscribe({
+        next: (datos) => {
+          this.parametrosXInsumo = datos;
+        },
+        error: (err) => {
+          //Mensaje de error
+        },
+        complete: () => {
+          this.fsrService
+            .obtenerPorcentajeCesantiaEdad(
+              this.selectedProyecto,
+              this.selectedEmpresa
+            )
+            .subscribe({ next: (porcentaje) => {
+              if (porcentaje.length > 0 && this.parametrosXInsumo.length > 0) {
+                this.existeCensatia = true;
+              } else {
+                this.existeCensatia = false;
+              }
+            },error: (err) => {
+              //Mensaje de error
+            }});
+        },
+      });
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3585,56 +3619,56 @@ export class PrecioUnitarioComponent implements OnInit {
       });
   }
 
-  crearFSIDias(dias: diasConsideradosDTO) {
-    if (
-      typeof dias.codigo == undefined ||
-      !dias.codigo ||
-      dias.codigo == '' ||
-      typeof dias.descripcion == undefined ||
-      !dias.descripcion ||
-      dias.descripcion == '' ||
-      typeof dias.valor == undefined ||
-      !dias.valor
-    ) {
-      this._snackBar.open('capture todos los campos', 'X', { duration: 3000 });
-      return;
-    }
-    this.fsrService.crearDiasFSI(dias, this.selectedEmpresa).subscribe(() => {
-      if (dias.esLaborableOPagado == true) {
-        this.diasConsideradosFsiPagados.push({
-          id: 0,
-          codigo: '',
-          descripcion: '',
-          valor: 0,
-          articulosLey: '',
-          esLaborableOPagado: true,
-          idFactorSalarioIntegrado: this.fsi.id,
-          idProyecto: this.selectedProyecto,
-        });
-      } else {
-        this.diasConsideradosFsiNoTrabajados.push({
-          id: 0,
-          codigo: '',
-          descripcion: '',
-          valor: 0,
-          articulosLey: '',
-          esLaborableOPagado: false,
-          idFactorSalarioIntegrado: this.fsi.id,
-          idProyecto: this.selectedProyecto,
-        });
-      }
-      this.fsrService
-        .obtenerFSR(this.selectedProyecto, this.selectedEmpresa)
-        .subscribe((fsr) => {
-          this.fsr = fsr;
-        });
-      this.fsrService
-        .obtenerFSI(this.selectedProyecto, this.selectedEmpresa)
-        .subscribe((fsi) => {
-          this.fsi = fsi;
-        });
-    });
-  }
+  // crearFSIDias(dias: diasConsideradosDTO) {
+  //   if (
+  //     typeof dias.codigo == undefined ||
+  //     !dias.codigo ||
+  //     dias.codigo == '' ||
+  //     typeof dias.descripcion == undefined ||
+  //     !dias.descripcion ||
+  //     dias.descripcion == '' ||
+  //     typeof dias.valor == undefined ||
+  //     !dias.valor
+  //   ) {
+  //     this._snackBar.open('capture todos los campos', 'X', { duration: 3000 });
+  //     return;
+  //   }
+  //   this.fsrService.crearDiasFSI(dias, this.selectedEmpresa).subscribe(() => {
+  //     if (dias.esLaborableOPagado == true) {
+  //       this.diasConsideradosFsiPagados.push({
+  //         id: 0,
+  //         codigo: '',
+  //         descripcion: '',
+  //         valor: 0,
+  //         articulosLey: '',
+  //         esLaborableOPagado: true,
+  //         idFactorSalarioIntegrado: this.fsi.id,
+  //         idProyecto: this.selectedProyecto,
+  //       });
+  //     } else {
+  //       this.diasConsideradosFsiNoTrabajados.push({
+  //         id: 0,
+  //         codigo: '',
+  //         descripcion: '',
+  //         valor: 0,
+  //         articulosLey: '',
+  //         esLaborableOPagado: false,
+  //         idFactorSalarioIntegrado: this.fsi.id,
+  //         idProyecto: this.selectedProyecto,
+  //       });
+  //     }
+  //     this.fsrService
+  //       .obtenerFSR(this.selectedProyecto, this.selectedEmpresa)
+  //       .subscribe((fsr) => {
+  //         this.fsr = fsr;
+  //       });
+  //     this.fsrService
+  //       .obtenerFSI(this.selectedProyecto, this.selectedEmpresa)
+  //       .subscribe((fsi) => {
+  //         this.fsi = fsi;
+  //       });
+  //   });
+  // }
 
   private readonly auxiliar = new BehaviorSubject<boolean>(true);
   precioUnitarioEditando!: precioUnitarioDTO;
@@ -4060,7 +4094,7 @@ export class PrecioUnitarioComponent implements OnInit {
       fsrDetalles: this.fsrDetalles,
       porcentajePrestaciones: this.porcentajePrestaciones,
       esAutorizado: this.esAutorizado,
-    }
+    };
     // const dialogOpen = this.dialog.open(DialogFSRComponent, {
     //   data: {
     //     diasConsideradosFsiNoTrabajados: this.diasConsideradosFsiNoTrabajados,
@@ -4090,30 +4124,35 @@ export class PrecioUnitarioComponent implements OnInit {
     // });
   }
 
-/**
- * Cierra el dialogo de FSR y muestra el contenedor de presupuesto.
- * Si se proporciona un evento, se vuelve a recalcular el presupuesto.
- * Se llama a obtenerEstructurado para obtener la lista de precios unitarios.
- * Se establecen las variables de esquemaArbol2, esquemaArbol3, esquemaArbol4 y pestanas en false.
- * @param event - El evento que se provoca al cerrar el dialogo.
- */
-  cerrarFSR(event: Event){
+  /**
+   * Cierra el dialogo de FSR y muestra el contenedor de presupuesto.
+   * Si se proporciona un evento, se vuelve a recalcular el presupuesto.
+   * Se llama a obtenerEstructurado para obtener la lista de precios unitarios.
+   * Se establecen las variables de esquemaArbol2, esquemaArbol3, esquemaArbol4 y pestanas en false.
+   * @param event - El evento que se provoca al cerrar el dialogo.
+   */
+  cerrarFSR(event: Event) {
     this.contenedorFSR = false;
     this.contenedorPresupuesto = true;
     this.contenedorExplosionInsumo = false;
-    if(event){
+    if (event) {
       this.recalcularPresupuesto();
-        this.precioUnitarioService
-          .obtenerEstructurado(this.selectedProyecto, this.selectedEmpresa)
-          .subscribe((precios) => {
-            this.preciosUnitarios = precios;
-            this.esquemaArbol2 = false;
-            this.esquemaArbol3 = false;
-            this.esquemaArbol4 = false;
-            this.pestanas = false;
-          });
+      this.precioUnitarioService
+        .obtenerEstructurado(this.selectedProyecto, this.selectedEmpresa)
+        .subscribe((precios) => {
+          this.preciosUnitarios = precios;
+          this.esquemaArbol2 = false;
+          this.esquemaArbol3 = false;
+          this.esquemaArbol4 = false;
+          this.pestanas = false;
+        });
+      this.fsrService
+        .obtenerFSR(this.selectedProyecto, this.selectedEmpresa)
+        .subscribe((fsr) => {
+          this.esCompuesto = fsr.esCompuesto;
+          this.obtenerCensatia();
+        });
     }
-    
   }
 
   autorizarPresupuesto() {
@@ -4536,7 +4575,7 @@ export class PrecioUnitarioComponent implements OnInit {
 
   recalcular(event: Event) {
     console.log('event', event);
-    
+
     this.contenedorPresupuesto = true;
     this.contenedorExplosionInsumo = false;
     this.contenedorFSR = false;
@@ -4644,20 +4683,21 @@ export class PrecioUnitarioComponent implements OnInit {
     });
   }
 
-
-/**
- * Comprueba si existen indirectos para el proyecto y empresa seleccionados.
- * 
- * @returns {void}
- */
+  /**
+   * Comprueba si existen indirectos para el proyecto y empresa seleccionados.
+   *
+   * @returns {void}
+   */
   comprobarIndirectos() {
-    this._IndirectosService.ObtenerIndirectos(this.selectedEmpresa, this.selectedProyecto).subscribe((datos) => {
-      if(datos.length > 0){
-        this.existeIndirectos = true;
-      }else{
-        this.existeIndirectos = false;
-      }
-    });
+    this._IndirectosService
+      .ObtenerIndirectos(this.selectedEmpresa, this.selectedProyecto)
+      .subscribe((datos) => {
+        if (datos.length > 0) {
+          this.existeIndirectos = true;
+        } else {
+          this.existeIndirectos = false;
+        }
+      });
   }
 
   IndirectosXConcepto(precio: precioUnitarioDTO) {
@@ -4767,11 +4807,11 @@ export class PrecioUnitarioComponent implements OnInit {
         next: (datos) => {
           this.displayCarga = 'none';
 
-          console.log(datos, "UwU")
+          console.log(datos, 'UwU');
           if (datos.estatus) {
             // se subio
             this.cargarRegistros();
-            
+
             this.recalcularPresupuesto();
           } else {
             // error back

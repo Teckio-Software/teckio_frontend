@@ -92,7 +92,7 @@ export class FSRService{
     }
 
     public crearParametrosFsr(parametrosFsr: ParametrosFsrDTO, idEmpresa: number){
-        return this.HttpClient.post(`${this.apiUrl}/${idEmpresa}/crearParametrosFsr`, parametrosFsr);
+        return this.HttpClient.post<RespuestaDTO>(`${this.apiUrl}/${idEmpresa}/crearParametrosFsr`, parametrosFsr);
     }
 
     public editarParametrosFsr(parametrosFsr: ParametrosFsrDTO, idEmpresa: number){

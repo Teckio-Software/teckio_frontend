@@ -73,10 +73,13 @@
             label="Factor de salario real"
           ></mat-tab>
           <mat-tab
+            *ngIf="fsr.esCompuesto"
             class="text-labels z-10"
             label="Porcentaje de cesantía por edad"
           ></mat-tab>
-          <mat-tab class="text-labels z-10" label="Insumos por FSR"></mat-tab>
+          <mat-tab class="text-labels z-10" 
+          *ngIf="fsr.esCompuesto"
+          label="Insumos por FSR"></mat-tab>
         </mat-tab-group>
       </div>
     </div>

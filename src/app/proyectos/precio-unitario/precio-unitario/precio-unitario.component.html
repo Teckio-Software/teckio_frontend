@@ -189,7 +189,7 @@
       </div>
        <div
               *ngIf="mostrarMenuAlertas"
-              class="absolute right-96 top-14 z-50 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+              class="absolute right-96 top-14 z-50 mt-2 w-60 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
             >
               <div class="py-1">
                 <button
@@ -197,7 +197,7 @@
                   class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   (click)="openDialogFSR(); mostrarMenuAlertas = false"
                 >
-                  Configurar censatía y vejez
+                  Configurar factor salario real
                 </button>
                 <button
                   *ngIf="!existeIndirectos"

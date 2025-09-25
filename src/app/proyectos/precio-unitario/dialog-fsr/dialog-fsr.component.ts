@@ -147,6 +147,7 @@ export class DialogFSRComponent {
       .obtenerFSR(this.selectedProyecto, this.selectedEmpresa)
       .subscribe((datos) => {
         this.fsr = datos;
+        this.obtenerCensatia();
         console.log('este es el FSR', this.fsr);
         this.fsrService
           .obtenerFSRDetalles(this.fsr.id, this.selectedEmpresa)
@@ -224,18 +225,47 @@ export class DialogFSRComponent {
         this.selectedEmpresa
       )
       .subscribe((datos) => {
-        this.porcentajesCesantiaEdad = datos;
-        if(this.porcentajesCesantiaEdad.length > 0){
-          this.existeCesantiaVejez = true;
-        }else{
-          this.existeCesantiaVejez = false;
-        }
+        this.porcentajesCesantiaEdad = datos;        
         this.porcentajesCesantiaEdad.push({
           id: 0,
           idProyecto: this.selectedProyecto,
           rangoUMA: 0,
           porcentaje: 0,
         });
+      });
+  }
+
+  obtenerCensatia() {
+    this.existeCesantiaVejez = true;
+    if(!this.fsr.esCompuesto){
+      return;
+    }
+    this.fsrService
+      .obtenerParametrosXInsumo(this.fsr, this.selectedEmpresa)
+      .subscribe({
+        next: (datos) => {
+          this.parametrosXInsumo = datos;
+        },
+        error: (err) => {
+          //Mensaje de error
+        },
+        complete: () => {
+          this.fsrService
+            .obtenerPorcentajeCesantiaEdad(
+              this.selectedProyecto,
+              this.selectedEmpresa
+            )
+            .subscribe({ next: (porcentaje) => {
+              
+              if (porcentaje.length > 0 && this.parametrosXInsumo.length > 0) {
+                this.existeCesantiaVejez = true;
+              } else {
+                this.existeCesantiaVejez = false;
+              }
+            },error: (err) => {
+              //Mensaje de error
+            }});
+        },
       });
   }
 
@@ -349,16 +379,35 @@ export class DialogFSRComponent {
   }
 
   crearParametro() {
-    this.existeEdicion = true;
     if (this.ParametrosFsrDTO.id == 0) {
       this.ParametrosFsrDTO.idProyecto = this.selectedProyecto;
-
+      if(this.ParametrosFsrDTO.riesgoTrabajo<= 0 ||
+         this.ParametrosFsrDTO.cuotaFija <= 0 ||
+         this.ParametrosFsrDTO.aplicacionExcedente <= 0 ||
+         this.ParametrosFsrDTO.prestacionDinero <= 0 ||
+         this.ParametrosFsrDTO.gastoMedico <= 0 ||
+         this.ParametrosFsrDTO.invalidezVida <= 0 ||
+         this.ParametrosFsrDTO.retiro <= 0 ||
+         this.ParametrosFsrDTO.prestaconSocial <= 0 ||
+         this.ParametrosFsrDTO.infonavit <= 0 ||
+         this.ParametrosFsrDTO.uma <= 0){
+          //Alerta por datos faltantes, provisionalmente un console.log y todos los datos son obligatorios
+          console.log('faltan datos');
+           return;
+         }
+    this.existeEdicion = true;
       this.fsrService
         .crearParametrosFsr(this.ParametrosFsrDTO, this.selectedEmpresa)
-        .subscribe((datos) => {
-          this.ObtenerFS();
+        .subscribe({next:(datos) => {
+          if(datos.estatus){
+            this.ObtenerFS();
           this.calcularDias();
-        });
+          }else{
+            console.log(datos.descripcion);
+          }
+        },error:()=>{
+          //Mensaje de error
+        }});
     } else {
       this.fsrService
         .editarParametrosFsr(this.ParametrosFsrDTO, this.selectedEmpresa)
