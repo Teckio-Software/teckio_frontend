@@ -170,6 +170,17 @@ export interface ImporteSemanalDTO{
 
 
 
+export interface GanttViewport {
+  columnWidth: number;
+  dates: Date[];
+  fullSvgWidth: number;
+  scrollX: number;
+  setScrollX: (nextScroll: number) => void;
+  tableWidth: number;
+  viewMode: ViewMode;
+  dateSetup: DateSetup;
+}
+
 export interface Task {
   id: string;
   type : TaskType;
@@ -197,6 +208,7 @@ export interface Task {
   isDisabled?: boolean;
   getProgramaciones?: Function;
   getImporteSemanal?: Function;
+  refreshAllData?: () => Promise<void>;
   /**
    * Project or task
    */
@@ -227,6 +239,7 @@ export interface EmptyTask {
   selectedEmpresa : number;
   getProgramaciones?: Function;
   getImporteSemanal?: Function;
+  refreshAllData?: () => Promise<void>;
   idProyecto?: number;
   isDisabled?: boolean;
   styles?: Partial<ColorStyles>;
@@ -604,6 +617,7 @@ export interface GanttProps extends EventOption, DisplayOption, StylingOption   
   selectedEmpresa: number;
   selectedProyecto: number;
   isChecked?  : boolean;
+  onViewportChange?: (viewport: GanttViewport) => void;
   
   
 }

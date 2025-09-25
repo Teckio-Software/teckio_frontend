@@ -1,4 +1,4 @@
-import React, { act, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -19,6 +19,8 @@ import {
   Icons,
   ImporteSemanalDTO,
   OnChangeTasks,
+  GanttViewport,
+  OnDateChangeSuggestionType,
   Task,
   TaskOrEmpty,
   TitleColumn,
@@ -48,11 +50,20 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 
-const ProgressColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
-  if (task.type !== "empty") {
-    console.log("Estas son las tareas", task.idProyecto);
+const refreshTaskData = async (task: TaskOrEmpty) => {
+  if (task.type === "empty") {
+    return;
   }
 
+  if (typeof task.refreshAllData === "function") {
+    try {
+      await task.refreshAllData();
+    } catch (error) {
+      console.error("Error al refrescar la informacion del Gantt", error);
+    }
+  }
+};
+const ProgressColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
   const [progress, setProgress] = useState(`${task.progress}`);
 
   useEffect(() => {
@@ -70,13 +81,12 @@ const ProgressColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
           progress: newProgress,
         };
 
-        // Actualizar Gantt con la nueva tarea (simulación de la actualización)
-        asignarProgresoGantt(updatedTask, task.selectedEmpresa);
-
-        setTimeout(() => {
-          task.getProgramaciones && task.getProgramaciones();
-          task.getImporteSemanal && task.getImporteSemanal();
-        }, 600);
+        try {
+          await asignarProgresoGantt(updatedTask, task.selectedEmpresa);
+          await refreshTaskData(task);
+        } catch (error) {
+          console.error("Error al actualizar el progreso", error);
+        }
       }
     }
   };
@@ -116,10 +126,6 @@ const ProgressColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
 };
 
 const DesfaseComandoColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
-  if (task.type !== "empty") {
-    console.log("Estas son las tareas", task.idProyecto);
-  }
-
   const [desfaseComando, setDesfaseComando] = useState(
     `${task.desfaseComando}`
   );
@@ -139,13 +145,12 @@ const DesfaseComandoColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
           desfaseComando: newdesfaseComando,
         };
 
-        // Actualizar Gantt con la nueva tarea (simulación de la actualización)
-        GenerarDesfase(updatedTask, task.selectedEmpresa);
-
-        setTimeout(() => {
-          task.getProgramaciones && task.getProgramaciones();
-          task.getImporteSemanal && task.getImporteSemanal();
-        }, 600);
+        try {
+          await GenerarDesfase(updatedTask, task.selectedEmpresa);
+          await refreshTaskData(task);
+        } catch (error) {
+          console.error("Error al actualizar el desfase", error);
+        }
       }
     }
   };
@@ -184,11 +189,6 @@ const DesfaseComandoColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
 };
 
 const NumeradorColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
-  if (task.type !== "empty") {
-    console.log("Estas son las tareas", task.idProyecto);
-    console.log("Sewe", task);
-  }
-
   const [numerador, setNumerador] = useState(`${task.numerador}`);
 
   useEffect(() => {
@@ -206,13 +206,12 @@ const NumeradorColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
           numerador: newNumerador,
         };
 
-        // Actualizar Gantt con la nueva tarea (simulación de la actualización)
-        asignarProgresoGantt(updatedTask, task.selectedEmpresa);
-
-        setTimeout(() => {
-          task.getProgramaciones && task.getProgramaciones();
-          task.getImporteSemanal && task.getImporteSemanal();
-        }, 600);
+        try {
+          await asignarProgresoGantt(updatedTask, task.selectedEmpresa);
+          await refreshTaskData(task);
+        } catch (error) {
+          console.error("Error al actualizar el numerador", error);
+        }
       }
     }
   };
@@ -240,11 +239,6 @@ const NumeradorColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
 };
 
 const DuracionColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
-  if (task.type !== "empty") {
-    console.log("Estas son las tareas", task.idProyecto);
-    console.log("Sewe", task);
-  }
-
   const [duracion, setDuracion] = useState(`${task.duracion}`);
 
   useEffect(() => {
@@ -262,13 +256,12 @@ const DuracionColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
           duracion: newDuracion,
         };
 
-        // Actualizar Gantt con la nueva tarea (simulación de la actualización)
-        asignarDuracionGantt(updatedTask, task.selectedEmpresa);
-
-        setTimeout(() => {
-          task.getProgramaciones && task.getProgramaciones();
-          task.getImporteSemanal && task.getImporteSemanal();
-        }, 600);
+        try {
+          await asignarDuracionGantt(updatedTask, task.selectedEmpresa);
+          await refreshTaskData(task);
+        } catch (error) {
+          console.error("Error al actualizar la duracion", error);
+        }
       }
     }
   };
@@ -276,7 +269,6 @@ const DuracionColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDuracion(event.target.value);
   };
-  console.log("que es", task.parent);
 
   if (task.type === "task") {
     return (
@@ -309,9 +301,6 @@ const DuracionColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
 };
 
 const PredecesorColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
-  if (task.type !== "empty") {
-  }
-
   const [predecesor, setPredecesor] = useState(`${task.predecesor}`);
 
   useEffect(() => {
@@ -322,23 +311,19 @@ const PredecesorColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (event.key === "Enter") {
-      console.log("ejecutando");
       const newPredecesor = Number(predecesor);
-      console.log("Predecesora : ", newPredecesor);
       if (!isNaN(newPredecesor)) {
         const updatedTask = {
           ...task,
           predecesor: newPredecesor,
         };
 
-        // Actualizar Gantt con la nueva tarea (simulación de la actualización)
-        console.log("Seref", updatedTask);
-        GenerarDependenciaXNumerador(updatedTask, task.selectedEmpresa);
-
-        setTimeout(() => {
-          task.getProgramaciones && task.getProgramaciones();
-          task.getImporteSemanal && task.getImporteSemanal();
-        }, 600);
+        try {
+          await GenerarDependenciaXNumerador(updatedTask, task.selectedEmpresa);
+          await refreshTaskData(task);
+        } catch (error) {
+          console.error("Error al actualizar la dependencia", error);
+        }
       }
     }
   };
@@ -365,10 +350,6 @@ const PredecesorColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
 };
 
 const ComandoColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
-  if (task.type !== "empty") {
-    console.log("Estas son las tareas", task.idProyecto);
-  }
-
   const [comando, setComando] = useState(`${task.comando}`);
 
   useEffect(() => {
@@ -383,13 +364,12 @@ const ComandoColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
         comando: newComando,
       };
 
-      // Actualizar Gantt con la nueva tarea (simulación de la actualización)
-      asignarComando(updatedTask, task.selectedEmpresa);
-
-      setTimeout(() => {
-        task.getProgramaciones && task.getProgramaciones();
-        task.getImporteSemanal && task.getImporteSemanal();
-      }, 600);
+      try {
+        await asignarComando(updatedTask, task.selectedEmpresa);
+        await refreshTaskData(task);
+      } catch (error) {
+        console.error("Error al actualizar el comando", error);
+      }
     }
   };
 
@@ -427,10 +407,6 @@ const ComandoColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
 };
 
 const CantidadColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
-  if (task.type !== "empty") {
-    console.log("Estas son las tareas", task.idProyecto);
-  }
-
   const [cantidad, setCantidad] = useState(`${task.cantidad}`);
 
   useEffect(() => {
@@ -443,18 +419,7 @@ const CantidadColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
     if (event.key === "Enter") {
       const newCantidad = Number(cantidad);
       if (!isNaN(newCantidad)) {
-        const updatedTask = {
-          ...task,
-          cantidad: newCantidad,
-        };
-
-        // Actualizar Gantt con la nueva tarea (simulación de la actualización)
-        // asignarProgresoGantt(updatedTask, task.selectedEmpresa);
-
-        setTimeout(() => {
-          task.getProgramaciones && task.getProgramaciones();
-          task.getImporteSemanal && task.getImporteSemanal();
-        }, 600);
+        await refreshTaskData(task);
       }
     }
   };
@@ -492,10 +457,6 @@ const CantidadColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
 };
 
 const DependenciasColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
-  if (task.type !== "empty") {
-    console.log("Estas son las tareas", task.idProyecto);
-  }
-
   const [cadenaDependencias, setCadenaDependencias] = useState(
     `${task.cadenaDependencias}`
   );
@@ -510,18 +471,7 @@ const DependenciasColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
     if (event.key === "Enter") {
       const newCadenaDependencias = Number(cadenaDependencias);
       if (!isNaN(newCadenaDependencias)) {
-        const updatedTask = {
-          ...task,
-          cadenaDependencias: newCadenaDependencias,
-        };
-
-        // Actualizar Gantt con la nueva tarea (simulación de la actualización)
-        // asignarProgresoGantt(updatedTask, task.selectedEmpresa);
-
-        setTimeout(() => {
-          task.getProgramaciones && task.getProgramaciones();
-          task.getImporteSemanal && task.getImporteSemanal();
-        }, 600);
+        await refreshTaskData(task);
       }
     }
   };
@@ -656,18 +606,26 @@ type AppProps = {
 
 export const GanttComponent: React.FC<AppProps> = (props) => {
   const [actividades, setActividades] = useState<Task[]>([]);
+  const [viewport, setViewport] = useState<GanttViewport | null>(null);
+  const getProgramaciones = useCallback(async () => {
+    try {
+      const response = await GanttData(
+        props.selectedEmpresa,
+        props.selectedProyecto
+      );
 
-  console.log("Estas son la seleccion de empresa", props.selectedEmpresa);
-  const getProgramaciones = async () => {
-    GanttData(props.selectedEmpresa, props.selectedProyecto)
-      .then((response) => {
+      if (Array.isArray(response)) {
         setActividades(response);
-        console.log("Estas son las actividades", response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+      } else if (response) {
+        console.warn("Formato inesperado al obtener actividades", response);
+        setActividades([]);
+      } else {
+        setActividades([]);
+      }
+    } catch (error) {
+      console.error("Error al obtener programaciones", error);
+    }
+  }, [props.selectedEmpresa, props.selectedProyecto]);
 
   const [semanas, setSemanas] = useState<ImporteSemanalDTO[]>([]);
   const [semanasMDO, setSemanasMDO] = useState<ImporteSemanalDTO[]>([]);
@@ -678,24 +636,80 @@ export const GanttComponent: React.FC<AppProps> = (props) => {
   const [semanasHerramienta, setSemanasHerramienta] = useState<
     ImporteSemanalDTO[]
   >([]);
-  const getImporteSemanal = async () => {
-    ImporteSemanalGanttData(props.selectedEmpresa, props.selectedProyecto)
-      .then((response) => {
-        setSemanas(response.semanas);
-        setSemanasMDO(response.semanasMDO);
-        setSemanasMaterial(response.semanasMaterial);
-        setSemanasEquipo(response.semanasEquipo);
-        setSemanasHerramienta(response.semanasHerramienta);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  const getImporteSemanal = useCallback(async () => {
+    try {
+      const response = await ImporteSemanalGanttData(
+        props.selectedEmpresa,
+        props.selectedProyecto
+      );
 
-  React.useEffect(() => {
-    getProgramaciones();
-    getImporteSemanal();
+      if (response) {
+        setSemanas(response.semanas ?? []);
+        setSemanasMDO(response.semanasMDO ?? []);
+        setSemanasMaterial(response.semanasMaterial ?? []);
+        setSemanasEquipo(response.semanasEquipo ?? []);
+        setSemanasHerramienta(response.semanasHerramienta ?? []);
+      } else {
+        setSemanas([]);
+        setSemanasMDO([]);
+        setSemanasMaterial([]);
+        setSemanasEquipo([]);
+        setSemanasHerramienta([]);
+      }
+    } catch (error) {
+      console.error("Error al obtener importe semanal", error);
+    }
+  }, [props.selectedEmpresa, props.selectedProyecto]);
+
+
+
+  const handleViewportChange = useCallback((nextViewport: GanttViewport) => {
+    setViewport(nextViewport);
   }, []);
+
+  const refreshStateRef = useRef<{ inFlight: Promise<void> | null; queued: boolean }>({
+    inFlight: null,
+    queued: false,
+  });
+
+  const performDataFetch = useCallback(async () => {
+    await Promise.all([getProgramaciones(), getImporteSemanal()]);
+  }, [getProgramaciones, getImporteSemanal]);
+
+  const refreshAllData = useCallback(async (): Promise<void> => {
+    const state = refreshStateRef.current;
+
+    if (state.inFlight) {
+      state.queued = true;
+      await state.inFlight;
+
+      if (state.queued) {
+        state.queued = false;
+        return refreshAllData();
+      }
+
+      return;
+    }
+
+    state.inFlight = (async () => {
+      try {
+        await performDataFetch();
+      } finally {
+        refreshStateRef.current.inFlight = null;
+      }
+    })();
+
+    await state.inFlight;
+
+    if (state.queued) {
+      state.queued = false;
+      return refreshAllData();
+    }
+  }, [performDataFetch]);
+
+  useEffect(() => {
+    void refreshAllData();
+  }, [refreshAllData]);
 
   let TasckDataMap = actividades.map((actividad) => {
     return {
@@ -710,6 +724,7 @@ export const GanttComponent: React.FC<AppProps> = (props) => {
       selectedEmpresa: props.selectedEmpresa,
       getProgramaciones: getProgramaciones,
       getImporteSemanal: getImporteSemanal,
+      refreshAllData: refreshAllData,
       type: actividad.type,
       hideChildren: false,
       dependencies:
@@ -733,70 +748,59 @@ export const GanttComponent: React.FC<AppProps> = (props) => {
 
   const onChangeTasks = useCallback<OnChangeTasks>(
     async (nextTasks, action) => {
-      console.log("Accion turbo", action);
-      console.log("cmabiando la tarea");
-      switch (action.type) {
-        case "delete_relation":
-          setActividades(
-            nextTasks.filter((task): task is Task => task.type !== "empty")
-          );
-          if (
-            action.payload.taskFrom.dependencies &&
-            action.payload.taskTo.dependencies
-          ) {
-            EliminarGantt(
-              action.payload.taskTo.dependencies,
-              action.payload.taskFrom.dependencies,
-              props.selectedEmpresa
-            );
-          }
-          break;
 
-        case "delete_task":
-          if (window.confirm("Are you sure?")) {
+
+      try {
+        switch (action.type) {
+          case "delete_relation": {
             setActividades(
               nextTasks.filter((task): task is Task => task.type !== "empty")
             );
+
+            if (
+              action.payload.taskFrom.dependencies &&
+              action.payload.taskTo.dependencies
+            ) {
+              await EliminarGantt(
+                action.payload.taskTo.dependencies,
+                action.payload.taskFrom.dependencies,
+                props.selectedEmpresa
+              );
+            }
+
+            await refreshAllData();
+            break;
           }
-          break;
-        case "progress_change":
-          setActividades(
-            nextTasks.filter((task): task is Task => task.type !== "empty")
-          );
+          case "delete_task": {
+            if (window.confirm("Are you sure?")) {
+              setActividades(
+                nextTasks.filter((task): task is Task => task.type !== "empty")
+              );
+              await refreshAllData();
+            }
+            break;
+          }
+          case "progress_change":
+          case "duration_change":
+          case "date_change": {
+            setActividades(
+              nextTasks.filter((task): task is Task => task.type !== "empty")
+            );
+            await refreshAllData();
+            break;
+          }
+          default: {
+            const filteredTasks = nextTasks.filter(
+              (task): task is Task => task.type !== "empty"
+            );
 
-          setTimeout(() => {
-            getImporteSemanal();
-            getProgramaciones();
-          }, 600);
-          break;
-        case "duration_change":
-          setActividades(
-            nextTasks.filter((task): task is Task => task.type !== "empty")
-          );
+            const dependencyCalls: Promise<unknown>[] = [];
 
-          setTimeout(() => {
-            getImporteSemanal();
-            getProgramaciones();
-          }, 600);
-          break;
-        case "date_change":
-          setActividades(
-            nextTasks.filter((task): task is Task => task.type !== "empty")
-          );
-          setTimeout(() => {
-            getImporteSemanal();
-            getProgramaciones();
-          }, 600);
-
-          break;
-
-        default:
-          nextTasks.forEach((task) => {
-            if (task.type !== "empty") {
+            filteredTasks.forEach((task) => {
               if ((task.dependencies?.length ?? 0) > 0) {
                 task.dependencies?.forEach((dependencia) => {
                   if (dependencia.id == null) {
-                    let registro: dependenciaProgramacionEstimadaDTO = {
+                    const registro: dependenciaProgramacionEstimadaDTO = {
                       sourceId: dependencia.sourceId,
                       sourceTarget: dependencia.sourceTarget,
                       ownTarget: dependencia.ownTarget,
@@ -804,50 +808,72 @@ export const GanttComponent: React.FC<AppProps> = (props) => {
                       idProyecto: props.selectedProyecto,
                       idProgramacionEstimadaGantt: Number(task.id),
                     };
-                    GenerarDependencia(registro, props.selectedEmpresa);
+                    dependencyCalls.push(
+                      GenerarDependencia(registro, props.selectedEmpresa)
+                    );
                   }
                 });
               }
+            });
+
+            if (dependencyCalls.length > 0) {
+              await Promise.all(dependencyCalls);
             }
-          });
-          setActividades(
-            nextTasks.filter((task): task is Task => task.type !== "empty")
-          );
-          setTimeout(() => {
-            getProgramaciones();
-            getImporteSemanal();
-          }, 600);
-          break;
+
+            setActividades(filteredTasks);
+            await refreshAllData();
+            break;
+          }
+        }
+      } catch (error) {
+        console.error("Error al procesar cambios en el Gantt", error);
       }
     },
-    []
+    [refreshAllData, props.selectedEmpresa, props.selectedProyecto]
   );
 
   const handleDblClick = useCallback((task: Task) => {
     alert("On Double Click event Id:" + task.id);
   }, []);
 
-  const handleClick = useCallback((task: Task) => {
-    console.log("On Click event Id:" + task.id);
-  }, []);
+  const handleClick = useCallback((_task: Task) => {}, []);
 
   const [view, setView] = React.useState<ViewMode>(ViewMode.Day);
-  // console.log("Estas son las semanas", view);
   const [isChecked, setIsChecked] = React.useState(true);
   const [hiddenTable, setHiddenTable] = React.useState(false);
 
-  const onProgressChange = (
-    task: Task,
-    dependentTasks: readonly Task[],
-    taskIndex: number
-  ) => {
-    asignarProgresoGantt(task, props.selectedEmpresa);
-  };
+  const onProgressChange = useCallback(
+    async (task: Task, dependentTasks: readonly Task[], taskIndex: number) => {
+      try {
+        await asignarProgresoGantt(task, props.selectedEmpresa);
+        await refreshAllData();
+      } catch (error) {
+        console.error("Error al actualizar el progreso desde el diagrama", error);
+      }
+    },
+    [props.selectedEmpresa, refreshAllData]
+  );
+  const onDateChange = useCallback(
+    async (
+      actividad: TaskOrEmpty,
+      _dependentTasks: readonly Task[],
+      _taskIndex: number,
+      _parents: readonly Task[],
+      _suggestions: readonly OnDateChangeSuggestionType[],
+    ) => {
+      if (actividad.type === "empty") {
+        return;
+      }
 
-  const onDateChange = (actividades: any) => {
-    EditarGantt(actividades, props.selectedEmpresa); // EditarGantt(actividades, props.selectedEmpresa);
-  };
-
+      try {
+        await EditarGantt(actividad, props.selectedEmpresa);
+        await refreshAllData();
+      } catch (error) {
+        console.error("Error al actualizar las fechas", error);
+      }
+    },
+    [props.selectedEmpresa, refreshAllData]
+  );
   return (
     <>
       <DndProvider backend={HTML5Backend}>
@@ -859,15 +885,16 @@ export const GanttComponent: React.FC<AppProps> = (props) => {
         />
 
         <Gantt
+          {...props}
           onDateChange={onDateChange}
           onProgressChange={onProgressChange}
           // onEditTaskClick={onEditTask}
           isShowCriticalPath
           isRecountParentsOnChange={false}
           isShowChildOutOfParentWarnings
-          {...props}
           // onEditTask={onEditTask}
           // onAddTask={onAddTask}
+          onViewportChange={handleViewportChange}
           onChangeTasks={onChangeTasks}
           // onDoubleClick={handleDblClick}
           // onClick={handleClick}
@@ -878,8 +905,9 @@ export const GanttComponent: React.FC<AppProps> = (props) => {
           isChecked={isChecked}
           isDeleteDependencyOnDoubleClick={true}
         />
-        {view === ViewMode.Week && !hiddenTable && (
+        {view === ViewMode.Week && !hiddenTable && viewport && (
           <TableBelow
+            timeline={viewport}
             importeSemanal={semanas}
             semanasMDO={semanasMDO}
             semanasMaterial={semanasMaterial}
@@ -894,3 +922,8 @@ export const GanttComponent: React.FC<AppProps> = (props) => {
     </>
   );
 };
+
+
+
+
+

@@ -189,7 +189,6 @@ export const Calendar: React.FC<CalendarProps> = ({
       }
       // bottom
       const bottomValue = renderBottomHeaderByDate(date, i);
-      console.log("bottomValue", bottomValue);
 
       bottomValues.push(
         <text
@@ -418,3 +417,4 @@ export const Calendar: React.FC<CalendarProps> = ({
     </g>
   );
 };
+

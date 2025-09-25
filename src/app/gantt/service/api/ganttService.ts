@@ -8,13 +8,11 @@ import { Dependency } from "../../src";
 // var idProyecto = Number(obtenerLocalStorage);
 // var obtenerLocalStorageEmpresa = localStorage.getItem('idEmpresa');
 // var idEmpresa = Number(obtenerLocalStorageEmpresa);
-// console.log(idProyecto, idEmpresa,"EwE");
 
 
 
 
 export const GanttData = async (selectedEmpresa: number, selectedProyecto: number) =>{
-    console.log("UwU entrando")
     try{
         const registros = await fetch(environment.apiURL + 'programacionestimadaGantt/' + selectedEmpresa + '/obtenerGanttXIdProyecto/' + selectedProyecto);
         const response = await registros.json();
@@ -26,11 +24,9 @@ export const GanttData = async (selectedEmpresa: number, selectedProyecto: numbe
 }
 
 export const ImporteSemanalGanttData = async (selectedEmpresa: number, selectedProyecto: number) =>{
-    console.log("entrando a importe semanal")
     try{
         const registros = await fetch(environment.apiURL + 'programacionestimadaGantt/' + selectedEmpresa + '/obtenerImporteSemanalGantt/' + selectedProyecto);
         const response = await registros.json();
-        console.log(response, "EwE2");
         return response;
     }
     catch (error) {
@@ -74,9 +70,7 @@ export interface dependenciaProgramacionEstimadaDTO{
 }
 
 export const EditarGantt = async({ ...dataTask  } ,selectedEmpresa: number) =>{
-    console.log(dataTask, "UwUdentro de la peticion");
 
-    console.log(dataTask, "UwUdentro de la peticion" , selectedEmpresa);
     try{
         var programacionestimadaGantt: programacionestimadaGanttDTO = {
             id: dataTask["id"],
@@ -257,50 +251,74 @@ export const asignarComando = async({ ...dataTask  } ,selectedEmpresa: number) =
     }
 }
 
-export const EliminarGantt = async(dependenciesPre: Dependency[], dependenciesPost: Dependency[] , selectedEmpresa: number) =>{
-    console.log("EntraEliminar")
-    try
-    {
-        console.log(dependenciesPre, "EwE");
-        dependenciesPre.forEach(registro => {
-            let registrosExistentes = dependenciesPost.filter((item) => item.sourceId == registro.sourceId);
-            if(registrosExistentes.length <= 0){
-                fetch(environment.apiURL + 'programacionestimadaGantt/' + selectedEmpresa + '/eliminarDependencia/' + registro.id,
-                    {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        }
-                    }
-                )
-            }
-        });
-    }
-    catch
-    {
-
-    }
-}
-
-export const GenerarDependencia = async(dependencies: dependenciaProgramacionEstimadaDTO, selectedEmpresa: number) =>{
-    try
-    {
-        const registro = JSON.stringify(dependencies);
-        fetch(environment.apiURL + 'programacionestimadaGantt/' + selectedEmpresa + '/generarDependencia/',
-            {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: registro,
-            }
+export const EliminarGantt = async (
+  dependenciesPre: Dependency[],
+  dependenciesPost: Dependency[],
+  selectedEmpresa: number
+) => {
+  try {
+    const deletions = dependenciesPre
+      .filter((registro) => {
+        const registrosExistentes = dependenciesPost.filter(
+          (item) => item.sourceId == registro.sourceId
+        );
+        return registrosExistentes.length <= 0;
+      })
+      .map((registro) =>
+        fetch(
+          environment.apiURL +
+            'programacionestimadaGantt/' +
+            selectedEmpresa +
+            '/eliminarDependencia/' +
+            registro.id,
+          {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
         )
-    }
-    catch{
+      );
 
+    if (deletions.length > 0) {
+      await Promise.all(deletions);
     }
-}
+  } catch (error) {
+    console.error('Error al eliminar dependencias', error);
+    throw error;
+  }
+};
+export const GenerarDependencia = async (
+  dependencies: dependenciaProgramacionEstimadaDTO,
+  selectedEmpresa: number
+) => {
+  try {
+    const registro = JSON.stringify(dependencies);
+    const respuesta = await fetch(
+      environment.apiURL +
+        'programacionestimadaGantt/' +
+        selectedEmpresa +
+        '/generarDependencia/',
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: registro,
+      }
+    );
 
+    try {
+      return await respuesta.json();
+    } catch (error) {
+      console.warn('Respuesta sin cuerpo al generar dependencia');
+      return respuesta;
+    }
+  } catch (error) {
+    console.error('Error al generar dependencia', error);
+    throw error;
+  }
+};
 export const GenerarDependenciaXNumerador = async({ ...dataTask  } ,selectedEmpresa: number) =>{
     try{
         var programacionestimadaGantt: programacionestimadaGanttDTO = {
@@ -328,7 +346,6 @@ export const GenerarDependenciaXNumerador = async({ ...dataTask  } ,selectedEmpr
             predecesor: dataTask["predecesor"],
             cadenaDependencias: ""
         }
-        console.log(programacionestimadaGantt, "Efe");
         var programacionestimadaGantt1 = JSON.stringify(programacionestimadaGantt);
         const registros = await fetch(
             environment.apiURL + 'programacionestimadaGantt/' + selectedEmpresa + '/generarDependenciaXNumerador/',
@@ -373,7 +390,6 @@ export const GenerarDesfase = async({ ...dataTask  } ,selectedEmpresa: number) =
             predecesor: dataTask["predecesor"],
             cadenaDependencias: ""
         }
-        console.log(programacionestimadaGantt, "Efe");
         var programacionestimadaGantt1 = JSON.stringify(programacionestimadaGantt);
         const registros = await fetch(
             environment.apiURL + 'programacionestimadaGantt/' + selectedEmpresa + '/asignarDesfase/',
@@ -428,3 +444,4 @@ export const GenerarDesfase = async({ ...dataTask  } ,selectedEmpresa: number) =
 //       throw new Error(error);
 //     }
 //   };
+

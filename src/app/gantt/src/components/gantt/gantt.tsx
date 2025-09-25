@@ -22,6 +22,7 @@ import {
   Distances,
   FixPosition,
   GanttProps,
+  GanttViewport,
   OnDateChange,
   OnDateChangeSuggestionType,
   OnRelationChange,
@@ -279,6 +280,7 @@ export const Gantt: React.FC<GanttProps> = ({
   selectedEmpresa,
   selectedProyecto,
   isChecked,
+  onViewportChange = undefined,
 
 }) => {
   const ganttSVGRef = useRef<SVGSVGElement>(null);
@@ -859,7 +861,6 @@ export const Gantt: React.FC<GanttProps> = ({
 
   const [columnsState, setColumns] = useState<Column[]>(() => {
     if (columnsProp) {
-      console.log("columnsProp", columnsProp);
       return [...columnsProp];
     }
 
@@ -975,7 +976,6 @@ export const Gantt: React.FC<GanttProps> = ({
     tableWidthState,
     taskListWidth,
   ]);
-
   const getMetadata = useCallback(
     (changeAction: ChangeAction) => getChangeTaskMetadata({
       adjustTaskToWorkingDates,
@@ -1015,7 +1015,6 @@ export const Gantt: React.FC<GanttProps> = ({
         end,
       };
     });
-    console.log("data ciclando", nextTasks  )
     return nextTasks;
 
   }, [
@@ -1245,7 +1244,6 @@ export const Gantt: React.FC<GanttProps> = ({
       changedTask,
       originalTask,
     });
-    console.log(adjustedTask)
 
 
     const changeAction: ChangeAction = action === "move"
@@ -1268,7 +1266,6 @@ export const Gantt: React.FC<GanttProps> = ({
     ] = getMetadata(changeAction);
 
     const taskIndex = taskIndexes[0].index;
-    console.log("taskIndexes", taskIndexes, "dependentTasks", dependentTasks, "parents", parents, "suggestions", suggestions);
 
     if (onDateChangeProp) {
       onDateChangeProp(
@@ -1279,7 +1276,6 @@ export const Gantt: React.FC<GanttProps> = ({
         suggestions,
       );
     }
-    console.log("data cambiando", onDateChangeProp)
 
     if (onChangeTasks) {
       const withSuggestions = prepareSuggestions(suggestions);
@@ -1686,7 +1682,6 @@ export const Gantt: React.FC<GanttProps> = ({
   ]);
 
   const handleFixDependency = useCallback((task: Task, delta: number) => {
-    console.log("Reinicio")
     const {
       start,
       end,
@@ -1726,7 +1721,6 @@ export const Gantt: React.FC<GanttProps> = ({
   ]);
 
   const onRelationChange = useCallback<OnRelationChange>((from, to, isOneDescendant) => {
-    console.log("onRelationChange", from, to, isOneDescendant, "sadaaaaaaaaaaa");
     if (onRelationChangeProp) {
       onRelationChangeProp(from, to, isOneDescendant);
     }
@@ -2007,6 +2001,52 @@ export const Gantt: React.FC<GanttProps> = ({
     rtl,
     startColumnIndex,
   ]);
+  const timelineDates = useMemo(() => {
+    if (startColumnIndex > endColumnIndex) {
+      return [] as Date[];
+    }
+
+    const dates: Date[] = [];
+
+    for (let index = startColumnIndex; index <= endColumnIndex; index += 1) {
+      dates.push(getDate(index));
+    }
+
+    return dates;
+  }, [
+    startColumnIndex,
+    endColumnIndex,
+    getDate,
+  ]);
+
+
+
+  useEffect(() => {
+    if (!onViewportChange) {
+      return;
+    }
+
+    onViewportChange({
+      columnWidth: distances.columnWidth,
+      dates: timelineDates,
+      fullSvgWidth,
+      scrollX,
+      setScrollX: setScrollXProgrammatically,
+      tableWidth,
+      viewMode,
+      dateSetup,
+    });
+  }, [
+    onViewportChange,
+    distances.columnWidth,
+    timelineDates,
+    fullSvgWidth,
+    scrollX,
+    setScrollXProgrammatically,
+    tableWidth,
+    viewMode,
+    dateSetup,
+  ]);
 
   const barProps: TaskGanttContentProps = useMemo(() => ({
     additionalLeftSpace,
@@ -2211,3 +2251,5 @@ export const Gantt: React.FC<GanttProps> = ({
     </div>
   );
 };
+
+

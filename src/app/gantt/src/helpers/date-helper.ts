@@ -84,7 +84,6 @@ export const ganttDateRange = (
 
 
 export const getWeekNumberISO8601 = (date: Date) => {
-  console.log("WuW")
   const tmpDate = new Date(date.valueOf());
   const dayNumber = (tmpDate.getDay() + 6) % 7;
   tmpDate.setDate(tmpDate.getDate() - dayNumber + 3);
@@ -107,3 +106,4 @@ export const getWeekNumberISO8601 = (date: Date) => {
 export const getDaysInMonth = (month: number, year: number) => {
   return new Date(year, month + 1, 0).getDate();
 };
+

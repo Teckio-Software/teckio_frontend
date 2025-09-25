@@ -5,11 +5,10 @@ import { GlosarioDTO } from '../types/GlosarioDTO';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GlosarioService {
-
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   private apiUrl = environment.apiURL + 'glosario/';
 
@@ -22,7 +21,6 @@ export class GlosarioService {
   }
 
   public obtenerTodos(): Observable<GlosarioDTO[]> {
-    console.log(`${this.apiUrl}ObtenerTodos`);
     return this.http.get<GlosarioDTO[]>(`${this.apiUrl}ObtenerTodos`);
   }
 
@@ -33,5 +31,4 @@ export class GlosarioService {
   public eliminarTermino(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}Eliminar/${id}`);
   }
-
 }
