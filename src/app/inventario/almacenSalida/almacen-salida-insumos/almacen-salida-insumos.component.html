@@ -12,12 +12,12 @@
   <table class="w-full text-sm xs:table-fixed">
     <thead class="bg-primario text-white">
       <tr>
-        <th scope="col" class="px-1 py-[2px]">No. salida almacén</th>
+        <th scope="col" class="px-1 py-[2px]">No. de salida de almacén</th>
         <th scope="col" class="px-1 py-[2px]">Descripción</th>
         <th scope="col" class="px-1 py-[2px]">Unidad</th>
         <th scope="col" class="px-1 py-[2px]">Cantidad por salir</th>
-        <th scope="col" class="px-1 py-[2px]">Es préstamo</th>
-        <th scope="col" class="px-1 py-[2px]">Devolución</th>
+        <!-- <th scope="col" class="px-1 py-[2px]">Es Préstamo</th>
+        <th scope="col" class="px-1 py-[2px]">Devolución</th> -->
       </tr>
     </thead>
     <tbody class="divide-y divide-gray300">
@@ -37,7 +37,7 @@
         <td scope="col" class="px-1 py-[2px]">
           {{ ias.cantidadPorSalir }}
         </td>
-        <td scope="col" class="px-1 py-[2px]">
+        <!-- <td scope="col" class="px-1 py-[2px]">
           {{ ias.esPrestamo ? "Sí" : "No" }}
         </td>
         <td scope="col" class="px-1 py-[2px]">
@@ -48,7 +48,7 @@
           <div *ngIf="ias.esPrestamo && ias.prestamoFinalizado">
             Insumos devueltos
           </div>
-        </td>
+        </td> -->
       </tr>
     </tbody>
   </table>

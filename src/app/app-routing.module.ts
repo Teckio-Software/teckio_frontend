@@ -1,3 +1,4 @@
+import { GlosarioRoutingModule } from './documentacion/glosario/glosario-routing.module';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
@@ -423,6 +424,13 @@ const routes: Routes = [
       import(
         `./gestion-ventas/productos-servicios/productos-servicios.module`
       ).then((module) => module.ProductosServiciosModule),
+  },
+  {
+    path: 'glosario',
+    loadChildren: () =>
+      import(`./documentacion/glosario/glosario.module`).then(
+        (module) => module.GlosarioModule
+      ),
   },
 
   { path: '**', redirectTo: '' },

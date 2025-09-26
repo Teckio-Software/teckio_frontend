@@ -164,6 +164,11 @@ import { ImprimirModalComponent } from './proyectos/precio-unitario/precio-unita
 import { FieldsetModule } from 'primeng/fieldset';
 import { A11yModule } from "@angular/cdk/a11y";
 
+
+import { GlosarioComponent } from './documentacion/glosario/glosario.component';
+import { ModalGlosarioComponent } from './documentacion/modal-glosario/modal-glosario.component';
+import { DocumentacionModule } from './documentacion/documentacion.module';
+
 export function playerFactory() {
   return player;
 }
@@ -314,6 +319,8 @@ export function playerFactory() {
     ProductosServiciosComponent,
     ImprimirModalComponent,
     
+    GlosarioComponent,
+    ModalGlosarioComponent
   ],
 
   imports: [

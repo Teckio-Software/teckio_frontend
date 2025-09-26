@@ -1,5 +1,5 @@
 import { ProyectoStateService } from './utilidades/drawer/service/proyecto-state.service';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SeguridadService } from './seguridad/seguridad.service';
 import { SeguridadMultiEmpresaService } from './seguridad/seguridad-multi-empresa/seguridad-multi-empresa.service';
 import { UsuarioEmpresaService } from './seguridad/Servicios/usuario-empresa.service';
@@ -22,7 +22,7 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
   styleUrls: ['./app.component.css'],
   animations: [onMainContentChange],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   proyectoControl = new FormControl('');
   filteredProyectos: Observable<proyectoDTO[]> = new Observable<
     proyectoDTO[]
@@ -32,6 +32,7 @@ export class AppComponent implements OnInit {
   esLogueado: boolean = false;
   title = 'ERP_Teckio_F';
   subscription!: Subscription;
+  private proyectoChangeSubscription?: Subscription;
   recargar: number = 0;
   permisosUsuario: permisos[] = [];
   permisosAdmin: permisos[] = [];
@@ -89,6 +90,13 @@ export class AppComponent implements OnInit {
     this._sidenavService.sideNavState$.subscribe((res) => {
       this.onSideNavChange = res;
     });
+
+    this.proyectoChangeSubscription = this.proyectoService.OnChange.subscribe((idEmpresa) => {
+      const empresaId = idEmpresa > 0 ? idEmpresa : this.selectedEmpresa;
+      if (empresaId > 0) {
+        this.obtenerProyectos(empresaId);
+      }
+    });
   }
 
   private _filter(value: string): proyectoDTO[] {
@@ -101,6 +109,13 @@ export class AppComponent implements OnInit {
 
   private _normalizeValue(value: string): string {
     return value.toLowerCase().replace(/\s/g, '');
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+    this.proyectoChangeSubscription?.unsubscribe();
   }
 
   reiniciarFiltro() {
@@ -144,8 +159,8 @@ export class AppComponent implements OnInit {
     this.zvSeguridadService.guardaIdEmpresaLocalStorage(this.selectedEmpresa);
     if (this.selectedEmpresa > 0) {
       const idEmpresa = Number(this.selectedEmpresa);
-      // Actualiza la empresa seleccionada en el último registro
-      // Actualizar la lista de proyectos después de cambiar de empresa
+      // Actualiza la empresa seleccionada en el ultimo registro
+      // Actualizar la lista de proyectos despues de cambiar de empresa
       this.proyectoService.obtener(idEmpresa).subscribe((datos) => {
         this.proyectos = datos;
         let editarAtravesDeChangeEmpresa: usuarioUltimaSeccion = {
