@@ -798,6 +798,11 @@ ul {
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 }
+    /* 3. Estilo para la barra inferior (El subrayado) */
+    .first-custom-tab-group .mat-mdc-tab-header .mat-ink-bar {
+        /* Establecer en un color diferente o transparente para que no choque con el fondo blanco */
+        background-color: transparent !important; 
+    }
 ::ng-deep .first-custom-tab-group .mat-mdc-tab-labels {
   gap: 2px !important; /* Asegúrate de que no haya espacio entre las pestañas */
 }
