@@ -48,7 +48,7 @@
                                             (keydown.enter)="ediatarIndirectoPrecioUnitario()">
                                         <input autocomplete="off" type="text" class="w-full bg-transparent"
                                             id="input-table" *ngIf="!PUEditando"
-                                            [(ngModel)]="PU.porcentajeIndirectoConFormato" (click)="edicion()" readonly>
+                                            [(ngModel)]="porcentajeRealConFormato" (click)="edicion()" readonly>
                                     </td>
                                 </tr>
                             </tbody>
@@ -76,7 +76,7 @@
                                                 'colorNivel1' :indirecto.nivel == 1,
                                                 'colorNivel2' :indirecto.nivel == 2,
                                                 'colorNivel3' :indirecto.nivel == 3,
-                                                'colorNivel4' :indirecto.nivel == 4, 
+                                                'colorNivel4' :indirecto.nivel == 4,
                                                 'colorNivel5' :indirecto.nivel == 5,
                                                 'colorNivel6' :indirecto.nivel == 6,
                                                 'colorNivel7' :indirecto.nivel == 7,
@@ -140,7 +140,7 @@
                             'paddingNivel1' :indirecto.nivel == 1,
                             'paddingNivel2' :indirecto.nivel == 2,
                             'paddingNivel3' :indirecto.nivel == 3,
-                            'paddingNivel4' :indirecto.nivel == 4, 
+                            'paddingNivel4' :indirecto.nivel == 4,
                             'paddingNivel5' :indirecto.nivel == 5,
                             'paddingNivel6' :indirecto.nivel == 6,
                             'paddingNivel7' :indirecto.nivel == 7,
