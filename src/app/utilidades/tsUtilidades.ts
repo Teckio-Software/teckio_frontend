@@ -250,12 +250,12 @@ export const pages: Page[] = [
         imageUrl: 'assets/rubro.svg',
         permiso: ['SeccionRubro'],
       },
-      {
-        name: 'Tipo de Póliza',
-        link: '/tipopoliza',
-        imageUrl: 'assets/tipo-poliza.svg',
-        permiso: ['SeccionTipoPoliza'],
-      },
+      // {
+      //   name: 'Tipo de Poliza',
+      //   link: '/tipopoliza',
+      //   imageUrl: 'assets/tipo-poliza.svg',
+      //   permiso: ['SeccionTipoPoliza'],
+      // },
       {
         name: 'Cuenta Contable',
         link: '/cuentacontable',

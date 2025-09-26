@@ -30,6 +30,10 @@ export class PrecioUnitarioService {
         return this.HttpClient.get(`${this.apiUrl}/${idEmpresa}/AutorizarPresupuesto/${idProyecto}`)
     }
 
+    public removerAutorizacionPresupuesto(idProyecto: number, idEmpresa: number): Observable<RespuestaDTO> {
+        return this.HttpClient.get<RespuestaDTO>(`${this.apiUrl}/${idEmpresa}/RemoverAutorizacionPresupuesto/${idProyecto}`)
+    }
+
     public autorizarXPrecioUnitario(precioUniatrio: precioUnitarioDTO, idEmpresa: number): Observable<any> {
         return this.HttpClient.post(`${this.apiUrl}/${idEmpresa}/AutorizarXPrecioUnitario`, precioUniatrio)
     }
