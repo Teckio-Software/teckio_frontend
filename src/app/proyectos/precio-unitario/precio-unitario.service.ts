@@ -26,6 +26,7 @@ export class PrecioUnitarioService {
         return this.HttpClient.get<precioUnitarioDTO[]>(`${this.apiUrl}/${idEmpresa}/obtenerConceptos/${idProyecto}`)
     }
 
+
     public autorizarPresupuesto(idProyecto: number, idEmpresa: number): Observable<any> {
         return this.HttpClient.get(`${this.apiUrl}/${idEmpresa}/AutorizarPresupuesto/${idProyecto}`)
     }
