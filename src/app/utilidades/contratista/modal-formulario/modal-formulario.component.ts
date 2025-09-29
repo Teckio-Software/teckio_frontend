@@ -12,6 +12,7 @@ import { contratistaDTO } from 'src/app/catalogos/contratista/tsContratista';
 import { ContratistaService } from 'src/app/catalogos/contratista/contratista.service';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import { AlertaTipo, AlertComponent } from '../../alert/alert.component';
+import { da, es } from 'date-fns/locale';
 
 @Component({
   selector: 'app-modal-formulario',
@@ -48,6 +49,8 @@ export class ModalFormularioComponent implements OnInit {
     idIvaAcreditableFiscal: 0,
   };
 
+  mensajeTipoProveedor: string = '';
+
   //Variables para las muestras de mensajes de error
   errorGlobal: boolean = false;
   errorRs: boolean = false;
@@ -71,6 +74,16 @@ export class ModalFormularioComponent implements OnInit {
       .subscribe(() => this.updateErrorMessage());
     let idEmpresa = seguridadService.obtenIdEmpresaLocalStorage();
     this.selectedEmpresa = Number(idEmpresa);
+
+    if (
+      data.contratista.esProveedorMaterial &&
+      data.contratista.esProveedorServicio
+    ) {
+      this.data.contratista.esSubContratista = true;
+      this.mensajeTipoProveedor = '“Esta opción considera tanto al destajista como al proveedor.”';
+      this.data.contratista.esProveedorMaterial = false;
+      this.data.contratista.esProveedorServicio = false;
+    }
   }
 
   ngOnInit(): void {
@@ -92,6 +105,10 @@ export class ModalFormularioComponent implements OnInit {
       ],
       esProveedorMaterial: [
         this.data.contratista.esProveedorMaterial,
+        { validators: [] },
+      ],
+      esSubContratista: [
+        this.data.contratista.esSubContratista,
         { validators: [] },
       ],
       colonia: [this.data.contratista.colonia, { validators: [] }],
@@ -154,6 +171,19 @@ export class ModalFormularioComponent implements OnInit {
     }
   }
 
+  selectOnly(tipo: string) {
+    if(tipo === 'subcontratista'){
+      this.mensajeTipoProveedor = '“Esta opción considera tanto al destajista como al proveedor.”';
+    }else{
+      this.mensajeTipoProveedor = '';
+    }
+    this.form.patchValue({
+      esProveedorServicio: tipo === 'servicio',
+      esProveedorMaterial: tipo === 'material',
+      esSubContratista: tipo === 'subcontratista',
+    });
+  }
+
   guardar() {
     this.errorGlobal = false;
     this.errorRs = false;
@@ -173,12 +203,18 @@ export class ModalFormularioComponent implements OnInit {
       this.form.get('representanteLegal')?.value;
     this.Contratista.telefono = this.form.get('telefono')?.value;
     this.Contratista.nExterior = this.form.get('nExterior')?.value;
-    this.Contratista.esProveedorServicio = this.form.get(
-      'esProveedorServicio'
-    )?.value;
-    this.Contratista.esProveedorMaterial = this.form.get(
-      'esProveedorMaterial'
-    )?.value;
+    let tipo = this.form.get('esSubContratista')?.value;
+    if (tipo) {
+      this.Contratista.esProveedorServicio = true;
+      this.Contratista.esProveedorMaterial = true;
+    } else {
+      this.Contratista.esProveedorServicio = this.form.get(
+        'esProveedorServicio'
+      )?.value;
+      this.Contratista.esProveedorMaterial = this.form.get(
+        'esProveedorMaterial'
+      )?.value;
+    }
     this.Contratista.colonia = this.form.get('colonia')?.value;
     this.Contratista.municipio = this.form.get('municipio')?.value;
     this.Contratista.codigoPostal = this.form.get('codigoPostal')?.value;

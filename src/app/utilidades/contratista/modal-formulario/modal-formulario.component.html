@@ -75,6 +75,7 @@
               <p *ngIf="errorRl" class="text-red-700" >*El campo 'Representante legal' es obligatorio</p>
             </div>
 
+            <p *ngIf="mensajeTipoProveedor.length > 0" class="text-black-700" >{{mensajeTipoProveedor}}</p>
             <div>
               <span class="block text-sm font-medium text-gray-700 mb-2">
                 Tipo de proveedor
@@ -85,7 +86,9 @@
                     type="checkbox"
                     class="form-checkbox rounded text-indigo-600 focus:ring-indigo-500"
                     formControlName="esProveedorServicio"
+                    value="destajo"
                     (change)="errorTp = false"
+                    (change)="selectOnly('servicio')"
                   />
                   <span>Destajo</span>
                 </label>
@@ -93,9 +96,23 @@
                   <input
                     type="checkbox"
                     class="form-checkbox rounded text-indigo-600 focus:ring-indigo-500"
+                    value="proveedor"
                     formControlName="esProveedorMaterial"
+                    (change)="selectOnly('material')"
+
                   />
                   <span>Proveedor</span>
+                </label>
+                 <label class="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox rounded text-indigo-600 focus:ring-indigo-500"
+                    value="subcontratista"
+                    formControlName="esSubContratista"
+                    (change)="selectOnly('subcontratista')"
+
+                  />
+                  <span>Subcontratista</span>
                 </label>
               </div>
               <p *ngIf="errorTp" class="text-red-700" >*Selecciona un tipo de proveedor</p>

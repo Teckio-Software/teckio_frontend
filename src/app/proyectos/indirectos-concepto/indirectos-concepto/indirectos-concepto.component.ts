@@ -76,10 +76,11 @@ export class IndirectosConceptoComponent {
     expandido: false,
     nivel: 0
   }
-
   existenIndirectos: boolean = false;
   porcentajeIndirectos: number = 0;
   existenEstimaciones: boolean = false;
+
+  porcentajeRealConFormato: string = '';
 
   constructor(
     public dialogRef: MatDialogRef<IndirectosComponent>,
@@ -117,6 +118,13 @@ export class IndirectosConceptoComponent {
         indirectosPadre.forEach((element) => {
           this.porcentajeIndirectos += element.porcentaje;
         });
+        this.porcentajeRealConFormato = new Intl.NumberFormat('es-MX', {
+          style: 'percent',
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format(
+          (this.porcentajeIndirectos / 100)
+        );
         this.existenIndirectos = true;
       }
     });
@@ -141,7 +149,15 @@ export class IndirectosConceptoComponent {
       indirectosPadre.forEach((element) => {
         this.porcentajeIndirectos += element.porcentaje;
       });
+      console.log("este es el porcentaje", this.porcentajeIndirectos);
       this.PU.porcentajeIndirectoConFormato = new Intl.NumberFormat('es-MX', { minimumFractionDigits: 4 }).format(this.porcentajeIndirectos / 100 + 1);
+      this.porcentajeRealConFormato = new Intl.NumberFormat('es-MX', {
+          style: 'percent',
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format(
+          (this.porcentajeIndirectos / 100)
+        );
       this.existenIndirectos = true;
       this.PUEditando = false;
       return this.porcentajeIndirectos;
@@ -178,7 +194,14 @@ export class IndirectosConceptoComponent {
   ediatarIndirectoPrecioUnitario() {
     this.precioUnitarioService.editarIndirectoPrecioUnitario(this.PU, this.selectedEmpresa).subscribe((datos) => {
       if (datos) {
-        this.PU.porcentajeIndirectoConFormato = new Intl.NumberFormat('es-MX', { minimumFractionDigits: 4 }).format(this.PU.porcentajeIndirecto)
+        this.porcentajeRealConFormato = new Intl.NumberFormat('es-MX', {
+          style: 'percent',
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format(
+          (this.PU.porcentajeIndirecto - 1)
+        );
+        // this.PU.porcentajeIndirectoConFormato = new Intl.NumberFormat('es-MX', { minimumFractionDigits: 4 }).format(this.PU.porcentajeIndirecto)
         this.PUEditando = false;
       }
     });

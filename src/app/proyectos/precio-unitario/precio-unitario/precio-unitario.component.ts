@@ -4572,7 +4572,11 @@ export class PrecioUnitarioComponent implements OnInit {
     this.selectedCantidadConFormato = new Intl.NumberFormat('es-MX', {
       minimumFractionDigits: 4,
     }).format(this.selectedCantidad);
-    this.selectedRendimiento = 1 / this.selectedCantidad;
+    if(this.selectedCantidad == 0){
+      this.selectedRendimiento = 0;
+    }else{
+      this.selectedRendimiento = 1 / this.selectedCantidad;
+    }
     this.selectedRendimientoConFormato = new Intl.NumberFormat('es-MX', {
       minimumFractionDigits: 4,
     }).format(this.selectedRendimiento);
@@ -4598,10 +4602,18 @@ export class PrecioUnitarioComponent implements OnInit {
   }
 
   asignarCantidad(newValue: number) {
+    if(newValue == 0){
+      this.selectedRendimiento = 0;
+      return;
+    }
     this.selectedRendimiento = 1 / newValue;
   }
 
   asignarRendimiento(newValue: number) {
+    if(newValue == 0){
+      this.selectedCantidad = 0;
+      return;
+    }
     this.selectedCantidad = 1 / newValue;
   }
 
