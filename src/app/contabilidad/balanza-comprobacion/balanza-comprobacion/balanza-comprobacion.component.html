@@ -1,48 +1,53 @@
-<div class="cont-filtro">
-  <div class="cont-filt1">
-    <div class="contenedor-input">
-      <p class="place-holder" style="height: 30px; width: 14vh; display: flex;">Año de inicio</p>
-      <select class="form-select" style="height: 31px;" [(ngModel)]="filtroRangoFecha.anioInicio"
-        (ngModelChange)="cargarPorRangoFecha()">
-        <option *ngFor="let anio of anios" [value]="anio.anio">{{anio.anio}}</option>
-      </select>
-    </div>
-    <div class="contenedor-input">
-      <p class="place-holder" style="height: 30px; width: 14vh;">Mes de inicio</p>
-      <select class="form-select" style="height: 31px;" [(ngModel)]="filtroRangoFecha.mesInicio"
-        (ngModelChange)="cargarPorRangoFecha()">
-        <option *ngFor="let mes of meses" [value]="mes.mes">{{mes.mes}}</option>
-      </select>
+<div class=" bg-gray-300 rounded-lg m-[0 auto] mb-3 mt-4">
+  <div class="flex lg:flex-row flex-col gap-2 justify-center">
+    <div class="flex gap-2 justify-center">
+      <div class="contenedor-input">
+        <p class="place-holder h-20 sm:h-8 w-14 sm:w-28 text-clip overflow-hidden">Año de inicio</p>
+        <select class="form-select h-20 sm:h-8" [(ngModel)]="filtroRangoFecha.anioInicio"
+          (ngModelChange)="cargarPorRangoFecha()">
+          <option *ngFor="let anio of anios" [value]="anio.anio">{{anio.anio}}</option>
+        </select>
+      </div>
+      <div class="contenedor-input">
+        <p class="place-holder h-20 sm:h-8 w-14 sm:w-28 text-clip overflow-hidden">Mes de inicio</p>
+        <select class="form-select h-20 sm:h-8" [(ngModel)]="filtroRangoFecha.mesInicio"
+          (ngModelChange)="cargarPorRangoFecha()">
+          <option *ngFor="let mes of meses" [value]="mes.mes">{{mes.mes}}</option>
+        </select>
+      </div>
     </div>
     <!-- --------------- -->
-    <div class="contenedor-input">
-      <p class="place-holder" style="height: 30px; width: 14vh;">Año de termino</p>
-      <select class="form-select" style="height: 31px;" [(ngModel)]="filtroRangoFecha.anioTermino"
+    <div class="flex gap-2 justify-center">
+      <div class="contenedor-input">
+      <p class="place-holder h-14 sm:h-8 w-16 sm:w-32 text-clip overflow-hidden">Año de termino</p>
+      <select class="form-select h-14 sm:h-8" [(ngModel)]="filtroRangoFecha.anioTermino"
         (ngModelChange)="cargarPorRangoFecha()">
         <option *ngFor="let anio of anios" [value]="anio.anio">{{anio.anio}}</option>
       </select>
     </div>
-
-    <div class="contenedor-input">
-      <p class="place-holder" style="height: 30px; width: 14vh;">Mes de termino</p>
-      <select class="form-select" style="height: 31px;" [(ngModel)]="filtroRangoFecha.mesTermino"
+    <div class="contenedor-input"> 
+      <p class="place-holder h-14 sm:h-8 w-16 sm:w-32 text-clip overflow-hidden">Mes de termino</p>
+      <select class="form-select h-14 sm:h-8" [(ngModel)]="filtroRangoFecha.mesTermino"
         (ngModelChange)="cargarPorRangoFecha()">
         <option *ngFor="let mes of meses" [value]="mes.mes">{{mes.mes}}</option>
       </select>
     </div>
+    </div>
+    
+    
   </div>
   <!-- --------------- -->
-  <div class="cont-filt2">
+  <div class="flex justify-center mt-0 mb-3">
     <div class="contenedor-input2" style="margin-right: 10px;">
-      <p class="place-holder" style="height: 30px; width: 16vh;">Seleccione un año</p>
-      <select class="form-select" style="height: 31px;" [(ngModel)]="filtroPeriodo.anio"
+      <p class="place-holder h-14 sm:h-8 w-20 sm:w-40 text-clip overflow-hidden">Seleccione un año</p>
+      <select class="form-select h-14 sm:h-8" [(ngModel)]="filtroPeriodo.anio"
         (ngModelChange)="cargarPorPeriodo()">
         <option *ngFor="let anio of anios" [value]="anio.anio">{{anio.anio}}</option>
       </select>
     </div>
     <div class="contenedor-input2" style="margin-right: 10px;">
-      <p class="place-holder" style="height: 30px; width: 16vh;">Seleccione un mes</p>
-      <select class="form-select" style="height: 31px;" [(ngModel)]="filtroPeriodo.mes"
+      <p class="place-holder h-14 sm:h-8 w-20 sm:w-40 text-clip overflow-hidden">Seleccione un mes</p>
+      <select class="form-select h-14 sm:h-8" [(ngModel)]="filtroPeriodo.mes"
         (ngModelChange)="cargarPorPeriodo()">
         <option *ngFor="let mes of meses" [value]="mes.mes">{{mes.mes}}</option>
       </select>
@@ -50,22 +55,22 @@
   </div>
 </div>
 
-<div class="overflow-y-auto overflow-x-auto w-full rounded-lg shadow-md whitespace-nowrap mx-auto" style="margin-top: 30px;">
-  <table class="text-sm w-full mb-0">
+<div class="overflow-y-auto overflow-x-auto w-full rounded-lg shadow-md whitespace-nowrap mx-auto mt-[30px]">
+  <table class="text-sm w-full mb-0 table table-hover table-arbol">
     <thead class="bg-primario text-white">
-      <th style="width: 7%;" class="px-1 py-[2px] xs:w-[75px]">-</th>
-      <th style="width: 19%;" class="px-1 py-[2px] xs:w-[75px]">Código</th>
-      <th style="width: 22%;" class="px-1 py-[2px] xs:w-[75px]">Descripción</th>
-      <th style="width: 22%;" class="px-1 py-[2px] xs:w-[75px]">Saldo inicial</th>
-      <th style="width: 8.7%;" class="px-1 py-[2px] xs:w-[75px]">Debe</th>
-      <th style="width: 8.7%;" class="px-1 py-[2px] xs:w-[75px]">Haber</th>
-      <th class="px-1 py-[2px] xs:w-[75px]">Saldo final</th>
+      <th class="px-1 py-[2px] w-[7%]">-</th>
+      <th class="px-1 py-[2px] w-[19%]">Código</th>
+      <th class="px-1 py-[2px] w-[22%]">Descripción</th>
+      <th class="px-1 py-[2px] w-[22%]">Saldo inicial</th>
+      <th class="px-1 py-[2px] w-[8.7%]">Debe</th>
+      <th class="px-1 py-[2px] w-[8.7%]">Haber</th>
+      <th class="px-1 py-[2px] w-[13.7%]">Saldo final</th>
     </thead>
   </table>
 
   <tree-view [treeData]="balanzas">
     <ng-template let-balanza>
-      <table class="table table-striped table-hover table-arbol">
+      <table class="table table-hover table-arbol">
         <tbody>
           <tr class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]" [ngClass]="{
               nivel1: balanza.nivel == 1,
@@ -76,7 +81,7 @@
               nivel6: balanza.nivel == 6,
               nivel7: balanza.nivel == 7
               }">
-            <td style="width: 7%; border-right: 1px solid #f2f2f217;" class="cont-drill" [ngClass]="{
+            <td style=" border-right: 1px solid #f2f2f217;" class="cont-drill w-[7%]" [ngClass]="{
               nivel1Margen: balanza.nivel == 1,
               nivel2Margen: balanza.nivel == 2,
               nivel3Margen: balanza.nivel == 3,
@@ -137,7 +142,7 @@
               class="cont-drill text-end">
               ${{ balanza.haber }}
             </td>
-            <td class="cont-drill text-end" style="border-right: 1px solid #f2f2f217">
+            <td class="cont-drill text-end w-[13.7%]" style="border-right: 1px solid #f2f2f217">
               ${{ balanza.saldoFinal }}
             </td>
           </tr>
@@ -146,16 +151,16 @@
     </ng-template>
   </tree-view>
 
-  <table class="text-sm w-full mb-0">
+  <table class="text-sm w-full mb-0 table table-hover table-arbol">
     <thead class="bg-primario text-white">
-      <th style="width: 7%;" class="px-1 py-[2px] xs:w-[75px"></th>
-      <th style="width: 19%;" class="px-1 py-[2px] xs:w-[75px"></th>
-      <th style="width: 22%;" class="px-1 py-[2px] xs:w-[75px"></th>
-      <th style="width: 22%;" class="px-1 py-[2px] xs:w-[75px">Saldo Inicial: $0</th>
-      <th style="width: 8.7%;" class="px-1 py-[2px] xs:w-[75px">Debe: ${{debe}}</th>
-      <th style="width: 8.7%;" class="px-1 py-[2px] xs:w-[75px">Haber: ${{haber}}</th>
-      <th style="width: 13.7%;" class="px-1 py-[2px] xs:w-[75px">Saldo Final: $0</th>
-      <th></th>
+      <th class="px-1 py-[2px] w-[7%]">Totales: </th>
+      <th class="px-1 py-[2px] w-[19%]"></th>
+      <th class="px-1 py-[2px] w-[22%]"></th>
+      <th class="px-1 py-[2px] w-[22%] text-end">$0</th>
+      <th class="px-1 py-[2px] w-[8.7%] text-end">${{debe}}</th>
+      <th class="px-1 py-[2px] w-[8.7%] text-end">${{haber}}</th>
+      <th class="px-1 py-[2px] w-[13.7%] text-end">$0</th>
     </thead>
   </table>
+
 </div>
