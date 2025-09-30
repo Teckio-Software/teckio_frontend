@@ -1,4 +1,4 @@
-name: CI/CD Dev (no marketplace)
+name: CI/CD Dev
 
 on:
   push:
@@ -13,17 +13,17 @@ jobs:
       packages: write
 
     env:
-      IMAGE: ghcr.io/Teckio-Software/teckio_frontend   # <org>=Tu org, <service>=frontend|backend|sso
-      DOCKER_CONTEXT: frontend/teckio_frontend                # cambia si tu Dockerfile está en subcarpeta (ej: frontend/teckio_frontend)
+      IMAGE: ghcr.io/Teckio-Software/teckio_frontend
+      DOCKER_CONTEXT: frontend/teckio_frontend
 
     steps:
-      - name: Checkout (git clone)
+      - name: Checkout
         run: |
           git clone --depth=1 https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git repo
           cd repo
           echo "GIT SHA: $(git rev-parse --short HEAD)"
 
-      - name: Login to GHCR
+      - name: Login a GHCR con GITHUB_TOKEN
         working-directory: repo
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
@@ -37,10 +37,10 @@ jobs:
           docker push $IMAGE:$TAG_DEV
           docker push $IMAGE:$TAG_SHA
 
-      - name: Deploy over SSH
+      - name: Deploy al droplet por SSH
         working-directory: repo
         run: |
           echo "${{ secrets.DO_SSH_KEY }}" > key.pem
           chmod 600 key.pem
-          ssh -o StrictHostKeyChecking=no -i key.pem "${{ secrets.DO_SSH_USER }}"@"${{ secrets.DO_HOST }}" \
+          ssh -o StrictHostKeyChecking=no -i key.pem "${{ secrets.DROPLET_USER }}"@"${{ secrets.DROPLET_HOST }}" \
             'export GHCR_USER="${{ secrets.GHCR_USER }}"; export GHCR_TOKEN="${{ secrets.GHCR_TOKEN }}"; bash /srv/teckio/deploy-dev.sh'
