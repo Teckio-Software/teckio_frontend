@@ -132,18 +132,18 @@
             </td>
             <td style="border-right: 1px solid #3f3e3e17; width: 22%; border-right: 1px solid #f2f2f217"
               class="cont-drill text-end">
-              ${{ balanza.saldoInicial }}
+              ${{ balanza.saldoInicial|number:'1.4-4' }}
             </td>
             <td style="border-right: 1px solid #3f3e3e17; width: 8.7%; border-right: 1px solid #f2f2f217"
               class="cont-drill text-end">
-              ${{ balanza.debe }}
+              ${{ balanza.debe|number:'1.4-4' }}
             </td>
             <td style="border-right: 1px solid #3f3e3e17; width: 8.7%; border-right: 1px solid #f2f2f217"
               class="cont-drill text-end">
-              ${{ balanza.haber }}
+              ${{ balanza.haber|number:'1.4-4' }}
             </td>
             <td class="cont-drill text-end w-[13.7%]" style="border-right: 1px solid #f2f2f217">
-              ${{ balanza.saldoFinal }}
+              ${{ balanza.saldoFinal|number:'1.4-4' }}
             </td>
           </tr>
         </tbody>
@@ -157,8 +157,8 @@
       <th class="px-1 py-[2px] w-[19%]"></th>
       <th class="px-1 py-[2px] w-[22%]"></th>
       <th class="px-1 py-[2px] w-[22%] text-end">$0</th>
-      <th class="px-1 py-[2px] w-[8.7%] text-end">${{debe}}</th>
-      <th class="px-1 py-[2px] w-[8.7%] text-end">${{haber}}</th>
+      <th class="px-1 py-[2px] w-[8.7%] text-end">${{debe|number:'1.4-4'}}</th>
+      <th class="px-1 py-[2px] w-[8.7%] text-end">${{haber|number:'1.4-4'}}</th>
       <th class="px-1 py-[2px] w-[13.7%] text-end">$0</th>
     </thead>
   </table>

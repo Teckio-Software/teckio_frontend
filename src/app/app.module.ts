@@ -163,6 +163,8 @@ import { ProductosServiciosComponent } from './gestion-ventas/productos-servicio
 import { ImprimirModalComponent } from './proyectos/precio-unitario/precio-unitario/imprimir-modal/imprimir-modal.component';
 import { FieldsetModule } from 'primeng/fieldset';
 import { A11yModule } from "@angular/cdk/a11y";
+import { UppercaseInputDirective } from './directiva/uppercase.directive';
+import { OnlyNumbersDirective } from './directiva/onlynumbers.directive';
 
 export function playerFactory() {
   return player;
@@ -313,7 +315,8 @@ export function playerFactory() {
     ModalAsigacionComponent,
     ProductosServiciosComponent,
     ImprimirModalComponent,
-    
+    UppercaseInputDirective,
+    OnlyNumbersDirective
   ],
 
   imports: [
@@ -336,7 +339,8 @@ export function playerFactory() {
     OrdenCompraModule,
     ScrollingModule,
     FieldsetModule,
-    A11yModule
+    A11yModule,
+
 ],
   exports: [LeftMenuComponent],
   providers: [

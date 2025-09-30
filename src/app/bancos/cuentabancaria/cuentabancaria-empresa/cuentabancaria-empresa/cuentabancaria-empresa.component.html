@@ -11,7 +11,7 @@
       <!-- detenerCierre(event: MouseEvent): Método que detiene la propagación del evento de clic cuando se hace clic dentro del contenido del modal, asegurando que el modal no se cierre inadvertidamente. -->
       <div class="m-2 flex justify-between rounded-lg">
         <h2 class="font-normal tracking-[2px] leading-8 text-base">
-          Nueva Cuenta Bancaria
+          Nueva cuenta bancaria
         </h2>
         <button
           type="button"
@@ -39,7 +39,7 @@
                 (change)="errorBanco = false; errorGlobal = false"
               >
                 <option class="text-gray-700" value="" disabled selected hidden>
-                  Selecciona un banco..
+                  Selecciona un banco...
                 </option>
                 <option [ngValue]="banco.id" *ngFor="let banco of bancos">
                   {{ banco.nombre }}
@@ -60,10 +60,13 @@
                 name="persona"
                 placeholder="Escribe el número de cuenta"
                 formControlName="NumeroCuenta"
-                (change)="errorNumCuenta = false; errorGlobal = false"
+                appOnlyNumbers
+                maxlength="10"
+                (change)="errorNumCuenta.estatus= false; errorGlobal = false"
               />
-              <div *ngIf="errorNumCuenta" class="text-red-500 text-sm mb-2">
-                *El campo 'Número de cuenta' es requerido
+              <p [ngClass]="errorNumCuenta.estatus ? 'text-red-500' : 'text-gray-500'" class="text-sm w-full text-end">{{formulario.value.NumeroCuenta.length}}/10</p>
+              <div *ngIf="errorNumCuenta.estatus" class="text-red-500 text-sm mb-2">
+                *{{errorNumCuenta.descripcion}}
               </div>
             </div>
             <div class="mb-3">
@@ -77,10 +80,13 @@
                 name="persona"
                 placeholder="Escribe el número de sucursal"
                 formControlName="NumeroSucursal"
-                (change)="errorNumSucursal = false; errorGlobal = false"
+                appOnlyNumbers
+                maxlength="20"
+                (change)="errorNumSucursal.estatus = false; errorGlobal = false"
               />
-              <div *ngIf="errorNumSucursal" class="text-red-500 text-sm mb-2">
-                *El campo 'Número de sucursal' es requerido
+              <p [ngClass]="errorNumSucursal.estatus ? 'text-red-500' : 'text-gray-500'" class="text-sm w-full text-end">{{formulario.value.NumeroSucursal.length}}/20</p>
+              <div *ngIf="errorNumSucursal.estatus" class="text-red-500 text-sm mb-2">
+                *{{errorNumSucursal.descripcion}}
               </div>
             </div>
             <div class="mb-3">
@@ -94,10 +100,13 @@
                 name="persona"
                 placeholder="Escribe el número de clabe"
                 formControlName="CuentaClabe"
-                (change)="errorClabe = false; errorGlobal = false"
+                appOnlyNumbers
+                maxlength="18"
+                (change)="errorClabe.estatus= false; errorGlobal = false"
               />
-              <div *ngIf="errorClabe" class="text-red-500 text-sm mb-2">
-                *El campo 'Número de clabe' es requerido
+              <p [ngClass]="errorClabe.estatus ? 'text-red-500' : 'text-gray-500'" class="text-sm w-full text-end">{{formulario.value.CuentaClabe.length}}/18</p>
+              <div *ngIf="errorClabe.estatus" class="text-red-500 text-sm mb-2">
+                *{{errorClabe.descripcion}}
               </div>
             </div>
             <div class="mb-3">

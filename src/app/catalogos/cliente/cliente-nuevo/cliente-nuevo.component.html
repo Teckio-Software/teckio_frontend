@@ -57,6 +57,8 @@
                 placeholder="Escribe el RFC"
                 formControlName="rfc"
                 (change)="errorRFC.estatus = false; errorGlobal = false"
+                appUppercaseInput
+                maxlength="13"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
               <div *ngIf="errorRFC.estatus" class="text-red-500 text-sm mb-2">
@@ -73,11 +75,11 @@
                 type="email"
                 placeholder="Escribe el correo electrónico"
                 formControlName="email"
-                (change)="errorCE = false; errorGlobal = false"
+                (change)="errorCE.estatus = false; errorGlobal = false"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
-              <div *ngIf="errorCE" class="text-red-500 text-sm mb-2">
-                *El campo 'Correo electrónico' es requerido
+              <div *ngIf="errorCE.estatus" class="text-red-500 text-sm mb-2">
+                *{{ errorCE.descripcion }}
               </div>
             </div>
 
@@ -92,11 +94,13 @@
                 type="text"
                 placeholder="Escribe el teléfono"
                 formControlName="telefono"
-                (change)="errorTel = false; errorGlobal = false"
+                appOnlyNumbers
+                maxlength="10"
+                (change)="errorTel.estatus= false; errorGlobal = false"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
-              <div *ngIf="errorTel" class="text-red-500 text-sm mb-2">
-                *El campo 'Teléfono' es requerido
+              <div *ngIf="errorTel.estatus" class="text-red-500 text-sm mb-2">
+                *{{ errorTel.descripcion }}
               </div>
             </div>
 
@@ -172,6 +176,7 @@
                     placeholder="Código postal"
                     formControlName="codigoPostal"
                     (change)="errorCP = false; errorGlobal = false"
+                    appOnlyNumbers
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
                   <div *ngIf="errorCP" class="text-red-500 text-sm mb-2">

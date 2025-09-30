@@ -121,12 +121,12 @@
                   [(ngModel)]="polizaDetalle.concepto" (keydown.enter)="agregarDetalle(polizaDetalle)">
               </td>
               <td style="width: 15%;" class="body-table">
-                <input type="text" class="bg-transparent w-full" id="input-table"
+                <input type="text" class="bg-transparent w-full text-end" id="input-table"
                   [(ngModel)]="polizaDetalle.debe" (keydown.enter)="agregarDetalle(polizaDetalle)"
                   (ngModelChange)="reiniciaHaber(polizaDetalle)">
               </td>
               <td style="width: 15%;" class="body-table">
-                <input type="text" class="bg-transparent w-full" id="input-table"
+                <input type="text" class="bg-transparent w-full text-end" id="input-table"
                   [(ngModel)]="polizaDetalle.haber" (keydown.enter)="agregarDetalle(polizaDetalle)"
                   (ngModelChange)="reiniciaDebe(polizaDetalle)">
               </td>
@@ -146,11 +146,11 @@
                 
               </td>
               <td class="cont-total" colspan="1">
-                <input type="text" class="bg-transparent w-full" id="input-table" [(ngModel)]="totalDebeCreacion"
+                <input type="text" class="bg-transparent w-full text-end" id="input-table" [(ngModel)]="totalDebeCreacion"
                   disabled>
               </td>
               <td class="cont-total" colspan="1">
-                <input type="text" class="bg-transparent w-full" id="input-table" [(ngModel)]="totalHaberCreacion"
+                <input type="text" class="bg-transparent w-full text-end" id="input-table" [(ngModel)]="totalHaberCreacion"
                   disabled>
               </td>
             </tr>

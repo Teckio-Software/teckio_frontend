@@ -8,6 +8,7 @@ import { BancoDTO } from 'src/app/bancos/banco/tsBanco';
 import { CuentabancariaClienteService } from '../cuentabancaria-cliente.service';
 import { BancoService } from 'src/app/bancos/banco/banco.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 
 @Component({
   selector: 'app-cuentabancaria-cliente',
@@ -31,6 +32,26 @@ export class CuentabancariaClienteComponent {
   };
 
   bancos: BancoDTO[] = [];
+
+  mensajeError: RespuestaDTO = {
+      estatus: false,
+      descripcion: ''
+    };
+  
+    errorB: boolean = false;
+    errorNCu: RespuestaDTO = {
+      estatus: false,
+      descripcion: ''
+    };
+    errorNS: RespuestaDTO = {
+      estatus: false,
+      descripcion: ''
+    };
+    errorC: RespuestaDTO = {
+      estatus: false,
+      descripcion: ''
+    };
+    errorTM: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<CuentabancariaClienteComponent>,
@@ -65,19 +86,92 @@ export class CuentabancariaClienteComponent {
     this.cuentaBancaria.tipoMoneda = this.formulario.get('TipoMoneda')?.value;
 
     if (
-      this.cuentaBancaria.idBanco <= 0 ||
-      this.cuentaBancaria.idCliente <= 0 ||
-      this.cuentaBancaria.numeroCuenta == '' ||
-      this.cuentaBancaria.numeroCuenta == undefined ||
-      this.cuentaBancaria.numeroSucursal == '' ||
-      this.cuentaBancaria.numeroSucursal == undefined ||
-      this.cuentaBancaria.clabe == '' ||
-      this.cuentaBancaria.clabe == undefined ||
-      this.cuentaBancaria.tipoMoneda == undefined ||
-      this.cuentaBancaria.tipoMoneda <= 0
+      (this.cuentaBancaria.idBanco <= 0 || this.cuentaBancaria.idBanco.toString() == '') &&
+      // this.cuentaBancaria.idCliente <= 0 &&
+      (this.cuentaBancaria.numeroCuenta == '' ||
+      this.cuentaBancaria.numeroCuenta == undefined) &&
+      (this.cuentaBancaria.numeroSucursal == '' ||
+      this.cuentaBancaria.numeroSucursal == undefined) &&
+      (this.cuentaBancaria.clabe == '' ||
+      this.cuentaBancaria.clabe == undefined) &&
+      (this.cuentaBancaria.tipoMoneda == undefined ||
+      this.cuentaBancaria.tipoMoneda <= 0)
     ) {
+      this.mensajeError = {
+        estatus: true,
+        descripcion: 'Todos los campos son obligatorios',
+      };
       return;
     } else {
+      //Validaciones
+
+      let c = true;
+
+      if (this.cuentaBancaria.idBanco <= 0 || this.cuentaBancaria.idBanco.toString() == "") {
+        this.errorB = true;
+        c = false;
+      }
+
+      if (this.cuentaBancaria.idCliente <= 0) {
+        this.mensajeError = {
+        estatus: true,
+        descripcion: 'No hay un cliente asociado',
+      };
+        c = false;
+      }
+      if(this.cuentaBancaria.numeroCuenta.length<10){
+        this.errorNCu = {
+          estatus: true,
+          descripcion: 'El campo Numero de Cuenta debe tener 10 digitos'
+        };
+        c = false;
+      }
+      if (this.cuentaBancaria.numeroCuenta == "" || this.cuentaBancaria.numeroCuenta == undefined) {
+        this.errorNCu = {
+          estatus: true,
+          descripcion: 'El campo Numero de Cuenta es obligatorio'
+        };
+        c = false;
+      }
+      if(this.cuentaBancaria.numeroSucursal.length<20){
+        this.errorNS = {
+          estatus: true,
+          descripcion: 'El campo Numero de Sucursal debe tener 20 digitos'
+        };
+        c = false;
+      }
+      if (this.cuentaBancaria.numeroSucursal == "" || this.cuentaBancaria.numeroSucursal == undefined) {
+        this.errorNS = {
+          estatus: true,
+          descripcion: 'El campo Numero de Sucursal es obligatorio'
+        };
+        c = false;
+      }
+      if(this.cuentaBancaria.clabe.length<18){
+        this.errorC = {
+          estatus: true,
+          descripcion: 'El campo Clabe debe tener 18 digitos'
+        };
+        c = false;
+      }
+      if (this.cuentaBancaria.clabe == "" || this.cuentaBancaria.clabe == undefined) {
+        this.errorC = {
+          estatus: true,
+          descripcion: 'El campo Clabe es obligatorio'
+        };
+        c = false;
+      }
+
+      if (this.cuentaBancaria.tipoMoneda == undefined || this.cuentaBancaria.tipoMoneda <= 0) {
+        this.errorTM = true;
+        c = false;
+      }
+
+      if(!c){
+        return;
+      }
+
+
       this._CuentaBancaria
         .CrearCuentaBancaria(this.data.idEmpresa, this.cuentaBancaria)
         .subscribe((dato) => {

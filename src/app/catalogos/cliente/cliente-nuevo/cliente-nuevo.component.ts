@@ -41,8 +41,8 @@ export class ClienteNuevoComponent {
   errorGlobal: boolean = false;
   errorRS: boolean = false;
   errorRFC: RespuestaDTO = {estatus: false, descripcion: ''};
-  errorCE: boolean = false;
-  errorTel: boolean = false;
+  errorCE: RespuestaDTO = {estatus: false, descripcion: ''};
+  errorTel: RespuestaDTO = {estatus: false, descripcion: ''};
   errorRL: boolean = false;
   errorDm: boolean = false;
   errorCol: boolean = false;
@@ -93,14 +93,15 @@ export class ClienteNuevoComponent {
       this.errorGlobal = true;
       return;
     }else{
-      if(this.cliente.rfc.length > 13){
-        this.errorRFC.estatus = true;
-        this.errorRFC.descripcion = "La longitud del RFC no es correcta";
-        return;
-      }
+      
       let c = true
       if(this.cliente.razonSocial.trim() == ''){
         this.errorRS = true;
+        c = false;
+      }
+      if(this.cliente.rfc.length < 12){
+        this.errorRFC.estatus = true;
+        this.errorRFC.descripcion = "La longitud del RFC no es correcta";
         c = false;
       }
       if(this.cliente.rfc.trim() == ''){
@@ -108,12 +109,25 @@ export class ClienteNuevoComponent {
         this.errorRFC.descripcion = "El campo 'RFC' es requerido";
         c = false;
       }
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!regex.test(this.cliente.email)) {
+      this.errorCE.estatus = true;
+      this.errorCE.descripcion = "El campo Correo electrónico no es válido";
+      c = false;
+    }
       if(this.cliente.email.trim() == ''){
-        this.errorCE = true;
+        this.errorCE.estatus = true;
+        this.errorCE.descripcion = "El campo 'Correo electrónico' es requerido";
+        c = false;
+      }
+      if(this.cliente.telefono.length < 10){
+        this.errorTel.estatus = true;
+        this.errorTel.descripcion = "El campo 'Teléfono' debe tener 10 caracteres";
         c = false;
       }
       if(this.cliente.telefono.trim() == ''){
-        this.errorTel = true;
+        this.errorTel.estatus = true;
+        this.errorTel.descripcion = "El campo 'Teléfono' es requerido";
         c = false;
       }
       if(this.cliente.representanteLegal.trim() == ''){
@@ -159,8 +173,10 @@ export class ClienteNuevoComponent {
     this.errorRS = false;
     this.errorRFC.estatus = false;
     this.errorRFC.descripcion = "";
-    this.errorCE = false;
-    this.errorTel = false;
+    this.errorCE.estatus = false;
+    this.errorCE.descripcion = "";
+    this.errorTel.estatus = false;
+    this.errorTel.descripcion = "";
     this.errorRL = false;
     this.errorDm = false;
     this.errorCol = false;

@@ -16,7 +16,7 @@
                     <div class="flex gap-2" *ngIf="!existeConjunto">
                         <div class="flex items-end">
                             <button (click)="crearConjuntoIndirecto()"
-                                class="bg-[#51aec7]  hover:bg-hoverButton   titular items-center bg-custom-bg flex  font-bold tracking-wider  m-0 text-center">
+                                class="bg-[#51aec7]  hover:bg-hoverButton   titular items-center bg-custom-bg flex  font-bold tracking-wider rounded-md m-0 mb-1 text-center">
                                 <p
                                     class=" text-[#f2f2f2] titular bg-custom-bg w-52  font-bold tracking-wider  m-0 text-center">
                                     Crear</p>
@@ -24,17 +24,17 @@
                             </button>
                         </div>
                     </div>
-                    <div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto;"
-                        class="overflow-y-auto max-h-[300px]">
-                        <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
-                            <thead>
+                    <div
+                        class="overflow-y-auto overflow-x-auto max-h-[300px] rounded-lg shadow-md w-full whitespace-nowrap m-[0px auto] mb-1">
+                        <table class="w-full text-sm">
+                            <thead class="bg-primario text-white sticky top-0">
                                 <tr>
-                                    <th class="cabecera1" scope="col">Tipo calculo</th>
-                                    <th class="cabecera1" scope="col">Porcentaje</th>
+                                    <th class="px-1 py-[2px]" scope="col">Tipo calculo</th>
+                                    <th class="px-1 py-[2px]" scope="col">Porcentaje</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]">
                                     <td scope="col"><select [disabled]="existenEstimaciones"
                                             class="border-none rounded-sm bg-[#ffffff] text-[#020202d3] font-medium p-1 bg-transparent"
                                             [(ngModel)]="conjuntoIndirecto.tipoCalculo"
@@ -42,23 +42,23 @@
                                             <option [value]="0">Simple</option>
                                             <option [value]="1">Compuesto</option>
                                         </select></td>
-                                    <td scope="col">{{conjuntoIndirecto.porcentajeConFormato}}</td>
+                                    <td scope="col" class="text-end" >{{conjuntoIndirecto.porcentajeConFormato}}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div>
-                        <table class="table-striped table-hover " class="w-[100%]" style="height: 0px;">
-                            <thead>
-                                <th class="cabecera" style="width: 5%;">-</th>
-                                <th class="cabecera" style="width: 15%;">Código</th>
-                                <th class="cabecera" style="width: 70%;">Descripción</th>
-                                <th class="cabecera" style="width: 10%;">Porcentaje</th>
+                    <div class="overflow-y-auto overflow-x-auto max-h-[300px] rounded-lg shadow-md w-full whitespace-nowrap m-[0px auto] mb-1">
+                        <table class="w-full text-sm" style="height: 0px;">
+                            <thead class="bg-primario text-white sticky top-0">
+                                <th class="px-1 py-[2px]" style="width: 5%;">-</th>
+                                <th class="px-1 py-[2px]" style="width: 15%;">Código</th>
+                                <th class="px-1 py-[2px]" style="width: 70%;">Descripción</th>
+                                <th class="px-1 py-[2px]" style="width: 10%;">Porcentaje</th>
                             </thead>
                         </table>
                     </div>
                     <div style="overflow-y: auto; white-space: nowrap; margin: 0 auto; cursor: pointer; max-height: 200px;"
-                        class="floating-window" class="resizable-container">
+                        class="floating-window rounded-lg resizable-container">
                         <tree-view [treeData]="indirectos">
                             <ng-template let-indirecto>
                                 <table>
@@ -149,8 +149,8 @@
                                             </td>
                                             <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 10%;"
                                                 class="cont-drill" (click)="seleccionar(indirecto)">
-                                                <input autocomplete="off" type="text" class="" id="input-table"
-                                                    [(ngModel)]="indirecto.porcentaje" class="bg-transparent"
+                                                <input autocomplete="off" type="text" class="text-end bg-transparent" id="input-table"
+                                                    [(ngModel)]="indirecto.porcentaje" 
                                                     [disabled]="existenEstimaciones"
                                                     [readonly]="indirecto.idIndirectoBase == 0 || indirecto.hijos.length > 0"
                                                     (keydown.enter)="crear(indirecto)"
