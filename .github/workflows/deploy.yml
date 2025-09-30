@@ -13,9 +13,11 @@ jobs:
       packages: write
 
     steps:
-      - name: Checkout (git clone con GITHUB_TOKEN)
+      - name: Checkout (git clone con GITHUB_TOKEN y rama del run)
         run: |
-          git clone --depth=1 "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" repo
+          echo "ref_name=${{ github.ref_name }}"
+          git clone --depth=1 --branch "${{ github.ref_name }}" \
+            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" repo
           cd repo
           echo "GIT SHA: $(git rev-parse --short HEAD)"
 
