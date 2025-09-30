@@ -57,21 +57,21 @@ jobs:
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
       - name: Preparar llave SSH
-         run: |
-          printf '%s\n' "${{ secrets.DO_SSH_KEY }}" > key.pem
-          chmod 600 key.pem
+        run: |
+         printf '%s\n' "${{ secrets.DO_SSH_KEY }}" > key.pem
+         chmod 600 key.pem
 
       - name: Write SSH key
-          run: |
-            printf "%s" "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
-            chmod 600 key.pem
+        run: |
+         printf "%s" "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
+         chmod 600 key.pem
 
       - name: Show key fingerprint (safe)
         run: |
-          # Deriva la pública de la privada y muestra fingerprint
-          ssh-keygen -y -f key.pem > ci.pub
-          echo "CI key fingerprint:"
-          ssh-keygen -lf ci.pub
+         # Deriva la pública de la privada y muestra fingerprint
+         ssh-keygen -y -f key.pem > ci.pub
+         echo "CI key fingerprint:"
+         ssh-keygen -lf ci.pub
       - name: Build & Push
         working-directory: repo
         env:
