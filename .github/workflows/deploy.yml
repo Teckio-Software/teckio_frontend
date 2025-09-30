@@ -1,4 +1,4 @@
-name: CI/CD Dev
+name: Deployment Frontend Development
 
 on:
   push:
@@ -12,9 +12,9 @@ jobs:
       contents: read
       packages: write
 
+    # Cambia BUILD_CONTEXT si tu Dockerfile está en otra ruta (usa "." si está en la raíz)
     env:
-      IMAGE: ghcr.io/Teckio-Software/teckio_frontend
-      BUILD_CONTEXT: frontend/teckio_frontend   # <— antes se llamaba DOCKER_CONTEXT
+      BUILD_CONTEXT: frontend/teckio_frontend
 
     steps:
       - name: Checkout (git clone con GITHUB_TOKEN)
@@ -26,6 +26,15 @@ jobs:
       - name: Asegurar docker context por defecto
         run: docker context use default
 
+      - name: Definir IMAGE (owner en minúsculas)
+        id: img
+        run: |
+          OWNER="${{ github.repository_owner }}"
+          OWNER_LC=$(echo "$OWNER" | tr '[:upper:]' '[:lower:]')
+          IMAGE="ghcr.io/${OWNER_LC}/teckio_frontend"
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+          echo "Usando imagen: $IMAGE"
+
       - name: Login a GHCR (con GITHUB_TOKEN)
         working-directory: repo
         run: |
@@ -33,12 +42,13 @@ jobs:
 
       - name: Build & Push
         working-directory: repo
+        env:
+          TAG_DEV: dev
+          TAG_SHA: sha-${{ github.sha }}
         run: |
-          TAG_DEV=dev
-          TAG_SHA=sha-${GITHUB_SHA}
-          docker build -t $IMAGE:$TAG_DEV -t $IMAGE:$TAG_SHA "$BUILD_CONTEXT"
-          docker push $IMAGE:$DEV
-          docker push $IMAGE:$TAG_SHA
+          docker build -t "$IMAGE:$TAG_DEV" -t "$IMAGE:$TAG_SHA" "$BUILD_CONTEXT"
+          docker push "$IMAGE:$TAG_DEV"
+          docker push "$IMAGE:$TAG_SHA"
 
       - name: Deploy al droplet por SSH
         working-directory: repo
