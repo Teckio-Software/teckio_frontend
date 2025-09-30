@@ -40,7 +40,7 @@ jobs:
     steps:
       - name: SSH deploy
         if: ${{ vars.DEPLOY_MODE == 'service' }}
-        uses: appleboy/ssh-action@v1.2.0
+        uses: Teckio-Software/appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.DROPLET_HOST }}
           username: ${{ secrets.DROPLET_USER }}
