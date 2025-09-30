@@ -64,7 +64,7 @@
                 maxlength="10"
                 (change)="errorNumCuenta.estatus= false; errorGlobal = false"
               />
-              <p [ngClass]="errorNumCuenta.estatus ? 'text-red-500' : 'text-gray-500'" class="text-sm w-full text-end">{{formulario.value.NumeroCuenta.length}}/10</p>
+              <p [ngClass]="formulario.value.NumeroCuenta.length>=10? 'text-green-400' : errorNumCuenta.estatus ? 'text-red-500' : 'text-gray-500'" class="text-sm w-full text-end">{{formulario.value.NumeroCuenta.length}}/10</p>
               <div *ngIf="errorNumCuenta.estatus" class="text-red-500 text-sm mb-2">
                 *{{errorNumCuenta.descripcion}}
               </div>
@@ -84,7 +84,7 @@
                 maxlength="20"
                 (change)="errorNumSucursal.estatus = false; errorGlobal = false"
               />
-              <p [ngClass]="errorNumSucursal.estatus ? 'text-red-500' : 'text-gray-500'" class="text-sm w-full text-end">{{formulario.value.NumeroSucursal.length}}/20</p>
+              <p [ngClass]="formulario.value.NumeroSucursal.length>=20? 'text-green-400' : errorNumSucursal.estatus ? 'text-red-500' : 'text-gray-500'" class="text-sm w-full text-end">{{formulario.value.NumeroSucursal.length}}/20</p>
               <div *ngIf="errorNumSucursal.estatus" class="text-red-500 text-sm mb-2">
                 *{{errorNumSucursal.descripcion}}
               </div>
@@ -104,7 +104,7 @@
                 maxlength="18"
                 (change)="errorClabe.estatus= false; errorGlobal = false"
               />
-              <p [ngClass]="errorClabe.estatus ? 'text-red-500' : 'text-gray-500'" class="text-sm w-full text-end">{{formulario.value.CuentaClabe.length}}/18</p>
+              <p [ngClass]="formulario.value.CuentaClabe.length>=18? 'text-green-400' : errorClabe.estatus ? 'text-red-500' : 'text-gray-500'" class="text-sm w-full text-end">{{formulario.value.CuentaClabe.length}}/18</p>
               <div *ngIf="errorClabe.estatus" class="text-red-500 text-sm mb-2">
                 *{{errorClabe.descripcion}}
               </div>

@@ -61,6 +61,7 @@
                 maxlength="13"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
+              <p [ngClass]="formulario.value.rfc.length >= 12? 'text-green-400' : errorRFC.estatus ? 'text-red-500' : 'text-gray-500'" class="text-sm w-full text-end">{{formulario.value.rfc.length}}/13</p>
               <div *ngIf="errorRFC.estatus" class="text-red-500 text-sm mb-2">
                 *{{ errorRFC.descripcion }}
               </div>
@@ -99,6 +100,7 @@
                 (change)="errorTel.estatus= false; errorGlobal = false"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
+              <p [ngClass]="formulario.value.telefono.length >= 10? 'text-green-400' : errorRFC.estatus ? 'text-red-500' : 'text-gray-500'" class="text-sm w-full text-end">{{formulario.value.telefono.length}}/10</p>
               <div *ngIf="errorTel.estatus" class="text-red-500 text-sm mb-2">
                 *{{ errorTel.descripcion }}
               </div>
