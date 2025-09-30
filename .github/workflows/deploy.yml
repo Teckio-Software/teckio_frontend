@@ -70,6 +70,12 @@ jobs:
           docker build -f "$DOCKERFILE_PATH" -t "$IMAGE:$TAG_DEV" -t "$IMAGE:$TAG_SHA" "$BUILD_CONTEXT"
           docker push "$IMAGE:$TAG_DEV"
           docker push "$IMAGE:$TAG_SHA"
+      - name: Test SSH
+        env:
+          SSH_USER: root
+          SSH_HOST: 138.68.50.168
+        run: |
+          ssh -o StrictHostKeyChecking=no -i key.pem "$SSH_USER@$SSH_HOST" "echo 'ssh ok' && whoami && hostname"
       - name: Deploy al droplet por SSH
         working-directory: repo
         run: |
