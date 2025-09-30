@@ -1,4 +1,4 @@
-name: Deployment Frontend Development
+name: CI/CD Dev (no marketplace) - Auto Dockerfile
 
 on:
   push:
@@ -12,15 +12,10 @@ jobs:
       contents: read
       packages: write
 
-    # Cambia BUILD_CONTEXT si tu Dockerfile está en otra ruta (usa "." si está en la raíz)
-    env:
-      BUILD_CONTEXT: .
-      DOCKERFILE_PATH: Dockerfile
-
     steps:
       - name: Checkout (git clone con GITHUB_TOKEN)
         run: |
-          git clone --depth=1 https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git repo
+          git clone --depth=1 "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" repo
           cd repo
           echo "GIT SHA: $(git rev-parse --short HEAD)"
 
@@ -28,13 +23,39 @@ jobs:
         run: docker context use default
 
       - name: Definir IMAGE (owner en minúsculas)
-        id: img
         run: |
-          OWNER="${{ github.repository_owner }}"
-          OWNER_LC=$(echo "$OWNER" | tr '[:upper:]' '[:lower:]')
-          IMAGE="ghcr.io/${OWNER_LC}/teckio_frontend"
-          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+          OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          # <- Cambia "teckio_frontend" por "teckio_backend" / "teckio_sso" en los otros repos
+          echo "IMAGE=ghcr.io/${OWNER_LC}/teckio_frontend" >> $GITHUB_ENV
           echo "Usando imagen: $IMAGE"
+
+      - name: Detectar Dockerfile y context automáticamente
+        working-directory: repo
+        run: |
+          set -euo pipefail
+          echo "Buscando Dockerfile..."
+          # 1) Busca por archivos exactamente llamados "Dockerfile"
+          DF=$(git ls-files | awk -F/ '$NF=="Dockerfile"{print $0}' | head -n1 || true)
+          if [ -z "${DF:-}" ]; then
+            DF=$(find . -maxdepth 4 -type f -name 'Dockerfile' | head -n1 || true)
+          fi
+          if [ -z "${DF:-}" ]; then
+            echo "No se encontró un archivo llamado 'Dockerfile' en el repo."
+            echo "Contenido de primer nivel:"
+            ls -la
+            exit 1
+          fi
+          DIR=$(dirname "$DF")
+          # Normaliza context "." si el Dockerfile está en la raíz
+          if [ "$DIR" = "." ]; then
+            CTX="."
+          else
+            CTX="$DIR"
+          fi
+          echo "DOCKERFILE_PATH=$DF" >> $GITHUB_ENV
+          echo "BUILD_CONTEXT=$CTX" >> $GITHUB_ENV
+          echo "Detectado Dockerfile en: $DF"
+          echo "Build context: $CTX"
 
       - name: Login a GHCR (con GITHUB_TOKEN)
         working-directory: repo
@@ -47,7 +68,8 @@ jobs:
           TAG_DEV: dev
           TAG_SHA: sha-${{ github.sha }}
         run: |
-          docker build -t "$IMAGE:$TAG_DEV" -t "$IMAGE:$TAG_SHA" "$BUILD_CONTEXT"
+          echo "Usando DOCKERFILE_PATH=$DOCKERFILE_PATH, BUILD_CONTEXT=$BUILD_CONTEXT"
+          docker build -f "$DOCKERFILE_PATH" -t "$IMAGE:$TAG_DEV" -t "$IMAGE:$TAG_SHA" "$BUILD_CONTEXT"
           docker push "$IMAGE:$TAG_DEV"
           docker push "$IMAGE:$TAG_SHA"
 
