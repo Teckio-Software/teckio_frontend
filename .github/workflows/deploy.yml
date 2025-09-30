@@ -64,6 +64,11 @@ jobs:
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
+      - name: Preparar llave SSH
+        run: |
+          printf '%s\n' "${{ secrets.DO_SSH_KEY }}" > key.pem
+          chmod 600 key.pem
+
       - name: Build & Push
         working-directory: repo
         env:
