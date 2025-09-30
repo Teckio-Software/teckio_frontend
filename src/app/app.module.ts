@@ -165,6 +165,8 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { A11yModule } from "@angular/cdk/a11y";
 import { UppercaseInputDirective } from './directiva/uppercase.directive';
 import { OnlyNumbersDirective } from './directiva/onlynumbers.directive';
+import { AuditoriaService } from './seguridad/auditorias/auditorias.service';
+import { AuditoriasComponent } from './seguridad/auditorias/auditorias.component';
 
 export function playerFactory() {
   return player;
@@ -316,7 +318,9 @@ export function playerFactory() {
     ProductosServiciosComponent,
     ImprimirModalComponent,
     UppercaseInputDirective,
-    OnlyNumbersDirective
+    OnlyNumbersDirective,
+    AuditoriasComponent
+
   ],
 
   imports: [
@@ -340,7 +344,6 @@ export function playerFactory() {
     ScrollingModule,
     FieldsetModule,
     A11yModule,
-
 ],
   exports: [LeftMenuComponent],
   providers: [

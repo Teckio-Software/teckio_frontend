@@ -356,6 +356,12 @@ export const pages: Page[] = [
         imageUrl: 'assets/clientes.svg',
         permiso: ['Administrador'],
       },
+      {
+        name: 'Auditorías',
+        link: '/auditorias',
+        imageUrl: 'assets/requisicion.svg',
+        permiso: ['Administrador'],
+      }
     ],
     expanded: false,
   },

@@ -424,6 +424,13 @@ const routes: Routes = [
         `./gestion-ventas/productos-servicios/productos-servicios.module`
       ).then((module) => module.ProductosServiciosModule),
   },
+  {
+    path: 'auditorias',
+    loadChildren: () =>
+      import(`./seguridad/auditorias/auditorias.module`).then(
+        (module) => module.AuditoriasModule
+      ),
+  },
 
   { path: '**', redirectTo: '' },
 ];
