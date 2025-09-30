@@ -14,7 +14,8 @@ jobs:
 
     # Cambia BUILD_CONTEXT si tu Dockerfile está en otra ruta (usa "." si está en la raíz)
     env:
-      BUILD_CONTEXT: frontend/teckio_frontend
+      BUILD_CONTEXT: teckio_frontend
+      DOCKERFILE_PATH: teckio_frontend/Dockerfile
 
     steps:
       - name: Checkout (git clone con GITHUB_TOKEN)
