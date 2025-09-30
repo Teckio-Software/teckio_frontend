@@ -73,7 +73,7 @@ jobs:
       - name: Deploy al droplet por SSH
         working-directory: repo
         run: |
-          echo "${{ secrets.DO_SSH_KEY }}" > key.pem
+          printf "%s"  "${{ secrets.DO_SSH_KEY }}" > key.pem
           chmod 600 key.pem
           ssh -o StrictHostKeyChecking=no -i key.pem "${{ secrets.DROPLET_USER }}"@"${{ secrets.DROPLET_HOST }}" \
             'export GHCR_USER="${{ secrets.GHCR_USER }}"; export GHCR_TOKEN="${{ secrets.GHCR_TOKEN }}"; bash /srv/teckio/deploy-dev.sh'
