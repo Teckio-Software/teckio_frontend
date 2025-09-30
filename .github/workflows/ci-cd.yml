@@ -1,56 +1,46 @@
-name: CI/CD Frontend
+name: CI/CD Dev (no marketplace)
+
 on:
   push:
     branches: [develop]
   workflow_dispatch:
 
 jobs:
-  build_push:
+  build_and_deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-      id-token: write
+
+    env:
+      IMAGE: ghcr.io/Teckio-Software/teckio_frontend   # <org>=Tu org, <service>=frontend|backend|sso
+      DOCKER_CONTEXT: frontend/teckio_frontend                # cambia si tu Dockerfile está en subcarpeta (ej: frontend/teckio_frontend)
+
     steps:
-      - uses: Teckio-Software/checkout@v4
-      - uses: Teckio-Software/setup-buildx-action@v3
-      - uses: Teckio-Software/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - id: meta
-        uses: Teckio-Software/metadata-action@v5
-        with:
-          images: ghcr.io/Teckio-Software/teckio_frontend
-          tags: |
-            type=raw,value=dev
-            type=sha
-      - uses: Teckio-Software/build-push-action@v6
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build_push
-    steps:
-      - name: SSH deploy
-        if: ${{ vars.DEPLOY_MODE == 'service' }}
-        uses: Teckio-Software/appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.DROPLET_HOST }}
-          username: ${{ secrets.DROPLET_USER }}
-          key: ${{ secrets.DO_SSH_KEY }}
-          envs: GHCR_USER,GHCR_TOKEN
-          script: |
-            export GHCR_USER='${{ secrets.GHCR_USER }}'
-            export GHCR_TOKEN='${{ secrets.GHCR_TOKEN }}'
-            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
-            cd /srv/teckio/compose
-            docker compose -f docker-compose.dev.yml pull frontend
-            docker compose -f docker-compose.dev.yml up -d frontend
-            docker image prune -f || true
+      - name: Checkout (git clone)
+        run: |
+          git clone --depth=1 https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git repo
+          cd repo
+          echo "GIT SHA: $(git rev-parse --short HEAD)"
+
+      - name: Login to GHCR
+        working-directory: repo
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Build & Push
+        working-directory: repo
+        run: |
+          TAG_DEV=dev
+          TAG_SHA=sha-${GITHUB_SHA}
+          docker build -t $IMAGE:$TAG_DEV -t $IMAGE:$TAG_SHA "$DOCKER_CONTEXT"
+          docker push $IMAGE:$TAG_DEV
+          docker push $IMAGE:$TAG_SHA
+
+      - name: Deploy over SSH
+        working-directory: repo
+        run: |
+          echo "${{ secrets.DO_SSH_KEY }}" > key.pem
+          chmod 600 key.pem
+          ssh -o StrictHostKeyChecking=no -i key.pem "${{ secrets.DO_SSH_USER }}"@"${{ secrets.DO_HOST }}" \
+            'export GHCR_USER="${{ secrets.GHCR_USER }}"; export GHCR_TOKEN="${{ secrets.GHCR_TOKEN }}"; bash /srv/teckio/deploy-dev.sh'
