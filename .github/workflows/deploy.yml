@@ -1,4 +1,4 @@
-name: Development
+name: Development Frontend
 on:
   push:
     branches: [develop]
