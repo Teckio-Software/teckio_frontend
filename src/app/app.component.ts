@@ -120,7 +120,10 @@ export class AppComponent implements OnInit {
         this.proyectos[0].id
       );
     }
-    let proyecto = this.proyectos.find((x) => x.id === idProyectoLocal);
+    const idProyecto = Number(
+      this.zvSeguridadService.obtenerIdProyectoLocalStorage()
+    );
+    let proyecto = this.proyectos.find((x) => x.id === idProyecto);
     if (proyecto) {
       this.proyectoControl.setValue(proyecto.nombre);
     }
@@ -216,43 +219,43 @@ export class AppComponent implements OnInit {
       });
   }
 
-  obtenerProyectos(idEmpresa: number) {
-    this.proyectos = [];
-    this.proyectoService.obtener(idEmpresa).subscribe((datos) => {
-      this.proyectos = datos;
-      this.filteredProyectos = this.proyectoControl.valueChanges.pipe(
-        startWith(''),
-        map((value) => {
-          const stringValue = typeof value === 'string' ? value : '';
-          return this._filter(stringValue);
-        })
-      );
-      let idAlmacenado = Number(
-        this.zvSeguridadService.obtenerIdProyectoLocalStorage()
-      );
-      if (idAlmacenado > 0) {
-        this.idProyecto = idAlmacenado;
-        this.zvSeguridadService.guardarIdProyectoLocalStorage(idAlmacenado);
-        this.recargar = this.recargar + 1;
-      } else {
-        this._UsuarioXIdUsuario
-          .obtenerUltimaSeccionUsuarioXIUsuario(this.idUsuario)
-          .subscribe((data) => {
-            if (data.idProyecto == 0) {
-              data.idProyecto = datos[0].id;
-            }
-            this.zvSeguridadService.guardarIdProyectoLocalStorage(
-              data.idProyecto
-            );
-            this.zvSeguridadService.guardaIdEmpresaLocalStorage(data.idEmpresa);
+  // obtenerProyectos(idEmpresa: number) {
+  //   this.proyectos = [];
+  //   this.proyectoService.obtener(idEmpresa).subscribe((datos) => {
+  //     this.proyectos = datos;
+  //     this.filteredProyectos = this.proyectoControl.valueChanges.pipe(
+  //       startWith(''),
+  //       map((value) => {
+  //         const stringValue = typeof value === 'string' ? value : '';
+  //         return this._filter(stringValue);
+  //       })
+  //     );
+  //     let idAlmacenado = Number(
+  //       this.zvSeguridadService.obtenerIdProyectoLocalStorage()
+  //     );
+  //     if (idAlmacenado > 0) {
+  //       this.idProyecto = idAlmacenado;
+  //       this.zvSeguridadService.guardarIdProyectoLocalStorage(idAlmacenado);
+  //       this.recargar = this.recargar + 1;
+  //     } else {
+  //       this._UsuarioXIdUsuario
+  //         .obtenerUltimaSeccionUsuarioXIUsuario(this.idUsuario)
+  //         .subscribe((data) => {
+  //           if (data.idProyecto == 0) {
+  //             data.idProyecto = datos[0].id;
+  //           }
+  //           this.zvSeguridadService.guardarIdProyectoLocalStorage(
+  //             data.idProyecto
+  //           );
+  //           this.zvSeguridadService.guardaIdEmpresaLocalStorage(data.idEmpresa);
 
-            this.obtenerProyectos(this.selectedEmpresa);
-            this.idProyecto = data.idProyecto;
-            this.recargar = this.recargar + 1;
-          });
-      }
-    });
-  }
+  //           this.obtenerProyectos(this.selectedEmpresa);
+  //           this.idProyecto = data.idProyecto;
+  //           this.recargar = this.recargar + 1;
+  //         });
+  //     }
+  //   });
+  // }
 
   // cargarEmpresas(): EmpresaDTO[] {
   //   let hayToken = this.zvSeguridadService.zfObtenerToken();
