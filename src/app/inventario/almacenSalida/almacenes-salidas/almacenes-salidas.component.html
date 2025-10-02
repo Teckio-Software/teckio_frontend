@@ -382,7 +382,7 @@
           {{ insumoInformacion.unidad }}
         </td>
         <td class="px-1 py-[2px]">
-          {{ insumoInformacion.cantidadDisponible }}
+          {{ insumoInformacion.cantidadDisponible | number: "1.4-4" }}
         </td>
         <td class="px-1 py-[2px]">
           <input
@@ -536,7 +536,10 @@
                           (keydown.enter)="agregarFila()"
                         />
                       </td>
-                      <td scope="col">
+                      <td class="bg-transparent text-end p-1">
+                        {{cantidadDisponible | number:'1.4-4'}}
+                      </td>
+                      <!-- <td scope="col">
                         <input
                           type="number"
                           class="bg-transparent text-end w-full p-1"
@@ -544,7 +547,7 @@
                           (keydown.enter)="agregarFila()"
                           readonly
                         />
-                      </td>
+                      </td> -->
                     </tr>
                     
                 </table>
@@ -577,7 +580,7 @@
                           class="bg-transparent w-full p-1"
                         />
                       </td>
-                      <td scope="col">
+                      <td scope="col" *ngIf="selectedIndex == i">
                         <input
                           type="number"
                           [(ngModel)]="insumo.cantidadExistencia"
@@ -586,6 +589,9 @@
                           (change)="comprobarExistencia(i, insumo)"
                           (keydown.enter)="agregarFila()"
                         />
+                      </td>
+                      <td (click)="selectedIndex = i;" *ngIf="selectedIndex != i" class="bg-transparent text-end p-1">
+                        {{insumo.cantidadExistencia | number:'1.4-4'}}
                       </td>
                       <td scope="col">
                         <button

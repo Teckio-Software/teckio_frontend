@@ -16,17 +16,17 @@
           <option value="Error">Error</option>
           <option value="Critical">Critical</option>
         </select>
+
         <div class="">
           <input
             type="text"
-            placeholder="Seleccione usuario"
+            placeholder="Filtro..."
             autocomplete="off"
             class="block w-48 px-3 py-1.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            (input)="filtrarUsuario($event)"
-            (click)="mostrarListaUsuario = !mostrarListaUsuario"
-            [(ngModel)]="nombreUsuario"
+            (input)="filtrarXTexto()"
+            [(ngModel)]="filtroTexto"
           />
-          <div *ngIf="mostrarListaUsuario">
+          <!-- <div *ngIf="mostrarListaUsuario">
             <ul
               *ngFor="let usuario of listaUsuarios"
               class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-auto max-h-48 overflow-y-auto shadow-lg"
@@ -38,7 +38,13 @@
                 {{ usuario }}
               </li>
             </ul>
-          </div>
+          </div> -->
+        </div>
+        <div>
+          <div class="flex" ><input type="checkbox" (change)="filtrarLogs()" [(ngModel)]="filtrarMetodo">Método</div>
+          <div class="flex" ><input type="checkbox" (change)="filtrarLogs()" [(ngModel)]="filtrarDescripcion">Descripción</div>
+          <div class="flex" ><input type="checkbox" (change)="filtrarLogs()" [(ngModel)]="filtrarDbContext">DbContext</div>
+          <div class="flex" ><input type="checkbox" (change)="filtrarLogs()" [(ngModel)]="filtrarUsuario">Usuario</div>
         </div>
         <input
           type="date"
@@ -61,15 +67,10 @@
         </div>
       </div>
     </div>
-    <!-- Button cotainer  end -->
-
-    <p class="text-sm font-medium mb-2 text-gray700 xs:text-[10px]">
-      Campos obligatorios marcados con <span class="font-bold">*</span>
-    </p>
   </div>
 
   <!-- Table -->
-  <div class="overflow-x-auto shadow-md rounded-lg">
+  <div class="overflow-x-auto shadow-md rounded-lg mt-2">
     <!-- Table container -->
     <div>
       <table class="w-full text-sm xs:table-fixed">
@@ -146,7 +147,7 @@
                 </td>
               </tr>
             </ng-container>
-            <tr *ngIf="listaLogsReset.length == 0" class="xs:hidden">
+            <tr *ngIf="listaLogsReset.length == 0 && !isLoading" class="xs:hidden">
               <td
                 colspan="6"
                 class="text-center text-gray-700 font-medium py-1 xs:text-xs"
@@ -167,7 +168,7 @@
             </tr>
             <tr
               class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
-              *ngFor="let log of listaLogs"
+              *ngFor="let log of paginatedLogs"
             >
               <td class="px-1 py-[2px]" scope="col">
                 {{ log.fecha | date : "dd/MM/yyyy HH:mm:ss"}}
@@ -183,15 +184,57 @@
                 {{ log.dbContext }}
               </td>
               <td class="px-1 py-[2px]" scope="col">
-                {{ log.idUsuario }}
+                {{ log.nombreUsuario }}
               </td>
               <td class="px-1 py-[2px]" scope="col">
-                {{ log.idEmpresa }}
+                {{ log.nombreEmpresa }}
               </td>
             </tr>
           </ng-container>
         </tbody>
       </table>
+       <div class="flex bg-[#ffffff] justify-end rounded-b-[3px]">
+        <div class="flex items-center">
+          {{ getPaginationInfo() }}
+        </div>
+        <nav class="p-2">
+          <ul class="flex">
+            <li class="flex items-center">
+              <a
+                class="mx-1 flex h-7 w-7 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-[#2d748d] cursor-pointer"
+                (click)="previousPage()"
+                aria-label="Previous"
+              >
+                <span class="material-icons text-sm">keyboard_arrow_left</span>
+              </a>
+            </li>
+            <li *ngFor="let page of visiblePages" class="flex items-center">
+              <a
+                class="mx-1 flex h-7 w-7 items-center justify-center rounded-full hover:bg-[#2d748d] cursor-pointer"
+                [ngClass]="{
+                  'bg-colorButton text-[#ffffff] shadow-md':
+                    currentPage === page,
+                  'border border-blue-gray-100 bg-transparent text-blue-gray-500 hover:bg-[#2d748d]':
+                    currentPage !== page
+                }"
+                [class.active]="page === currentPage"
+                (click)="goToPage(page)"
+              >
+                {{ page }}
+              </a>
+            </li>
+            <li class="flex items-center">
+              <a
+                class="mx-1 flex h-7 w-7 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300 cursor-pointer"
+                (click)="nextPage()"
+                aria-label="Next"
+              >
+                <span class="material-icons text-sm">keyboard_arrow_right</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </div>
   </div>
 </section>

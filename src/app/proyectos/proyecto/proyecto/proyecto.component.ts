@@ -228,6 +228,7 @@ export class ProyectoComponent implements OnInit {
 
   updateVisiblePages() {
     const startPage = Math.max(1, this.currentPage - 2);
+    
     const endPage = Math.min(this.totalPages, startPage + 4);
 
     this.visiblePages = Array.from(
