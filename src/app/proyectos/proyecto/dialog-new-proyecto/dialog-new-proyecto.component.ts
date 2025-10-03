@@ -1,5 +1,5 @@
 import { usuarioProyectoDTO } from './../../../seguridad/usuario-multi-empresa-filtrado/proyecto-usuario/tsUsuarioProyecto';
-import { Component, Inject } from '@angular/core';
+import { AfterViewInit, Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -10,13 +10,12 @@ import { ProyectoUsuarioService } from 'src/app/seguridad/usuario-multi-empresa-
 import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 import { timer } from 'rxjs';
 
-
 @Component({
   selector: 'app-dialog-new-proyecto',
   templateUrl: './dialog-new-proyecto.component.html',
   styleUrls: ['./dialog-new-proyecto.component.css'],
 })
-export class DialogNewProyectoComponent {
+export class DialogNewProyectoComponent{
   form!: FormGroup;
   menu1: boolean;
   nuevoProyecto: proyectoDTO = {
@@ -109,6 +108,11 @@ export class DialogNewProyectoComponent {
     } else {
       let fechaInicio = this.data.proyecto.fechaInicio.split('T')[0];
       let fechaFin = this.data.proyecto.fechaFinal.split('T')[0];
+      let cp = this.data.proyecto.codigoPostal.toString();
+      if(cp.length < 5){
+        let ceros = '0'.repeat(5 - cp.length);
+        cp = ceros + cp;
+      }
 
       this.form = this.formBuilder.group({
         id: [this.data.proyecto.id, { validators: [] }],
@@ -122,7 +126,7 @@ export class DialogNewProyectoComponent {
         porcentajeIva: [this.data.proyecto.porcentajeIva, { validators: [] }], //
         presupuestoConIvaMonedaNacional: [0, { validators: [] }],
         anticipo: [this.data.proyecto.anticipo, { validators: [] }], //
-        codigoPostal: [this.data.proyecto.codigoPostal, { validators: [] }], //
+        codigoPostal: [cp, { validators: [] }], //
         domicilio: [this.data.proyecto.domicilio, { validators: [] }], //
         fechaInicio: [fechaInicio, { validators: [] }], //
         fechaFinal: [fechaFin, { validators: [] }], //

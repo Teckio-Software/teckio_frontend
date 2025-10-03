@@ -70,6 +70,7 @@ export class ImprimirModalComponent {
   isError: boolean = false;
   isError2: boolean = false;
   isError3: boolean = false;
+  isError4: boolean = false;
 
   currentStep = 0;
   /** Títulos visibles del wizard de pasos del modal. */
@@ -291,6 +292,12 @@ export class ImprimirModalComponent {
    */
   nextStep() {
     if(this.tipoReporte === 'analisisPreciosUnitarios') {
+      if(ObtenerPUPlanos(this.preciosUnitarios).length <= 0){        
+        this.isError4 = true;
+        console.log(this.isError4);
+
+        return;
+      }
       this.currentStep = 2
     }
     this.isError = false;
@@ -353,6 +360,9 @@ export class ImprimirModalComponent {
    */
   prevStep() {
     this.isError = false;
+    if(this.tipoReporte === 'analisisPreciosUnitarios') {
+      this.currentStep = 0
+    }
     if (this.currentStep > 0) {
       this.currentStep--;
     }
@@ -487,37 +497,13 @@ export class ImprimirModalComponent {
 }
 
 /**
- * Filtra los nodos de una lista de precios unitarios según si tienen la propiedad "seleccionado" en true.
- * 
- * @param {precioUnitarioDTO[]} lista - La lista de precios unitarios que se va a filtrar.
- * @returns {precioUnitarioDTO[]} - La lista de precios unitarios filtrada.
+ * Función que itera un array de nodos de precio unitario y devuelve un
+ * array con los nodos de manera plana que están
+ * seleccionados.
+ * @param {precioUnitarioDTO[]} nodos - Array de nodos de precio unitario
+ * @returns {precioUnitarioDTO[]} - Array con los nodos de tipo "Planos" y
+ * seleccionados
  */
-// function filtrarListaRecursivo(lista: precioUnitarioDTO[]): precioUnitarioDTO[] {
-//   return lista
-//     .map((nodo) => filtrarSeleccionados(nodo))
-//     .flat();
-// }
-
-/**
- * Filtra los nodos de un árbol de precios unitarios según si tienen la propiedad "seleccionado" en true.
- * @param {precioUnitarioDTO} nodo - El nodo del árbol que se va a filtrar.
- * @returns {precioUnitarioDTO | null} - El nodo filtrado o null si no se cumple con la condición.
- */
-// function filtrarSeleccionados(nodo: precioUnitarioDTO): precioUnitarioDTO[]{
-//   const hijosSeleccionados = nodo.hijos
-//     .map(hijo => filtrarSeleccionados(hijo))
-//     .flat();
-
-//   if(nodo.esSeleccionado){
-//     return [{
-//       ...nodo,
-//       hijos: hijosSeleccionados
-//     }]
-//   }
-
-//   return hijosSeleccionados;
-// }
-
 function ObtenerPUPlanos(nodos: precioUnitarioDTO[]): precioUnitarioDTO[] {
   const puPlanos: precioUnitarioDTO[] = [];
   for (const nodo of nodos) {
@@ -530,15 +516,3 @@ function ObtenerPUPlanos(nodos: precioUnitarioDTO[]): precioUnitarioDTO[] {
   }
   return puPlanos;
 }
-
-// function ObtenerIds(nodos: precioUnitarioDTO[]): number[] {
-//   const ids: number[] = [];
-//   for (const nodo of nodos) {
-//     if(nodo.tipoPrecioUnitario!=0)
-//     ids.push(nodo.id);
-//     if (nodo.hijos && nodo.hijos.length > 0) {
-//       ids.push(...ObtenerIds(nodo.hijos));
-//     }
-//   }
-//   return ids;
-// }
