@@ -1,13 +1,15 @@
 import { proyectoDTO } from './../../../proyecto/tsProyecto';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { imprimirReporte } from './imprimirReportes';
+import { imprimirReporte, imprimirReporteAnalisisPU } from './imprimirReportes';
 import { precioUnitarioDTO } from '../../tsPrecioUnitario';
 import { ParametrosImprimirPuService } from './services/parametros-imprimir-pu.service';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import { ParametrosImpresionPu } from './ts.parametros-imprimir-pu';
 import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 import { Reporte } from './types/reporte';
+import { log } from 'console';
+import { PrecioUnitarioService } from '../../precio-unitario.service';
 
 /**
  * Modal para configurar y ejecutar la impresión de reportes
@@ -59,6 +61,7 @@ export class ImprimirModalComponent {
   isParamDeleted: boolean = false;
   reportePresupuesto: boolean = false;
   reporteManoDeObra: boolean = false;
+  reporteAnalisisPrecioUnitario: boolean = false;
   isImporteconLetra: boolean = true;
   isImprimirImpuestos: boolean = true;
   isImprimirConCostoDirecto: boolean = false;
@@ -107,7 +110,8 @@ export class ImprimirModalComponent {
    */
   constructor(
     private parametrosImpresion: ParametrosImprimirPuService,
-    private seguridadService: SeguridadService
+    private seguridadService: SeguridadService,
+    private precioUnitarioService: PrecioUnitarioService
   ) {
     const idEmpresa: number = Number(
       seguridadService.obtenIdEmpresaLocalStorage()
@@ -286,6 +290,9 @@ export class ImprimirModalComponent {
    * para ese reporte.
    */
   nextStep() {
+    if(this.tipoReporte === 'analisisPreciosUnitarios') {
+      this.currentStep = 2
+    }
     this.isError = false;
     this.isError2 = false;
     this.isError3 = false;
@@ -366,6 +373,7 @@ export class ImprimirModalComponent {
   finish() {
     const reporte: Reporte = {
       precioUnitario: this.preciosUnitarios,
+      detallesPrecioUnitario: [],
       titulo: this.paramsImpresion.nombre,
       encabezadoIzq: this.paramsImpresion.encabezadoIzquierdo,
       encabezadoCentro: this.paramsImpresion.encabezadoCentro,
@@ -387,6 +395,7 @@ export class ImprimirModalComponent {
 
     const reporteMarcado: Reporte = {
       precioUnitario: this.marcados,
+      detallesPrecioUnitario: [],
       titulo: this.paramsImpresion.nombre,
       encabezadoIzq: this.paramsImpresion.encabezadoIzquierdo,
       encabezadoCentro: this.paramsImpresion.encabezadoCentro,
@@ -428,6 +437,46 @@ export class ImprimirModalComponent {
           imprimirReporte(reporteMarcado);
         }
         break;
+      case 'analisisPreciosUnitarios':
+        this.reporteAnalisisPrecioUnitario = true;
+        let preciosUnitariosFiltrados = ObtenerPUPlanos(this.preciosUnitarios);
+        
+        // let preciosUnitariosFiltrados = filtrarListaRecursivo(this.preciosUnitarios)
+        if(preciosUnitariosFiltrados.length <= 0){
+          console.log('No hay precios unitarios seleccionados');
+          return;
+        }
+        // let ids = ObtenerIds(preciosUnitariosFiltrados);
+        let ids = preciosUnitariosFiltrados.map(pu => pu.id);
+
+        // console.log(preciosUnitariosFiltrados);
+        reporte.imprimirConCostoDirecto = true;
+        // console.log('Estos son los ids',ids);
+        reporte.precioUnitario = preciosUnitariosFiltrados;
+        this.precioUnitarioService.ObtenerDetallesPorPUImpresion(this.selectedEmpresa,ids).subscribe((preciosUnitarios) => {
+          reporte.detallesPrecioUnitario = preciosUnitarios;
+          // reporte.precioUnitario = preciosUnitariosFiltrados;
+          // let detalleprecioUnitario = preciosUnitarios;
+          // for(let i = 0 ; i < reporte.precioUnitario.length; i++){
+          //   reporte.precioUnitario[i].hijos = detalleprecioUnitario.filter(p=>p.id == detalleprecioUnitario[i].idPrecioUnitario);
+          // }
+          // reporte.precioUnitario.forEach(element => {
+          //   let lista = detalleprecioUnitario.filter(p=>p.idPrecioUnitarioBase == element.idPrecioUnitarioBase);
+          //   element.hijos = lista;
+          // });
+          // reporte.precioUnitario = preciosUnitarios;
+          
+          console.log(preciosUnitarios);
+          console.log('Se van a imprimir los análisis');
+        // reporte.precioUnitario = preciosUnitariosFiltrados;
+        console.log(reporte);
+        imprimirReporteAnalisisPU(reporte);
+        })
+        
+        
+        
+        
+        break;
 
       default:
         console.log(
@@ -436,3 +485,60 @@ export class ImprimirModalComponent {
     }
   }
 }
+
+/**
+ * Filtra los nodos de una lista de precios unitarios según si tienen la propiedad "seleccionado" en true.
+ * 
+ * @param {precioUnitarioDTO[]} lista - La lista de precios unitarios que se va a filtrar.
+ * @returns {precioUnitarioDTO[]} - La lista de precios unitarios filtrada.
+ */
+// function filtrarListaRecursivo(lista: precioUnitarioDTO[]): precioUnitarioDTO[] {
+//   return lista
+//     .map((nodo) => filtrarSeleccionados(nodo))
+//     .flat();
+// }
+
+/**
+ * Filtra los nodos de un árbol de precios unitarios según si tienen la propiedad "seleccionado" en true.
+ * @param {precioUnitarioDTO} nodo - El nodo del árbol que se va a filtrar.
+ * @returns {precioUnitarioDTO | null} - El nodo filtrado o null si no se cumple con la condición.
+ */
+// function filtrarSeleccionados(nodo: precioUnitarioDTO): precioUnitarioDTO[]{
+//   const hijosSeleccionados = nodo.hijos
+//     .map(hijo => filtrarSeleccionados(hijo))
+//     .flat();
+
+//   if(nodo.esSeleccionado){
+//     return [{
+//       ...nodo,
+//       hijos: hijosSeleccionados
+//     }]
+//   }
+
+//   return hijosSeleccionados;
+// }
+
+function ObtenerPUPlanos(nodos: precioUnitarioDTO[]): precioUnitarioDTO[] {
+  const puPlanos: precioUnitarioDTO[] = [];
+  for (const nodo of nodos) {
+    if(nodo.tipoPrecioUnitario!=0 && nodo.esSeleccionado){
+      puPlanos.push(nodo);
+    }
+    if (nodo.hijos && nodo.hijos.length > 0) {
+      puPlanos.push(...ObtenerPUPlanos(nodo.hijos));
+    }
+  }
+  return puPlanos;
+}
+
+// function ObtenerIds(nodos: precioUnitarioDTO[]): number[] {
+//   const ids: number[] = [];
+//   for (const nodo of nodos) {
+//     if(nodo.tipoPrecioUnitario!=0)
+//     ids.push(nodo.id);
+//     if (nodo.hijos && nodo.hijos.length > 0) {
+//       ids.push(...ObtenerIds(nodo.hijos));
+//     }
+//   }
+//   return ids;
+// }

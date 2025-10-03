@@ -45,6 +45,7 @@
     "classnames": "^2.5.1",
     "click-outside": "^2.0.2",
     "date-fns": "^4.1.0",
+    "flowbite": "^3.1.2",
     "frappe-gantt": "^0.8.1",
     "gantt-task-react": "^0.3.9",
     "html2canvas": "^1.4.1",

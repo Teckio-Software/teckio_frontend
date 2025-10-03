@@ -43,6 +43,8 @@ export class IndirectosComponent {
     nivel: 0
   }
 
+  selectedIndex: number = -1;
+
   existenEstimaciones: boolean = false;
 
 

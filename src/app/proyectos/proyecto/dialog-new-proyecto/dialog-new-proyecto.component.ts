@@ -8,6 +8,8 @@ import { ProyectoService } from '../proyecto.service';
 import Swal from 'sweetalert2';
 import { ProyectoUsuarioService } from 'src/app/seguridad/usuario-multi-empresa-filtrado/proyecto-usuario/proyecto-usuario.service';
 import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
+import { timer } from 'rxjs';
+
 
 @Component({
   selector: 'app-dialog-new-proyecto',
@@ -61,6 +63,7 @@ export class DialogNewProyectoComponent {
   errFI: boolean = false;
   errFT: boolean = false;
   errGlobal: boolean = false;
+  errorAnticipo: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<DialogNewProyectoComponent>,
@@ -73,11 +76,13 @@ export class DialogNewProyectoComponent {
   ) {
     this.menu1 = this.data.menu1;
     this.selectedEmpresa = this.data.selectedEmpresa;
+    
   }
   ngOnInit(): void {
     this.dialogRef.updateSize('70%');
 
     if (!this.data.proyecto) {
+      let fechaActual = new Date().toISOString().split('T')[0];
       this.form = this.formBuilder.group({
         id: [0, { validators: [] }],
         codigoProyecto: ['', { validators: [] }], //
@@ -89,10 +94,10 @@ export class DialogNewProyectoComponent {
         presupuestoSinIvaMonedaNacional: ['', { validators: [] }],
         porcentajeIva: ['', { validators: [] }], //
         presupuestoConIvaMonedaNacional: [0, { validators: [] }],
-        anticipo: ['', { validators: [] }], //
+        anticipo: [0, { validators: [] }], //
         codigoPostal: ['', { validators: [] }], //
         domicilio: ['', { validators: [] }], //
-        fechaInicio: ['', { validators: [] }], //
+        fechaInicio: [fechaActual, { validators: [] }], //
         fechaFinal: ['', { validators: [] }], //
         tipoProgramaActividad: ['', { validators: [] }], //
         inicioSemana: ['', { validators: [] }], //
@@ -113,7 +118,7 @@ export class DialogNewProyectoComponent {
         presupuestoSinIvaMonedaNacional: ['', { validators: [] }],
         porcentajeIva: [this.data.proyecto.porcentajeIva, { validators: [] }], //
         presupuestoConIvaMonedaNacional: [0, { validators: [] }],
-        anticipo: ['', { validators: [] }], //
+        anticipo: [this.data.proyecto.anticipo, { validators: [] }], //
         codigoPostal: [this.data.proyecto.codigoPostal, { validators: [] }], //
         domicilio: [this.data.proyecto.domicilio, { validators: [] }], //
         fechaInicio: [this.data.proyecto.fechaInicio, { validators: [] }], //
@@ -138,7 +143,7 @@ export class DialogNewProyectoComponent {
     this.nuevoProyecto.nivel = 1;
     this.nuevoProyecto.idPadre = 0;
     this.nuevoProyecto.inicioSemana = 1;
-    this.nuevoProyecto.anticipo = 0;
+    // this.nuevoProyecto.anticipo = 0;
     this.nuevoProyecto.tipoProgramaActividad = 1;
     this.nuevoProyecto.tipoCambio = 0;
     this.nuevoProyecto.esSabado = true;
@@ -259,4 +264,31 @@ export class DialogNewProyectoComponent {
   detenerCierre(event: MouseEvent) {
     event.stopPropagation();
   }
+
+  validarAnticipo(){
+    let anticipo = this.form.value.anticipo;    
+    if(anticipo > 100){
+      this.form.get('anticipo')?.setValue(100);
+      this.errorAnticipo = true;
+      timer(3000).subscribe(() => {
+        this.errorAnticipo = false;
+      });
+    }
+    if(anticipo < 0){
+      this.form.get('anticipo')?.setValue(0);
+      this.errorAnticipo = true;
+      timer(3000).subscribe(() => {
+        this.errorAnticipo = false;
+      });
+    }
+  }
+
+/**
+ * Selecciona todo el contenido de un input
+ * @param event Evento que se lanza cuando se selecciona todo el contenido de un input
+ */
+  selectAll(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  input.select();
+}
 }

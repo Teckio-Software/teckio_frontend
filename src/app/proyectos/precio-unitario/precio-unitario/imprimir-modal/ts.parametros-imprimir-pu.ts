@@ -17,4 +17,5 @@ export interface Imagen {
   id: number;
   ruta: string;
   base64: string;
+  seleccionado: boolean;
 }

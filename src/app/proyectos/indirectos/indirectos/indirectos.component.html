@@ -135,6 +135,7 @@
                                                     [(ngModel)]="indirecto.codigo" class="bg-transparent"
                                                     [disabled]="existenEstimaciones"
                                                     [readonly]="indirecto.idIndirectoBase == 0 || indirecto.hijos.length > 0"
+                                                    (click)="selectedIndex = indirecto.id"
                                                     (keydown.enter)="crear(indirecto)"
                                                     style="border: .5px solid #ffffff4d; border-radius: 3px; width: 100%;">
                                             </td>
@@ -142,12 +143,13 @@
                                                 class="cont-drill" (click)="seleccionar(indirecto)">
                                                 <input autocomplete="off" type="text" class="" id="input-table"
                                                     [(ngModel)]="indirecto.descripcion" class="bg-transparent"
+                                                    (click)="selectedIndex = indirecto.id"
                                                     [disabled]="existenEstimaciones"
                                                     [readonly]="indirecto.idIndirectoBase == 0 || indirecto.hijos.length > 0"
                                                     (keydown.enter)="crear(indirecto)"
                                                     style="border: .5px solid #ffffff4d; border-radius: 3px; width: 100%;">
                                             </td>
-                                            <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 10%;"
+                                            <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 10%;" *ngIf="selectedIndex==indirecto.id"
                                                 class="cont-drill" (click)="seleccionar(indirecto)">
                                                 <input autocomplete="off" type="text" class="text-end bg-transparent" id="input-table"
                                                     [(ngModel)]="indirecto.porcentaje" 
@@ -155,6 +157,13 @@
                                                     [readonly]="indirecto.idIndirectoBase == 0 || indirecto.hijos.length > 0"
                                                     (keydown.enter)="crear(indirecto)"
                                                     style="border: .5px solid #ffffff4d; border-radius: 3px; width: 100%;">
+                                            </td>
+                                            <td class="border-r-2 border-[#3f3e3e17] w-[10%]" *ngIf="selectedIndex!=indirecto.id"
+                                            (click)="selectedIndex = indirecto.id"
+                                            >
+                                                <div class="text-end">
+                                                    {{indirecto.porcentaje | number:'1.2-2'}}%
+                                                </div>
                                             </td>
                                         </tr>
                                     </tbody>

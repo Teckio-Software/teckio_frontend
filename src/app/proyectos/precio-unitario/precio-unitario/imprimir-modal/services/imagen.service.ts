@@ -14,9 +14,9 @@ export class ImagenService {
    * @param idEmpresa El id de la empresa que contiene la imagen.
    * @param id El id de la imagen que se quiere obtener.
    */
-  public ObtenerXId(idEmpresa: number, id: number): Observable<Imagen> {
+  public ObtenerSeleccionada(idEmpresa: number): Observable<Imagen> {
     return this.HttpClient.get<Imagen>(
-      `${this.apiUrl}/${idEmpresa}/obtenerXId/${id}`
+      `${this.apiUrl}/${idEmpresa}/obtenerseleccionada`
     );
   }
 }
