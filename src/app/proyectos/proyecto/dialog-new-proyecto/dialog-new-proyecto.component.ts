@@ -94,7 +94,7 @@ export class DialogNewProyectoComponent {
         presupuestoSinIvaMonedaNacional: ['', { validators: [] }],
         porcentajeIva: ['', { validators: [] }], //
         presupuestoConIvaMonedaNacional: [0, { validators: [] }],
-        anticipo: [0, { validators: [] }], //
+        anticipo: ['', { validators: [] }], //
         codigoPostal: ['', { validators: [] }], //
         domicilio: ['', { validators: [] }], //
         fechaInicio: [fechaActual, { validators: [] }], //
@@ -107,6 +107,9 @@ export class DialogNewProyectoComponent {
         nivel: ['', { validators: [] }], //
       });
     } else {
+      let fechaInicio = this.data.proyecto.fechaInicio.split('T')[0];
+      let fechaFin = this.data.proyecto.fechaFinal.split('T')[0];
+
       this.form = this.formBuilder.group({
         id: [this.data.proyecto.id, { validators: [] }],
         codigoProyecto: [this.data.proyecto.codigoProyecto, { validators: [] }], //
@@ -121,8 +124,8 @@ export class DialogNewProyectoComponent {
         anticipo: [this.data.proyecto.anticipo, { validators: [] }], //
         codigoPostal: [this.data.proyecto.codigoPostal, { validators: [] }], //
         domicilio: [this.data.proyecto.domicilio, { validators: [] }], //
-        fechaInicio: [this.data.proyecto.fechaInicio, { validators: [] }], //
-        fechaFinal: [this.data.proyecto.fechaFinal, { validators: [] }], //
+        fechaInicio: [fechaInicio, { validators: [] }], //
+        fechaFinal: [fechaFin, { validators: [] }], //
         tipoProgramaActividad: ['', { validators: [] }], //
         inicioSemana: ['', { validators: [] }], //
         esSabado: [false, { validators: [] }], //
@@ -143,6 +146,9 @@ export class DialogNewProyectoComponent {
     this.nuevoProyecto.nivel = 1;
     this.nuevoProyecto.idPadre = 0;
     this.nuevoProyecto.inicioSemana = 1;
+    if(this.nuevoProyecto.anticipo == null){
+      this.nuevoProyecto.anticipo = 0;
+    }
     // this.nuevoProyecto.anticipo = 0;
     this.nuevoProyecto.tipoProgramaActividad = 1;
     this.nuevoProyecto.tipoCambio = 0;
