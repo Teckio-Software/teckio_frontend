@@ -70,6 +70,5 @@ export const theme = {
   plugins: [
     require("tailwindcss"),
     require("autoprefixer"),
-    require("daisyui"),
   ],
 };
