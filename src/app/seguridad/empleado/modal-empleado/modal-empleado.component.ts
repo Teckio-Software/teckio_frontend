@@ -116,9 +116,9 @@ export class ModalEmpleadoComponent {
         this.errorRFC.descripcion = "El campo 'RFC' es requerido";
         c = false;
       }else{
-        if(this.empleado.rfc.length > 13){
+        if(this.empleado.rfc.length < 12){
         this.errorRFC.estatus = true;
-        this.errorRFC.descripcion = "El campo 'RFC' debe tener 13 caracteres";
+        this.errorRFC.descripcion = "El campo 'RFC' debe tener 12 o 13 caracteres";
         c = false;
       }
       }

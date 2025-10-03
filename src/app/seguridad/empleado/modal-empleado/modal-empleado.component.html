@@ -50,7 +50,7 @@
                   <label class="block text-sm font-medium text-gray-700" for="name">CURP</label>
                   <input
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    type="text" name="name" id="name" formControlName="curp"
+                    type="text" name="name" id="name" formControlName="curp" appUppercaseInput maxlength="18"
                     (change)="errorCURP.estatus= false; errorGlobal = false;" />
                     <div *ngIf="errorCURP.estatus" class="text-red-500 text-sm mb-2">
                       *{{errorCURP.descripcion}}
@@ -60,7 +60,7 @@
                   <label class="block text-sm font-medium text-gray-700" for="name">RFC</label>
                   <input
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    type="text" name="name" id="name" formControlName="rfc"
+                    type="text" name="name" id="name" formControlName="rfc" appUppercaseInput maxlength="13"
                     (change)="errorRFC.estatus= false; errorGlobal = false;" />
                     <div *ngIf="errorRFC.estatus" class="text-red-500 text-sm mb-2">
                       *{{errorRFC.descripcion}}
@@ -72,7 +72,7 @@
                   <label class="block text-sm font-medium text-gray-700" for="name">Seguro social</label>
                   <input
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    type="text" name="name" id="name" formControlName="seguroSocial"
+                    type="text" name="name" id="name" formControlName="seguroSocial" maxlength="20"
                     (change)="errorSS.estatus= false; errorGlobal = false;" />
                     <div *ngIf="errorSS.estatus" class="text-red-500 text-sm mb-2">
                       *{{errorSS.descripcion}}

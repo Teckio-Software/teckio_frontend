@@ -12,7 +12,11 @@ import { contratistaDTO } from 'src/app/catalogos/contratista/tsContratista';
 import { ContratistaService } from 'src/app/catalogos/contratista/contratista.service';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import { AlertaTipo, AlertComponent } from '../../alert/alert.component';
+<<<<<<< HEAD
 import { da, es } from 'date-fns/locale';
+=======
+import { RespuestaDTO } from '../../tsUtilidades';
+>>>>>>> origin/JaviDev
 
 @Component({
   selector: 'app-modal-formulario',
@@ -54,12 +58,12 @@ export class ModalFormularioComponent implements OnInit {
   //Variables para las muestras de mensajes de error
   errorGlobal: boolean = false;
   errorRs: boolean = false;
-  errorRfc: boolean = false;
+  errorRfc: RespuestaDTO = { estatus: false, descripcion: '' };
   errorRl: boolean = false;
   errorTp: boolean = false;
-  errorCe: boolean = false;
+  errorCe: RespuestaDTO = { estatus: false, descripcion: '' };
   errorDm: boolean = false;
-  errorTe: boolean = false;
+  errorTe: RespuestaDTO = { estatus: false, descripcion: '' };
   errorNE: boolean = false;
 
   constructor(
@@ -187,12 +191,12 @@ export class ModalFormularioComponent implements OnInit {
   guardar() {
     this.errorGlobal = false;
     this.errorRs = false;
-    this.errorRfc = false;
+    this.errorRfc.estatus = false;
     this.errorRl = false;
     this.errorTp = false;
-    this.errorCe = false;
+    this.errorCe.estatus = false;
     this.errorDm = false;
-    this.errorTe = false;
+    this.errorTe.estatus = false;
     this.errorNE = false;
 
     this.Contratista.razonSocial = this.form.get('razonSocial')?.value;
@@ -271,8 +275,20 @@ export class ModalFormularioComponent implements OnInit {
       this.errorRs = true;
       cont = false;
     }
+    
+    if (this.Contratista.rfc.trim().length<12) {
+      this.errorRfc.estatus = true;
+      this.errorRfc.descripcion = "El campo 'RFC' debe tener 12 o 13 caracteres";
+      cont = false;
+    }
     if (this.Contratista.rfc == null || this.Contratista.rfc.trim() == '') {
-      this.errorRfc = true;
+      this.errorRfc.estatus = true;
+      this.errorRfc.descripcion = "El campo 'RFC' es obligatorio";
+      cont = false;
+    }
+    if (this.Contratista.rfc.includes(' ')) {
+      this.errorRfc.estatus = true;
+      this.errorRfc.descripcion = "El campo 'RFC' no puede contener espacios";
       cont = false;
     }
     if (
@@ -289,10 +305,20 @@ export class ModalFormularioComponent implements OnInit {
       this.errorTp = true;
       cont = false;
     }
-    if (this.Contratista.email == null || this.Contratista.email.trim() == '') {
-      this.errorCe = true;
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!regex.test(this.Contratista.email)) {
+      this.errorCe.estatus = true;
+      this.errorCe.descripcion = "El campo Correo electrónico no es válido";
       cont = false;
     }
+    //Se le quitan los espacios en automático
+    this.Contratista.email = this.Contratista.email.trim();
+    if (this.Contratista.email == null || this.Contratista.email == '') {
+      this.errorCe.estatus = true;
+      this.errorCe.descripcion = "El campo 'Correo electrónico' es obligatorio";
+      cont = false;
+    }
+    
     if (
       this.Contratista.domicilio == null ||
       this.Contratista.domicilio.trim() == ''
@@ -300,11 +326,20 @@ export class ModalFormularioComponent implements OnInit {
       this.errorDm = true;
       cont = false;
     }
+    
+    if (
+      this.Contratista.telefono.trim().length<10
+    ) {
+      this.errorTe.estatus = true;
+      this.errorTe.descripcion = "El campo 'Teléfono' debe tener 10 caracteres";
+      cont = false;
+    }
     if (
       this.Contratista.telefono == null ||
       this.Contratista.telefono.trim() == ''
     ) {
-      this.errorTe = true;
+      this.errorTe.estatus = true;
+      this.errorTe.descripcion = "El campo 'Teléfono' es obligatorio";
       cont = false;
     }
     if (
@@ -337,4 +372,33 @@ export class ModalFormularioComponent implements OnInit {
         });
     }
   }
+
+  /**
+ * Filtra los caracteres no numéricos de un input de tipo texto
+ * @param {Event} e - Evento que se desencadena cuando se escribe algo en el input
+ * Elimina inmediatamente los caracteres no numéricos del input y ajusta la posición del cursor
+ * para que no se mueva inesperadamente.
+ */
+  filterNonNumeric(e: Event) {
+  const inputElement = e.target as HTMLInputElement;
+  //Obtiene la posición del cursor
+  const start = inputElement.selectionStart;
+  //Obtiene el valor del texto
+  let valor = inputElement.value;
+  //Elimina inmediatamente el carácter no numérico
+  const valorFiltrado = valor.replace(/\D/g, '');
+  inputElement.value = valorFiltrado;
+  this.form.get('telefono')?.setValue(valorFiltrado, { emitEvent: false }); 
+  //Restablece la posición del cursor para una mejor experiencia de usuario
+  if (start !== null) {
+    // Si se eliminó algo ajusta la posición del cursor.
+    if (valor.length !== valorFiltrado.length) {
+      // Intenta mover el cursor una posición menos si se eliminó un carácter antes de él.
+      inputElement.setSelectionRange(start - 1, start - 1);
+    } else {
+      // Si no se eliminó nada, mantén la posición.
+      inputElement.setSelectionRange(start, start);
+    }
+  }
+}
 }

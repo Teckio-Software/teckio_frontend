@@ -61,6 +61,7 @@ export class ImprimirModalComponent {
   isParamDeleted: boolean = false;
 
   reportePresupuesto: boolean = false;
+  reporteManoDeObra: boolean = false;
   isImporteconLetra: boolean = true;
   isImprimirImpuestos: boolean = true;
   isImprimirConCostoDirecto: boolean = false;
@@ -319,10 +320,17 @@ export class ImprimirModalComponent {
 
     this.currentStep++;
 
+    this.reportePresupuesto = false;
+    this.reporteManoDeObra = false;
     if (this.currentStep > 0) {
       switch (this.tipoReporte) {
         case 'presupuesto':
           this.reportePresupuesto = true;
+          break;
+
+        case 'presupuestoManoDeObra':
+          this.reporteManoDeObra = true;
+          console.warn(`No hay lógica implementada para: ${this.tipoReporte}`);
 
           break;
 

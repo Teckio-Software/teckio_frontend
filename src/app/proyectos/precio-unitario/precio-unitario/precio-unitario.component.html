@@ -201,8 +201,35 @@
           ></textarea>
         </div>
       </div>
-
+       <div
+              *ngIf="mostrarMenuAlertas"
+              class="absolute right-96 top-14 z-50 mt-2 w-60 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            >
+              <div class="py-1">
+                <button
+                  *ngIf="!existeCensatia"
+                  class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  (click)="openDialogFSR(); mostrarMenuAlertas = false"
+                >
+                  Configurar factor salario real
+                </button>
+                <button
+                  *ngIf="!existeIndirectos"
+                  class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  (click)="indirectos(); mostrarMenuAlertas = false"
+                >
+                  Configurar los indirectos
+                </button>
+              </div>
+            </div>
       <div class="flex gap-2" *ngIf="!contenedorCatalogoGeneral">
+        <button *ngIf="!existeCensatia || !existeIndirectos"
+          class="disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 rounded-md transition-all delay-75 py-2 px-2"
+          placement="left"
+          (click)="mostrarMenuAlertas = !mostrarMenuAlertas"
+        >
+          <img src="./assets/warning.svg" alt="Advertencia" class="w-8 h-8" />
+        </button>
         <button
           class="disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 rounded-md transition-all delay-75 py-2 px-2"
           ngbTooltip="Imprimir"
@@ -238,6 +265,7 @@
           />
         </button>
       </div>
+      
       <div class="flex-2" *ngIf="!contenedorCatalogoGeneral">
         <div
           class="relative group flex flex-row bg-white shadow-sm rounded-t-lg p-1 items-end"

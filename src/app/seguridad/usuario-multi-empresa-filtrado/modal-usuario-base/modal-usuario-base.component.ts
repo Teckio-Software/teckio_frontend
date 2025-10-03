@@ -145,6 +145,16 @@ export class ModalUsuarioBaseComponent {
       });
       return;
     }
+    const regexTest = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if(!regexTest.test(correo)){
+      Swal.fire({
+        title: 'Error',
+        text: 'El correo no es válido',
+        icon: 'warning',
+      });
+      return;
+    }
 
     let esCorreoValido = this.utilidadServicio.esEmailValido(correo);
     if (!esCorreoValido) {
@@ -259,13 +269,14 @@ export class ModalUsuarioBaseComponent {
             text: info.descripcion,
             icon: 'success',
           });
+          this.dialogRef.close();
+
         } else {
           Swal.fire({
             title: 'Error',
             text: info.descripcion,
             icon: 'error',
           });
-          this.dialogRef.close();
         }
       });
   }

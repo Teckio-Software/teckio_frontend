@@ -1,0 +1,197 @@
+<section>
+  <div>
+    <div>
+      <div class="flex mt-1 gap-2">
+        <select
+          [(ngModel)]="filtroNivel"
+          name=""
+          id=""
+          (input)="seleccionNivel($event)"
+          class="block w-full h-auto px-3 py-1.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        >
+          <option value="">Nivel...</option>
+          <option value="Debug">Debug</option>
+          <option value="Info">Info</option>
+          <option value="Warn">Warn</option>
+          <option value="Error">Error</option>
+          <option value="Critical">Critical</option>
+        </select>
+        <div class="">
+          <input
+            type="text"
+            placeholder="Seleccione usuario"
+            autocomplete="off"
+            class="block w-48 px-3 py-1.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            (input)="filtrarUsuario($event)"
+            (click)="mostrarListaUsuario = !mostrarListaUsuario"
+            [(ngModel)]="nombreUsuario"
+          />
+          <div *ngIf="mostrarListaUsuario">
+            <ul
+              *ngFor="let usuario of listaUsuarios"
+              class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-auto max-h-48 overflow-y-auto shadow-lg"
+            >
+              <li
+                class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                (click)="seleccionarUsuario(usuario)"
+              >
+                {{ usuario }}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <input
+          type="date"
+          ngbTooltip="Fecha de inicio"
+          [(ngModel)]="fechaInicio"
+          (change)="filtrarLogs()"
+          class="block w-full h-auto px-3 py-1.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+        <input
+          type="date"
+          ngbTooltip="Fecha de termino"
+          [(ngModel)]="fechaFin"
+          (change)="filtrarLogs()"
+          class="block w-full h-auto px-3 py-1.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+        <div class="flex items-center">
+          <button (click)="limpiarFiltros()" class="w-7 h-7">
+            <img src="assets/delete filter.svg" alt="botón agregar" />
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Button cotainer  end -->
+
+    <p class="text-sm font-medium mb-2 text-gray700 xs:text-[10px]">
+      Campos obligatorios marcados con <span class="font-bold">*</span>
+    </p>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto shadow-md rounded-lg">
+    <!-- Table container -->
+    <div>
+      <table class="w-full text-sm xs:table-fixed">
+        <thead class="bg-primario text-white">
+          <tr class="xs:text-[10px]">
+            <th scope="col" class="px-1 py-[2px] xs:w-[75px]">Fecha</th>
+            <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">Nivel</th>
+            <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">Método</th>
+            <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">Descripción</th>
+            <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">DbContext</th>
+            <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">Usuario</th>
+            <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">Empresa</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray300">
+          <ng-container>
+            <ng-container *ngIf="isLoading">
+              <tr>
+                <!-- Fecha -->
+                <td class="px-1" scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!--Nivel -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Método -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Descripción -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- DbContext -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Usuario -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Empresa -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+            <tr *ngIf="listaLogsReset.length == 0" class="xs:hidden">
+              <td
+                colspan="6"
+                class="text-center text-gray-700 font-medium py-1 xs:text-xs"
+              >
+                No hay auditorías registradas.
+              </td>
+            </tr>
+            <tr
+              *ngIf="listaLogsReset.length != 0 && listaLogs.length == 0"
+              class="xs:hidden"
+            >
+              <td
+                colspan="6"
+                class="text-center text-gray-700 font-medium py-1 xs:text-xs"
+              >
+                No se encontraron resultados con los filtros seleccionados.
+              </td>
+            </tr>
+            <tr
+              class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              *ngFor="let log of listaLogs"
+            >
+              <td class="px-1 py-[2px]" scope="col">
+                {{ log.fecha | date : "dd/MM/yyyy HH:mm:ss"}}
+              </td>
+              <td class="px-1 py-[2px]" scope="col">{{ log.nivel }}</td>
+              <td class="px-1 py-[2px]" scope="col">
+                {{ log.metodo  }}
+              </td>
+              <td class="px-1 py-[2px]" scope="col">
+                {{ log.descripcion }}
+              </td>
+              <td class="px-1 py-[2px]" scope="col">
+                {{ log.dbContext }}
+              </td>
+              <td class="px-1 py-[2px]" scope="col">
+                {{ log.idUsuario }}
+              </td>
+              <td class="px-1 py-[2px]" scope="col">
+                {{ log.idEmpresa }}
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

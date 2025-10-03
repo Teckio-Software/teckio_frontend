@@ -6,6 +6,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import { BancoService } from 'src/app/bancos/banco/banco.service';
 import { CuentabancariaEmpresaService } from '../cuentabancaria-empresa.service';
+import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 
 @Component({
   selector: 'app-cuentabancaria-empresa',
@@ -34,9 +35,9 @@ export class CuentabancariaEmpresaComponent {
 
   errorGlobal: boolean = false;
   errorBanco: boolean = false;
-  errorNumCuenta: boolean = false;
-  errorNumSucursal: boolean = false;
-  errorClabe: boolean = false;
+  errorNumCuenta: RespuestaDTO = { estatus: false, descripcion: '' };
+  errorNumSucursal: RespuestaDTO = { estatus: false, descripcion: '' };
+  errorClabe: RespuestaDTO = { estatus: false, descripcion: '' };
   errorTipoMoneda: boolean = false;
 
   constructor(
@@ -85,16 +86,34 @@ export class CuentabancariaEmpresaComponent {
         this.errorBanco = true;
         c = false;
       }
+      if (this.cuentaBancaria.numeroCuenta.trim().length<10){
+        this.errorNumCuenta.estatus = true;
+        this.errorNumCuenta.descripcion = "El campo 'Número de cuenta' debe tener 10 caracteres";
+        c = false;
+      }
       if (this.cuentaBancaria.numeroCuenta.trim() == "" || this.cuentaBancaria.numeroCuenta == undefined){
-        this.errorNumCuenta = true;
+        this.errorNumCuenta.estatus = true;
+        this.errorNumCuenta.descripcion = "El campo 'Número de cuenta' es requerido";
+        c = false;
+      }
+      if (this.cuentaBancaria.numeroSucursal.trim().length<20){
+        this.errorNumSucursal.estatus = true;
+        this.errorNumSucursal.descripcion = "El campo 'Número de sucursal' debe tener 20 caracteres";
         c = false;
       }
       if (this.cuentaBancaria.numeroSucursal.trim() == "" || this.cuentaBancaria.numeroSucursal == undefined){
-        this.errorNumSucursal = true;
+        this.errorNumSucursal.estatus = true;
+        this.errorNumSucursal.descripcion = "El campo 'Número de sucursal' es requerido";
+        c = false;
+      }
+      if (this.cuentaBancaria.clabe.trim().length<18){
+        this.errorClabe.estatus = true;
+        this.errorClabe.descripcion = "El campo 'Clabe' debe tener 18 caracteres";
         c = false;
       }
       if (this.cuentaBancaria.clabe.trim() == "" || this.cuentaBancaria.clabe == undefined){
-        this.errorClabe = true;
+        this.errorClabe.estatus = true;
+        this.errorClabe.descripcion = "El campo 'Clabe' es requerido";
         c = false;
       }
       if (this.cuentaBancaria.tipoMoneda == undefined || this.cuentaBancaria.tipoMoneda <= 0){

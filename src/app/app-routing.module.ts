@@ -426,7 +426,15 @@ const routes: Routes = [
       ).then((module) => module.ProductosServiciosModule),
   },
   {
-    path: 'glosario',
+   
+    path: 'auditorias',
+    loadChildren: () =>
+      import(`./seguridad/auditorias/auditorias.module`).then(
+        (module) => module.AuditoriasModule
+      ),
+  },
+  {
+     path: 'glosario',
     loadChildren: () =>
       import(`./documentacion/glosario/glosario.module`).then(
         (module) => module.GlosarioModule

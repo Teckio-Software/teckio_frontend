@@ -163,7 +163,10 @@ import { ProductosServiciosComponent } from './gestion-ventas/productos-servicio
 import { ImprimirModalComponent } from './proyectos/precio-unitario/precio-unitario/imprimir-modal/imprimir-modal.component';
 import { FieldsetModule } from 'primeng/fieldset';
 import { A11yModule } from "@angular/cdk/a11y";
-
+import { UppercaseInputDirective } from './directiva/uppercase.directive';
+import { OnlyNumbersDirective } from './directiva/onlynumbers.directive';
+import { AuditoriaService } from './seguridad/auditorias/auditorias.service';
+import { AuditoriasComponent } from './seguridad/auditorias/auditorias.component';
 
 import { GlosarioComponent } from './documentacion/glosario/glosario.component';
 import { ModalGlosarioComponent } from './documentacion/modal-glosario/modal-glosario.component';
@@ -318,9 +321,12 @@ export function playerFactory() {
     ModalAsigacionComponent,
     ProductosServiciosComponent,
     ImprimirModalComponent,
-    
     GlosarioComponent,
-    ModalGlosarioComponent
+    ModalGlosarioComponent,
+    UppercaseInputDirective,
+    OnlyNumbersDirective,
+    AuditoriasComponent
+
   ],
 
   imports: [
@@ -343,7 +349,7 @@ export function playerFactory() {
     OrdenCompraModule,
     ScrollingModule,
     FieldsetModule,
-    A11yModule
+    A11yModule,
 ],
   exports: [LeftMenuComponent],
   providers: [

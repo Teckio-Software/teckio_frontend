@@ -61,11 +61,11 @@
         <td class="td-0" scope="col" >{{mb.fechaAplicacion | date:"dd-MM-yyyy" }}</td>
         <td class="td-0" scope="col" >{{mb.fechaCobra | date:"dd-MM-yyyy" }}</td>
         <td class="td-0" scope="col" >{{mb.descripcionModalidad}}</td>
-        <td class="td-0" scope="col" >{{mb.tipoDeposito == 1 ? mb.montoTotal : ""}}</td>
-        <td class="td-0" scope="col" >{{mb.tipoDeposito == 2 ? mb.montoTotal : ""}}</td>
-        <td class="td-0" scope="col" >{{mb.saldo}}</td>
+        <td class="td-0" scope="col" >{{mb.tipoDeposito == 1 ? ('$ ' + (mb.montoTotal | number:'1.2-2')) : ""}}</td>
+        <td class="td-0" scope="col" >{{mb.tipoDeposito == 2 ? ('$'+(mb.montoTotal | number:'1.2-2')) : ""}}</td>
+        <td class="td-0" scope="col" >${{mb.saldo|number:'1.2-2'}}</td>
         <td class="td-0" scope="col" >{{mb.descripcionMoneda}}</td>
-        <td class="td-0" scope="col" >{{mb.tipoCambio}}</td>
+        <td class="td-0" scope="col" >${{mb.tipoCambio|number:'1.2-2'}}</td>
         <td class="td-0" scope="col" >{{mb.concepto}}</td>
         <td class="td-0" scope="col" >{{mb.beneficiario}}</td>
         <td class="td-0" scope="col" >{{mb.descripcionEstatus}}</td>
