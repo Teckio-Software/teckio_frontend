@@ -16,7 +16,7 @@
                     <div class="flex gap-2" *ngIf="!existenIndirectos && !existenEstimaciones">
                         <div class="flex items-end">
                             <button (click)="NuevosIndirectos()"
-                                class="bg-[#51aec7]  hover:bg-hoverButton   titular items-center bg-custom-bg flex  font-bold tracking-wider  m-0 text-center">
+                                class=" bg-colorButton  hover:bg-hoverButton titular items-center bg-custom-bg flex  font-bold tracking-wider  m-0 text-center rounded-md mb-1">
                                 <p
                                     class=" text-[#f2f2f2] titular bg-custom-bg w-52  font-bold tracking-wider  m-0 text-center">
                                     Nuevos Indirectos</p>
@@ -24,29 +24,29 @@
                             </button>
                         </div>
                     </div>
-                    <div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto;"
-                        class="overflow-y-auto max-h-[300px]">
-                        <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
-                            <thead>
+                    <div
+                        class="overflow-y-auto max-h-[300px] w-full m-[0px auto] overflow-x-auto whitespace-nowrap rounded-lg shadow-md">
+                        <table class="w-full text-sm">
+                            <thead class="bg-primario text-white sticky top-0">
                                 <tr>
-                                    <th class="cabecera1" scope="col">Indirecto</th>
-                                    <th class="cabecera1" scope="col">Porcentaje</th>
+                                    <th class="px-1 py-[2px]" scope="col">Indirecto</th>
+                                    <th class="px-1 py-[2px]" scope="col">Porcentaje</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
+                            <tbody class="divide-y divide-gray300">
+                                <tr class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]">
                                     <td scope="col">Costo Directo</td>
-                                    <td scope="col">
+                                    <td scope="col" class="text-end">
                                         {{PU.costoUnitarioConFormato}}
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]">
                                     <td scope="col">Indirecto Particular</td>
                                     <td scope="col">
-                                        <input autocomplete="off" type="number" class="w-full bg-transparent" [disabled]="existenEstimaciones"
+                                        <input autocomplete="off" type="number" class="w-full bg-transparent text-end" [disabled]="existenEstimaciones"
                                             id="input-table" *ngIf="PUEditando" [(ngModel)]="PU.porcentajeIndirecto"
                                             (keydown.enter)="ediatarIndirectoPrecioUnitario()">
-                                        <input autocomplete="off" type="text" class="w-full bg-transparent"
+                                        <input autocomplete="off" type="text" class="w-full bg-transparent text-end"
                                             id="input-table" *ngIf="!PUEditando"
                                             [(ngModel)]="porcentajeRealConFormato" (click)="edicion()" readonly>
                                     </td>
@@ -56,13 +56,13 @@
                     </div>
 
                     <div *ngIf="existenIndirectos" (click)="detenerCierre($event)">
-                        <div>
-                            <table class="table-striped table-hover " class="w-[100%]" style="height: 0px;">
-                                <thead>
-                                    <th class="cabecera" style="width: 5%;">-</th>
-                                    <th class="cabecera" style="width: 15%;">Código</th>
-                                    <th class="cabecera" style="width: 70%;">Descripción</th>
-                                    <th class="cabecera" style="width: 10%;">Porcentaje</th>
+                        <div class="overflow-y-auto max-h-[300px] w-full m-[0px auto] overflow-x-auto whitespace-nowrap rounded-lg shadow-md">
+                            <table class="w-full text-sm" style="height: 0px;">
+                                <thead class="bg-primario text-white sticky top-0">
+                                    <th class="px-1 py-[2px]" style="width: 5%;">-</th>
+                                    <th class="px-1 py-[2px]" style="width: 15%;">Código</th>
+                                    <th class="px-1 py-[2px]" style="width: 70%;">Descripción</th>
+                                    <th class="px-1 py-[2px]" style="width: 10%;">Porcentaje</th>
                                 </thead>
                             </table>
                         </div>

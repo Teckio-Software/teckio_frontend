@@ -254,7 +254,7 @@ export const pages: Page[] = [
       //   permiso: ['SeccionTipoPoliza'],
       // },
       {
-        name: 'Cuenta Contable',
+        name: 'Cuenta contable',
         link: '/cuentacontable',
         imageUrl: 'assets/cuentaContable.svg',
         permiso: ['SeccionCuentaContable'],
@@ -272,7 +272,7 @@ export const pages: Page[] = [
         permiso: ['SeccionPoliza'],
       },
       {
-        name: 'Balanza de Comprobación',
+        name: 'Balanza de comprobación',
         link: '/balanza',
         imageUrl: 'assets/balanza-comprobacion.svg',
         permiso: ['SeccionBalanzaComprobacion'],
@@ -285,13 +285,13 @@ export const pages: Page[] = [
       },
 
       {
-        name: 'Cuenta Bancaria',
+        name: 'Cuenta bancaria',
         link: '/cuentabancaria',
         imageUrl: 'assets/cuenta-bancaria.svg',
         permiso: ['SeccionCuentaBancaria'],
       },
       {
-        name: 'Movimiento Bancario',
+        name: 'Movimiento bancario',
         link: '/movimientobancario',
         imageUrl: 'assets/movimiento-bancario.png',
         permiso: ['SeccionMovimientoBancario'],
@@ -353,6 +353,12 @@ export const pages: Page[] = [
         imageUrl: 'assets/clientes.svg',
         permiso: ['Administrador'],
       },
+      {
+        name: 'Auditorías',
+        link: '/auditorias',
+        imageUrl: 'assets/requisicion.svg',
+        permiso: ['Administrador'],
+      }
     ],
     expanded: false,
   },

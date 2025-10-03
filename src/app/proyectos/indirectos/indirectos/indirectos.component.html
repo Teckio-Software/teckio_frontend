@@ -1,174 +1,271 @@
 <div class="fixed inset-0 z-10 w-screen overflow-y-auto" (click)="cerrar()">
-    <div class="content-center sm:flex min-h-full items-cen justify-center p-4 text-center sm:items-center sm:p-0">
-        <!-- Evita que el clic se propague al contenedor padre (overlay) -->
+  <div
+    class="content-center sm:flex min-h-full items-cen justify-center p-4 text-center sm:items-center sm:p-0"
+  >
+    <!-- Evita que el clic se propague al contenedor padre (overlay) -->
 
-        <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl" (click)="onDocumentClick($event)"
-            (click)="detenerCierre($event)">
-            <!-- detenerCierre(event: MouseEvent): Método que detiene la propagación del evento de clic cuando se hace clic dentro del contenido del modal, asegurando que el modal no se cierre inadvertidamente. -->
-            <div class="m-2 flex justify-between">
-                <h2 class="font-normal tracking-[2px] leading-8  text-base">Indirectos</h2>
-                <button type="button" class=" leading-none absolute top-0 right-0 px-4 py-3 text-2xl"
-                    (click)="cerrar()">&times;</button>
-
+    <div
+      class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl"
+      (click)="onDocumentClick($event)"
+      (click)="detenerCierre($event)"
+    >
+      <!-- detenerCierre(event: MouseEvent): Método que detiene la propagación del evento de clic cuando se hace clic dentro del contenido del modal, asegurando que el modal no se cierre inadvertidamente. -->
+      <div class="m-2 flex justify-between">
+        <h2 class="font-normal tracking-[2px] leading-8 text-base">Indirectos</h2>
+        <button
+          type="button"
+          class="leading-none absolute top-0 right-0 px-4 py-3 text-2xl"
+          (click)="cerrar()"
+        >
+          &times;
+        </button>
+      </div>
+      <div class="bg-white px-4 pb-4 sm:p-6 sm:pb-4">
+        <div>
+          <div class="flex gap-2" *ngIf="!existeConjunto">
+            <div class="flex items-end">
+              <button
+                (click)="crearConjuntoIndirecto()"
+                class="bg-[#51aec7] hover:bg-hoverButton titular items-center bg-custom-bg flex font-bold tracking-wider rounded-md m-0 mb-1 text-center"
+              >
+                <p
+                  class="text-[#f2f2f2] titular bg-custom-bg w-52 font-bold tracking-wider m-0 text-center"
+                >
+                  Crear
+                </p>
+                <img src="assets/add.svg" alt="" />
+              </button>
             </div>
-            <div class="bg-white px-4 pb-4 sm:p-6 sm:pb-4">
-                <div>
-                    <div class="flex gap-2" *ngIf="!existeConjunto">
-                        <div class="flex items-end">
-                            <button (click)="crearConjuntoIndirecto()"
-                                class="bg-[#51aec7]  hover:bg-hoverButton   titular items-center bg-custom-bg flex  font-bold tracking-wider  m-0 text-center">
-                                <p
-                                    class=" text-[#f2f2f2] titular bg-custom-bg w-52  font-bold tracking-wider  m-0 text-center">
-                                    Crear</p>
-                                <img src="assets/add.svg" alt="">
+          </div>
+          <div
+            class="overflow-y-auto overflow-x-auto max-h-[300px] rounded-lg shadow-md w-full whitespace-nowrap m-[0px auto] mb-1"
+          >
+            <table class="w-full text-sm">
+              <thead class="bg-primario text-white sticky top-0">
+                <tr>
+                  <th class="px-1 py-[2px]" scope="col">Tipo calculo</th>
+                  <th class="px-1 py-[2px]" scope="col">Porcentaje</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+                >
+                  <td scope="col">
+                    <select
+                      [disabled]="existenEstimaciones"
+                      class="border-none rounded-sm bg-[#ffffff] text-[#020202d3] font-medium p-1 bg-transparent"
+                      [(ngModel)]="conjuntoIndirecto.tipoCalculo"
+                      (change)="Recalcular(conjuntoIndirecto)"
+                    >
+                      <option [value]="0">Simple</option>
+                      <option [value]="1">Compuesto</option>
+                    </select>
+                  </td>
+                  <td scope="col" class="text-end">{{ conjuntoIndirecto.porcentajeConFormato }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div
+            class="overflow-y-auto overflow-x-auto max-h-[300px] rounded-lg shadow-md w-full whitespace-nowrap m-[0px auto] mb-1"
+          >
+            <table class="w-full text-sm" style="height: 0px">
+              <thead class="bg-primario text-white sticky top-0">
+                <th class="px-1 py-[2px]" style="width: 5%">-</th>
+                <th class="px-1 py-[2px]" style="width: 15%">Código</th>
+                <th class="px-1 py-[2px]" style="width: 70%">Descripción</th>
+                <th class="px-1 py-[2px]" style="width: 10%">Porcentaje</th>
+              </thead>
+            </table>
+          </div>
+          <div
+            style="
+              overflow-y: auto;
+              white-space: nowrap;
+              margin: 0 auto;
+              cursor: pointer;
+              max-height: 200px;
+            "
+            class="floating-window rounded-lg resizable-container"
+          >
+            <tree-view [treeData]="indirectos">
+              <ng-template let-indirecto>
+                <table>
+                  <tbody>
+                    <tr
+                      [ngClass]="{
+                        colorNivel1: indirecto.nivel == 1,
+                        colorNivel2: indirecto.nivel == 2,
+                        colorNivel3: indirecto.nivel == 3,
+                        colorNivel4: indirecto.nivel == 4,
+                        colorNivel5: indirecto.nivel == 5,
+                        colorNivel6: indirecto.nivel == 6,
+                        colorNivel7: indirecto.nivel == 7,
+                      }"
+                    >
+                      <td
+                        style="width: 5%; border-right: 1px solid #f2f2f217"
+                        class="cont-drill"
+                        (click)="seleccionar(indirecto)"
+                      >
+                        <div class="contenedores" style="display: flex">
+                          <div *ngIf="indirecto.hijos.length > 0">
+                            <mat-icon class="test" (click)="expansionDominio(indirecto)">
+                              {{ indirecto.expandido ? ' expand_more' : 'chevron_right' }}
+                            </mat-icon>
+                          </div>
+                          <div *ngIf="indirecto.hijos.length == 0">
+                            <button
+                              class="button-accion bg-transparent"
+                              style="width: 5px"
+                            ></button>
+                          </div>
+                          <div>
+                            <button
+                              #dropdownToggle
+                              *ngIf="!existenEstimaciones"
+                              class="inline-flex items-center p-1 text-md font-medium text-center text-gray-900 rounded-lg"
+                              type="button"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                            >
+                              <svg
+                                class="w-3 h-3"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor"
+                                viewBox="0 0 4 15"
+                              >
+                                <path
+                                  d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"
+                                />
+                              </svg>
                             </button>
+                            <ul
+                              class="cursor-pointer dropdown-menu text-sm text-[#000000DE] dark:text-gray-200"
+                            >
+                              <li class="cursor-pointer">
+                                <a
+                                  (click)="crearIndirectoMismoNivel(indirecto)"
+                                  *ngIf="indirecto.idIndirectoBase != 0"
+                                  class="cursor-auto dropdown-item block px-4 py-2 hover:bg-gray-100 hover:bg-[#4eaac154] hover:text-[#000000DE]"
+                                  >Mismo nivel
+                                </a>
+                              </li>
+                              <li class="cursor-pointer">
+                                <a
+                                  (click)="crearIndirectoSubnivel(indirecto)"
+                                  class="dropdown-item block px-4 py-2 hover:bg-[#4eaac154] hover:text-[#000000DE]"
+                                >
+                                  Subnivel
+                                </a>
+                              </li>
+                              <li class="cursor-pointer">
+                                <a
+                                  (click)="eliminarIndirecto(indirecto)"
+                                  *ngIf="
+                                    indirecto.idIndirectoBase != 0 && indirecto.hijos.length <= 0
+                                  "
+                                  class="dropdown-item block px-4 py-2 hover:bg-[#4eaac154] hover:text-[#000000DE]"
+                                >
+                                  Eliminar
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
                         </div>
-                    </div>
-                    <div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto;"
-                        class="overflow-y-auto max-h-[300px]">
-                        <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
-                            <thead>
-                                <tr>
-                                    <th class="cabecera1" scope="col">Tipo calculo</th>
-                                    <th class="cabecera1" scope="col">Porcentaje</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td scope="col"><select [disabled]="existenEstimaciones"
-                                            class="border-none rounded-sm bg-[#ffffff] text-[#020202d3] font-medium p-1 bg-transparent"
-                                            [(ngModel)]="conjuntoIndirecto.tipoCalculo"
-                                            (change)="Recalcular(conjuntoIndirecto)">
-                                            <option [value]="0">Simple</option>
-                                            <option [value]="1">Compuesto</option>
-                                        </select></td>
-                                    <td scope="col">{{porcentajeRealConFormato}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                        <table class="table-striped table-hover " class="w-[100%]" style="height: 0px;">
-                            <thead>
-                                <th class="cabecera" style="width: 5%;">-</th>
-                                <th class="cabecera" style="width: 15%;">Código</th>
-                                <th class="cabecera" style="width: 70%;">Descripción</th>
-                                <th class="cabecera" style="width: 10%;">Porcentaje</th>
-                            </thead>
-                        </table>
-                    </div>
-                    <div style="overflow-y: auto; white-space: nowrap; margin: 0 auto; cursor: pointer; max-height: 200px;"
-                        class="floating-window" class="resizable-container">
-                        <tree-view [treeData]="indirectos">
-                            <ng-template let-indirecto>
-                                <table>
-                                    <tbody>
-                                        <tr  [ngClass]="{
-                                            'colorNivel1' :indirecto.nivel == 1,
-                                            'colorNivel2' :indirecto.nivel == 2,
-                                            'colorNivel3' :indirecto.nivel == 3,
-                                            'colorNivel4' :indirecto.nivel == 4,
-                                            'colorNivel5' :indirecto.nivel == 5,
-                                            'colorNivel6' :indirecto.nivel == 6,
-                                            'colorNivel7' :indirecto.nivel == 7,
-                                          }">
-                                            <td style="width: 5%; border-right: 1px solid #f2f2f217;" class="cont-drill"
-                                                (click)="seleccionar(indirecto)">
-                                                <div class="contenedores" style="display: flex;">
-                                                    <div *ngIf="indirecto.hijos.length > 0">
-                                                        <mat-icon class="test" (click)="expansionDominio(indirecto)">
-                                                            {{indirecto.expandido ? ' expand_more' : 'chevron_right' }}
-                                                        </mat-icon>
-                                                    </div>
-                                                    <div *ngIf="indirecto.hijos.length == 0">
-                                                        <button class="button-accion bg-transparent"
-                                                            style="width: 5px;"></button>
-                                                    </div>
-                                                    <div>
-                                                        <button  #dropdownToggle *ngIf="!existenEstimaciones"
-                                                            class="inline-flex items-center p-1 text-md font-medium text-center text-gray-900  rounded-lg "
-                                                            type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            <svg class="w-3 h-3" aria-hidden="true"
-                                                                xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                                                viewBox="0 0 4 15">
-                                                                <path
-                                                                    d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
-                                                            </svg>
-                                                        </button>
-                                                        <ul
-                                                            class="cursor-pointer dropdown-menu text-sm text-[#000000DE] dark:text-gray-200">
-                                                            <li class="cursor-pointer">
-                                                                <a (click)="crearIndirectoMismoNivel(indirecto)"
-                                                                    *ngIf="indirecto.idIndirectoBase != 0"
-                                                                    class=" cursor-auto dropdown-item block px-4 py-2 hover:bg-gray-100 hover:bg-[#4eaac154] hover:text-[#000000DE]">Mismo
-                                                                    nivel
-                                                                </a>
-                                                            </li>
-                                                            <li class="cursor-pointer">
-                                                                <a (click)="crearIndirectoSubnivel(indirecto)"
-                                                                    class="dropdown-item block px-4 py-2  hover:bg-[#4eaac154] hover:text-[#000000DE]">
-                                                                    Subnivel
-                                                                </a>
-                                                            </li>
-                                                            <li class="cursor-pointer">
-                                                                <a (click)="eliminarIndirecto(indirecto)"
-                                                                    *ngIf="indirecto.idIndirectoBase != 0 && indirecto.hijos.length <= 0"
-                                                                    class="dropdown-item block px-4 py-2  hover:bg-[#4eaac154] hover:text-[#000000DE]">
-                                                                    Eliminar
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 15%;"
-                                                class="cont-drill" (click)="seleccionar(indirecto)" [ngClass]="{
-                                                    'paddingNivel1' :indirecto.nivel == 1,
-                                                    'paddingNivel2' :indirecto.nivel == 2,
-                                                    'paddingNivel3' :indirecto.nivel == 3,
-                                                    'paddingNivel4' :indirecto.nivel == 4,
-                                                    'paddingNivel5' :indirecto.nivel == 5,
-                                                    'paddingNivel6' :indirecto.nivel == 6,
-                                                    'paddingNivel7' :indirecto.nivel == 7,
-                                                  }">
-                                                <input autocomplete="off" type="text" class="" id="input-table"
-                                                    [(ngModel)]="indirecto.codigo" class="bg-transparent"
-                                                    [disabled]="existenEstimaciones"
-                                                    [readonly]="indirecto.idIndirectoBase == 0 || indirecto.hijos.length > 0"
-                                                    (keydown.enter)="crear(indirecto)"
-                                                    style="border: .5px solid #ffffff4d; border-radius: 3px; width: 100%;">
-                                            </td>
-                                            <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 70%;"
-                                                class="cont-drill" (click)="seleccionar(indirecto)">
-                                                <input autocomplete="off" type="text" class="" id="input-table"
-                                                    [(ngModel)]="indirecto.descripcion" class="bg-transparent"
-                                                    [disabled]="existenEstimaciones"
-                                                    [readonly]="indirecto.idIndirectoBase == 0 || indirecto.hijos.length > 0"
-                                                    (keydown.enter)="crear(indirecto)"
-                                                    style="border: .5px solid #ffffff4d; border-radius: 3px; width: 100%;">
-                                            </td>
-                                            <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 10%;"
-                                                class="cont-drill" (click)="seleccionar(indirecto)">
-                                                <input autocomplete="off" type="text" class="" id="input-table"
-                                                    [(ngModel)]="indirecto.porcentaje" class="bg-transparent"
-                                                    [disabled]="existenEstimaciones"
-                                                    [readonly]="indirecto.idIndirectoBase == 0 || indirecto.hijos.length > 0"
-                                                    (keydown.enter)="crear(indirecto)"
-                                                    style="border: .5px solid #ffffff4d; border-radius: 3px; width: 100%;">
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </ng-template>
-                        </tree-view>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-gray-50 px-2 py-2 sm:flex sm:flex-row-reverse sm:px-6 sm:gap-4">
-                <button
-                    class="bg-[#51aec7] hover:bg-[#002B53] text-[#f2f2f2]  py-2 px-4 rounded-sm mr-2 mt-3  inline-flex w-full justify-center shadow-sm ring-1 ring-inset  sm:mt-0 sm:w-auto"
-                    (click)="cerrar()">Aceptar</button>
-            </div>
+                      </td>
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 15%;
+                        "
+                        class="cont-drill"
+                        (click)="seleccionar(indirecto)"
+                        [ngClass]="{
+                          paddingNivel1: indirecto.nivel == 1,
+                          paddingNivel2: indirecto.nivel == 2,
+                          paddingNivel3: indirecto.nivel == 3,
+                          paddingNivel4: indirecto.nivel == 4,
+                          paddingNivel5: indirecto.nivel == 5,
+                          paddingNivel6: indirecto.nivel == 6,
+                          paddingNivel7: indirecto.nivel == 7,
+                        }"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class=""
+                          id="input-table"
+                          [(ngModel)]="indirecto.codigo"
+                          class="bg-transparent"
+                          [disabled]="existenEstimaciones"
+                          [readonly]="indirecto.idIndirectoBase == 0 || indirecto.hijos.length > 0"
+                          (keydown.enter)="crear(indirecto)"
+                          style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
+                        />
+                      </td>
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 70%;
+                        "
+                        class="cont-drill"
+                        (click)="seleccionar(indirecto)"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class=""
+                          id="input-table"
+                          [(ngModel)]="indirecto.descripcion"
+                          class="bg-transparent"
+                          [disabled]="existenEstimaciones"
+                          [readonly]="indirecto.idIndirectoBase == 0 || indirecto.hijos.length > 0"
+                          (keydown.enter)="crear(indirecto)"
+                          style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
+                        />
+                      </td>
+                      <td
+                        style="
+                          border-right: 1px solid #3f3e3e17;
+                          border-right: 1px solid #f2f2f217;
+                          width: 10%;
+                        "
+                        class="cont-drill"
+                        (click)="seleccionar(indirecto)"
+                      >
+                        <input
+                          autocomplete="off"
+                          type="text"
+                          class="text-end bg-transparent"
+                          id="input-table"
+                          [(ngModel)]="indirecto.porcentaje"
+                          [disabled]="existenEstimaciones"
+                          [readonly]="indirecto.idIndirectoBase == 0 || indirecto.hijos.length > 0"
+                          (keydown.enter)="crear(indirecto)"
+                          style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </ng-template>
+            </tree-view>
+          </div>
         </div>
+      </div>
+      <div class="bg-gray-50 px-2 py-2 sm:flex sm:flex-row-reverse sm:px-6 sm:gap-4">
+        <button
+          class="bg-[#51aec7] hover:bg-[#002B53] text-[#f2f2f2] py-2 px-4 rounded-sm mr-2 mt-3 inline-flex w-full justify-center shadow-sm ring-1 ring-inset sm:mt-0 sm:w-auto"
+          (click)="cerrar()"
+        >
+          Aceptar
+        </button>
+      </div>
     </div>
+  </div>
 </div>

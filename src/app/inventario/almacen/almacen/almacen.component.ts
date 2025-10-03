@@ -21,6 +21,7 @@ import { proyectoDTO } from 'src/app/proyectos/proyecto/tsProyecto';
 import { MatDialog } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { EmpresaService } from 'src/app/catalogos/empresas/empresa.service';
+import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 
 @Component({
   selector: 'app-almacen',
@@ -84,6 +85,15 @@ export class AlmacenComponent implements OnInit {
 
   filtroAlmacen: string = '0';
 
+  errorGlobal: boolean = false;
+  errorCo: boolean = false;
+  errorNom: boolean = false;
+  errorResp: boolean = false;
+  errorTel: RespuestaDTO = { estatus: false, descripcion: '' };
+  errorCiu: boolean = false;
+  errorCol: boolean = false;
+  errorDom: boolean = false;
+
   ngOnInit(): void {
     this.traerInformacion();
     this.proyectoService.obtener(this.selectedEmpresa).subscribe((datos) => {
@@ -132,35 +142,120 @@ export class AlmacenComponent implements OnInit {
     this.almacen.telefono = this.form.get('telefono')?.value;
     this.almacen.idProyecto = this.almacen.central ? null : this.idProyecto;
     if (
-      typeof this.almacen.codigo === 'undefined' ||
+      (typeof this.almacen.codigo === 'undefined' ||
       !this.almacen.codigo ||
-      this.almacen.codigo === '' ||
-      typeof this.almacen.almacenNombre === 'undefined' ||
+      this.almacen.codigo === '' )&&
+      (typeof this.almacen.almacenNombre === 'undefined' ||
       !this.almacen.almacenNombre ||
-      this.almacen.almacenNombre === '' ||
-      typeof this.almacen.responsable === 'undefined' ||
+      this.almacen.almacenNombre === '')&&
+      (typeof this.almacen.responsable === 'undefined' ||
       !this.almacen.responsable ||
-      this.almacen.responsable === '' ||
-      typeof this.almacen.domicilio === 'undefined' ||
+      this.almacen.responsable === '')&&
+      (typeof this.almacen.domicilio === 'undefined' ||
       !this.almacen.domicilio ||
-      this.almacen.domicilio === '' ||
-      typeof this.almacen.colonia === 'undefined' ||
+      this.almacen.domicilio === '')&&
+      (typeof this.almacen.colonia === 'undefined' ||
       !this.almacen.colonia ||
-      this.almacen.colonia === '' ||
-      typeof this.almacen.ciudad === 'undefined' ||
+      this.almacen.colonia === '')&&
+      (typeof this.almacen.ciudad === 'undefined' ||
       !this.almacen.ciudad ||
-      this.almacen.ciudad === '' ||
-      typeof this.almacen.telefono === 'undefined' ||
+      this.almacen.ciudad === '')&&
+      (typeof this.almacen.telefono === 'undefined' ||
       !this.almacen.telefono ||
-      this.almacen.telefono === ''
+      this.almacen.telefono === '')
     ) {
-      Swal.fire({
-        title: 'Error',
-        text: 'Capture la información correctamente',
-        icon: 'error',
-      });
+      this.errorGlobal = true;
       return;
     }
+
+    let c = true;
+    if(typeof this.almacen.codigo === 'undefined' ||
+      !this.almacen.codigo ||
+      this.almacen.codigo === '' ){
+        this.errorCo = true;
+        c = false;
+      }
+    if(typeof this.almacen.almacenNombre === 'undefined' ||
+      !this.almacen.almacenNombre ||
+      this.almacen.almacenNombre === '' ){
+        this.errorNom = true;
+        c = false;
+      }
+    if(typeof this.almacen.responsable === 'undefined' ||
+      !this.almacen.responsable ||
+      this.almacen.responsable === '' ){
+        this.errorResp = true;
+        c = false;
+      }
+      //Comenté estas validaciones del teléfono ya que el input no deberia permitir estos casos
+    //   if(this.almacen.telefono.length < 10 || this.almacen.telefono.length > 10){
+    //   this.errorTel.estatus = true;
+    //   this.errorTel.descripcion = "El campo 'Teléfono' debe tener 10 dígitos";
+    //   c = false;
+    // }
+    if(this.almacen.telefono.trim() == ''){
+      this.errorTel.estatus = true;
+      this.errorTel.descripcion = "El campo 'Teléfono' es requerido";
+      c = false;
+    }
+    // if(isNaN(Number(this.almacen.telefono))){
+    //   this.errorTel.estatus = true;
+    //   this.errorTel.descripcion = "El campo 'Teléfono' no puede contener letras";
+    //   c = false;
+    // }
+    if(typeof this.almacen.ciudad === 'undefined' ||
+      !this.almacen.ciudad ||
+      this.almacen.ciudad === '' ){
+        this.errorCiu = true;
+        c = false;
+      }
+    if(typeof this.almacen.colonia === 'undefined' ||
+      !this.almacen.colonia ||
+      this.almacen.colonia === '' ){
+        this.errorCol = true;
+        c = false;
+      }
+    if(typeof this.almacen.domicilio === 'undefined' ||
+      !this.almacen.domicilio ||
+      this.almacen.domicilio === '' ){
+        this.errorDom = true;
+        c = false;
+      }
+    
+    if(!c){
+      return;
+    }
+
+    // if (
+    //   typeof this.almacen.codigo === 'undefined' ||
+    //   !this.almacen.codigo ||
+    //   this.almacen.codigo === '' ||
+    //   typeof this.almacen.almacenNombre === 'undefined' ||
+    //   !this.almacen.almacenNombre ||
+    //   this.almacen.almacenNombre === '' ||
+    //   typeof this.almacen.responsable === 'undefined' ||
+    //   !this.almacen.responsable ||
+    //   this.almacen.responsable === '' ||
+    //   typeof this.almacen.domicilio === 'undefined' ||
+    //   !this.almacen.domicilio ||
+    //   this.almacen.domicilio === '' ||
+    //   typeof this.almacen.colonia === 'undefined' ||
+    //   !this.almacen.colonia ||
+    //   this.almacen.colonia === '' ||
+    //   typeof this.almacen.ciudad === 'undefined' ||
+    //   !this.almacen.ciudad ||
+    //   this.almacen.ciudad === '' ||
+    //   typeof this.almacen.telefono === 'undefined' ||
+    //   !this.almacen.telefono ||
+    //   this.almacen.telefono === ''
+    // ) {
+    //   Swal.fire({
+    //     title: 'Error',
+    //     text: 'Capture la información correctamente',
+    //     icon: 'error',
+    //   });
+    //   return;
+    // }
     if (typeof this.almacen.central === 'undefined' || !this.almacen.central) {
       this.almacen.central = false;
     }
@@ -201,6 +296,35 @@ export class AlmacenComponent implements OnInit {
     this.form.get('id')?.setValue(0);
     this.ideditaAlmacen = 0;
   }
+
+/**
+ * Filtra los caracteres no numéricos de un input de tipo texto
+ * @param {Event} e - Evento que se desencadena cuando se escribe algo en el input
+ * Elimina inmediatamente los caracteres no numéricos del input y ajusta la posición del cursor
+ * para que no se mueva inesperadamente.
+ */
+  filterNonNumeric(e: Event) {
+  const inputElement = e.target as HTMLInputElement;
+  //Obtiene la posición del cursor
+  const start = inputElement.selectionStart;
+  //Obtiene el valor del texto
+  let valor = inputElement.value;
+  //Elimina inmediatamente el carácter no numérico
+  const valorFiltrado = valor.replace(/\D/g, '');
+  inputElement.value = valorFiltrado;
+  this.form.get('telefono')?.setValue(valorFiltrado, { emitEvent: false }); 
+  //Restablece la posición del cursor para una mejor experiencia de usuario
+  if (start !== null) {
+    // Si se eliminó algo ajusta la posición del cursor.
+    if (valor.length !== valorFiltrado.length) {
+      // Intenta mover el cursor una posición menos si se eliminó un carácter antes de él.
+      inputElement.setSelectionRange(start - 1, start - 1);
+    } else {
+      // Si no se eliminó nada, mantén la posición.
+      inputElement.setSelectionRange(start, start);
+    }
+  }
+}
 
   limpiarFormulario() {
     this.form.reset();

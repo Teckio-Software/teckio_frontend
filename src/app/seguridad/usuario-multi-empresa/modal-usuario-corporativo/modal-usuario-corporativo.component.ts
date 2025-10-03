@@ -100,6 +100,10 @@ export class ModalUsuarioCorporativoComponent implements OnInit {
     if(this.form.get('amaterno')?.value == ''){
       this.AlertaCampo('El campo \'Apellido Materno\' es requerido');
       return;}
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if(!regex.test(this.form.get('correoElectronico')?.value)){
+      this.AlertaCampo('El correo electrónico no es válido');
+      return;}
       if(this.form.get('correoElectronico')?.value == ''){
       this.AlertaCampo('El campo \'Correo electrónico\' es requerido');
       return;}

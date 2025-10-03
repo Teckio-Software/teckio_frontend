@@ -52,10 +52,12 @@
                 type="text"
                 formControlName="rfc"
                 placeholder="PAMA010724HFSO"
-                (change)="errorRfc = false"
+                appUppercaseInput
+                maxlength="13"
+                (change)="errorRfc.estatus= false"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
-              <p *ngIf="errorRfc" class="text-red-700" >*El campo 'RFC' es obligatorio</p>
+              <p *ngIf="errorRfc.estatus" class="text-red-700" >*{{errorRfc.descripcion}}</p>
             </div>
 
             <div>
@@ -127,10 +129,10 @@
                 type="email"
                 formControlName="email"
                 placeholder="name@overwatch.com"
-                (change)="errorCe = false"
+                (change)="errorCe.estatus = false"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
-              <p *ngIf="errorCe" class="text-red-700" >*El campo 'Correo electrónico' es obligatorio</p>
+              <p *ngIf="errorCe.estatus" class="text-red-700" >*{{errorCe.descripcion}}</p>
             </div>
 
             <div>
@@ -160,12 +162,13 @@
                 <input
                   id="telefono"
                   type="text"
+                  (input)="filterNonNumeric($event)"
                   formControlName="telefono"
                   placeholder="7221234567"
-                  (change)="errorTe = false"
+                  (change)="errorTe.estatus= false"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
-              <p *ngIf="errorTe" class="text-red-700" >*El campo 'Teléfono' es obligatorio</p>
+              <p *ngIf="errorTe.estatus" class="text-red-700" >*{{errorTe.descripcion}}</p>
               </div>
               <div class="flex-1">
                 <label
