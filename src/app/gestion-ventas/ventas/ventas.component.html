@@ -185,7 +185,7 @@
                 </td>
               </tr>
             </ng-container>
-            <tr *ngIf="ordenesVentaReset.length == 0" class="xs:hidden">
+            <tr *ngIf="ordenesVentaReset.length == 0 && !isLoading" class="xs:hidden">
               <td
                 colspan="6"
                 class="text-center text-gray-700 font-medium py-1 xs:text-xs"
