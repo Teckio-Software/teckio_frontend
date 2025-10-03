@@ -1,9 +1,10 @@
+import { id } from 'date-fns/locale';
 import { ProyectoStateService } from './utilidades/drawer/service/proyecto-state.service';
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { SeguridadService } from './seguridad/seguridad.service';
 import { SeguridadMultiEmpresaService } from './seguridad/seguridad-multi-empresa/seguridad-multi-empresa.service';
 import { UsuarioEmpresaService } from './seguridad/Servicios/usuario-empresa.service';
-import { map, Observable, of, startWith, Subscription } from 'rxjs';
+import { forkJoin, map, Observable, of, startWith, Subscription, switchMap } from 'rxjs';
 import { permisos } from './seguridad/autorizado/tsAutorizado';
 import { SidenavService } from './utilidades/drawer/service/sidenav.service';
 import { onMainContentChange } from './utilidades/drawer/animations/animations';
@@ -15,6 +16,7 @@ import { EmpresaDTO } from './catalogos/empresas/empresa';
 import { usuarioUltimaSeccion } from './seguridad/seguridad-multi-empresa/tsSeguridadMultiEmpresa';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { set } from 'date-fns';
 
 @Component({
   selector: 'app-root',
@@ -22,17 +24,14 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
   styleUrls: ['./app.component.css'],
   animations: [onMainContentChange],
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
   proyectoControl = new FormControl('');
-  filteredProyectos: Observable<proyectoDTO[]> = new Observable<
-    proyectoDTO[]
-  >();
+  filteredProyectos: Observable<proyectoDTO[]> = new Observable<proyectoDTO[]>();
   public tituloComponente: string = 'Inicio';
   public onSideNavChange: boolean | undefined;
   esLogueado: boolean = false;
   title = 'ERP_Teckio_F';
   subscription!: Subscription;
-  private proyectoChangeSubscription?: Subscription;
   recargar: number = 0;
   permisosUsuario: permisos[] = [];
   permisosAdmin: permisos[] = [];
@@ -72,16 +71,11 @@ export class AppComponent implements OnInit, OnDestroy {
     private tituloService: TituloService,
     private proyectoService: ProyectoService,
     private _UsuarioXIdUsuario: UsuarioUltimaSeccionService,
-    private proyectoStateService: ProyectoStateService
+    private proyectoStateService: ProyectoStateService,
   ) {
     let idEmpresa = this.zvSeguridadService.obtenIdEmpresaLocalStorage();
     this.selectedEmpresa = Number(idEmpresa);
-    this.idProyectoChange = Number(
-      this.zvSeguridadService.obtenerIdProyectoLocalStorage()
-    );
-    this.idUsuario = Number(
-      this.zvSeguridadService.zfObtenerCampoJwt('idUsuario')
-    );
+    this.idUsuario = Number(this.zvSeguridadService.zfObtenerCampoJwt('idUsuario'));
     this.esLogueado = this.zvSeguridadService.zfEstaLogueadoBoolean();
     this._sidenavService.sideNavState$.subscribe((res) => {
       this.onSideNavChange = res;
@@ -90,20 +84,13 @@ export class AppComponent implements OnInit, OnDestroy {
     this._sidenavService.sideNavState$.subscribe((res) => {
       this.onSideNavChange = res;
     });
-
-    this.proyectoChangeSubscription = this.proyectoService.OnChange.subscribe((idEmpresa) => {
-      const empresaId = idEmpresa > 0 ? idEmpresa : this.selectedEmpresa;
-      if (empresaId > 0) {
-        this.obtenerProyectos(empresaId);
-      }
-    });
   }
 
   private _filter(value: string): proyectoDTO[] {
     const filterValue = this._normalizeValue(String(value));
 
     return this.proyectos.filter((proyecto) =>
-      this._normalizeValue(proyecto.nombre).includes(filterValue)
+      this._normalizeValue(proyecto.nombre).includes(filterValue),
     );
   }
 
@@ -111,11 +98,18 @@ export class AppComponent implements OnInit, OnDestroy {
     return value.toLowerCase().replace(/\s/g, '');
   }
 
-  ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
+  private actualizarListadoProyectos(proyectos: proyectoDTO[]): void {
+    this.proyectos = proyectos;
+    const idProyectoLocal = Number(this.zvSeguridadService.obtenerIdProyectoLocalStorage());
+    if (this.proyectos.length > 0 && idProyectoLocal === 0) {
+      this.zvSeguridadService.guardarIdProyectoLocalStorage(this.proyectos[0].id);
     }
-    this.proyectoChangeSubscription?.unsubscribe();
+    const idProyecto = Number(this.zvSeguridadService.obtenerIdProyectoLocalStorage());
+    let proyecto = this.proyectos.find((x) => x.id === idProyecto);
+    if (proyecto) {
+      this.proyectoControl.setValue(proyecto.nombre);
+    }
+    this.reiniciarFiltro();
   }
 
   reiniciarFiltro() {
@@ -124,16 +118,13 @@ export class AppComponent implements OnInit, OnDestroy {
       map((value) => {
         const stringValue = typeof value === 'string' ? value : '';
         return this._filter(stringValue);
-      })
+      }),
     );
   }
 
   ngOnInit(): void {
     if (this.zvSeguridadService.zfEstaLogueadoBoolean()) {
-      // this.obtenerProyectos();
-      this.GuardarUltimoProyectoAndEmpresa();
-      this.cargarEmpresas();
-      this.obtenerProyectos(this.selectedEmpresa);
+      this.obtenerUltimaSeccionEmpresaYProyecto();
     }
 
     this.permisosUsuario.push({
@@ -147,118 +138,133 @@ export class AppComponent implements OnInit, OnDestroy {
     });
 
     this.subscription = this._UsuarioEmpresaService.refresh$.subscribe(() => {
-      this.cargarEmpresas();
+      this.obtenerUltimaSeccionEmpresaYProyecto();
     });
     this.tituloService.tituloComponente$.subscribe((titulo) => {
       this.tituloComponente = titulo;
     });
   }
   actualizar(idEmpresa: number) {
-    this.textoDataList.nativeElement.value = '';
-    this.recargar++;
-    this.zvSeguridadService.guardaIdEmpresaLocalStorage(this.selectedEmpresa);
-    if (this.selectedEmpresa > 0) {
-      const idEmpresa = Number(this.selectedEmpresa);
-      // Actualiza la empresa seleccionada en el ultimo registro
-      // Actualizar la lista de proyectos despues de cambiar de empresa
-      this.proyectoService.obtener(idEmpresa).subscribe((datos) => {
-        this.proyectos = datos;
-        let editarAtravesDeChangeEmpresa: usuarioUltimaSeccion = {
-          id: this.idTableUltimoRegistro,
-          idProyecto: 0,
-          idEmpresa: idEmpresa,
-          idUsuario: this.idUsuario,
-        };
-        if (datos.length > 0) {
-          this.textoDataList.nativeElement.value = datos[0].nombre;
-          editarAtravesDeChangeEmpresa.idProyecto = datos[0].id;
-          this.zvSeguridadService.guardarIdProyectoLocalStorage(datos[0].id);
-        } else {
-          this.textoDataList.nativeElement.value = '';
-          editarAtravesDeChangeEmpresa.idProyecto = 0;
-          this.zvSeguridadService.guardarIdProyectoLocalStorage(0);
-        }
-        this.selectedEmpresa = idEmpresa;
-        this._UsuarioXIdUsuario
-          .editarUltimaSeccionUsuario(editarAtravesDeChangeEmpresa)
-          .subscribe((datos) => {
-            this.recargar++;
-            this._UsuarioEmpresaService
-              .actualizarClaims()
-              .subscribe((datos) => {
-                this.actualizaClaims();
-                this._UsuarioEmpresaService.zfGuardarToken(datos);
-              });
+    if (!idEmpresa) {
+      return;
+    }
+
+    if (this.textoDataList?.nativeElement) {
+      this.textoDataList.nativeElement.value = '';
+    }
+
+    this.isLoading = true;
+    this.selectedEmpresa = idEmpresa;
+    this.zvSeguridadService.guardaIdEmpresaLocalStorage(idEmpresa);
+    this.zvSeguridadService.guardarIdProyectoLocalStorage(0);
+
+    this._UsuarioXIdUsuario
+      .obtenerUltimaSeccionUsuarioXIUsuario(this.idUsuario)
+      .pipe(
+        switchMap((datos) => {
+          const nuevoRegistro: usuarioUltimaSeccion = {
+            id: datos.id,
+            idProyecto: Number(this.zvSeguridadService.obtenerIdProyectoLocalStorage()),
+            idEmpresa: idEmpresa,
+            idUsuario: this.idUsuario,
+          };
+          const ultimaSeccion$ =
+            datos.id > 0
+              ? this._UsuarioXIdUsuario.editarUltimaSeccionUsuario(nuevoRegistro)
+              : this._UsuarioXIdUsuario.crearUltimaSeccionUsuario(nuevoRegistro);
+
+          return forkJoin({
+            ultimaSeccion: ultimaSeccion$,
+            claims: this._UsuarioEmpresaService.actualizarClaims(),
+            proyectos: this.proyectoService.obtener(idEmpresa),
           });
+        }),
+      )
+      .subscribe({
+        next: ({ claims, proyectos }) => {
+          this._UsuarioEmpresaService.zfGuardarToken(claims);
+          this.zvSeguridadService.actualizarToken(claims.token);
+          this.actualizarListadoProyectos(proyectos);
+          this.isLoading = false;
+          this.recargar++;
+        },
+        error: (error) => {
+          console.error('Error al actualizar empresa', error);
+          this.isLoading = false;
+        },
       });
-    }
-  }
-  obtenerProyectos(idEmpresa: number) {
-    this.proyectos = [];
-    this.proyectoService.obtener(idEmpresa).subscribe((datos) => {
-      this.proyectos = datos;
-      this.filteredProyectos = this.proyectoControl.valueChanges.pipe(
-        startWith(''),
-        map((value) => {
-          const stringValue = typeof value === 'string' ? value : '';
-          return this._filter(stringValue);
-        })
-      );
-      let idAlmacenado = Number(
-        this.zvSeguridadService.obtenerIdProyectoLocalStorage()
-      );
-      if (idAlmacenado > 0) {
-        this.idProyecto = idAlmacenado;
-        this.zvSeguridadService.guardarIdProyectoLocalStorage(idAlmacenado);
-        this.recargar = this.recargar + 1;
-      } else {
-        this._UsuarioXIdUsuario
-          .obtenerUltimaSeccionUsuarioXIUsuario(this.idUsuario)
-          .subscribe((data) => {
-            if (data.idProyecto == 0) {
-              data.idProyecto = datos[0].id;
-            }
-            this.zvSeguridadService.guardarIdProyectoLocalStorage(
-              data.idProyecto
-            );
-            this.zvSeguridadService.guardaIdEmpresaLocalStorage(data.idEmpresa);
-
-            this.obtenerProyectos(this.selectedEmpresa);
-            this.idProyecto = data.idProyecto;
-            this.recargar = this.recargar + 1;
-          });
-      }
-    });
   }
 
-  cargarEmpresas(): EmpresaDTO[] {
-    let hayToken = this.zvSeguridadService.zfObtenerToken();
-    if (typeof hayToken === 'undefined' || !hayToken?.length) {
-      return [];
-    }
-    this.esLogueado = this.zvSeguridadService.zfEstaLogueadoBoolean();
-    let idEmpresa = this.zvSeguridadService.obtenIdEmpresaLocalStorage();
-    this.selectedEmpresa = Number(idEmpresa);
-    this._UsuarioEmpresa.obtenEmpresasPorUsuario().subscribe((empresas) => {
-      this.empresasPertenecientes = empresas;
-      if (empresas.length > 0 && this.selectedEmpresa <= 0) {
-        this.selectedEmpresa = empresas[0].id;
-        this.idUsuario = Number(
-          this.zvSeguridadService.zfObtenerCampoJwt('idUsuario')
-        );
-        this.GuardarUltimoProyectoAndEmpresa();
-        this.zvSeguridadService.guardaIdEmpresaLocalStorage(
-          this.selectedEmpresa
-        );
-        if (this.selectedEmpresa > 0) {
-          this.obtenerProyectos(this.selectedEmpresa);
-          this.recargar = this.recargar + 1;
-        }
-      }
-      return this.empresasPertenecientes;
-    });
-    return [];
-  }
+  // obtenerProyectos(idEmpresa: number) {
+  //   this.proyectos = [];
+  //   this.proyectoService.obtener(idEmpresa).subscribe((datos) => {
+  //     this.proyectos = datos;
+  //     this.filteredProyectos = this.proyectoControl.valueChanges.pipe(
+  //       startWith(''),
+  //       map((value) => {
+  //         const stringValue = typeof value === 'string' ? value : '';
+  //         return this._filter(stringValue);
+  //       })
+  //     );
+  //     let idAlmacenado = Number(
+  //       this.zvSeguridadService.obtenerIdProyectoLocalStorage()
+  //     );
+  //     if (idAlmacenado > 0) {
+  //       this.idProyecto = idAlmacenado;
+  //       this.zvSeguridadService.guardarIdProyectoLocalStorage(idAlmacenado);
+  //       this.recargar = this.recargar + 1;
+  //     } else {
+  //       this._UsuarioXIdUsuario
+  //         .obtenerUltimaSeccionUsuarioXIUsuario(this.idUsuario)
+  //         .subscribe((data) => {
+  //           if (data.idProyecto == 0) {
+  //             data.idProyecto = datos[0].id;
+  //           }
+  //           this.zvSeguridadService.guardarIdProyectoLocalStorage(
+  //             data.idProyecto
+  //           );
+  //           this.zvSeguridadService.guardaIdEmpresaLocalStorage(data.idEmpresa);
+
+  //           this.obtenerProyectos(this.selectedEmpresa);
+  //           this.idProyecto = data.idProyecto;
+  //           this.recargar = this.recargar + 1;
+  //         });
+  //     }
+  //   });
+  // }
+
+  // cargarEmpresas(): EmpresaDTO[] {
+  //   let hayToken = this.zvSeguridadService.zfObtenerToken();
+  //   if (typeof hayToken === 'undefined' || !hayToken?.length) {
+  //     return [];
+  //   }
+  //   this.esLogueado = this.zvSeguridadService.zfEstaLogueadoBoolean();
+  //   let idEmpresa = this.zvSeguridadService.obtenIdEmpresaLocalStorage();
+  //   this.selectedEmpresa = Number(idEmpresa);
+  //   console.log(
+  //     'esta es la empresa que esta en el localstorage',
+  //     this.selectedEmpresa
+  //   );
+  //   this._UsuarioEmpresa.obtenEmpresasPorUsuario().subscribe((empresas) => {
+  //     this.empresasPertenecientes = empresas;
+  //     if (empresas.length > 0 && this.selectedEmpresa <= 0) {
+  //       this.selectedEmpresa = empresas[0].id;
+  //       this.idUsuario = Number(
+  //         this.zvSeguridadService.zfObtenerCampoJwt('idUsuario')
+  //       );
+  //       this.GuardarUltimoProyectoAndEmpresa();
+  //       this.zvSeguridadService.guardaIdEmpresaLocalStorage(
+  //         this.selectedEmpresa
+  //       );
+  //       if (this.selectedEmpresa > 0) {
+  //         this.obtenerProyectos(this.selectedEmpresa);
+  //         this.recargar = this.recargar + 1;
+  //       }
+  //     }
+  //     return this.empresasPertenecientes;
+  //   });
+  //   return [];
+  // }
 
   logout() {
     this.recargar = 0;
@@ -289,48 +295,109 @@ export class AppComponent implements OnInit, OnDestroy {
     this.onSideNavChange = !this.onSideNavChange;
   }
 
-  GuardarUltimoProyectoAndEmpresa() {
+  // GuardarUltimoProyectoAndEmpresa() {
+  //   this._UsuarioXIdUsuario
+  //     .obtenerUltimaSeccionUsuarioXIUsuario(this.idUsuario)
+  //     .subscribe((datos) => {
+  //       this.idTableUltimoRegistro = Number(datos.id);
+  //       if (datos.id > 0) {
+  //         this.selectedEmpresa = datos.idEmpresa;
+  //         this.idProyecto = datos.idProyecto;
+  //         this.proyectoService
+  //           .obtenerXId(datos.idProyecto, datos.idEmpresa)
+  //           .subscribe((datos) => {
+  //             this.proyectoControl.setValue(datos.nombre);
+  //             this.proyectoString = datos.nombre;
+  //           });
+  //         this.zvSeguridadService.guardarIdProyectoLocalStorage(
+  //           this.idProyecto
+  //         );
+  //       } else {
+  //         let nuevoRegistro: usuarioUltimaSeccion = {
+  //           id: 0,
+  //           idProyecto: this.idProyecto,
+  //           idEmpresa: this.selectedEmpresa,
+  //           idUsuario: this.idUsuario,
+  //         };
+  //         this._UsuarioXIdUsuario
+  //           .crearUltimaSeccionUsuario(nuevoRegistro)
+  //           .subscribe((datos) => {
+  //             this.selectedEmpresa = datos.idEmpresa;
+  //             this.idProyecto = datos.idProyecto;
+  //             this.zvSeguridadService.guardarIdProyectoLocalStorage(
+  //               this.idProyecto
+  //             );
+  //             this.recargar++;
+  //             this._UsuarioEmpresaService
+  //               .actualizarClaims()
+  //               .subscribe((datos) => {
+  //                 this.actualizaClaims();
+  //                 this._UsuarioEmpresaService.zfGuardarToken(datos);
+  //               });
+  //           });
+  //       }
+  //     });
+  // }
+
+  obtenerUltimaSeccionEmpresaYProyecto() {
+    let hayToken = this.zvSeguridadService.zfObtenerToken();
+    if (typeof hayToken === 'undefined' || !hayToken?.length) {
+      return;
+    }
+    this.esLogueado = this.zvSeguridadService.zfEstaLogueadoBoolean();
     this._UsuarioXIdUsuario
       .obtenerUltimaSeccionUsuarioXIUsuario(this.idUsuario)
       .subscribe((datos) => {
-        this.idTableUltimoRegistro = Number(datos.id);
         if (datos.id > 0) {
-          this.selectedEmpresa = datos.idEmpresa;
-          this.idProyecto = datos.idProyecto;
-          this.proyectoService
-            .obtenerXId(datos.idProyecto, datos.idEmpresa)
-            .subscribe((datos) => {
-              this.proyectoControl.setValue(datos.nombre);
-              this.proyectoString = datos.nombre;
-              this.zvSeguridadService.guardarIdProyectoLocalStorage(
-                this.idProyecto
-              );
-            });
+          // Guardar en localstorage Empresa y Proyecto
+          this.zvSeguridadService.guardaIdEmpresaLocalStorage(datos.idEmpresa);
+          this.zvSeguridadService.guardarIdProyectoLocalStorage(datos.idProyecto);
+          this.cargarEmpresasXUsuario();
         } else {
-          let nuevoRegistro: usuarioUltimaSeccion = {
-            id: 0,
-            idProyecto: this.idProyecto,
-            idEmpresa: this.selectedEmpresa,
-            idUsuario: this.idUsuario,
-          };
-          this._UsuarioXIdUsuario
-            .crearUltimaSeccionUsuario(nuevoRegistro)
-            .subscribe((datos) => {
-              this.selectedEmpresa = datos.idEmpresa;
-              this.idProyecto = datos.idProyecto;
-              this.zvSeguridadService.guardarIdProyectoLocalStorage(
-                this.idProyecto
-              );
-              this.recargar++;
-              this._UsuarioEmpresaService
-                .actualizarClaims()
-                .subscribe((datos) => {
-                  this.actualizaClaims();
-                  this._UsuarioEmpresaService.zfGuardarToken(datos);
-                });
+          this.zvSeguridadService.guardaIdEmpresaLocalStorage(0);
+          this.zvSeguridadService.guardarIdProyectoLocalStorage(0);
+          // Obtenemos Empresa y Proyecto
+          this.cargarEmpresasXUsuario();
+
+          // Generar nuevo registro para ultima seccion y guardarlo
+          setTimeout(() => {
+            let nuevoRegistro: usuarioUltimaSeccion = {
+              id: 0,
+              idProyecto: Number(this.zvSeguridadService.obtenerIdProyectoLocalStorage()),
+              idEmpresa: Number(this.zvSeguridadService.obtenIdEmpresaLocalStorage()),
+              idUsuario: this.idUsuario,
+            };
+            this._UsuarioXIdUsuario.crearUltimaSeccionUsuario(nuevoRegistro).subscribe((datos) => {
+              this._UsuarioEmpresaService.actualizarClaims().subscribe((datos) => {
+                this.actualizaClaims();
+                this._UsuarioEmpresaService.zfGuardarToken(datos);
+                this.recargar++;
+              });
             });
+          }, 500);
         }
       });
+  }
+
+  cargarEmpresasXUsuario() {
+    this._UsuarioEmpresa.obtenEmpresasPorUsuario().subscribe((empresas) => {
+      this.empresasPertenecientes = empresas;
+      let idEmpresa = Number(this.zvSeguridadService.obtenIdEmpresaLocalStorage());
+      if (empresas.length > 0) {
+        if (idEmpresa == 0) {
+          this.zvSeguridadService.guardaIdEmpresaLocalStorage(empresas[0].id);
+        }
+        this.cargarProyectosXEmpresa();
+      }
+    });
+  }
+
+  cargarProyectosXEmpresa() {
+    const idEmpresa = Number(this.zvSeguridadService.obtenIdEmpresaLocalStorage());
+
+    this.proyectoService.obtener(idEmpresa).subscribe((datos) => {
+      this.actualizarListadoProyectos(datos);
+    });
   }
 
   selectionChangeContratista(event: MatAutocompleteSelectedEvent) {
@@ -338,38 +405,30 @@ export class AppComponent implements OnInit, OnDestroy {
     this.isLoading = true;
 
     this.proyectoControl.setValue(selectedProyecto.nombre);
-    const exixteProyecto = this.proyectos.filter(
-      (e) => e.nombre === selectedProyecto.nombre
-    );
+    const exixteProyecto = this.proyectos.filter((e) => e.nombre === selectedProyecto.nombre);
     if (exixteProyecto.length > 0) {
-      const idProyecto = selectedProyecto.id;
-      if (idProyecto > 0) {
-        this.zvSeguridadService.guardarIdProyectoLocalStorage(idProyecto);
-        this.recargar = this.recargar + 1;
-        this.proyectoIdChange = idProyecto;
-        let idEmpresa = Number(this.selectedEmpresa);
-        let nuevoRegistro: usuarioUltimaSeccion = {
-          id: this.idTableUltimoRegistro,
-          idProyecto: this.proyectoIdChange,
-          idEmpresa: idEmpresa,
-          idUsuario: this.idUsuario,
-        };
-        this._UsuarioXIdUsuario
-          .editarUltimaSeccionUsuario(nuevoRegistro)
-          .subscribe((datos) => {
+      this.zvSeguridadService.guardarIdProyectoLocalStorage(selectedProyecto.id);
+      this._UsuarioXIdUsuario
+        .obtenerUltimaSeccionUsuarioXIUsuario(this.idUsuario)
+        .subscribe((datos) => {
+          // editar registro para ultima seccion y guardarlo
+          let nuevoRegistro: usuarioUltimaSeccion = {
+            id: datos.id,
+            idProyecto: Number(this.zvSeguridadService.obtenerIdProyectoLocalStorage()),
+            idEmpresa: Number(this.zvSeguridadService.obtenIdEmpresaLocalStorage()),
+            idUsuario: this.idUsuario,
+          };
+          this._UsuarioXIdUsuario.editarUltimaSeccionUsuario(nuevoRegistro).subscribe((datos) => {
             this.recargar++;
-            this._UsuarioEmpresaService
-              .actualizarClaims()
-              .subscribe((datos) => {
-                this.actualizaClaims();
-                this._UsuarioEmpresaService.zfGuardarToken(datos);
-                this.zvSeguridadService.actualizarToken(datos.token);
-                this.proyectoStateService.setProyectoNombre(selectedProyecto);
-                this.isLoading = false;
-              });
+            this._UsuarioEmpresaService.actualizarClaims().subscribe((datos) => {
+              this.actualizaClaims();
+              this._UsuarioEmpresaService.zfGuardarToken(datos);
+              this.zvSeguridadService.actualizarToken(datos.token);
+              this.proyectoStateService.setProyectoNombre(selectedProyecto);
+              this.isLoading = false;
+            });
           });
-        this.recargar++;
-      }
+        });
     }
   }
 }
