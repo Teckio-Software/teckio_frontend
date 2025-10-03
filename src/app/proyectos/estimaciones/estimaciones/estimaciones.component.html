@@ -7,6 +7,14 @@
   <mat-tab label="Avance de obra">
     <div *ngIf="selectedIndex === 0">
       <section class="contenedor-section">
+        <app-alert
+        *ngIf="alertaTipo !== AlertaTipo.none"
+        [alertaTipo]="alertaTipo"
+        [alertaMessage]="alertaMessage"
+        (close)="cerrarAlerta()"
+      >
+      </app-alert>
+
         <div
           class="cont-acciones"
           style="display: flex; justify-content: center; align-items: center"
@@ -46,6 +54,22 @@
               </select>
             </div>
             <!-- type="button" class="btn-close" aria-label="Close" " -->
+             <div>
+              <button
+                type="button"
+                class="custom-button2 p-1"
+                placement="bottom"
+                ngbTooltip="Imprimir"
+                triggers="mouseenter:mouseleave"
+                placement="left"
+                (click)="imprimir()"
+              >
+                <img
+                  src="./assets/print.svg"
+                  alt="Imprimir icono"
+                />
+              </button>
+            </div>
             <div>
               <button
                 *ngIf="periodo?.esCerrada === false"
@@ -59,6 +83,7 @@
                 <img src="assets/borrar.svg" alt="" />
               </button>
             </div>
+            
           </div>
         </div>
 
@@ -83,7 +108,7 @@
                 class="button bg-colorButton hover:bg-hoverButton text-[#f2f2f2]"
                 [disabled]="isLoading || isButtonDisabled"
               >
-                Nuevo Periodo
+                Nuevo período
                 <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
               </button>
             </div>
@@ -113,7 +138,7 @@
                   class="button bg-colorButton hover:bg-hoverButton text-[#f2f2f2]"
                   [disabled]="isLoading || isButtonDisabled"
                 >
-                  Nuevo Periodo
+                  Nuevo período
                   <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
                 </button>
               </div>
@@ -140,7 +165,7 @@
                   <legend class="legend">Subtotal</legend>
 
                   <input
-                    class="input-field border-2"
+                    class="input-field border-2 text-end"
                     type="text"
                     placeholder="0"
                     disabled
@@ -154,7 +179,7 @@
                   <legend class="legend">IVA</legend>
 
                   <input
-                    class="input-field border-2"
+                    class="input-field border-2 text-end"
                     type="text"
                     placeholder="0"
                     disabled
@@ -168,7 +193,7 @@
                   <legend class="legend">Total</legend>
 
                   <input
-                    class="input-field border-2"
+                    class="input-field border-2 text-end"
                     type="text"
                     placeholder="0"
                     disabled
@@ -190,37 +215,38 @@
             margin: 0 auto;
             margin-top: 10px;
           "
+          class="rounded-lg shadow-md"
         >
           <table
-            class="table-striped table-hover titulo-arbol2"
-            class="resizable-container"
+            class="table-striped table-hover"
+            class="w-[95%] h-[100px] border-b-4 border-b-slate-800 overflow-hidden resize-y cursor-ns-resize relative mx-auto pb-[7px] bg-white/35"
             style="height: 0px"
           >
-            <thead>
+            <thead class="text-white text-center" >
               <tr>
-                <th colspan="6" class="style-encabezado-ac-act"></th>
-                <th colspan="3" class="style-encabezado-ac-act">Anterior</th>
-                <th colspan="3" class="style-encabezado-ac-act" s>Actual</th>
-                <th colspan="3" class="style-encabezado-ac-act">Acumulado</th>
+                <th colspan="6" class="bg-colorButton">Presupuesto</th>
+                <th colspan="3" class="bg-colorButton">Anterior</th>
+                <th colspan="3" class="bg-colorButton" s>Actual</th>
+                <th colspan="3" class="bg-colorButton">Acumulado</th>
               </tr>
             </thead>
 
-            <thead>
-              <th class="cabecera" style="width: 2%">-</th>
-              <th class="cabecera" style="width: 8%">Código</th>
-              <th class="cabecera" style="width: 18%">Descripción</th>
-              <th class="cabecera" style="width: 6%">Unidad</th>
-              <th class="cabecera" style="width: 6%">Cantidad</th>
-              <th class="cabecera" style="width: 6%">Importe</th>
-              <th class="cabecera" style="width: 6%">Avance</th>
-              <th class="cabecera" style="width: 6%">%</th>
-              <th class="cabecera" style="width: 6%">Importe</th>
-              <th class="cabecera" style="width: 6%">Avance</th>
-              <th class="cabecera" style="width: 6%">%</th>
-              <th class="cabecera" style="width: 6%">Importe</th>
-              <th class="cabecera" style="width: 6%">Avance</th>
-              <th class="cabecera" style="width: 6%">%</th>
-              <th class="cabecera" style="width: 6%">Importe</th>
+            <thead class="text-white" >
+              <th class="bg-primario" style="width: 2%">-</th>
+              <th class="bg-primario" style="width: 8%">Código</th>
+              <th class="bg-primario" style="width: 18%">Descripción</th>
+              <th class="bg-primario" style="width: 6%">Unidad</th>
+              <th class="bg-primario" style="width: 6%">Cantidad</th>
+              <th class="bg-primario" style="width: 6%">Importe</th>
+              <th class="bg-primario" style="width: 6%">Avance</th>
+              <th class="bg-primario" style="width: 6%">%</th>
+              <th class="bg-primario" style="width: 6%">Importe</th>
+              <th class="bg-primario" style="width: 6%">Avance</th>
+              <th class="bg-primario" style="width: 6%">%</th>
+              <th class="bg-primario" style="width: 6%">Importe</th>
+              <th class="bg-primario" style="width: 6%">Avance</th>
+              <th class="bg-primario" style="width: 6%">%</th>
+              <th class="bg-primario" style="width: 6%">Importe</th>
             </thead>
           </table>
           <div
@@ -231,13 +257,13 @@
               margin: 0 auto;
             "
             class="floating-window"
-            class="resizable-container"
+            class="h-[100px] border-b-4 border-b-slate-800 overflow-hidden resize-y cursor-ns-resize relative mx-auto pb-[7px] bg-white/35 overflow-y-scroll"
           >
             <tree-view [treeData]="estimaciones">
               <ng-template let-estimacion>
-                <table class="table-striped table-hover table-arbol">
+                <table class="table-striped table-hover table-arbol ">
                   <tbody>
-                    <tr>
+                    <tr class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]" >
                       <ng-template #tooltipContent>
                         <div
                           style="
@@ -255,7 +281,7 @@
 
                               </div> -->
                           <table
-                            class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos"
+                            class="w-[95%] h-[100px] border-b-4 border-b-slate-800 overflow-hidden resize-y cursor-ns-resize relative mx-auto pb-[7px] bg-white/35"
                           >
                             <thead>
                               <tr style="position: sticky; top: 0">
@@ -325,10 +351,9 @@
                           padding-left: 0px;
                         "
                         class="cont-drill"
-
                         (dblclick)="obtenerPeriodosXEstimacion(estimacion)"
-                      [ngbTooltip]="tooltipContent"
-                      triggers="dblclick"
+                        [ngbTooltip]="tooltipContent"
+                        triggers="dblclick"
                       >
                         <input
                           autocomplete="off"
@@ -355,8 +380,8 @@
                         "
                         class="cont-drill"
                         (dblclick)="obtenerPeriodosXEstimacion(estimacion)"
-                      [ngbTooltip]="tooltipContent"
-                      triggers="dblclick"
+                        [ngbTooltip]="tooltipContent"
+                        triggers="dblclick"
                       >
                         <input
                           autocomplete="off"
@@ -411,7 +436,7 @@
                         <input
                           autocomplete="off"
                           type="text"
-                          class=""
+                          class="text-end"
                           id="input-table"
                           [(ngModel)]="estimacion.cantidadConFormato"
                           readonly
@@ -436,7 +461,7 @@
                         <input
                           autocomplete="off"
                           type="text"
-                          class=""
+                          class="text-end"
                           id="input-table"
                           [(ngModel)]="estimacion.importeConFormato"
                           readonly
@@ -461,7 +486,7 @@
                         <input
                           autocomplete="off"
                           type="text"
-                          class=""
+                          class="text-end"
                           id="input-table"
                           [(ngModel)]="
                             estimacion.cantidadAvanceAcumuladoConFormato
@@ -488,7 +513,7 @@
                         <input
                           autocomplete="off"
                           type="text"
-                          class=""
+                          class="text-end"
                           id="input-table"
                           [(ngModel)]="
                             estimacion.porcentajeAvanceAcumuladoConFormato
@@ -515,7 +540,7 @@
                         <input
                           autocomplete="off"
                           type="text"
-                          class=""
+                          class="text-end"
                           id="input-table"
                           [(ngModel)]="
                             estimacion.importeDeAvanceAcumuladoConFormato
@@ -542,7 +567,7 @@
                         <input
                           autocomplete="off"
                           type="text"
-                          class=""
+                          class="text-end"
                           id="input-table"
                           [(ngModel)]="estimacion.cantidadAvance"
                           (keydown.enter)="asignarCantidad(estimacion)"
@@ -576,7 +601,7 @@
                         <input
                           autocomplete="off"
                           type="text"
-                          class=""
+                          class="text-end"
                           id="input-table"
                           [(ngModel)]="estimacion.cantidadAvanceConFormato"
                           readonly
@@ -608,7 +633,7 @@
                         <input
                           autocomplete="off"
                           type="text"
-                          class=""
+                          class="text-end"
                           id="input-table"
                           [(ngModel)]="estimacion.cantidadAvanceConFormato"
                           readonly
@@ -642,7 +667,7 @@
                         <input
                           autocomplete="off"
                           type="text"
-                          class=""
+                          class="text-end"
                           id="input-table"
                           [(ngModel)]="estimacion.porcentajeAvance"
                           (keydown.enter)="asignarPorcentaje(estimacion)"
@@ -676,7 +701,7 @@
                         <input
                           autocomplete="off"
                           type="text"
-                          class=""
+                          class="text-end"
                           id="input-table"
                           [(ngModel)]="estimacion.porcentajeAvanceConFormato"
                           readonly
@@ -708,7 +733,7 @@
                         <input
                           autocomplete="off"
                           type="text"
-                          class=""
+                          class="text-end"
                           id="input-table"
                           [(ngModel)]="estimacion.porcentajeAvanceConFormato"
                           readonly
@@ -738,7 +763,7 @@
                         <input
                           autocomplete="off"
                           type="text"
-                          class=""
+                          class="text-end"
                           id="input-table"
                           [(ngModel)]="estimacion.importeDeAvanceConFormato"
                           readonly
@@ -768,7 +793,7 @@
                         <input
                           autocomplete="off"
                           type="text"
-                          class=""
+                          class="text-end"
                           id="input-table"
                           [(ngModel)]="estimacion.cantidadAvanceTotalConFormato"
                           readonly
@@ -800,7 +825,7 @@
                         <input
                           autocomplete="off"
                           type="text"
-                          class=""
+                          class="text-end"
                           id="input-table"
                           [(ngModel)]="estimacion.porcentajeTotalConFormato"
                           readonly
@@ -832,7 +857,7 @@
                         <input
                           autocomplete="off"
                           type="text"
-                          class=""
+                          class="text-end"
                           id="input-table"
                           [(ngModel)]="estimacion.importeTotalConFormato"
                           readonly

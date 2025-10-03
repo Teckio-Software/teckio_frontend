@@ -35,8 +35,12 @@ export class AddCuentaContableComponent {
     tipoCuentaContable: 0
   }
   
-
-
+  errorCo: boolean = false;
+  errorDe: boolean = false;
+  errorRu: boolean = false;
+  errorTM: boolean = false;
+  errorCAS: boolean = false;
+  errorGlobal: boolean = false;
 
   constructor(
     private cuentaContableService: CuentaContableService,
@@ -66,6 +70,39 @@ export class AddCuentaContableComponent {
 
 
   creaNuevaCuentaContable(){
+    let c = true;
+    if((this.nuevaCC.codigo.trim()=='')&&
+      (this.nuevaCC.descripcion.trim()=='') &&
+      (this.nuevaCC.idRubro<=0) &&
+      (this.nuevaCC.tipoMoneda<=0) &&
+      (this.nuevaCC.idCodigoAgrupadorSat<=0)
+      ){
+        this.errorGlobal = true;
+        return;
+      }
+    if(this.nuevaCC.codigo.trim()==''){
+      this.errorCo = true;
+      c = false;
+    }
+    if(this.nuevaCC.descripcion.trim()==''){
+      this.errorDe = true;
+      c = false;
+    }
+    if(this.nuevaCC.idRubro<=0){
+      this.errorRu = true;
+      c = false;
+    }
+    if(this.nuevaCC.tipoMoneda<=0){
+      this.errorTM = true;
+      c = false;
+    }
+    if(this.nuevaCC.idCodigoAgrupadorSat<=0){
+      this.errorCAS = true;
+      c = false;
+    }
+    if(!c){
+      return;
+    }
     this.dialogRef.close(this.nuevaCC); // Cierra el modal sin guardar
   }
 
@@ -75,6 +112,15 @@ export class AddCuentaContableComponent {
     .subscribe((respuesta) => {
       this.rubros = respuesta;
     });
+  }
+
+  limpiarErrores(){
+    this.errorCo = false;
+    this.errorDe = false;
+    this.errorRu = false;
+    this.errorTM = false;
+    this.errorCAS = false;
+    this.errorGlobal = false;
   }
 
   nuevaCC: cuentaContableCreacionDTO =  {
@@ -94,6 +140,7 @@ export class AddCuentaContableComponent {
   }
 
   cerrarDialog() {
+    this.limpiarErrores();
     this.dialogRef.close(false); // Cierra el modal sin guardar
   }
   

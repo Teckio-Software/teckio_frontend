@@ -4,10 +4,10 @@
   color: #B5DCE0;
 }
 
-.none {
+/* .none {
   border: solid 2px #f1f6f8;
   background-color: #bee2e6 ;
-}
+} */
 
 .orden {
   -webkit-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.32);
@@ -48,11 +48,11 @@
  td {
    padding: 2px;
  }
-
+/* 
  .none {
    border: solid 1px #f1f6f8;
    background-color: rgb(249, 254, 255) ;
- }
+ } */
 
  .cont-table {
    width: 100%;

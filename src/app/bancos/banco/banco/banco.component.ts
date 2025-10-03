@@ -29,6 +29,8 @@ export class BancoComponent {
 
   selectedEmpresa = 0;
 
+  isLoading: boolean = true;
+
   constructor(private BancoService: BancoService,
     private FormBuilder: FormBuilder,
     private _SeguridadEmpresa: SeguridadService
@@ -52,6 +54,7 @@ export class BancoComponent {
     this.BancoService.ObtenerBancos(this.selectedEmpresa).subscribe((datos) => {
       this.banco = datos;
       this.bancoReset = datos;
+      this.isLoading = false;
     })
   }
 

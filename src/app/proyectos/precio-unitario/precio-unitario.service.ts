@@ -1,11 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment.development';
-import { DatosParaCopiarArmadoDTO, datosParaCopiarDTO, precioUnitarioDTO, preciosParaEditarPosicionDTO } from './tsPrecioUnitario';
+import { DatosParaCopiarArmadoDTO, DatosParaImportarCatalogoGeneralDTO, datosParaCopiarDTO, precioUnitarioDTO, preciosParaEditarPosicionDTO } from './tsPrecioUnitario';
 import { Observable } from 'rxjs';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import { InsumoParaExplosionDTO } from 'src/app/catalogos/insumo/tsInsumo';
 import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
+import { precioUnitarioDetalleDTO } from '../precio-unitario-detalle/tsPrecioUnitarioDetalle';
 
 @Injectable({
     providedIn: 'root'
@@ -26,12 +27,28 @@ export class PrecioUnitarioService {
         return this.HttpClient.get<precioUnitarioDTO[]>(`${this.apiUrl}/${idEmpresa}/obtenerConceptos/${idProyecto}`)
     }
 
+    public ObtenerDetallesPorPUImpresion(idEmpresa: number, ids: number[]): Observable<precioUnitarioDetalleDTO[]> {
+        return this.HttpClient.post<precioUnitarioDetalleDTO[]>(`${this.apiUrl}/${idEmpresa}/ObtenerDetallesPorPUImpresion`, ids)
+    }
+
+    public autorizarPresupuesto(idProyecto: number, idEmpresa: number): Observable<any> {
+        return this.HttpClient.get(`${this.apiUrl}/${idEmpresa}/AutorizarPresupuesto/${idProyecto}`)
+    }
+
+    public autorizarXPrecioUnitario(precioUniatrio: precioUnitarioDTO, idEmpresa: number): Observable<any> {
+        return this.HttpClient.post(`${this.apiUrl}/${idEmpresa}/AutorizarXPrecioUnitario`, precioUniatrio)
+    }
+
     public crearYObtener(precioUnitario: precioUnitarioDTO, idEmpresa: number) {
         return this.HttpClient.post<precioUnitarioDTO[]>(`${this.apiUrl}/${idEmpresa}/crear`, precioUnitario)
     }
 
     public editar(precioUnitario: precioUnitarioDTO, idEmpresa: number) {
         return this.HttpClient.post<precioUnitarioDTO[]>(`${this.apiUrl}/${idEmpresa}/editar`, precioUnitario)
+    }
+
+    public partirConcepto(registro: precioUnitarioDTO, idEmpresa: number): Observable<precioUnitarioDTO[]>{
+        return this.HttpClient.post<precioUnitarioDTO[]>(`${this.apiUrl}/${idEmpresa}/partirConcepto`, registro);
     }
 
     public editarIndirectoPrecioUnitario(precioUnitario: precioUnitarioDTO, idEmpresa: number) {
@@ -50,6 +67,22 @@ export class PrecioUnitarioService {
         return this.HttpClient.post<precioUnitarioDTO[]>(`${this.apiUrl}/${idEmpresa}/copiaregistros`, datos);
     }
 
+    public importarCatalogoAPrecioUnitario(datos: DatosParaImportarCatalogoGeneralDTO, idEmpresa: number) {
+        return this.HttpClient.post(`${this.apiUrl}/${idEmpresa}/importarCatalogoAPrecioUnitario`, datos);
+    }
+
+    public eliminarCatalogoGeneral(lista: precioUnitarioDTO[], idEmpresa: number) {
+        return this.HttpClient.post(`${this.apiUrl}/${idEmpresa}/eliminarCatalogoGeneral`, lista);
+    }
+
+    public agregarCatalogoGeneral(lista: precioUnitarioDTO[], idEmpresa: number) {
+        return this.HttpClient.post<precioUnitarioDTO[]>(`${this.apiUrl}/${idEmpresa}/agregarCatalogoGeneral`, lista);
+    }
+
+    public remplazarCatalogoGeneral(lista: precioUnitarioDTO[], idEmpresa: number) {
+        return this.HttpClient.post(`${this.apiUrl}/${idEmpresa}/remplazarCatalogoGeneral`, lista);
+    }
+
     public copiarArmado(datos: DatosParaCopiarArmadoDTO, idEmpresa: number) {
         return this.HttpClient.post<precioUnitarioDTO[]>(`${this.apiUrl}/${idEmpresa}/copiararmado`, datos)
     }
@@ -60,6 +93,12 @@ export class PrecioUnitarioService {
 
     public explosionDeInsumos(idProyecto: number, idEmpresa: number) {
         return this.HttpClient.get<InsumoParaExplosionDTO[]>(`${this.apiUrl}/${idEmpresa}/obtenerExplosionDeInsumos/${idProyecto}`)
+    }
+
+    public obtenerExplosionDeInsumosXPrecioUnitario(precioUnitario: precioUnitarioDTO, idEmpresa: number) {
+      console.log("aqui esta el objeto real", precioUnitario);
+
+        return this.HttpClient.post<InsumoParaExplosionDTO[]>(`${this.apiUrl}/${idEmpresa}/obtenerExplosionDeInsumosXPrecioUnitario`, precioUnitario)
     }
 
     public editarDesdeExplosion(insumo: InsumoParaExplosionDTO, idEmpresa: number) {

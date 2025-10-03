@@ -54,7 +54,8 @@ export class ConceptoComponent implements OnInit {
     idEspecialidad: 0,
     descripcionEspecialidad: '',
     idProyecto: 0,
-    costoUnitario: 0
+    costoUnitario: 0,
+    costoUnitarioConFormato: '$0.00'
   };
   concepto: conceptoDTO = {
     id: 0,
@@ -64,7 +65,8 @@ export class ConceptoComponent implements OnInit {
     idEspecialidad: 0,
     descripcionEspecialidad: '',
     idProyecto: 0,
-    costoUnitario: 0
+    costoUnitario: 0,
+    costoUnitarioConFormato: '$0.00'
   };
   zvColumnasAMostrar = ['detalle', 'descripcion', 'unidad', 'agrupacion', 'acciones'];
   cantidadTotalRegistros: any;
@@ -75,6 +77,9 @@ export class ConceptoComponent implements OnInit {
   proyectosReset!: proyectoDTO[];
   proyectos!: proyectoDTO[];
 
+  isLoading: boolean = true;
+
+  selectedConcepto: number = 0;
   
   ngOnInit(): void {
     this.cargarRegistros();
@@ -102,6 +107,7 @@ export class ConceptoComponent implements OnInit {
     .obtenerPaginado(this.idProyecto, this.selectedEmpresa)
     .subscribe((conceptos) => {
       this.conceptos = conceptos;
+      this.isLoading = false
     });
   }
 
@@ -224,6 +230,10 @@ export class ConceptoComponent implements OnInit {
     .subscribe(() =>{
 
     })
+  }
+
+  selectConcepto(id: number){
+    this.selectedConcepto = id;
   }
 
   // cambiarProyecto(proyecto: proyectoDTO){

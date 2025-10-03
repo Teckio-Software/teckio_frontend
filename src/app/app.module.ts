@@ -157,6 +157,16 @@ import { PrecioUnitarioModalComponent } from './proyectos/precio-unitario/precio
 import { ResumenOrdenesCompraComponent } from './compras/resumen-ordenes-compra/resumen-ordenes-compra.component';
 import { LottieModule } from 'ngx-lottie';
 import player from 'lottie-web';
+import { ModalAsigacionComponent } from './seguridad/usuario-multi-empresa-filtrado/modal-asigacion/modal-asigacion.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { ProductosServiciosComponent } from './gestion-ventas/productos-servicios/productos-servicios.component';
+import { ImprimirModalComponent } from './proyectos/precio-unitario/precio-unitario/imprimir-modal/imprimir-modal.component';
+import { FieldsetModule } from 'primeng/fieldset';
+import { A11yModule } from "@angular/cdk/a11y";
+import { UppercaseInputDirective } from './directiva/uppercase.directive';
+import { OnlyNumbersDirective } from './directiva/onlynumbers.directive';
+import { AuditoriaService } from './seguridad/auditorias/auditorias.service';
+import { AuditoriasComponent } from './seguridad/auditorias/auditorias.component';
 
 export function playerFactory() {
   return player;
@@ -304,6 +314,13 @@ export function playerFactory() {
     ProductosComponent,
     PrecioUnitarioModalComponent,
     ResumenOrdenesCompraComponent,
+    ModalAsigacionComponent,
+    ProductosServiciosComponent,
+    ImprimirModalComponent,
+    UppercaseInputDirective,
+    OnlyNumbersDirective,
+    AuditoriasComponent
+
   ],
 
   imports: [
@@ -324,7 +341,10 @@ export function playerFactory() {
     NgbTooltipModule,
     GanttComponentNG,
     OrdenCompraModule,
-  ],
+    ScrollingModule,
+    FieldsetModule,
+    A11yModule,
+],
   exports: [LeftMenuComponent],
   providers: [
     SidenavService,

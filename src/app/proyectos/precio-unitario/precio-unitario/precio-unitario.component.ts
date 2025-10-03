@@ -1,17 +1,17 @@
 import {
+  DatosParaImportarCatalogoGeneralDTO,
+  precioUnitarioDTO,
+} from './../tsPrecioUnitario';
+import {
   Component,
-  EventEmitter,
-  HostBinding,
   HostListener,
   OnInit,
-  Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { PrecioUnitarioService } from '../precio-unitario.service';
 import {
   detalleDesglosadoDTO,
-  precioUnitarioDTO,
   precioUnitarioCopiaDTO,
   datosParaCopiarDTO,
   DatosParaCopiarArmadoDTO,
@@ -32,50 +32,69 @@ import { tipoInsumoDTO } from 'src/app/catalogos/tipo-insumo/tsTipoInsumo';
 import { familiaInsumoDTO } from 'src/app/catalogos/familia-insumo/tsFamilia';
 import { GeneradoresDTO } from '../../Generadores/tsGeneradores';
 import { GeneradoresService } from '../../Generadores/generadores.service';
-import { Renderer2, ElementRef } from '@angular/core';
+import { ElementRef, ChangeDetectorRef } from '@angular/core';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import {
+  DataFSR,
+  ParametrosFsrXInsumoDTO,
   diasConsideradosDTO,
   factorSalarioIntegradoDTO,
   factorSalarioRealDTO,
   factorSalarioRealDetalleDTO,
 } from '../../fsr/tsFSR';
 import { FSRService } from '../../fsr/fsr.service';
-import { BehaviorSubject, connect, Observable } from 'rxjs';
+import { BehaviorSubject, finalize, Observable } from 'rxjs';
 import {
   InsumoDTO,
   InsumoParaExplosionDTO,
 } from 'src/app/catalogos/insumo/tsInsumo';
 import { InsumoService } from 'src/app/catalogos/insumo/insumo.service';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { DialogFSRComponent } from '../dialog-fsr/dialog-fsr.component';
-import { DialogExplosionInsumosComponent } from '../dialog-explosion-insumos/dialog-explosion-insumos.component';
 import { Unidades } from '../unidades';
 import { IndirectosComponent } from '../../indirectos/indirectos/indirectos.component';
-import { content } from 'html2canvas/dist/types/css/property-descriptors/content';
 import { IndirectosConceptoComponent } from '../../indirectos-concepto/indirectos-concepto/indirectos-concepto.component';
 import Swal from 'sweetalert2';
-import { eventListeners } from '@popperjs/core';
 import { ModalAlertComponent } from 'src/app/utilidades/modal-alert/modal-alert.component';
-import { da, de } from 'date-fns/locale';
 import { operacionesXPrecioUnitarioDetalleDTO } from '../../precio-unitario-detalle/tsOperacionesXPrecioUnitarioDetalle';
 import { EstimacionesService } from '../../estimaciones/estimaciones.service';
+import { error, log } from 'node:console';
+import { IndirectosServiceService } from '../../indirectos/indirectos-service.service';
 
 @Component({
   selector: 'app-precio-unitario',
   templateUrl: './precio-unitario.component.html',
   styleUrls: ['./precio-unitario.component.css'],
-  providers: [NgbTooltip], // Agrega NgbTooltip en la lista de providers
+  providers: [NgbTooltip],
 })
 export class PrecioUnitarioComponent implements OnInit {
   @ViewChild('tooltipContent') tooltipContent!: any;
   @ViewChild('tooltipIndirecto') tooltipIndirecto!: any;
+  @ViewChild('menuContainer') containerRef!: ElementRef;
+  @ViewChild('menuContainerAlertas') containerRefAlertas!: ElementRef;
 
+  @ViewChild('testInput') testInput: any;
+  @ViewChild('autoSumaInput') autoSumaInput: any;
+  @ViewChild('descripcionInput') descripcionInput: any;
+  @ViewChild('paginadoCopia') paginadoCopia: any;
+  @ViewChild('paginadoBase') paginadoBase: any;
+  @ViewChild('inputFiltradoCopia') inputFiltradoCopia: any;
+  @ViewChild('inputFiltrado') inputFiltrado: any;
 
+  @HostListener('document:click', ['$event'])
+  onClickFuera(event: MouseEvent) {
+    if (
+      this.mostrarMenu &&
+      this.containerRef &&
+      !this.containerRef.nativeElement.contains(event.target)
+    ) {
+      this.mostrarMenu = false;
+    }
+  }
 
-  @ViewChild(NgbTooltip) tooltip!: NgbTooltip; // Inicialización de la propiedad tooltip
+  @ViewChild(NgbTooltip) tooltip!: NgbTooltip;
+  estadoOriginal!: boolean;
   selectedIndex: number = 0;
   preciosUnitarios!: precioUnitarioDTO[];
   preciosUnitariosRefresco!: precioUnitarioDTO[];
@@ -94,6 +113,8 @@ export class PrecioUnitarioComponent implements OnInit {
   tiposInsumos!: tipoInsumoDTO[];
   familiasInsumos!: familiaInsumoDTO[];
   desglosados: detalleDesglosadoDTO[] = [];
+  detallesDesglose: precioUnitarioDetalleDTO[] = [];
+  totalDesglosados: number = 0;
   desglosadosCopia: detalleDesglosadoDTO[] = [];
   generadores!: GeneradoresDTO[];
   nombreProyecto: string = '';
@@ -125,11 +146,13 @@ export class PrecioUnitarioComponent implements OnInit {
     importeConFormato: '',
     costoBase: 0,
     costoBaseConFormato: '',
+    esAutorizado: false,
   };
   fsr: factorSalarioRealDTO = {
     id: 0,
     idProyecto: 0,
     porcentajeFsr: 0,
+    esCompuesto: false,
   };
   diasConsideradosFsiPagados!: diasConsideradosDTO[];
   diasConsideradosFsiNoTrabajados!: diasConsideradosDTO[];
@@ -181,6 +204,10 @@ export class PrecioUnitarioComponent implements OnInit {
     porcentajeIndirectoConFormato: '',
     posicion: 0,
     codigoPadre: '',
+    esCatalogoGeneral: false,
+    esAvanceObra: false,
+    esAdicional: false,
+    esSeleccionado: false,
   };
   selectedProyecto = 0;
   selectedProyecto2 = 0;
@@ -210,6 +237,9 @@ export class PrecioUnitarioComponent implements OnInit {
   diasPagados = 0;
   total = 0;
   totalConFormato = '';
+  totalSinIvaConFormato = '';
+  totalIvaConFormato = '';
+
   precioUnitarioPadreCreacion: precioUnitarioDTO = {
     hijos: [],
     id: 0,
@@ -243,11 +273,14 @@ export class PrecioUnitarioComponent implements OnInit {
     porcentajeIndirectoConFormato: '',
     posicion: 0,
     codigoPadre: '',
+    esCatalogoGeneral: false,
+    esAvanceObra: false,
+    esAdicional: false,
+    esSeleccionado: false,
   };
   seEstaCopiandoArmado = false;
   seEstaCopiandoConcepto = false;
   displayCarga: string = 'none';
-  // explosionInsumos!: InsumoParaExplosionDTO[];
   explosionInsumosReset!: InsumoParaExplosionDTO[];
   precioUnitarioEditado: precioUnitarioDTO = {
     hijos: [],
@@ -282,6 +315,10 @@ export class PrecioUnitarioComponent implements OnInit {
     porcentajeIndirectoConFormato: '',
     posicion: 0,
     codigoPadre: '',
+    esCatalogoGeneral: false,
+    esAvanceObra: false,
+    esAdicional: false,
+    esSeleccionado: false,
   };
   precioUnitarioDetalleEditado: precioUnitarioDetalleDTO = {
     id: 0,
@@ -305,9 +342,9 @@ export class PrecioUnitarioComponent implements OnInit {
     importeConFormato: '',
     costoBase: 0,
     costoBaseConFormato: '',
+    esAutorizado: false,
   };
   seEstaEditandoRegistro = false;
-  // Redimensionamiento de la tabla
   isResizing = false;
   startMouseY = 0;
   initialHeight = 0;
@@ -320,23 +357,32 @@ export class PrecioUnitarioComponent implements OnInit {
   selectedCantidad = 0;
   selectedRendimiento = 0;
   selectedCantidadConFormato = '0.0000';
-  selectedRendimientoConFormato = '0.0000';
+  selectedRendimientoConFormato = '$0.0000';
   esAsignarDetalleRendimiento = false;
   cargando = false;
+  tooltipVisible = false;
 
-  //lista operaciones por Detalle
+  existeCensatia: boolean = true;
+  existeIndirectos: boolean = true;
+
   operaciones: operacionesXPrecioUnitarioDetalleDTO[] = [];
   isRendimineto: boolean = true;
   isOpereciones: boolean = false;
   isOpenModal: boolean = false;
+  isOpenModalImprimir: boolean = false;
+  mostrarMenu = false;
+  mostrarMenuAlertas = false;
 
   contenedorPresupuesto: boolean = true;
   contenedorExplosionInsumo: boolean = false;
+  contenedorFSR: boolean = false;
+  contenedorCatalogoGeneral: boolean = false;
   appRecarga: number = 0;
   mostrarBotones: boolean = false;
   existenEstimaciones: boolean = false;
   selectedFileName: string = '';
   mensajeModal: string = '';
+  totalConIva: number = 0;
 
   operacionGenerador: string = '';
   generadorSeleccionado: GeneradoresDTO = {
@@ -347,22 +393,121 @@ export class PrecioUnitarioComponent implements OnInit {
     ejeY: '',
     ejeZ: '',
     cantidad: 0,
-    x: 0,
-    y: 0,
-    z: 0,
+    x: 1,
+    xDecimal: '$1.00',
+    y: 1,
+    yDecimal: '$1.00',
+    z: 1,
+    zDecimal: '$1.00',
+    totalDecimal: '$0.00',
     cantidadTotal: 0,
+    cantidadDecimal: '0.00',
     cantidadOperacion: '',
   };
+
+  precioUnitarioParaExplosion: precioUnitarioDTO = {
+    hijos: [],
+    id: 0,
+    idProyecto: 0,
+    cantidad: 0,
+    cantidadConFormato: '',
+    cantidadEditado: false,
+    cantidadExcedente: 0,
+    cantidadExcedenteConFormato: '',
+    tipoPrecioUnitario: 0,
+    costoUnitario: 0,
+    porcentajeIndirecto: 0,
+    porcentajeIndirectoConFormato: '',
+    costoUnitarioConFormato: '',
+    costoUnitarioEditado: false,
+    nivel: 0,
+    noSerie: 0,
+    idPrecioUnitarioBase: 0,
+    esDetalle: false,
+    idConcepto: 0,
+    codigo: '',
+    descripcion: '',
+    unidad: '',
+    precioUnitario: 0,
+    precioUnitarioConFormato: '',
+    precioUnitarioEditado: false,
+    importe: 0,
+    importeConFormato: '',
+    importeSeries: 0,
+    importeSeriesConFormato: '',
+    expandido: false,
+    posicion: 0,
+    codigoPadre: '',
+    esCatalogoGeneral: false,
+    esAvanceObra: false,
+    esAdicional: false,
+    esSeleccionado: false,
+  };
+
+  esAutorizado: boolean = false;
+
+  IdPrecioParaExplosion: number = 0;
+
+  preciosRemplazoCatalogo: precioUnitarioDTO[] = [];
+
+  preciosMarcados: precioUnitarioDTO[] = [];
+
+  proyectoSelected: proyectoDTO = {
+    id: 0,
+    codigoProyecto: '',
+    nombre: '',
+    noSerie: 0,
+    moneda: '',
+    presupuestoSinIva: 0,
+    tipoCambio: 0,
+    presupuestoSinIvaMonedaNacional: 0,
+    porcentajeIva: 0,
+    presupuestoConIvaMonedaNacional: 0,
+    anticipo: 0,
+    codigoPostal: 0,
+    domicilio: '',
+    fechaInicio: new Date(),
+    fechaFinal: new Date(),
+    tipoProgramaActividad: 0,
+    inicioSemana: 0,
+    esSabado: true,
+    esDomingo: true,
+    idPadre: 0,
+    nivel: 0,
+    expandido: false,
+    hijos: [],
+  };
+
+  selectedGenerador: number = 0;
+
+  esCompuesto: boolean = false;
+
   @ViewChild('InputOperacionGenerador') InputOperacionGenerador: any;
 
   archivosCargarExcels: FileList | null = null;
   @ViewChild('dialogPresupuestoExcel', { static: true })
   dialogCargaExcel!: TemplateRef<any>;
 
+  @ViewChild('dialogCatalogoRemplazar', { static: true })
+  dialogRemplazarCatalogo!: TemplateRef<any>;
+
+  dataFSR: DataFSR = {
+    diasConsideradosFsiNoTrabajados: [],
+    selectedEmpresa: 0,
+    diasConsideradosFsiPagados: [],
+    selectedProyecto: 0,
+    diasNoLaborales: 0,
+    diasPagados: 0,
+    fsrDetalles: [],
+    porcentajePrestaciones: 0,
+    esAutorizado: false,
+  };
+
+  parametrosXInsumo: ParametrosFsrXInsumoDTO[] = [];
+
   onMouseDown(event: MouseEvent) {
     const target = event.target as HTMLElement;
 
-    // Verificar si el botón izquierdo del mouse está presionado y si el cursor está en el borde inferior
     if (event.button === 0 && this.isCursorAtBottomBorder(target, event)) {
       this.enableResize(event);
     }
@@ -381,8 +526,6 @@ export class PrecioUnitarioComponent implements OnInit {
       if (target) {
         const deltaY = event.clientY - this.startMouseY;
         const newHeight = Math.max(50, this.initialHeight + deltaY);
-
-        // Ajustar solo la altura, no la anchura
       }
     }
   }
@@ -395,7 +538,6 @@ export class PrecioUnitarioComponent implements OnInit {
       this.startMouseY = event.clientY;
       this.initialHeight = target.clientHeight;
 
-      // Configurar el estilo CSS para permitir el redimensionamiento vertical
       target.style.resize = 'vertical';
     }
   }
@@ -409,7 +551,7 @@ export class PrecioUnitarioComponent implements OnInit {
     event: MouseEvent
   ): boolean {
     const rect = target.getBoundingClientRect();
-    const bottomThreshold = 10; // Umbral para considerar el borde inferior del elemento
+    const bottomThreshold = 10;
     return event.clientY > rect.bottom - bottomThreshold;
   }
 
@@ -426,7 +568,9 @@ export class PrecioUnitarioComponent implements OnInit {
     public dialog: MatDialog,
     private insumoService: InsumoService,
     private unidades: Unidades,
-    private estimacionesService: EstimacionesService
+    private estimacionesService: EstimacionesService,
+    private ChangeDetectorRef: ChangeDetectorRef,
+    private _IndirectosService: IndirectosServiceService
   ) {
     let idEmpresa = _SeguridadEmpresa.obtenIdEmpresaLocalStorage();
     let idProyecto = _SeguridadEmpresa.obtenerIdProyectoLocalStorage();
@@ -436,6 +580,17 @@ export class PrecioUnitarioComponent implements OnInit {
   }
 
   draggedItem: any;
+
+  handleClick(event: MouseEvent) {
+    this.cargarPresupuestoExcel();
+  }
+
+  mostrarInfo() {
+    this.tooltipVisible = true;
+    setTimeout(() => {
+      this.tooltipVisible = false;
+    }, 5000);
+  }
 
   dragStart(event: DragEvent, precioUnitario: any) {
     this.draggedItem = precioUnitario;
@@ -483,6 +638,10 @@ export class PrecioUnitarioComponent implements OnInit {
       expandido: false,
       posicion: 0,
       codigoPadre: '',
+      esCatalogoGeneral: false,
+      esAvanceObra: false,
+      esAdicional: false,
+      esSeleccionado: false,
     },
     destino: {
       hijos: [],
@@ -517,6 +676,10 @@ export class PrecioUnitarioComponent implements OnInit {
       expandido: false,
       posicion: 0,
       codigoPadre: '',
+      esCatalogoGeneral: false,
+      esAvanceObra: false,
+      esAdicional: false,
+      esSeleccionado: false,
     },
     esSubnivel: false,
     esCopiado: false,
@@ -525,15 +688,29 @@ export class PrecioUnitarioComponent implements OnInit {
   conceptos: precioUnitarioDTO[] = [];
   conceptosReset: precioUnitarioDTO[] = [];
 
+  trackById(index: number, item: any) {
+    return item.id;
+  }
+
   drop(event: DragEvent, destino: any) {
+    if (destino.esCatalogoGeneral) {
+      Swal.fire({
+        confirmButtonText: 'Aceptar',
+        html: `
+            <div>
+              <div class="mb-2 mt-2"><p style="margin : 0px;">No se permite mover elementos dentro del catálogo general.</p></div>
+            </div>
+          `,
+        imageWidth: 50,
+        customClass: {
+          icon: 'no-border',
+          cancelButton: 'SweetAlert2CancelButtonError',
+          confirmButton: 'SweetAlert2ConfirmButton',
+        },
+      });
+      return;
+    }
     event.preventDefault();
-
-    console.log(event.clientX, 'cliente X');
-    console.log(event.clientX, 'cliente Y');
-    console.log(event.bubbles, 'bubbles');
-    console.log(event.button, 'button');
-    console.log(event.ctrlKey, 'controlKEy');
-
     if (this.draggedItem && this.draggedItem !== destino) {
       try {
         const data = event.dataTransfer?.getData('application/json');
@@ -542,7 +719,6 @@ export class PrecioUnitarioComponent implements OnInit {
           const draggedData = JSON.parse(data);
           this.registrosParaMover.seleccionado = draggedData;
           this.registrosParaMover.destino = destino;
-          console.log(this.registrosParaMover);
 
           this.draggedItem = null;
 
@@ -551,13 +727,11 @@ export class PrecioUnitarioComponent implements OnInit {
             // icon: "error",
             confirmButtonText: 'Cerrar',
             html: `
-                        <div>
-                        <div class="mb-4"><p style="margin : 0px;">¡Seleccione!</p></div>
-                            <div class="flex justify-center gap-4">
-                                <button id="botonCopiar" class="py-2 px-4 rounded" style="background-color: rgba(143, 204, 219, 0.59); color: rgb(53, 52, 52);">Copiar</button>
-                                <button id="botonArrastrar" class="py-2 px-4 rounded" style="background-color: rgba(143, 204, 219, 0.59); color: rgb(53, 52, 52);">Mover</button>
+                  <div class="mb-2 mt-2"><p style="margin : 0px;">Selecciona una opción</p></div>
+                      <div class="flex justify-center gap-4">
+                          <button id="botonCopiar" class="py-2 px-4 rounded" style="background-color: rgba(143, 204, 219, 0.59); color: rgb(53, 52, 52);">Copiar</button>
+                          <button id="botonArrastrar" class="py-2 px-4 rounded" style="background-color: rgba(143, 204, 219, 0.59); color: rgb(53, 52, 52);">Mover</button>
                             </div>
-                        </div>
                         `,
             imageWidth: 50,
             customClass: {
@@ -591,7 +765,6 @@ export class PrecioUnitarioComponent implements OnInit {
 
   copiarPU() {
     this.registrosParaMover.esCopiado = true;
-    console.log('copiando PU ', this.registrosParaMover);
     this.precioUnitarioService
       .moverPosicion(this.registrosParaMover, this.selectedEmpresa)
       .subscribe((preciosUnitarios) => {
@@ -603,12 +776,28 @@ export class PrecioUnitarioComponent implements OnInit {
         this.totalConFormato = new Intl.NumberFormat('es-MX', {
           style: 'currency',
           currency: 'MXN',
+        }).format(
+          this.proyectoSelected.porcentajeIva > 0
+            ? this.total +
+                (this.total * this.proyectoSelected.porcentajeIva) / 100
+            : this.total
+        );
+        this.totalSinIvaConFormato = new Intl.NumberFormat('es-MX', {
+          style: 'currency',
+          currency: 'MXN',
         }).format(this.total);
+        this.totalIvaConFormato = new Intl.NumberFormat('es-MX', {
+          style: 'currency',
+          currency: 'MXN',
+        }).format(
+          this.proyectoSelected.porcentajeIva > 0
+            ? (this.total * this.proyectoSelected.porcentajeIva) / 100
+            : 0
+        );
       });
   }
   arrarstrarPU() {
     this.registrosParaMover.esCopiado = false;
-    console.log('arrastrando PU ', this.registrosParaMover);
     this.precioUnitarioService
       .moverPosicion(this.registrosParaMover, this.selectedEmpresa)
       .subscribe((preciosUnitarios) => {
@@ -620,19 +809,33 @@ export class PrecioUnitarioComponent implements OnInit {
         this.totalConFormato = new Intl.NumberFormat('es-MX', {
           style: 'currency',
           currency: 'MXN',
+        }).format(
+          this.proyectoSelected.porcentajeIva > 0
+            ? this.total +
+                (this.total * this.proyectoSelected.porcentajeIva) / 100
+            : this.total
+        );
+        this.totalSinIvaConFormato = new Intl.NumberFormat('es-MX', {
+          style: 'currency',
+          currency: 'MXN',
         }).format(this.total);
+        this.totalIvaConFormato = new Intl.NumberFormat('es-MX', {
+          style: 'currency',
+          currency: 'MXN',
+        }).format(
+          this.proyectoSelected.porcentajeIva > 0
+            ? (this.total * this.proyectoSelected.porcentajeIva) / 100
+            : 0
+        );
       });
   }
 
-  @ViewChild('testInput') testInput: any;
-  @ViewChild('autoSumaInput') autoSumaInput: any;
-  @ViewChild('descripcionInput') descripcionInput: any;
-  @ViewChild('paginadoCopia') paginadoCopia: any;
-  @ViewChild('paginadoBase') paginadoBase: any;
-  @ViewChild('inputFiltradoCopia') inputFiltradoCopia: any;
-  @ViewChild('inputFiltrado') inputFiltrado: any;
-
   ngOnInit(): void {
+    this.proyectoService
+      .obtenerXId(this.selectedProyecto, this.selectedEmpresa)
+      .subscribe((datos) => {
+        this.proyectoSelected = datos;
+      });
     this.estimacionesService
       .obtenerPeriodos(this.selectedProyecto, this.selectedEmpresa)
       .subscribe((datos) => {
@@ -645,6 +848,31 @@ export class PrecioUnitarioComponent implements OnInit {
       .obtenerTodosSinEstructurar(this.selectedEmpresa)
       .subscribe((proyectos) => {
         this.proyectos = proyectos;
+        this.proyectos.unshift({
+          id: 0,
+          codigoProyecto: '',
+          nombre: 'Catalogo General',
+          noSerie: 0,
+          moneda: '',
+          presupuestoSinIva: 0,
+          tipoCambio: 0,
+          presupuestoSinIvaMonedaNacional: 0,
+          porcentajeIva: 0,
+          presupuestoConIvaMonedaNacional: 0,
+          anticipo: 0,
+          codigoPostal: 0,
+          domicilio: '',
+          fechaInicio: new Date(),
+          fechaFinal: new Date(),
+          tipoProgramaActividad: 0,
+          inicioSemana: 0,
+          esSabado: true,
+          esDomingo: true,
+          idPadre: 0,
+          nivel: 0,
+          expandido: false,
+          hijos: [],
+        });
         this.proyectosReset = proyectos;
       });
     this.familiaInsumoService
@@ -657,13 +885,77 @@ export class PrecioUnitarioComponent implements OnInit {
       .subscribe((tipos) => {
         this.tiposInsumos = tipos;
       });
+  }
+
+  cargarListaConceptos() {
     this.precioUnitarioService
       .obtenerConceptos(this.selectedProyecto, this.selectedEmpresa)
       .subscribe((datos) => {
         this.conceptos = datos;
         this.conceptosReset = datos;
-        console.log('estos son los conceptos', this.conceptos);
+        this.precioUnitarioSeleccionado = {
+          hijos: [],
+          id: 0,
+          idProyecto: 0,
+          cantidad: 0,
+          cantidadExcedente: 0,
+          tipoPrecioUnitario: 0,
+          costoUnitario: 0,
+          nivel: 0,
+          noSerie: 0,
+          idPrecioUnitarioBase: 0,
+          esDetalle: false,
+          idConcepto: 0,
+          codigo: '',
+          descripcion: '',
+          unidad: '',
+          precioUnitario: 0,
+          importe: 0,
+          importeSeries: 0,
+          expandido: false,
+          cantidadConFormato: '',
+          cantidadExcedenteConFormato: '',
+          costoUnitarioConFormato: '',
+          precioUnitarioConFormato: '',
+          importeConFormato: '',
+          importeSeriesConFormato: '',
+          cantidadEditado: false,
+          costoUnitarioEditado: false,
+          precioUnitarioEditado: false,
+          porcentajeIndirecto: 0,
+          porcentajeIndirectoConFormato: '',
+          posicion: 0,
+          codigoPadre: '',
+          esCatalogoGeneral: false,
+          esAvanceObra: false,
+          esAdicional: false,
+          esSeleccionado: false,
+        };
       });
+    this.preciosUnitarios.forEach((registro) => {
+      if (registro.id == this.precioUnitarioSeleccionado.id) {
+        registro.esDetalle = true;
+        this.precioUnitarioSeleccionado = registro;
+      }
+      if (registro.tipoPrecioUnitario == 0) {
+        this.buscarHijoParaSeleccionar(registro);
+      }
+    });
+  }
+
+  buscarHijoParaSeleccionar(precioUnitario: precioUnitarioDTO) {
+    precioUnitario.hijos.forEach((registro) => {
+      if (registro.id == this.precioUnitarioSeleccionado.id) {
+        registro.esDetalle = true;
+        registro.cantidadEditado = true;
+        registro.costoUnitarioEditado = true;
+        registro.precioUnitarioEditado = true;
+        this.precioUnitarioSeleccionado = registro;
+      }
+      if (registro.tipoPrecioUnitario == 0) {
+        this.buscarHijoParaSeleccionar(registro);
+      }
+    });
   }
 
   expansionDominio(precioUnitario: precioUnitarioDTO): void {
@@ -673,18 +965,42 @@ export class PrecioUnitarioComponent implements OnInit {
   cargarRegistros() {
     this.seEstaEditandoRegistro = false;
     this.total = 0;
-    console.log('Aqui estoy', this.preciosUnitarios);
+    this.displayCarga = 'flex';
     this.precioUnitarioService
       .obtenerEstructurado(this.selectedProyecto, this.selectedEmpresa)
       .subscribe((preciosUnitarios) => {
         this.preciosUnitarios = preciosUnitarios;
+
+        if (this.preciosUnitarios.length > 0) {
+          if (this.preciosUnitarios[0].esAvanceObra) {
+            this.esAutorizado = true;
+          }
+        }
+
         for (let i = 0; i < preciosUnitarios.length; i++) {
           this.total = this.total + this.preciosUnitarios[i].importe;
         }
         this.totalConFormato = new Intl.NumberFormat('es-MX', {
           style: 'currency',
           currency: 'MXN',
+        }).format(
+          this.proyectoSelected.porcentajeIva > 0
+            ? this.total +
+                (this.total * this.proyectoSelected.porcentajeIva) / 100
+            : this.total
+        );
+        this.totalSinIvaConFormato = new Intl.NumberFormat('es-MX', {
+          style: 'currency',
+          currency: 'MXN',
         }).format(this.total);
+        this.totalIvaConFormato = new Intl.NumberFormat('es-MX', {
+          style: 'currency',
+          currency: 'MXN',
+        }).format(
+          this.proyectoSelected.porcentajeIva > 0
+            ? (this.total * this.proyectoSelected.porcentajeIva) / 100
+            : 0
+        );
         if (preciosUnitarios.length <= 0) {
           this.preciosUnitarios.push({
             id: 0,
@@ -708,10 +1024,10 @@ export class PrecioUnitarioComponent implements OnInit {
             hijos: [],
             cantidadConFormato: '0.00',
             cantidadExcedenteConFormato: '0.00',
-            costoUnitarioConFormato: '0.00',
-            precioUnitarioConFormato: '0.00',
-            importeConFormato: '0.00',
-            importeSeriesConFormato: '0.00',
+            costoUnitarioConFormato: '$0.00',
+            precioUnitarioConFormato: '$0.00',
+            importeConFormato: '$0.00',
+            importeSeriesConFormato: '$0.00',
             cantidadEditado: false,
             costoUnitarioEditado: false,
             precioUnitarioEditado: false,
@@ -719,6 +1035,10 @@ export class PrecioUnitarioComponent implements OnInit {
             porcentajeIndirectoConFormato: '',
             posicion: 0,
             codigoPadre: '',
+            esCatalogoGeneral: false,
+            esAvanceObra: false,
+            esAdicional: false,
+            esSeleccionado: false,
           });
         }
         this.insumoService
@@ -727,12 +1047,8 @@ export class PrecioUnitarioComponent implements OnInit {
             this.insumos = insumos;
             this.insumosReset = insumos;
           });
-        this.precioUnitarioService
-          .obtenerConceptos(this.selectedProyecto, this.selectedEmpresa)
-          .subscribe((datos) => {
-            this.conceptos = datos;
-            this.conceptosReset = datos;
-          });
+        this.cargarListaConceptos();
+        this.displayCarga = 'none';
       });
     this.esquemaArbol2 = false;
     this.esquemaArbol3 = false;
@@ -742,7 +1058,6 @@ export class PrecioUnitarioComponent implements OnInit {
   }
 
   openTooltip() {
-    console.log('holi');
     this.tooltip.open({ content: this.tooltipContent });
   }
 
@@ -753,7 +1068,12 @@ export class PrecioUnitarioComponent implements OnInit {
     this.tooltip.open({ content: this.tooltipIndirecto });
   }
 
-  crear(precioUnitario: precioUnitarioDTO) {
+  enviaraCatalogoGeneral(precioUnitario: precioUnitarioDTO, event: Event) {
+    event.preventDefault();
+
+    const valorOriginal = precioUnitario.esCatalogoGeneral;
+    const nuevoValor = !valorOriginal;
+
     this.precioUnitarioSeleccionado = {
       hijos: [],
       id: 0,
@@ -776,10 +1096,10 @@ export class PrecioUnitarioComponent implements OnInit {
       expandido: false,
       cantidadConFormato: '0.00',
       cantidadExcedenteConFormato: '0.00',
-      costoUnitarioConFormato: '0.00',
-      precioUnitarioConFormato: '0.00',
-      importeConFormato: '0.00',
-      importeSeriesConFormato: '0.00',
+      costoUnitarioConFormato: '$0.00',
+      precioUnitarioConFormato: '$0.00',
+      importeConFormato: '$0.00',
+      importeSeriesConFormato: '$0.00',
       cantidadEditado: false,
       costoUnitarioEditado: false,
       precioUnitarioEditado: false,
@@ -787,6 +1107,10 @@ export class PrecioUnitarioComponent implements OnInit {
       porcentajeIndirectoConFormato: '',
       posicion: 0,
       codigoPadre: '',
+      esCatalogoGeneral: false,
+      esAvanceObra: false,
+      esAdicional: false,
+      esSeleccionado: false,
     };
     this.testInput.nativeElement.style.display = 'none';
     this.mostrarBotones = false;
@@ -816,8 +1140,254 @@ export class PrecioUnitarioComponent implements OnInit {
         this.precioUnitarioService
           .crearYObtener(precioUnitario, this.selectedEmpresa)
           .subscribe((preciosUnitarios) => {
+            if (!this.contenedorCatalogoGeneral) {
+              this.preciosUnitariosRefresco = preciosUnitarios;
+              this.refrescar();
+              this.cargarListaConceptos();
+            }
+
+            this.displayCarga = 'none';
+          });
+      } else {
+        if (
+          typeof precioUnitario.codigo == undefined ||
+          !precioUnitario.codigo ||
+          precioUnitario.codigo == ''
+        ) {
+          this._snackBar.open('capture todos los campos1', 'X', {
+            duration: 3000,
+          });
+          return;
+        } else if (
+          (precioUnitario.descripcion != '' && precioUnitario.unidad == '') ||
+          (precioUnitario.descripcion == '' && precioUnitario.unidad != '')
+        ) {
+          this._snackBar.open('capture todos los campos2', 'X', {
+            duration: 3000,
+          });
+          return;
+        }
+        this.displayCarga = 'flex';
+        this.precioUnitarioService
+          .crearYObtener(precioUnitario, this.selectedEmpresa)
+          .subscribe((preciosUnitarios) => {
+            if (!this.contenedorCatalogoGeneral) {
+              this.preciosUnitariosRefresco = preciosUnitarios;
+              this.refrescar();
+              this.cargarListaConceptos();
+            }
+
+            this.displayCarga = 'none';
+          });
+      }
+      this.existeCaptura = false;
+    } else {
+      if (precioUnitario.nivel == 0) {
+        precioUnitario.nivel = 1;
+      }
+      precioUnitario.idProyecto = this.selectedProyecto;
+      if (precioUnitario.tipoPrecioUnitario == 0) {
+        if (
+          typeof precioUnitario.codigo == undefined ||
+          !precioUnitario.codigo ||
+          precioUnitario.codigo == '' ||
+          typeof precioUnitario.descripcion == undefined ||
+          !precioUnitario.descripcion ||
+          precioUnitario.descripcion == ''
+        ) {
+          this._snackBar.open('capture todos los campos', 'X', {
+            duration: 3000,
+          });
+          return;
+        }
+        this.displayCarga = 'flex';
+        this.precioUnitarioService
+          .editar(precioUnitario, this.selectedEmpresa)
+          .subscribe((preciosUnitarios) => {
             this.preciosUnitariosRefresco = preciosUnitarios;
             this.refrescar();
+            this.cargarListaConceptos();
+            this.displayCarga = 'none';
+          });
+      } else {
+        if (
+          typeof precioUnitario.codigo == undefined ||
+          !precioUnitario.codigo ||
+          precioUnitario.codigo == '' ||
+          typeof precioUnitario.descripcion == undefined ||
+          !precioUnitario.descripcion ||
+          precioUnitario.descripcion == '' ||
+          typeof precioUnitario.unidad == undefined ||
+          !precioUnitario.unidad ||
+          precioUnitario.unidad == ''
+        ) {
+          this._snackBar.open('capture todos los campos', 'X', {
+            duration: 3000,
+          });
+          return;
+        }
+        this.displayCarga = 'flex';
+
+        if (nuevoValor) {
+          // agregar al catalogo
+          if (!localStorage.getItem('noMostrarAgregarCatalogo')) {
+            Swal.fire({
+              confirmButtonText: 'Aceptar',
+              cancelButtonText: 'Cancelar',
+              showCancelButton: true,
+              html: `
+          <div>
+            <p>¿Desea agregar al catálogo de conceptos generales?</p>
+            <div style="margin-top:10px; text-align:left;">
+              <input type="checkbox" id="noMostrarAgregar" />
+              <label for="noMostrarAgregar">No volver a mostrar</label>
+            </div>
+          </div>
+        `,
+              didOpen: () => {
+                const cb = document.getElementById(
+                  'noMostrarAgregar'
+                ) as HTMLInputElement;
+                if (
+                  localStorage.getItem('noMostrarAgregarCatalogo') === 'true'
+                ) {
+                  cb.checked = true;
+                }
+              },
+              willClose: () => {
+                const cb = document.getElementById(
+                  'noMostrarAgregar'
+                ) as HTMLInputElement;
+                if (cb.checked) {
+                  localStorage.setItem('noMostrarAgregarCatalogo', 'true');
+                } else {
+                  localStorage.removeItem('noMostrarAgregarCatalogo');
+                }
+              },
+            }).then((result) => {
+              if (result.isConfirmed) {
+                precioUnitario.esCatalogoGeneral = nuevoValor;
+                this.editarCatalogo(precioUnitario);
+              } else {
+                this.displayCarga = 'none';
+              }
+              this.ChangeDetectorRef.detectChanges();
+            });
+          } else {
+            this.displayCarga = 'none';
+            precioUnitario.esCatalogoGeneral = nuevoValor;
+            this.editarCatalogo(precioUnitario);
+            this.ChangeDetectorRef.detectChanges();
+          }
+        } else {
+          // quitar del catalogo
+          Swal.fire({
+            confirmButtonText: 'Aceptar',
+            cancelButtonText: 'Cancelar',
+            showCancelButton: true,
+            html: `<p>¿Desea eliminar del catálogo de conceptos generales?</p>`,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              precioUnitario.esCatalogoGeneral = nuevoValor;
+              this.editarCatalogo(precioUnitario);
+            } else {
+              this.displayCarga = 'none';
+            }
+            this.ChangeDetectorRef.detectChanges();
+          });
+        }
+      }
+      this.existeCaptura = false;
+    }
+  }
+
+  editarCatalogo(precioUnitario: precioUnitarioDTO) {
+    this.displayCarga = 'flex';
+    this.precioUnitarioService
+      .editar(precioUnitario, this.selectedEmpresa)
+      .subscribe((preciosUnitarios) => {
+        if (!this.contenedorCatalogoGeneral) {
+          this.preciosUnitariosRefresco = preciosUnitarios;
+          this.refrescar();
+          this.cargarListaConceptos();
+        }
+        this.displayCarga = 'none';
+      });
+  }
+
+  crear(precioUnitario: precioUnitarioDTO) {
+    this.precioUnitarioSeleccionado = {
+      hijos: [],
+      id: 0,
+      idProyecto: 0,
+      cantidad: 0,
+      cantidadExcedente: 0,
+      tipoPrecioUnitario: 0,
+      costoUnitario: 0,
+      nivel: 0,
+      noSerie: 0,
+      idPrecioUnitarioBase: 0,
+      esDetalle: false,
+      idConcepto: 0,
+      codigo: '',
+      descripcion: '',
+      unidad: '',
+      precioUnitario: 0,
+      importe: 0,
+      importeSeries: 0,
+      expandido: false,
+      cantidadConFormato: '0.00',
+      cantidadExcedenteConFormato: '0.00',
+      costoUnitarioConFormato: '$0.00',
+      precioUnitarioConFormato: '$0.00',
+      importeConFormato: '$0.00',
+      importeSeriesConFormato: '$0.00',
+      cantidadEditado: false,
+      costoUnitarioEditado: false,
+      precioUnitarioEditado: false,
+      porcentajeIndirecto: 0,
+      porcentajeIndirectoConFormato: '',
+      posicion: 0,
+      codigoPadre: '',
+      esCatalogoGeneral: false,
+      esAvanceObra: false,
+      esAdicional: false,
+      esSeleccionado: false,
+    };
+    this.testInput.nativeElement.style.display = 'none';
+    this.mostrarBotones = false;
+    this.precioUnitarioEditado.cantidadEditado = false;
+    this.precioUnitarioEditado.costoUnitarioEditado = false;
+    this.seEstaEditandoRegistro = false;
+    if (precioUnitario.id == 0) {
+      if (precioUnitario.nivel == 0) {
+        precioUnitario.nivel = 1;
+      }
+      precioUnitario.idProyecto = this.selectedProyecto;
+      if (precioUnitario.tipoPrecioUnitario == 0) {
+        if (
+          typeof precioUnitario.codigo == undefined ||
+          !precioUnitario.codigo ||
+          precioUnitario.codigo == '' ||
+          typeof precioUnitario.descripcion == undefined ||
+          !precioUnitario.descripcion ||
+          precioUnitario.descripcion == ''
+        ) {
+          this._snackBar.open('capture todos los campos', 'X', {
+            duration: 3000,
+          });
+          return;
+        }
+        this.displayCarga = 'flex';
+        this.precioUnitarioService
+          .crearYObtener(precioUnitario, this.selectedEmpresa)
+          .subscribe((preciosUnitarios) => {
+            if (!this.contenedorCatalogoGeneral) {
+              this.preciosUnitariosRefresco = preciosUnitarios;
+              this.refrescar();
+              this.cargarListaConceptos();
+            }
+
             this.displayCarga = 'none';
           });
       } else {
@@ -849,8 +1419,11 @@ export class PrecioUnitarioComponent implements OnInit {
         this.precioUnitarioService
           .crearYObtener(precioUnitario, this.selectedEmpresa)
           .subscribe((precioUnitario) => {
-            this.preciosUnitariosRefresco = precioUnitario;
-            this.refrescar();
+            if (!this.contenedorCatalogoGeneral) {
+              this.preciosUnitariosRefresco = precioUnitario;
+              this.refrescar();
+              this.cargarListaConceptos();
+            }
             this.displayCarga = 'none';
           });
       }
@@ -880,6 +1453,7 @@ export class PrecioUnitarioComponent implements OnInit {
           .subscribe((preciosUnitarios) => {
             this.preciosUnitariosRefresco = preciosUnitarios;
             this.refrescar();
+            this.cargarListaConceptos();
             this.displayCarga = 'none';
           });
       } else {
@@ -903,8 +1477,11 @@ export class PrecioUnitarioComponent implements OnInit {
         this.precioUnitarioService
           .editar(precioUnitario, this.selectedEmpresa)
           .subscribe((precioUnitario) => {
-            this.preciosUnitariosRefresco = precioUnitario;
-            this.refrescar();
+            if (!this.contenedorCatalogoGeneral) {
+              this.preciosUnitariosRefresco = precioUnitario;
+              this.refrescar();
+              this.cargarListaConceptos();
+            }
             this.displayCarga = 'none';
           });
       }
@@ -912,10 +1489,22 @@ export class PrecioUnitarioComponent implements OnInit {
     }
   }
 
+  partirConcepto(precioUnitario: precioUnitarioDTO) {
+    this.displayCarga = 'flex';
+    this.precioUnitarioService
+      .partirConcepto(precioUnitario, this.selectedEmpresa)
+      .subscribe((datos) => {
+        this.preciosUnitariosRefresco = datos;
+        this.refrescar();
+        this.cargarListaConceptos();
+        this.displayCarga = 'none';
+      });
+  }
+
   crearPartidaAlMismoNivel(precioUnitario: precioUnitarioDTO) {
     if (this.existeCaptura == false) {
       if (precioUnitario.idPrecioUnitarioBase == 0) {
-        this.preciosUnitarios.push({
+        let nuevaPartida: precioUnitarioDTO = {
           id: 0,
           idProyecto: precioUnitario.idProyecto,
           cantidad: 1,
@@ -937,22 +1526,33 @@ export class PrecioUnitarioComponent implements OnInit {
           hijos: [],
           cantidadConFormato: '0.00',
           cantidadExcedenteConFormato: '0.00',
-          costoUnitarioConFormato: '0.00',
-          precioUnitarioConFormato: '0.00',
-          importeConFormato: '0.00',
-          importeSeriesConFormato: '0.00',
+          costoUnitarioConFormato: '$0.00',
+          precioUnitarioConFormato: '$0.00',
+          importeConFormato: '$0.00',
+          importeSeriesConFormato: '$0.00',
           cantidadEditado: false,
           costoUnitarioEditado: false,
           precioUnitarioEditado: false,
           porcentajeIndirecto: 0,
           porcentajeIndirectoConFormato: '',
-          posicion: 0,
+          posicion: precioUnitario.posicion + 1,
           codigoPadre: '',
-        });
+          esCatalogoGeneral: false,
+          esAvanceObra: false,
+          esAdicional: precioUnitario.esAdicional,
+          esSeleccionado: false,
+        };
+
+        this.preciosUnitarios = this.insertarEnPosicion(
+          this.preciosUnitarios,
+          nuevaPartida,
+          precioUnitario.posicion + 1
+        );
+
         this.precioUnitarioPadreCreacion.hijos = this.preciosUnitarios;
       } else {
         this.buscarNodo(precioUnitario.idPrecioUnitarioBase);
-        this.precioUnitarioPadre.hijos.push({
+        let nuevaPartida: precioUnitarioDTO = {
           id: 0,
           idProyecto: precioUnitario.idProyecto,
           cantidad: 1,
@@ -974,18 +1574,28 @@ export class PrecioUnitarioComponent implements OnInit {
           hijos: [],
           cantidadConFormato: '0.00',
           cantidadExcedenteConFormato: '0.00',
-          costoUnitarioConFormato: '0.00',
-          precioUnitarioConFormato: '0.00',
-          importeConFormato: '0.00',
-          importeSeriesConFormato: '0.00',
+          costoUnitarioConFormato: '$0.00',
+          precioUnitarioConFormato: '$0.00',
+          importeConFormato: '$0.00',
+          importeSeriesConFormato: '$0.00',
           cantidadEditado: false,
           costoUnitarioEditado: false,
           precioUnitarioEditado: false,
           porcentajeIndirecto: 0,
           porcentajeIndirectoConFormato: '',
-          posicion: 0,
+          posicion: precioUnitario.posicion + 1,
           codigoPadre: '',
-        });
+          esCatalogoGeneral: false,
+          esAvanceObra: false,
+          esAdicional: precioUnitario.esAdicional,
+          esSeleccionado: false,
+        };
+
+        this.precioUnitarioPadre.hijos = this.insertarEnPosicion(
+          this.precioUnitarioPadre.hijos,
+          nuevaPartida,
+          precioUnitario.posicion + 1
+        );
         this.precioUnitarioPadreCreacion = this.precioUnitarioPadre;
       }
       this.existeCaptura = true;
@@ -1020,6 +1630,8 @@ export class PrecioUnitarioComponent implements OnInit {
     if (this.existeCaptura == false) {
       if (precioUnitario.tipoPrecioUnitario != 0) {
         this.buscarNodo(precioUnitario.idPrecioUnitarioBase);
+        let posicionFinal = this.precioUnitarioPadre.hijos.length;
+
         this.precioUnitarioPadre.hijos.push({
           id: 0,
           idProyecto: precioUnitario.idProyecto,
@@ -1042,20 +1654,25 @@ export class PrecioUnitarioComponent implements OnInit {
           hijos: [],
           cantidadConFormato: '0.00',
           cantidadExcedenteConFormato: '0.00',
-          costoUnitarioConFormato: '0.00',
-          precioUnitarioConFormato: '0.00',
-          importeConFormato: '0.00',
-          importeSeriesConFormato: '0.00',
+          costoUnitarioConFormato: '$0.00',
+          precioUnitarioConFormato: '$0.00',
+          importeConFormato: '$0.00',
+          importeSeriesConFormato: '$0.00',
           cantidadEditado: false,
           costoUnitarioEditado: false,
           precioUnitarioEditado: false,
           porcentajeIndirecto: 0,
           porcentajeIndirectoConFormato: '',
-          posicion: 0,
+          posicion: posicionFinal + 1,
           codigoPadre: '',
+          esCatalogoGeneral: false,
+          esAvanceObra: false,
+          esAdicional: precioUnitario.esAdicional,
+          esSeleccionado: false,
         });
         this.precioUnitarioPadreCreacion = this.precioUnitarioPadre;
       } else {
+        let posicionFinal = precioUnitario.hijos.length;
         precioUnitario.hijos.push({
           id: 0,
           idProyecto: precioUnitario.idProyecto,
@@ -1078,17 +1695,21 @@ export class PrecioUnitarioComponent implements OnInit {
           hijos: [],
           cantidadConFormato: '0.00',
           cantidadExcedenteConFormato: '0.00',
-          costoUnitarioConFormato: '0.00',
-          precioUnitarioConFormato: '0.00',
-          importeConFormato: '0.00',
-          importeSeriesConFormato: '0.00',
+          costoUnitarioConFormato: '$0.00',
+          precioUnitarioConFormato: '$0.00',
+          importeConFormato: '$0.00',
+          importeSeriesConFormato: '$0.00',
           cantidadEditado: false,
           costoUnitarioEditado: false,
           precioUnitarioEditado: false,
           porcentajeIndirecto: 0,
           porcentajeIndirectoConFormato: '',
-          posicion: 0,
+          posicion: posicionFinal + 1,
           codigoPadre: '',
+          esCatalogoGeneral: false,
+          esAvanceObra: false,
+          esAdicional: precioUnitario.esAdicional,
+          esSeleccionado: false,
         });
         this.precioUnitarioPadreCreacion = precioUnitario;
       }
@@ -1097,11 +1718,13 @@ export class PrecioUnitarioComponent implements OnInit {
   }
 
   crearConcepto(precioUnitario: precioUnitarioDTO) {
+    console.log('precio unitario concepto', precioUnitario);
+
     precioUnitario.expandido = true;
     if (this.existeCaptura == false) {
       if (precioUnitario.tipoPrecioUnitario != 0) {
         this.buscarNodo(precioUnitario.idPrecioUnitarioBase);
-        this.precioUnitarioPadre.hijos.push({
+        let nuevoConcepto: precioUnitarioDTO = {
           id: 0,
           idProyecto: precioUnitario.idProyecto,
           cantidad: 0,
@@ -1123,20 +1746,31 @@ export class PrecioUnitarioComponent implements OnInit {
           hijos: [],
           cantidadConFormato: '0.00',
           cantidadExcedenteConFormato: '0.00',
-          costoUnitarioConFormato: '0.00',
-          precioUnitarioConFormato: '0.00',
-          importeConFormato: '0.00',
-          importeSeriesConFormato: '0.00',
+          costoUnitarioConFormato: '$0.00',
+          precioUnitarioConFormato: '$0.00',
+          importeConFormato: '$0.00',
+          importeSeriesConFormato: '$0.00',
           cantidadEditado: false,
           costoUnitarioEditado: false,
           precioUnitarioEditado: false,
           porcentajeIndirecto: 0,
           porcentajeIndirectoConFormato: '',
-          posicion: 0,
+          posicion: precioUnitario.posicion + 1,
           codigoPadre: '',
-        });
+          esCatalogoGeneral: false,
+          esAvanceObra: false,
+          esAdicional: precioUnitario.esAdicional,
+          esSeleccionado: false,
+        };
+        console.log('ver posiciones', this.precioUnitarioPadre.hijos);
+        this.precioUnitarioPadre.hijos = this.insertarEnPosicion(
+          this.precioUnitarioPadre.hijos,
+          nuevoConcepto,
+          precioUnitario.posicion + 1
+        );
         this.precioUnitarioPadreCreacion = this.precioUnitarioPadre;
       } else {
+        let posicionFinal = precioUnitario.hijos.length;
         precioUnitario.hijos.push({
           id: 0,
           idProyecto: precioUnitario.idProyecto,
@@ -1159,22 +1793,50 @@ export class PrecioUnitarioComponent implements OnInit {
           hijos: [],
           cantidadConFormato: '0.00',
           cantidadExcedenteConFormato: '0.00',
-          costoUnitarioConFormato: '0.00',
-          precioUnitarioConFormato: '0.00',
-          importeConFormato: '0.00',
-          importeSeriesConFormato: '0.00',
+          costoUnitarioConFormato: '$0.00',
+          precioUnitarioConFormato: '$0.00',
+          importeConFormato: '$0.00',
+          importeSeriesConFormato: '$0.00',
           cantidadEditado: false,
           costoUnitarioEditado: false,
           precioUnitarioEditado: false,
           porcentajeIndirecto: 0,
           porcentajeIndirectoConFormato: '',
-          posicion: 0,
+          posicion: posicionFinal + 1,
           codigoPadre: '',
+          esCatalogoGeneral: false,
+          esAvanceObra: false,
+          esAdicional: precioUnitario.esAdicional,
+          esSeleccionado: false,
         });
         this.precioUnitarioPadreCreacion = precioUnitario;
       }
     }
     this.existeCaptura = true;
+  }
+
+  insertarEnPosicion(
+    lista: precioUnitarioDTO[],
+    nuevo: precioUnitarioDTO,
+    posicion: number
+  ) {
+    console.log('llego esta posicion', posicion);
+
+    // Aseguramos que la posición sea válida
+    if (posicion < 1) posicion = 1;
+    if (posicion > lista.length + 1) posicion = lista.length + 1;
+
+    // Insertamos en el índice correcto (posicion - 1)
+    lista.splice(posicion - 1, 0, { ...nuevo, posicion });
+
+    // Recorremos la lista y actualizamos posiciones
+    lista.forEach((item, index) => {
+      item.posicion = index + 1;
+    });
+
+    lista.sort();
+    console.log('aqui ordenando elementos', lista);
+    return lista;
   }
 
   refrescar() {
@@ -1185,7 +1847,24 @@ export class PrecioUnitarioComponent implements OnInit {
       this.totalConFormato = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN',
+      }).format(
+        this.proyectoSelected.porcentajeIva > 0
+          ? this.total +
+              (this.total * this.proyectoSelected.porcentajeIva) / 100
+          : this.total
+      );
+      this.totalSinIvaConFormato = new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: 'MXN',
       }).format(this.total);
+      this.totalIvaConFormato = new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: 'MXN',
+      }).format(
+        this.proyectoSelected.porcentajeIva > 0
+          ? (this.total * this.proyectoSelected.porcentajeIva) / 100
+          : 0
+      );
     }
   }
 
@@ -1236,6 +1915,7 @@ export class PrecioUnitarioComponent implements OnInit {
   }
 
   cargarDetallesXIdPrecioUnitario(PrecioUnitario: precioUnitarioDTO) {
+    this.selectedGenerador = -1;
     let detalleVacio: precioUnitarioDetalleDTO = {
       id: 0,
       idPrecioUnitario: 0,
@@ -1258,13 +1938,13 @@ export class PrecioUnitarioComponent implements OnInit {
       importeConFormato: '',
       costoBase: 0,
       costoBaseConFormato: '',
+      esAutorizado: false,
     };
     this.detalleSeleccionado = detalleVacio;
     if (PrecioUnitario.id > 0) {
       if (PrecioUnitario.tipoPrecioUnitario == 0) {
         return;
       }
-      console.log(this.selectedIndex);
       this.displayCarga = 'flex';
       if (PrecioUnitario.tipoPrecioUnitario == 1) {
         this.esquemaArbol2 = true;
@@ -1272,7 +1952,10 @@ export class PrecioUnitarioComponent implements OnInit {
         this.pestanas = true;
         this.esquemaArbol3 = true;
         this.esquemaArbol4 = false;
-        if (PrecioUnitario.unidad.toLowerCase() == 'm' || PrecioUnitario.unidad.toLowerCase() == 'ml') {
+        if (
+          PrecioUnitario.unidad.toLowerCase() == 'm' ||
+          PrecioUnitario.unidad.toLowerCase() == 'ml'
+        ) {
           this.esM = true;
         } else {
           this.esM = false;
@@ -1328,6 +2011,7 @@ export class PrecioUnitarioComponent implements OnInit {
             .obtenerTodos(PrecioUnitario.id, this.selectedEmpresa)
             .subscribe((detalles) => {
               this.detalles = detalles;
+
               this.detalles.forEach((element) => {
                 element.cantidadConFormato = new Intl.NumberFormat('es-MX', {
                   minimumFractionDigits: 4,
@@ -1351,17 +2035,20 @@ export class PrecioUnitarioComponent implements OnInit {
                 importe: 0,
                 costoUnitarioConFormato: '0.00',
                 cantidadConFormato: '0.00',
-                importeConFormato: '0.00',
+                importeConFormato: '$0.00',
                 costoUnitarioEditado: false,
                 cantidadEditado: false,
                 costoBase: 0,
-                costoBaseConFormato: '0.00',
+                costoBaseConFormato: '$0.00',
+                esAutorizado: false,
               });
               this.displayCarga = 'none';
             });
         }
       }
     }
+
+    this.precioUnitarioSeleccionado = PrecioUnitario;
   }
 
   idTipoInsumoSelected: number = 0;
@@ -1408,6 +2095,10 @@ export class PrecioUnitarioComponent implements OnInit {
     porcentajeIndirectoConFormato: '',
     posicion: 0,
     codigoPadre: '',
+    esCatalogoGeneral: false,
+    esAvanceObra: false,
+    esAdicional: false,
+    esSeleccionado: false,
   };
 
   cargarDetallesXIdPrecioUnitarioCopia1(
@@ -1558,11 +2249,12 @@ export class PrecioUnitarioComponent implements OnInit {
                 importe: 0,
                 costoUnitarioConFormato: '0.00',
                 cantidadConFormato: '0.00',
-                importeConFormato: '0.00',
+                importeConFormato: '$0.00',
                 costoUnitarioEditado: false,
                 cantidadEditado: false,
                 costoBase: 0,
-                costoBaseConFormato: '0.00',
+                costoBaseConFormato: '$0.00',
+                esAutorizado: false,
               });
               this.desglosados.push({
                 id: 0,
@@ -1638,9 +2330,14 @@ export class PrecioUnitarioComponent implements OnInit {
           ejeZ: '',
           cantidad: 0,
           x: 1,
+          xDecimal: '$1.00',
           y: 1,
+          yDecimal: '$1.00',
           z: 1,
+          zDecimal: '$1.00',
           cantidadTotal: 0,
+          totalDecimal: '$0.00',
+          cantidadDecimal: '0.00',
           cantidadOperacion: '',
         });
       });
@@ -1695,13 +2392,14 @@ export class PrecioUnitarioComponent implements OnInit {
                 idTipoInsumo: 0,
                 idFamiliaInsumo: 0,
                 importe: 0,
-                costoUnitarioConFormato: '0.00',
+                costoUnitarioConFormato: '$0.00',
                 cantidadConFormato: '0.00',
-                importeConFormato: '0.00',
+                importeConFormato: '$0.00',
                 costoUnitarioEditado: false,
                 cantidadEditado: false,
                 costoBase: 0,
-                costoBaseConFormato: '0.00',
+                costoBaseConFormato: '$0.00',
+                esAutorizado: false,
               });
               this.displayCarga = 'none';
             });
@@ -1714,12 +2412,8 @@ export class PrecioUnitarioComponent implements OnInit {
               this.insumos = insumos;
               this.insumosReset = insumos;
             });
-          this.precioUnitarioService
-            .obtenerConceptos(this.selectedProyecto, this.selectedEmpresa)
-            .subscribe((datos) => {
-              this.conceptos = datos;
-              this.conceptosReset = datos;
-            });
+          this.cargarListaConceptos();
+          this.actualizarDesgloce();
         });
     } else {
       if (
@@ -1767,13 +2461,14 @@ export class PrecioUnitarioComponent implements OnInit {
                 idTipoInsumo: 0,
                 idFamiliaInsumo: 0,
                 importe: 0,
-                costoUnitarioConFormato: '0.00',
+                costoUnitarioConFormato: '$0.00',
                 cantidadConFormato: '0.00',
-                importeConFormato: '0.00',
+                importeConFormato: '$0.00',
                 costoUnitarioEditado: false,
                 cantidadEditado: false,
                 costoBase: 0,
-                costoBaseConFormato: '0.00',
+                costoBaseConFormato: '$0.00',
+                esAutorizado: false,
               });
               this.displayCarga = 'none';
             });
@@ -1786,14 +2481,70 @@ export class PrecioUnitarioComponent implements OnInit {
               this.insumos = insumos;
               this.insumosReset = insumos;
             });
-          this.precioUnitarioService
-            .obtenerConceptos(this.selectedProyecto, this.selectedEmpresa)
-            .subscribe((datos) => {
-              this.conceptos = datos;
-              this.conceptosReset = datos;
-            });
+          this.cargarListaConceptos();
+          this.actualizarDesgloce();
         });
     }
+  }
+
+  actualizarDesgloce() {
+    this.desglosados.forEach((element) => {
+      this.totalDesglosados = 0;
+      if (element.idDetallePerteneciente == 0) {
+        this.precioUnitarioDetalleService
+          .obtenerTodos(element.idPrecioUnitario, this.selectedEmpresa)
+          .subscribe((datos) => {
+            this.detallesDesglose = datos;
+            this.totalDesglosados = this.detallesDesglose.reduce(
+              (acumulado, detalle) => acumulado + detalle.importe,
+              0
+            );
+            element.costoConFormato = new Intl.NumberFormat('es-MX', {
+              style: 'currency',
+              currency: 'MXN',
+            }).format(this.totalDesglosados);
+          });
+      } else {
+        let Detalle: precioUnitarioDetalleDTO = {
+          id: element.idDetallePerteneciente,
+          idPrecioUnitario: element.idPrecioUnitario,
+          idInsumo: 0,
+          esCompuesto: false,
+          costoUnitario: 0,
+          cantidad: 0,
+          cantidadExcedente: 0,
+          idPrecioUnitarioDetallePerteneciente: 0,
+          codigo: '',
+          descripcion: '',
+          unidad: '',
+          idTipoInsumo: 0,
+          idFamiliaInsumo: 0,
+          importe: 0,
+          costoUnitarioConFormato: '',
+          cantidadConFormato: '',
+          importeConFormato: '',
+          costoUnitarioEditado: false,
+          cantidadEditado: false,
+          costoBase: 0,
+          costoBaseConFormato: '$0.00',
+          esAutorizado: false,
+        };
+
+        this.precioUnitarioDetalleService
+          .obtenerHijos(Detalle, this.selectedEmpresa)
+          .subscribe((datos) => {
+            this.detallesDesglose = datos;
+            this.totalDesglosados = this.detallesDesglose.reduce(
+              (acumulado, detalle) => acumulado + detalle.importe,
+              0
+            );
+            element.costoConFormato = new Intl.NumberFormat('es-MX', {
+              style: 'currency',
+              currency: 'MXN',
+            }).format(this.totalDesglosados);
+          });
+      }
+    });
   }
 
   editarDetalleImporte(detalle: precioUnitarioDetalleDTO) {
@@ -1847,13 +2598,14 @@ export class PrecioUnitarioComponent implements OnInit {
               idTipoInsumo: 0,
               idFamiliaInsumo: 0,
               importe: 0,
-              costoUnitarioConFormato: '0.00',
+              costoUnitarioConFormato: '$0.00',
               cantidadConFormato: '0.00',
-              importeConFormato: '0.00',
+              importeConFormato: '$0.00',
               costoUnitarioEditado: false,
               cantidadEditado: false,
               costoBase: 0,
-              costoBaseConFormato: '0.00',
+              costoBaseConFormato: '$0.00',
+              esAutorizado: false,
             });
             this.displayCarga = 'none';
           });
@@ -1863,12 +2615,7 @@ export class PrecioUnitarioComponent implements OnInit {
             this.insumos = insumos;
             this.insumosReset = insumos;
           });
-        this.precioUnitarioService
-          .obtenerConceptos(this.selectedProyecto, this.selectedEmpresa)
-          .subscribe((datos) => {
-            this.conceptos = datos;
-            this.conceptosReset = datos;
-          });
+        this.cargarListaConceptos();
       });
   }
 
@@ -1900,13 +2647,14 @@ export class PrecioUnitarioComponent implements OnInit {
             idTipoInsumo: 0,
             idFamiliaInsumo: 0,
             importe: 0,
-            costoUnitarioConFormato: '0.00',
+            costoUnitarioConFormato: '$0.00',
             cantidadConFormato: '0.00',
-            importeConFormato: '0.00',
+            importeConFormato: '$0.00',
             costoUnitarioEditado: false,
             cantidadEditado: false,
             costoBase: 0,
-            costoBaseConFormato: '0.00',
+            costoBaseConFormato: '$0.00',
+            esAutorizado: false,
           });
           this.displayCarga = 'none';
         });
@@ -1943,7 +2691,8 @@ export class PrecioUnitarioComponent implements OnInit {
         costoUnitarioEditado: false,
         cantidadEditado: false,
         costoBase: 0,
-        costoBaseConFormato: '0.00',
+        costoBaseConFormato: '$0.00',
+        esAutorizado: false,
       };
       this.precioUnitarioDetalleService
         .obtenerHijos(Detalle, this.selectedEmpresa)
@@ -1967,13 +2716,14 @@ export class PrecioUnitarioComponent implements OnInit {
             idTipoInsumo: 0,
             idFamiliaInsumo: 0,
             importe: 0,
-            costoUnitarioConFormato: '0.00',
+            costoUnitarioConFormato: '$0.00',
             cantidadConFormato: '0.00',
-            importeConFormato: '0.00',
+            importeConFormato: '$0.00',
             costoUnitarioEditado: false,
             cantidadEditado: false,
             costoBase: 0,
-            costoBaseConFormato: '0.00',
+            costoBaseConFormato: '$0.00',
+            esAutorizado: false,
           });
           this.displayCarga = 'none';
         });
@@ -2000,9 +2750,14 @@ export class PrecioUnitarioComponent implements OnInit {
                 ejeZ: '',
                 cantidad: 0,
                 x: 1,
+                xDecimal: '$1.00',
                 y: 1,
+                yDecimal: '$1.00',
                 z: 1,
+                zDecimal: '$1.00',
+                totalDecimal: '$0.00',
                 cantidadTotal: 0,
+                cantidadDecimal: '0.00',
                 cantidadOperacion: '',
               });
             });
@@ -2033,9 +2788,14 @@ export class PrecioUnitarioComponent implements OnInit {
                 ejeZ: '',
                 cantidad: 0,
                 x: 1,
+                xDecimal: '$1.00',
                 y: 1,
+                yDecimal: '$1.00',
                 z: 1,
+                zDecimal: '$1.00',
+                totalDecimal: '$0.00',
                 cantidadTotal: 0,
+                cantidadDecimal: '0.00',
                 cantidadOperacion: '',
               });
             });
@@ -2081,9 +2841,14 @@ export class PrecioUnitarioComponent implements OnInit {
               ejeZ: '',
               cantidad: 0,
               x: 1,
+              xDecimal: '$1.00',
               y: 1,
+              yDecimal: '$1.00',
               z: 1,
+              zDecimal: '$1.00',
+              totalDecimal: '$0.00',
               cantidadTotal: 0,
+              cantidadDecimal: '0.00',
               cantidadOperacion: '',
             });
           });
@@ -2107,6 +2872,14 @@ export class PrecioUnitarioComponent implements OnInit {
   }
 
   cambiarProyecto() {
+    this.fsrService
+      .obtenerFSR(this.selectedProyecto, this.selectedEmpresa)
+      .subscribe((fsr) => {
+        this.fsr = fsr;
+        this.esCompuesto = this.fsr.esCompuesto;
+        this.comprobarIndirectos();
+        this.obtenerCensatia();
+      });
     this.cargarRegistros();
     this.esquemaArbol2 = false;
     this.esquemaArbol3 = false;
@@ -2114,72 +2887,111 @@ export class PrecioUnitarioComponent implements OnInit {
     this.pestanas = false;
     this.dropdown = false;
     this.dropdown2 = false;
+
+    //   this.fsrService
+    //       .obtenerFSRDetalles(this.fsr.id, this.selectedEmpresa)
+    //       .subscribe((detalles) => {
+    //         this.porcentajePrestaciones = 0;
+    //         for (let i = 0; i < detalles.length; i++) {
+    //           this.porcentajePrestaciones =
+    //             this.porcentajePrestaciones + detalles[i].porcentajeFsrdetalle;
+    //         }
+    //         this.fsrDetalles = detalles;
+    //         this.fsrDetalles.push({
+    //           id: 0,
+    //           idFactorSalarioReal: this.fsr.id,
+    //           codigo: '',
+    //           descripcion: '',
+    //           porcentajeFsrdetalle: 0,
+    //           articulosLey: '',
+    //           idProyecto: 0,
+    //         });
+    //       });
+    // this.fsrService
+    //   .obtenerFSI(this.selectedProyecto, this.selectedEmpresa)
+    //   .subscribe((fsi) => {
+    //     this.fsi = fsi;
+
+    //   });
+
+    //   this.fsrService
+    //       .obtenerDiasNoLaborables(this.fsi.id, this.selectedEmpresa)
+    //       .subscribe((dias) => {
+    //         this.diasNoLaborales = 0;
+    //         for (let i = 0; i < dias.length; i++) {
+    //           this.diasNoLaborales = this.diasNoLaborales + dias[i].valor;
+    //         }
+    //         this.diasConsideradosFsiNoTrabajados = dias;
+    //         this.diasConsideradosFsiNoTrabajados.push({
+    //           id: 0,
+    //           codigo: '',
+    //           descripcion: '',
+    //           valor: 0,
+    //           articulosLey: '',
+    //           esLaborableOPagado: false,
+    //           idFactorSalarioIntegrado: this.fsi.id,
+    //           idProyecto: 0,
+    //         });
+    //       });
+    //     this.fsrService
+    //       .obtenerDiasPagados(this.fsi.id, this.selectedEmpresa)
+    //       .subscribe((dias) => {
+    //         this.diasPagados = 0;
+    //         for (let i = 0; i < dias.length; i++) {
+    //           this.diasPagados = this.diasPagados + dias[i].valor;
+    //         }
+    //         this.diasConsideradosFsiPagados = dias;
+    //         this.diasConsideradosFsiPagados.push({
+    //           id: 0,
+    //           codigo: '',
+    //           descripcion: '',
+    //           valor: 0,
+    //           articulosLey: '',
+    //           esLaborableOPagado: true,
+    //           idFactorSalarioIntegrado: this.fsi.id,
+    //           idProyecto: 0,
+    //         });
+    //       });
+  }
+
+  /**
+   * Verifica si existe un rango de censantía para el proyecto actual
+   *
+   * @remarks
+   * Si el proyecto es compuesto, no se verifica la censatía
+   * Si existe un rango de censantía, se establece la variable existCensatia en true,
+   * de lo contrario, se establece en false
+   */
+  obtenerCensatia() {
+    this.existeCensatia = true;
+    if (!this.esCompuesto) {
+      return;
+    }
     this.fsrService
-      .obtenerFSR(this.selectedProyecto, this.selectedEmpresa)
-      .subscribe((fsr) => {
-        this.fsr = fsr;
-        this.fsrService
-          .obtenerFSRDetalles(fsr.id, this.selectedEmpresa)
-          .subscribe((detalles) => {
-            this.porcentajePrestaciones = 0;
-            for (let i = 0; i < detalles.length; i++) {
-              this.porcentajePrestaciones =
-                this.porcentajePrestaciones + detalles[i].porcentajeFsrdetalle;
-            }
-            this.fsrDetalles = detalles;
-            this.fsrDetalles.push({
-              id: 0,
-              idFactorSalarioReal: this.fsr.id,
-              codigo: '',
-              descripcion: '',
-              porcentajeFsrdetalle: 0,
-              articulosLey: '',
-              idProyecto: 0,
-            });
-          });
-      });
-    this.fsrService
-      .obtenerFSI(this.selectedProyecto, this.selectedEmpresa)
-      .subscribe((fsi) => {
-        this.fsi = fsi;
-        this.fsrService
-          .obtenerDiasNoLaborables(fsi.id, this.selectedEmpresa)
-          .subscribe((dias) => {
-            this.diasNoLaborales = 0;
-            for (let i = 0; i < dias.length; i++) {
-              this.diasNoLaborales = this.diasNoLaborales + dias[i].valor;
-            }
-            this.diasConsideradosFsiNoTrabajados = dias;
-            this.diasConsideradosFsiNoTrabajados.push({
-              id: 0,
-              codigo: '',
-              descripcion: '',
-              valor: 0,
-              articulosLey: '',
-              esLaborableOPagado: false,
-              idFactorSalarioIntegrado: fsi.id,
-              idProyecto: 0,
-            });
-          });
-        this.fsrService
-          .obtenerDiasPagados(fsi.id, this.selectedEmpresa)
-          .subscribe((dias) => {
-            this.diasPagados = 0;
-            for (let i = 0; i < dias.length; i++) {
-              this.diasPagados = this.diasPagados + dias[i].valor;
-            }
-            this.diasConsideradosFsiPagados = dias;
-            this.diasConsideradosFsiPagados.push({
-              id: 0,
-              codigo: '',
-              descripcion: '',
-              valor: 0,
-              articulosLey: '',
-              esLaborableOPagado: true,
-              idFactorSalarioIntegrado: fsi.id,
-              idProyecto: 0,
-            });
-          });
+      .obtenerParametrosXInsumo(this.fsr, this.selectedEmpresa)
+      .subscribe({
+        next: (datos) => {
+          this.parametrosXInsumo = datos;
+        },
+        error: (err) => {
+          //Mensaje de error
+        },
+        complete: () => {
+          this.fsrService
+            .obtenerPorcentajeCesantiaEdad(
+              this.selectedProyecto,
+              this.selectedEmpresa
+            )
+            .subscribe({ next: (porcentaje) => {
+              if (porcentaje.length > 0 && this.parametrosXInsumo.length > 0) {
+                this.existeCensatia = true;
+              } else {
+                this.existeCensatia = false;
+              }
+            },error: (err) => {
+              //Mensaje de error
+            }});
+        },
       });
   }
 
@@ -2201,12 +3013,22 @@ export class PrecioUnitarioComponent implements OnInit {
       )
       .subscribe((preciosUnitariosParaCopiar) => {
         this.preciosUnitariosParaCopiar = preciosUnitariosParaCopiar;
+
         this.displayCarga = 'none';
       });
   }
 
   pruebaCont() {
     this.dropdown = true;
+  }
+
+  abrirDropdown(detalle: precioUnitarioDetalleDTO) {
+    if (detalle.id === 0) {
+      this.dropdown2 = true;
+      this.detalle = detalle;
+    } else {
+      this.dropdown2 = false;
+    }
   }
 
   pruebaCont2(detalle: precioUnitarioDetalleDTO) {
@@ -2238,7 +3060,6 @@ export class PrecioUnitarioComponent implements OnInit {
     this.precioUnitarioService
       .eliminar(precioUnitario.id, this.selectedEmpresa)
       .subscribe((preciosUnitarios) => {
-        console.log('entrando al proceso');
         if (!preciosUnitarios.estatus) {
           Swal.fire({
             imageUrl: 'assets/cancelado.svg',
@@ -2281,10 +3102,10 @@ export class PrecioUnitarioComponent implements OnInit {
             hijos: [],
             cantidadConFormato: '0.00',
             cantidadExcedenteConFormato: '0.00',
-            costoUnitarioConFormato: '0.00',
-            precioUnitarioConFormato: '0.00',
-            importeConFormato: '0.00',
-            importeSeriesConFormato: '0.00',
+            costoUnitarioConFormato: '$0.00',
+            precioUnitarioConFormato: '$0.00',
+            importeConFormato: '$0.00',
+            importeSeriesConFormato: '$0.00',
             cantidadEditado: false,
             costoUnitarioEditado: false,
             precioUnitarioEditado: false,
@@ -2292,6 +3113,10 @@ export class PrecioUnitarioComponent implements OnInit {
             porcentajeIndirectoConFormato: '',
             posicion: 0,
             codigoPadre: '',
+            esCatalogoGeneral: false,
+            esAvanceObra: false,
+            esAdicional: false,
+            esSeleccionado: false,
           });
         }
         this.displayCarga = 'none';
@@ -2345,7 +3170,13 @@ export class PrecioUnitarioComponent implements OnInit {
         this.seEstaEditando = false;
       } else {
         if (this.existeCaptura == true) {
-          this.precioUnitarioPadreCreacion.hijos.pop();
+          // this.precioUnitarioPadreCreacion.hijos.pop();
+          const index = this.precioUnitarioPadreCreacion.hijos.findIndex(
+            (item) => item.id === 0
+          );
+          if (index !== -1) {
+            this.precioUnitarioPadreCreacion.hijos.splice(index, 1);
+          }
           this.existeCaptura = false;
         } else {
           if (this.esquemaArbol2 == true && this.desglosados.length <= 1) {
@@ -2377,6 +3208,24 @@ export class PrecioUnitarioComponent implements OnInit {
         for (let i = 0; i < precioUnitarioCopia.hijos.length; i++) {
           precioUnitarioCopia.hijos[i].seleccionado = false;
           this.seleccionarHijos(precioUnitarioCopia.hijos[i]);
+        }
+      }
+    }
+  }
+
+  seleccionarHijosPresupuesto(precioUnitario: precioUnitarioDTO) {
+    if (precioUnitario.esSeleccionado) {
+      if (precioUnitario.hijos.length > 0) {
+        for (let i = 0; i < precioUnitario.hijos.length; i++) {
+          precioUnitario.hijos[i].esSeleccionado = true;
+          this.seleccionarHijosPresupuesto(precioUnitario.hijos[i]);
+        }
+      }
+    } else {
+      if (precioUnitario.hijos.length > 0) {
+        for (let i = 0; i < precioUnitario.hijos.length; i++) {
+          precioUnitario.hijos[i].esSeleccionado = false;
+          this.seleccionarHijosPresupuesto(precioUnitario.hijos[i]);
         }
       }
     }
@@ -2418,6 +3267,10 @@ export class PrecioUnitarioComponent implements OnInit {
     porcentajeIndirectoConFormato: '',
     posicion: 0,
     codigoPadre: '',
+    esCatalogoGeneral: false,
+    esAvanceObra: false,
+    esAdicional: false,
+    esSeleccionado: false,
   };
 
   importar(precioUnitario: precioUnitarioDTO) {
@@ -2463,7 +3316,6 @@ export class PrecioUnitarioComponent implements OnInit {
 
   importarConceptoDesdeArmado(precioUnitario: precioUnitarioDTO) {
     if (this.detallesCopiaReset1.length > 0) {
-      console.log('detallesCopiaReset1', this.detallesCopiaReset1);
       this.detallesCopia = this.detallesCopiaReset1.filter(
         (z) => z.idTipoInsumo == 10006
       );
@@ -2477,6 +3329,7 @@ export class PrecioUnitarioComponent implements OnInit {
           (registro) => (registro.seleccionado = false)
         );
         this.detallesCopia = this.detallesCopiaReset;
+        this.actualizarTotales();
       }
     }
     this.importarConceptoDesdePU = true;
@@ -2491,6 +3344,15 @@ export class PrecioUnitarioComponent implements OnInit {
     this.idTipoInsumoSelected = 0;
   }
 
+  autorizarPartida(precioUnitario: precioUnitarioDTO) {
+    this.precioUnitarioService
+      .autorizarXPrecioUnitario(precioUnitario, this.selectedEmpresa)
+      .subscribe((datos) => {
+        this.actualizarTotales();
+        this.cargarRegistros();
+      });
+  }
+
   importar2() {
     this.isGrid = true;
     this.contenedor2 = true;
@@ -2502,6 +3364,32 @@ export class PrecioUnitarioComponent implements OnInit {
     this.isGrid = false;
     this.contenedor2 = false;
     this.seEstaCopiando = false;
+  }
+
+  actualizarTotales() {
+    const totalSinIva = this.preciosUnitarios.reduce(
+      (acumulado, precioUnitario) => acumulado + (precioUnitario.importe || 0),
+      0
+    );
+
+    const totalConIva = this.preciosUnitarios.reduce(
+      (acumulado, precioUnitario) =>
+        acumulado +
+        (precioUnitario.importe || 0) *
+          (1 + (this.proyectoSelected.porcentajeIva || 0) / 100),
+      0
+    );
+
+    console.log(totalConIva);
+
+    this.totalSinIvaConFormato = totalSinIva.toLocaleString('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+    });
+    this.totalConFormato = totalConIva.toLocaleString('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+    });
   }
 
   importarDatos() {
@@ -2518,6 +3406,7 @@ export class PrecioUnitarioComponent implements OnInit {
         .subscribe((preciosUnitarios) => {
           this.importarConceptoDesdePU = false;
           this.preciosUnitarios = preciosUnitarios;
+          this.actualizarTotales();
           this.displayCarga = 'none';
         });
       this.contenedor2 = false;
@@ -2525,6 +3414,7 @@ export class PrecioUnitarioComponent implements OnInit {
       this.insumoService
         .obtenerParaAutocomplete(this.selectedProyecto, this.selectedEmpresa)
         .subscribe((insumos) => {
+          this.actualizarTotales();
           this.insumos = insumos;
         });
     } else {
@@ -2537,6 +3427,7 @@ export class PrecioUnitarioComponent implements OnInit {
           .copiarRegistros(this.datosCopia, this.selectedEmpresa)
           .subscribe((preciosUnitarios) => {
             this.preciosUnitarios = preciosUnitarios;
+            this.actualizarTotales();
             this.displayCarga = 'none';
           });
         this.contenedor2 = false;
@@ -2544,6 +3435,7 @@ export class PrecioUnitarioComponent implements OnInit {
         this.insumoService
           .obtenerParaAutocomplete(this.selectedProyecto, this.selectedEmpresa)
           .subscribe((insumos) => {
+            this.actualizarTotales();
             this.insumos = insumos;
           });
       } else {
@@ -2558,6 +3450,7 @@ export class PrecioUnitarioComponent implements OnInit {
           .copiarArmado(this.datosCopiaArmado, this.selectedEmpresa)
           .subscribe((preciosUnitarios) => {
             this.preciosUnitarios = preciosUnitarios;
+            this.actualizarTotales();
             this.displayCarga = 'none';
           });
         this.contenedor2 = false;
@@ -2565,6 +3458,7 @@ export class PrecioUnitarioComponent implements OnInit {
         this.insumoService
           .obtenerParaAutocomplete(this.selectedProyecto, this.selectedEmpresa)
           .subscribe((insumos) => {
+            this.actualizarTotales();
             this.insumos = insumos;
           });
       }
@@ -2614,7 +3508,7 @@ export class PrecioUnitarioComponent implements OnInit {
   }
 
   seleccionar(precioUnitario: precioUnitarioDTO) {
-    if (this.existenEstimaciones) {
+    if (this.contenedorCatalogoGeneral) {
       return;
     }
     if (precioUnitario.id != this.precioUnitarioSeleccionado.id) {
@@ -2628,6 +3522,11 @@ export class PrecioUnitarioComponent implements OnInit {
       precioUnitario.esDetalle = true;
       this.precioUnitarioSeleccionado = precioUnitario;
     }
+  }
+
+  seleccionarGenerador(generador: GeneradoresDTO) {
+    if (this.selectedGenerador != generador.id)
+      this.selectedGenerador = generador.id;
   }
 
   // seleccionarPUCantidad(precioUnitario: precioUnitarioDTO) {
@@ -2720,56 +3619,56 @@ export class PrecioUnitarioComponent implements OnInit {
       });
   }
 
-  crearFSIDias(dias: diasConsideradosDTO) {
-    if (
-      typeof dias.codigo == undefined ||
-      !dias.codigo ||
-      dias.codigo == '' ||
-      typeof dias.descripcion == undefined ||
-      !dias.descripcion ||
-      dias.descripcion == '' ||
-      typeof dias.valor == undefined ||
-      !dias.valor
-    ) {
-      this._snackBar.open('capture todos los campos', 'X', { duration: 3000 });
-      return;
-    }
-    this.fsrService.crearDiasFSI(dias, this.selectedEmpresa).subscribe(() => {
-      if (dias.esLaborableOPagado == true) {
-        this.diasConsideradosFsiPagados.push({
-          id: 0,
-          codigo: '',
-          descripcion: '',
-          valor: 0,
-          articulosLey: '',
-          esLaborableOPagado: true,
-          idFactorSalarioIntegrado: this.fsi.id,
-          idProyecto: this.selectedProyecto,
-        });
-      } else {
-        this.diasConsideradosFsiNoTrabajados.push({
-          id: 0,
-          codigo: '',
-          descripcion: '',
-          valor: 0,
-          articulosLey: '',
-          esLaborableOPagado: false,
-          idFactorSalarioIntegrado: this.fsi.id,
-          idProyecto: this.selectedProyecto,
-        });
-      }
-      this.fsrService
-        .obtenerFSR(this.selectedProyecto, this.selectedEmpresa)
-        .subscribe((fsr) => {
-          this.fsr = fsr;
-        });
-      this.fsrService
-        .obtenerFSI(this.selectedProyecto, this.selectedEmpresa)
-        .subscribe((fsi) => {
-          this.fsi = fsi;
-        });
-    });
-  }
+  // crearFSIDias(dias: diasConsideradosDTO) {
+  //   if (
+  //     typeof dias.codigo == undefined ||
+  //     !dias.codigo ||
+  //     dias.codigo == '' ||
+  //     typeof dias.descripcion == undefined ||
+  //     !dias.descripcion ||
+  //     dias.descripcion == '' ||
+  //     typeof dias.valor == undefined ||
+  //     !dias.valor
+  //   ) {
+  //     this._snackBar.open('capture todos los campos', 'X', { duration: 3000 });
+  //     return;
+  //   }
+  //   this.fsrService.crearDiasFSI(dias, this.selectedEmpresa).subscribe(() => {
+  //     if (dias.esLaborableOPagado == true) {
+  //       this.diasConsideradosFsiPagados.push({
+  //         id: 0,
+  //         codigo: '',
+  //         descripcion: '',
+  //         valor: 0,
+  //         articulosLey: '',
+  //         esLaborableOPagado: true,
+  //         idFactorSalarioIntegrado: this.fsi.id,
+  //         idProyecto: this.selectedProyecto,
+  //       });
+  //     } else {
+  //       this.diasConsideradosFsiNoTrabajados.push({
+  //         id: 0,
+  //         codigo: '',
+  //         descripcion: '',
+  //         valor: 0,
+  //         articulosLey: '',
+  //         esLaborableOPagado: false,
+  //         idFactorSalarioIntegrado: this.fsi.id,
+  //         idProyecto: this.selectedProyecto,
+  //       });
+  //     }
+  //     this.fsrService
+  //       .obtenerFSR(this.selectedProyecto, this.selectedEmpresa)
+  //       .subscribe((fsr) => {
+  //         this.fsr = fsr;
+  //       });
+  //     this.fsrService
+  //       .obtenerFSI(this.selectedProyecto, this.selectedEmpresa)
+  //       .subscribe((fsi) => {
+  //         this.fsi = fsi;
+  //       });
+  //   });
+  // }
 
   private readonly auxiliar = new BehaviorSubject<boolean>(true);
   precioUnitarioEditando!: precioUnitarioDTO;
@@ -2839,8 +3738,19 @@ export class PrecioUnitarioComponent implements OnInit {
     this.detalle.idTipoInsumo = insumo.idTipoInsumo;
   }
 
-  seleccionarConcepto(concepto: precioUnitarioDTO) {
+  seleccionarConcepto(
+    concepto: precioUnitarioDTO,
+    precioActual: precioUnitarioDTO
+  ) {
     this.precioUnitarioSeleccionado.codigo = concepto.codigo;
+    this.precioUnitarioSeleccionado.tipoPrecioUnitario =
+      concepto.tipoPrecioUnitario;
+    this.precioUnitarioSeleccionado.idPrecioUnitarioBase =
+      precioActual.idPrecioUnitarioBase;
+
+    this.precioUnitarioSeleccionado.esAdicional = true;
+    this.precioUnitarioSeleccionado.esAvanceObra = false;
+
     this.crear(this.precioUnitarioSeleccionado);
   }
 
@@ -2877,13 +3787,14 @@ export class PrecioUnitarioComponent implements OnInit {
           idTipoInsumo: 0,
           idFamiliaInsumo: 0,
           importe: 0,
-          costoUnitarioConFormato: '0.00',
+          costoUnitarioConFormato: '$0.00',
           cantidadConFormato: '0.00',
-          importeConFormato: '0.00',
+          importeConFormato: '$0.00',
           costoUnitarioEditado: false,
           cantidadEditado: false,
           costoBase: 0,
-          costoBaseConFormato: '0.00',
+          costoBaseConFormato: '$0.00',
+          esAutorizado: false,
         });
         this.precioUnitarioService
           .obtenerEstructurado(this.selectedProyecto, this.selectedEmpresa)
@@ -2916,13 +3827,14 @@ export class PrecioUnitarioComponent implements OnInit {
           idTipoInsumo: 0,
           idFamiliaInsumo: 0,
           importe: 0,
-          costoUnitarioConFormato: '0.00',
+          costoUnitarioConFormato: '$0.00',
           cantidadConFormato: '0.00',
-          importeConFormato: '0.00',
+          importeConFormato: '$0.00',
           costoUnitarioEditado: false,
           cantidadEditado: false,
           costoBase: 0,
-          costoBaseConFormato: '0.00',
+          costoBaseConFormato: '$0.00',
+          esAutorizado: false,
         });
         this.insumoService
           .obtenerParaAutocomplete(this.selectedProyecto, this.selectedEmpresa)
@@ -2972,6 +3884,30 @@ export class PrecioUnitarioComponent implements OnInit {
         .crearOperacion(operacion, this.selectedEmpresa)
         .subscribe((detalles) => {
           this.detalles = detalles;
+          this.detalles.push({
+            id: 0,
+            idPrecioUnitario: 0,
+            idInsumo: 0,
+            esCompuesto: false,
+            costoUnitario: 0,
+            costoUnitarioConFormato: '$0.00',
+            costoUnitarioEditado: false,
+            cantidad: 0,
+            cantidadConFormato: '0.00',
+            cantidadEditado: false,
+            cantidadExcedente: 0,
+            idPrecioUnitarioDetallePerteneciente: 0,
+            codigo: '',
+            descripcion: '',
+            unidad: '',
+            idTipoInsumo: 0,
+            idFamiliaInsumo: 0,
+            importe: 0,
+            importeConFormato: '$0.00',
+            costoBase: 0,
+            costoBaseConFormato: '$0.00',
+            esAutorizado: false,
+          });
           this.precioUnitarioDetalleService
             .obtenerOperaciones(
               this.detalleSeleccionado.id,
@@ -3004,12 +3940,7 @@ export class PrecioUnitarioComponent implements OnInit {
                   this.insumos = insumos;
                   this.insumosReset = insumos;
                 });
-              this.precioUnitarioService
-                .obtenerConceptos(this.selectedProyecto, this.selectedEmpresa)
-                .subscribe((datos) => {
-                  this.conceptos = datos;
-                  this.conceptosReset = datos;
-                });
+              this.cargarListaConceptos();
             });
         });
     } else {
@@ -3017,6 +3948,30 @@ export class PrecioUnitarioComponent implements OnInit {
         .editarOperacion(operacion, this.selectedEmpresa)
         .subscribe((detalles) => {
           this.detalles = detalles;
+          this.detalles.push({
+            id: 0,
+            idPrecioUnitario: 0,
+            idInsumo: 0,
+            esCompuesto: false,
+            costoUnitario: 0,
+            costoUnitarioConFormato: '$0.00',
+            costoUnitarioEditado: false,
+            cantidad: 0,
+            cantidadConFormato: '0.00',
+            cantidadEditado: false,
+            cantidadExcedente: 0,
+            idPrecioUnitarioDetallePerteneciente: 0,
+            codigo: '',
+            descripcion: '',
+            unidad: '',
+            idTipoInsumo: 0,
+            idFamiliaInsumo: 0,
+            importe: 0,
+            importeConFormato: '$0.00',
+            costoBase: 0,
+            costoBaseConFormato: '$0.00',
+            esAutorizado: false,
+          });
           this.precioUnitarioDetalleService
             .obtenerOperaciones(
               this.detalleSeleccionado.id,
@@ -3049,12 +4004,7 @@ export class PrecioUnitarioComponent implements OnInit {
                   this.insumos = insumos;
                   this.insumosReset = insumos;
                 });
-              this.precioUnitarioService
-                .obtenerConceptos(this.selectedProyecto, this.selectedEmpresa)
-                .subscribe((datos) => {
-                  this.conceptos = datos;
-                  this.conceptosReset = datos;
-                });
+              this.cargarListaConceptos();
             });
         });
     }
@@ -3095,11 +4045,7 @@ export class PrecioUnitarioComponent implements OnInit {
                 this.insumos = insumos;
                 this.insumosReset = insumos;
               });
-            this.precioUnitarioService
-              .obtenerConceptos(this.selectedProyecto, this.selectedEmpresa)
-              .subscribe((datos) => {
-                this.conceptos = datos;
-              });
+            this.cargarListaConceptos();
           });
       });
   }
@@ -3109,10 +4055,7 @@ export class PrecioUnitarioComponent implements OnInit {
     this.termino = this.inicio + e.pageSize;
   }
 
-  cambiarPaginaCopia(e: PageEvent) {
-    this.inicioCopia = e.pageIndex * e.pageSize;
-    this.terminoCopia = this.inicioCopia + e.pageSize;
-  }
+  cambiarPaginaCopia(e: PageEvent) {}
 
   // cargarExplosionDeInsumos(){
   //     this.precioUnitarioService.explosionDeInsumos(this.selectedProyecto, this.selectedEmpresa)
@@ -3137,31 +4080,130 @@ export class PrecioUnitarioComponent implements OnInit {
   // }
 
   openDialogFSR() {
-    const dialogOpen = this.dialog.open(DialogFSRComponent, {
-      data: {
-        diasConsideradosFsiNoTrabajados: this.diasConsideradosFsiNoTrabajados,
-        selectedEmpresa: this.selectedEmpresa,
-        diasConsideradosFsiPagados: this.diasConsideradosFsiPagados,
-        selectedProyecto: this.selectedProyecto,
-        diasNoLaborales: this.diasNoLaborales,
-        diasPagados: this.diasPagados,
-        fsrDetalles: this.fsrDetalles,
-        porcentajePrestaciones: this.porcentajePrestaciones,
-      },
-    });
-    dialogOpen.afterClosed().subscribe((respuesta) => {
-      if (respuesta) {
-        this.recalcularPresupuesto();
-        this.precioUnitarioService
-          .obtenerEstructurado(this.selectedProyecto, this.selectedEmpresa)
-          .subscribe((precios) => {
-            this.preciosUnitarios = precios;
-            this.esquemaArbol2 = false;
-            this.esquemaArbol3 = false;
-            this.esquemaArbol4 = false;
-            this.pestanas = false;
-          });
-      }
+    this.contenedorFSR = true;
+    this.contenedorPresupuesto = false;
+    this.contenedorExplosionInsumo = false;
+
+    this.dataFSR = {
+      diasConsideradosFsiNoTrabajados: this.diasConsideradosFsiNoTrabajados,
+      selectedEmpresa: this.selectedEmpresa,
+      diasConsideradosFsiPagados: this.diasConsideradosFsiPagados,
+      selectedProyecto: this.selectedProyecto,
+      diasNoLaborales: this.diasNoLaborales,
+      diasPagados: this.diasPagados,
+      fsrDetalles: this.fsrDetalles,
+      porcentajePrestaciones: this.porcentajePrestaciones,
+      esAutorizado: this.esAutorizado,
+    };
+    // const dialogOpen = this.dialog.open(DialogFSRComponent, {
+    //   data: {
+    //     diasConsideradosFsiNoTrabajados: this.diasConsideradosFsiNoTrabajados,
+    //     selectedEmpresa: this.selectedEmpresa,
+    //     diasConsideradosFsiPagados: this.diasConsideradosFsiPagados,
+    //     selectedProyecto: this.selectedProyecto,
+    //     diasNoLaborales: this.diasNoLaborales,
+    //     diasPagados: this.diasPagados,
+    //     fsrDetalles: this.fsrDetalles,
+    //     porcentajePrestaciones: this.porcentajePrestaciones,
+    //     esAutorizado: this.esAutorizado,
+    //   },
+    // });
+    // dialogOpen.afterClosed().subscribe((respuesta) => {
+    //   if (respuesta) {
+    //     this.recalcularPresupuesto();
+    //     this.precioUnitarioService
+    //       .obtenerEstructurado(this.selectedProyecto, this.selectedEmpresa)
+    //       .subscribe((precios) => {
+    //         this.preciosUnitarios = precios;
+    //         this.esquemaArbol2 = false;
+    //         this.esquemaArbol3 = false;
+    //         this.esquemaArbol4 = false;
+    //         this.pestanas = false;
+    //       });
+    //   }
+    // });
+  }
+
+  /**
+   * Cierra el dialogo de FSR y muestra el contenedor de presupuesto.
+   * Si se proporciona un evento, se vuelve a recalcular el presupuesto.
+   * Se llama a obtenerEstructurado para obtener la lista de precios unitarios.
+   * Se establecen las variables de esquemaArbol2, esquemaArbol3, esquemaArbol4 y pestanas en false.
+   * @param event - El evento que se provoca al cerrar el dialogo.
+   */
+  cerrarFSR(event: Event) {
+    this.contenedorFSR = false;
+    this.contenedorPresupuesto = true;
+    this.contenedorExplosionInsumo = false;
+    if (event) {
+      this.recalcularPresupuesto();
+      this.precioUnitarioService
+        .obtenerEstructurado(this.selectedProyecto, this.selectedEmpresa)
+        .subscribe((precios) => {
+          this.preciosUnitarios = precios;
+          this.esquemaArbol2 = false;
+          this.esquemaArbol3 = false;
+          this.esquemaArbol4 = false;
+          this.pestanas = false;
+        });
+      this.fsrService
+        .obtenerFSR(this.selectedProyecto, this.selectedEmpresa)
+        .subscribe((fsr) => {
+          this.esCompuesto = fsr.esCompuesto;
+          this.obtenerCensatia();
+        });
+    }
+  }
+
+  autorizarPresupuesto() {
+    this.displayCarga = 'flex';
+    this.precioUnitarioService
+      .autorizarPresupuesto(this.selectedProyecto, this.selectedEmpresa)
+      .subscribe((datos) => {
+        this.cargarRegistros();
+        this.displayCarga = 'none';
+      });
+  }
+
+  nuevaPartidaAdicional() {
+    var ultimoPU = this.preciosUnitarios[this.preciosUnitarios.length - 1];
+    this.preciosUnitarios.push({
+      id: 0,
+      idProyecto: this.selectedProyecto,
+      cantidad: 1,
+      cantidadExcedente: 0,
+      tipoPrecioUnitario: 0,
+      costoUnitario: 0,
+      nivel: 1,
+      noSerie: ultimoPU.noSerie,
+      idPrecioUnitarioBase: 0,
+      esDetalle: false,
+      idConcepto: 0,
+      codigo: '',
+      descripcion: '',
+      unidad: '',
+      precioUnitario: 0,
+      importe: 0,
+      importeSeries: 0,
+      expandido: false,
+      hijos: [],
+      cantidadConFormato: '0.00',
+      cantidadExcedenteConFormato: '0.00',
+      costoUnitarioConFormato: '$0.00',
+      precioUnitarioConFormato: '$0.00',
+      importeConFormato: '$0.00',
+      importeSeriesConFormato: '$0.00',
+      cantidadEditado: false,
+      costoUnitarioEditado: false,
+      precioUnitarioEditado: false,
+      porcentajeIndirecto: 0,
+      porcentajeIndirectoConFormato: '',
+      posicion: ultimoPU.posicion + 1,
+      codigoPadre: '',
+      esCatalogoGeneral: false,
+      esAvanceObra: false,
+      esAdicional: true,
+      esSeleccionado: false,
     });
   }
 
@@ -3179,14 +4221,364 @@ export class PrecioUnitarioComponent implements OnInit {
     //         this.recalcularPresupuesto();
     //     }
     // });
+    this.precioUnitarioParaExplosion.id = 0;
     this.appRecarga += 1;
     this.contenedorPresupuesto = false;
     this.contenedorExplosionInsumo = true;
   }
 
+  openDialogCatalogoGeneral() {
+    this.displayCarga = 'flex';
+
+    let seleccionados = this.obtenerConceptosSeleccionados(
+      this.preciosUnitarios
+    );
+    if (seleccionados.length > 0) {
+      this.precioUnitarioService
+        .agregarCatalogoGeneral(seleccionados, this.selectedEmpresa)
+        .subscribe((datos) => {
+          this.preciosRemplazoCatalogo = datos;
+          if (this.preciosRemplazoCatalogo.length) {
+            this.openDialogRemplazoCatalogo();
+          }
+        });
+    }
+
+    this.precioUnitarioService
+      .obtenerEstructurado(0, this.selectedEmpresa)
+      .pipe(finalize(() => (this.displayCarga = 'none')))
+      .subscribe({
+        next: (datos) => {
+          this.preciosUnitarios = datos;
+
+          this.contenedorPresupuesto = true;
+          this.contenedorCatalogoGeneral = true;
+          this.esquemaArbol2 = false;
+          this.esquemaArbol3 = false;
+          this.pestanas = false;
+        },
+        error: (err) => {
+          console.error('Error al cargar catálogo general', err);
+        },
+      });
+  }
+
+  obtenerConceptosSeleccionados(
+    precios: precioUnitarioDTO[]
+  ): precioUnitarioDTO[] {
+    let seleccionados: precioUnitarioDTO[] = [];
+    precios.forEach((precio) => {
+      if (precio.hijos.length > 0) {
+        let respuesta = this.obtenerConceptosSeleccionados(precio.hijos);
+        seleccionados.push(...respuesta);
+      }
+      if (precio.tipoPrecioUnitario == 1 && precio.esSeleccionado) {
+        seleccionados.push(precio);
+      }
+    });
+    return seleccionados;
+  }
+  obtenerPUSeleccionados(precios: precioUnitarioDTO[]): precioUnitarioDTO[] {
+    let seleccionados: precioUnitarioDTO[] = [];
+    precios.forEach((precio) => {
+      if (precio.hijos.length > 0) {
+        let respuesta = this.obtenerConceptosSeleccionados(precio.hijos);
+        seleccionados.push(...respuesta);
+      }
+      if (precio.esSeleccionado) {
+        seleccionados.push(precio);
+      }
+    });
+    return seleccionados;
+  }
+
+  obtenerPuSeleccionados(precios: precioUnitarioDTO[]): precioUnitarioDTO[] {
+    let seleccionados: precioUnitarioDTO[] = [];
+    precios.forEach((precio) => {
+      let nuevoPU: precioUnitarioDTO = {
+        id: 0,
+        descripcion: '',
+        hijos: [],
+        esSeleccionado: false,
+        costoUnitario: 0,
+        costoUnitarioConFormato: '',
+        importe: 0,
+        importeConFormato: '',
+        idProyecto: 0,
+        cantidad: 0,
+        cantidadConFormato: '',
+        cantidadEditado: false,
+        cantidadExcedente: 0,
+        cantidadExcedenteConFormato: '',
+        tipoPrecioUnitario: 0,
+        porcentajeIndirecto: 0,
+        porcentajeIndirectoConFormato: '',
+        costoUnitarioEditado: false,
+        nivel: 0,
+        noSerie: 0,
+        idPrecioUnitarioBase: 0,
+        esDetalle: false,
+        idConcepto: 0,
+        codigo: '',
+        unidad: '',
+        precioUnitario: 0,
+        precioUnitarioConFormato: '',
+        precioUnitarioEditado: false,
+        importeSeries: 0,
+        importeSeriesConFormato: '',
+        expandido: false,
+        posicion: 0,
+        codigoPadre: '',
+        esCatalogoGeneral: false,
+        esAvanceObra: false,
+        esAdicional: false,
+      };
+      if (precio.hijos.length > 0) {
+        let respuesta = this.obtenerPuSeleccionados(precio.hijos);
+        nuevoPU.descripcion = precio.descripcion;
+        nuevoPU.codigo = precio.codigo;
+
+        if (respuesta.length > 0 && respuesta[0].esSeleccionado) {
+          nuevoPU.hijos = respuesta;
+          nuevoPU.esSeleccionado = true;
+          nuevoPU.costoUnitario = respuesta.reduce(
+            (acumulador, valor) => acumulador + valor.costoUnitario,
+            0
+          );
+          nuevoPU.costoUnitarioConFormato = new Intl.NumberFormat('es-MX', {
+            minimumFractionDigits: 4,
+          }).format(nuevoPU.costoUnitario);
+          nuevoPU.importe = respuesta.reduce(
+            (acumulador, valor) => acumulador + valor.importe,
+            0
+          );
+          nuevoPU.importeConFormato = new Intl.NumberFormat('es-MX', {
+            minimumFractionDigits: 4,
+          }).format(nuevoPU.importe);
+          seleccionados.push(nuevoPU);
+        }
+      }
+      if (precio.tipoPrecioUnitario == 1 && precio.esSeleccionado) {
+        seleccionados.push(precio);
+      }
+    });
+    return seleccionados;
+  }
+
+  openDialogRemplazoCatalogo() {
+    this.dialog.open(this.dialogRemplazarCatalogo, {
+      width: '20%',
+      disableClose: true,
+    });
+  }
+
+  importarCatalogoDesdePu() {
+    if (this.precioUnitarioSeleccionado.esAvanceObra) {
+      Swal.fire({
+        confirmButtonText: 'Aceptar',
+        html: `
+            <div>
+              <div class="mb-2 mt-2"><p style="margin : 0px;">El elemento seleccionado ya ha sido autorizado.</p></div>
+            </div>
+          `,
+        imageWidth: 50,
+        customClass: {
+          icon: 'no-border',
+          cancelButton: 'SweetAlert2CancelButtonError',
+          confirmButton: 'SweetAlert2ConfirmButton',
+        },
+      });
+      return;
+    }
+    if (this.precioUnitarioSeleccionado.id === 0) {
+      Swal.fire({
+        confirmButtonText: 'Aceptar',
+        html: `
+            <div>
+              <div class="mb-2 mt-2"><p style="margin : 0px;">No se ha seleccionado un campo destino.</p></div>
+            </div>
+          `,
+        imageWidth: 50,
+        customClass: {
+          icon: 'no-border',
+          cancelButton: 'SweetAlert2CancelButtonError',
+          confirmButton: 'SweetAlert2ConfirmButton',
+        },
+      });
+      return;
+    }
+    let catalogoSeleccion = this.preciosUnitarios.filter(
+      (z) => z.esSeleccionado
+    );
+    if (catalogoSeleccion.length == 0) {
+      Swal.fire({
+        confirmButtonText: 'Aceptar',
+        html: `
+            <div>
+              <div class="mb-2 mt-2"><p style="margin : 0px;">No se ha seleccionado un elemento a importar.</p></div>
+            </div>
+          `,
+        imageWidth: 50,
+        customClass: {
+          icon: 'no-border',
+          cancelButton: 'SweetAlert2CancelButtonError',
+          confirmButton: 'SweetAlert2ConfirmButton',
+        },
+      });
+      return;
+    }
+
+    let parametros: DatosParaImportarCatalogoGeneralDTO = {
+      registros: catalogoSeleccion,
+      precioUnitario: this.precioUnitarioSeleccionado,
+    };
+
+    Swal.fire({
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      showCancelButton: true,
+      html: `<p>¿Desea importar al presupuesto?</p>`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.precioUnitarioService
+          .importarCatalogoAPrecioUnitario(parametros, this.selectedEmpresa)
+          .subscribe((datos) => {
+            this.contenedorCatalogoGeneral = false;
+            this.contenedorPresupuesto = true;
+            this.cargarRegistros();
+            this.recalcularPresupuesto();
+          });
+      }
+    });
+  }
+
+  eliminarDeCatalogoGeneral() {
+    let existeSeleccion = this.preciosUnitarios.filter((z) => z.esSeleccionado);
+    if (existeSeleccion.length <= 0) {
+      Swal.fire({
+        confirmButtonText: 'Aceptar',
+        html: `
+            <div>
+              <div class="mb-2 mt-2"><p style="margin : 0px;">No se ha seleccionado un elemento a eliminar.</p></div>
+            </div>
+          `,
+        imageWidth: 50,
+        customClass: {
+          icon: 'no-border',
+          cancelButton: 'SweetAlert2CancelButtonError',
+          confirmButton: 'SweetAlert2ConfirmButton',
+        },
+      });
+      return;
+    }
+
+    Swal.fire({
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      showCancelButton: true,
+      html: `<p>¿Desea eliminar del catálogo de conceptos generales?</p>`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.precioUnitarioService
+          .eliminarCatalogoGeneral(existeSeleccion, this.selectedEmpresa)
+          .subscribe((datos) => {
+            this.precioUnitarioService
+              .obtenerEstructurado(0, this.selectedEmpresa)
+              .pipe(finalize(() => (this.displayCarga = 'none')))
+              .subscribe({
+                next: (datos) => {
+                  this.preciosUnitarios = datos;
+
+                  this.contenedorPresupuesto = true;
+                  this.contenedorCatalogoGeneral = true;
+                  this.esquemaArbol2 = false;
+                  this.esquemaArbol3 = false;
+                  this.pestanas = false;
+                },
+                error: (err) => {
+                  Swal.fire({
+                    confirmButtonText: 'Aceptar',
+                    html: `
+            <div>
+              <div class="mb-2 mt-2"><p style="margin : 0px;">No se permite mover elementos dentro del catálogo general.</p></div>
+            </div>
+          `,
+                    imageWidth: 50,
+                    customClass: {
+                      icon: 'no-border',
+                      cancelButton: 'SweetAlert2CancelButtonError',
+                      confirmButton: 'SweetAlert2ConfirmButton',
+                    },
+                  });
+                },
+              });
+          });
+      } else {
+        this.displayCarga = 'none';
+      }
+      this.ChangeDetectorRef.detectChanges();
+    });
+  }
+
+  remplazarCatalogoGeneral() {
+    let seleccionadoRemplazar = this.preciosRemplazoCatalogo.filter(
+      (z) => z.esSeleccionado
+    );
+    if (seleccionadoRemplazar.length > 0) {
+      this.precioUnitarioService
+        .remplazarCatalogoGeneral(seleccionadoRemplazar, this.selectedEmpresa)
+        .subscribe((datos) => {
+          this.preciosRemplazoCatalogo = [];
+          this.limpiarRemplazarCatalogo();
+          this.precioUnitarioService
+            .obtenerEstructurado(0, this.selectedEmpresa)
+            .pipe(finalize(() => (this.displayCarga = 'none')))
+            .subscribe({
+              next: (datos) => {
+                this.preciosUnitarios = datos;
+
+                this.contenedorPresupuesto = true;
+                this.contenedorCatalogoGeneral = true;
+                this.esquemaArbol2 = false;
+                this.esquemaArbol3 = false;
+                this.pestanas = false;
+              },
+              error: (err) => {
+                console.error('Error al cargar catálogo general', err);
+              },
+            });
+        });
+    }
+  }
+
+  regresarPU() {
+    this.contenedorPresupuesto = true;
+    this.contenedorCatalogoGeneral = false;
+    this.cargarRegistros();
+  }
+
+  explosionInsumoXPrecioUnitario(precioUnitario: precioUnitarioDTO) {
+    this.IdPrecioParaExplosion = precioUnitario.id;
+    console.log(precioUnitario);
+
+    this.precioUnitarioParaExplosion = precioUnitario;
+
+    // console.log({...this.precioUnitarioParaExplosion}, 'copia');
+    console.log(this.precioUnitarioParaExplosion.id);
+
+    this.appRecarga += 1;
+
+    this.contenedorPresupuesto = false;
+    this.contenedorExplosionInsumo = true;
+    this.contenedorFSR = false;
+  }
+
   recalcular(event: Event) {
+    console.log('event', event);
+
     this.contenedorPresupuesto = true;
     this.contenedorExplosionInsumo = false;
+    this.contenedorFSR = false;
     if (event) {
       console.log('recalculando');
       this.recalcularPresupuesto();
@@ -3261,7 +4653,24 @@ export class PrecioUnitarioComponent implements OnInit {
         this.totalConFormato = new Intl.NumberFormat('es-MX', {
           style: 'currency',
           currency: 'MXN',
+        }).format(
+          this.proyectoSelected.porcentajeIva > 0
+            ? this.total +
+                (this.total * this.proyectoSelected.porcentajeIva) / 100
+            : this.total
+        );
+        this.totalSinIvaConFormato = new Intl.NumberFormat('es-MX', {
+          style: 'currency',
+          currency: 'MXN',
         }).format(this.total);
+        this.totalIvaConFormato = new Intl.NumberFormat('es-MX', {
+          style: 'currency',
+          currency: 'MXN',
+        }).format(
+          this.proyectoSelected.porcentajeIva > 0
+            ? (this.total * this.proyectoSelected.porcentajeIva) / 100
+            : 0
+        );
         this.displayCarga = 'none';
       });
   }
@@ -3272,6 +4681,23 @@ export class PrecioUnitarioComponent implements OnInit {
       this.cargarRegistros();
       // this.recalcularPresupuesto();
     });
+  }
+
+  /**
+   * Comprueba si existen indirectos para el proyecto y empresa seleccionados.
+   *
+   * @returns {void}
+   */
+  comprobarIndirectos() {
+    this._IndirectosService
+      .ObtenerIndirectos(this.selectedEmpresa, this.selectedProyecto)
+      .subscribe((datos) => {
+        if (datos.length > 0) {
+          this.existeIndirectos = true;
+        } else {
+          this.existeIndirectos = false;
+        }
+      });
   }
 
   IndirectosXConcepto(precio: precioUnitarioDTO) {
@@ -3299,10 +4725,12 @@ export class PrecioUnitarioComponent implements OnInit {
       disableClose: true,
     });
   }
+
   limpiarCargarExcel() {
     this.dialog.closeAll();
     this.mensajeModal = '';
     this.selectedFileName = '';
+    this.tooltipVisible = false;
   }
   detenerCierre(event: MouseEvent) {
     event.stopPropagation();
@@ -3313,8 +4741,11 @@ export class PrecioUnitarioComponent implements OnInit {
     this.selectedFileName = files![0].name;
   }
 
+  limpiarRemplazarCatalogo() {
+    this.dialog.closeAll();
+  }
+
   cargarPresupuestoExcel() {
-    // Limpia cualquier mensaje previo
     this.mensajeModal = '';
 
     if (!this.archivosCargarExcels || this.archivosCargarExcels.length === 0) {
@@ -3337,6 +4768,7 @@ export class PrecioUnitarioComponent implements OnInit {
           if (datos.estatus) {
             this.cargarRegistros();
             this.limpiarCargarExcel();
+            this.recalcularPresupuesto();
           } else {
             this.mensajeModal =
               datos.descripcion || 'Error al procesar el archivo';
@@ -3362,6 +4794,7 @@ export class PrecioUnitarioComponent implements OnInit {
       return;
     }
 
+    this.limpiarCargarExcel();
     this.displayCarga = 'flex';
 
     this.precioUnitarioService
@@ -3374,10 +4807,12 @@ export class PrecioUnitarioComponent implements OnInit {
         next: (datos) => {
           this.displayCarga = 'none';
 
+          console.log(datos, 'UwU');
           if (datos.estatus) {
             // se subio
             this.cargarRegistros();
-            this.limpiarCargarExcel();
+
+            this.recalcularPresupuesto();
           } else {
             // error back
             this.mensajeModal =
@@ -3396,13 +4831,56 @@ export class PrecioUnitarioComponent implements OnInit {
       });
   }
 
+  totalesConFormato() {
+    this.totalConIva = this.preciosUnitarios.reduce(
+      (acumulado, precioUnitario) =>
+        acumulado +
+        (precioUnitario.importe || 0) *
+          (1 + (this.proyectoSelected.porcentajeIva || 0) / 100),
+      0
+    );
+
+    this.preciosMarcados = this.obtenerPuSeleccionados(this.preciosUnitarios);
+
+    // this.total = 0;
+    // for (let i = 0; i < this.preciosMarcados.length; i++) {
+    //   this.total = this.total + this.preciosMarcados[i].importe;
+    // }
+    this.totalConFormato = new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+    }).format(
+      this.proyectoSelected.porcentajeIva > 0
+        ? this.total + (this.total * this.proyectoSelected.porcentajeIva) / 100
+        : this.total
+    );
+    this.totalSinIvaConFormato = new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+    }).format(this.total);
+    this.totalIvaConFormato = new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+    }).format(
+      this.proyectoSelected.porcentajeIva > 0
+        ? (this.total * this.proyectoSelected.porcentajeIva) / 100
+        : 0
+    );
+  }
+
   abrirModalCostoHorario(detalle: precioUnitarioDetalleDTO) {
     if (detalle.idTipoInsumo === 10007) {
       this.isOpenModal = true;
     }
   }
 
+  abrirModalImprimir() {
+    this.isOpenModalImprimir = true;
+    this.totalesConFormato();
+  }
+
   closeModal() {
     this.isOpenModal = false;
+    this.isOpenModalImprimir = false;
   }
 }

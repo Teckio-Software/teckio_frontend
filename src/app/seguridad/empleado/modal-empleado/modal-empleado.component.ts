@@ -5,6 +5,8 @@ import { EmpleadoDTO } from '../empleado';
 import { EmpleadoServiceService } from '../empleado-service.service';
 import { SeguridadService } from '../../seguridad.service';
 import { formatDate } from '@angular/common';
+import { error, log } from 'node:console';
+import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 
 @Component({
   selector: 'app-modal-empleado',
@@ -29,6 +31,17 @@ export class ModalEmpleadoComponent {
     estatus: false,
     seleccionado: false
   }
+
+  errorGlobal: boolean = false;
+  errorNo: boolean = false;
+  errorAP: boolean = false;
+  errorAM: boolean = false;
+  errorCURP: RespuestaDTO = {estatus: false, descripcion: ''};
+  errorRFC: RespuestaDTO = {estatus: false, descripcion: ''};
+  errorSS: RespuestaDTO = {estatus: false, descripcion: ''};
+  errorFRL: boolean = false;
+  errorFTRL: boolean = false;
+  errorSD: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<ModalEmpleadoComponent>,
@@ -64,16 +77,77 @@ export class ModalEmpleadoComponent {
 
   validacionCampos(){
     this.empleado = this.form.getRawValue();
-    if(this.empleado.nombre == "" || this.empleado.nombre == undefined || this.empleado.nombre == null ||
-      this.empleado.apellidoPaterno == "" || this.empleado.apellidoPaterno == undefined || this.empleado.apellidoPaterno == null ||
-      this.empleado.apellidoMaterno == "" || this.empleado.apellidoMaterno == undefined || this.empleado.apellidoMaterno == null ||
-      this.empleado.curp == "" || this.empleado.curp == undefined || this.empleado.curp == null || this.empleado.curp.length > 18 ||
-      this.empleado.rfc == "" || this.empleado.rfc == undefined || this.empleado.rfc == null || this.empleado.rfc.length > 13 ||
-      this.empleado.seguroSocial == "" || this.empleado.seguroSocial == undefined || this.empleado.seguroSocial == null || this.empleado.seguroSocial.length > 20 ||
-      this.empleado.salarioDiario <= 0 || this.empleado.salarioDiario == undefined
+    if((this.empleado.nombre == "" || this.empleado.nombre == undefined || this.empleado.nombre == null) &&
+      (this.empleado.apellidoPaterno == "" || this.empleado.apellidoPaterno == undefined || this.empleado.apellidoPaterno == null) &&
+      (this.empleado.apellidoMaterno == "" || this.empleado.apellidoMaterno == undefined || this.empleado.apellidoMaterno == null) &&
+      (this.empleado.curp == "" || this.empleado.curp == undefined || this.empleado.curp == null || this.empleado.curp.length > 18 || this.empleado.curp.length < 18) &&
+      (this.empleado.rfc == "" || this.empleado.rfc == undefined || this.empleado.rfc == null || this.empleado.rfc.length > 13) &&
+      (this.empleado.seguroSocial == "" || this.empleado.seguroSocial == undefined || this.empleado.seguroSocial == null || this.empleado.seguroSocial.length > 20) &&
+      (this.empleado.salarioDiario <= 0 || this.empleado.salarioDiario == undefined)
     ){
-      console.log("Error llene los campos correctamente");
+      this.errorGlobal = true;
     }else{
+      let c = true;
+      if(this.empleado.nombre == "" || this.empleado.nombre == undefined || this.empleado.nombre == null){
+        this.errorNo = true;
+        c = false;
+      }
+      if(this.empleado.apellidoPaterno == "" || this.empleado.apellidoPaterno == undefined || this.empleado.apellidoPaterno == null){
+        this.errorAP = true;
+        c = false;
+      }
+      if(this.empleado.apellidoMaterno == "" || this.empleado.apellidoMaterno == undefined || this.empleado.apellidoMaterno == null){
+        this.errorAM = true;
+        c = false;
+      }
+      if(this.empleado.curp == "" || this.empleado.curp == undefined || this.empleado.curp == null){
+        this.errorCURP.estatus = true;
+        this.errorCURP.descripcion = "El campo 'CURP' es requerido"
+        c = false;
+      }else{
+        if(this.empleado.curp.length > 18 || this.empleado.curp.length < 18){
+        this.errorCURP.estatus = true;
+        this.errorCURP.descripcion = "El campo 'CURP' debe tener 18 caracteres";
+        c = false;
+      }
+      }
+      if(this.empleado.rfc == "" || this.empleado.rfc == undefined || this.empleado.rfc == null){
+        this.errorRFC.estatus = true;
+        this.errorRFC.descripcion = "El campo 'RFC' es requerido";
+        c = false;
+      }else{
+        if(this.empleado.rfc.length < 12){
+        this.errorRFC.estatus = true;
+        this.errorRFC.descripcion = "El campo 'RFC' debe tener 12 o 13 caracteres";
+        c = false;
+      }
+      }
+      if(this.empleado.seguroSocial == "" || this.empleado.seguroSocial == undefined || this.empleado.seguroSocial == null){
+        this.errorSS.estatus = true;
+        this.errorSS.descripcion = "El campo 'Seguro social' es requerido"; 
+        c = false;
+      }else{
+        if(this.empleado.seguroSocial.length > 20){
+        this.errorSS.estatus = true;
+        this.errorSS.descripcion = "El campo 'Seguro social' debe tener 20 caracteres"; 
+        c = false;
+      }
+      }
+      if(this.empleado.fechaRelacionLaboral == undefined || this.empleado.fechaRelacionLaboral == null){
+        this.errorFRL = true;
+        c = false;
+      }
+      if(this.empleado.fechaTerminoRelacionLaboral == undefined || this.empleado.fechaTerminoRelacionLaboral == null){
+        this.errorFTRL = true;
+        c = false;
+      }
+      if(this.empleado.salarioDiario <= 0 || this.empleado.salarioDiario == undefined){
+        this.errorSD = true;
+        c = false;
+      }
+      if(!c){
+        return;
+      }
       this.guardar();
     }
   }
@@ -92,7 +166,21 @@ export class ModalEmpleadoComponent {
     }
   }
 
+  limpiarErrores(){
+    this.errorGlobal = false;
+    this.errorNo = false;
+    this.errorAP = false;
+    this.errorAM = false;
+    this.errorCURP.estatus = false;
+    this.errorRFC.estatus = false;
+    this.errorSS.estatus = false;
+    this.errorFRL = false;
+    this.errorFTRL = false;
+    this.errorSD = false;
+  }
+
   cerrar(){
+    this.limpiarErrores();
     this.dialogRef.close(true);
   }
 

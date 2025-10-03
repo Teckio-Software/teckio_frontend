@@ -10,12 +10,12 @@
           </datalist>
         </div> -->
     </div>
-    <div style="flex-grow: 1; flex-basis: auto; display: flex; gap: 5px;">
-      <div style="overflow-x: auto; white-space: nowrap;margin: 0 auto; margin-top: 0px; width: 100%;">
-        <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
-          <thead>
+    <div class="flex-grow flex-shrink basis-auto gap-1.5 mb-2" style="display: flex;">
+      <div class="whitespace-nowrap mx-auto overflow-x-auto w-full shadow-md rounded-lg mt-[0px]">
+        <table class="w-full text-sm mb-0">
+          <thead class="bg-primario text-white ">
             <tr>
-              <th style="width: 50%;" scope="col">
+              <th class="w-[50%] px-1 py-[2px] xs:w-[75px]" scope="col">
                 <select class="select-destajo" 
                         style="background-color: transparent; border: none; color: #f2f2f2; font-weight: 800;" 
                         (change)="onSelectionChangeDestajos($event)" 
@@ -24,7 +24,7 @@
                   <option class="opcion-destajos" value="Destajo">Destajo</option>
                 </select>
               </th>
-              <th style="width: 30%;" scope="col">{{nombreDestajo || "Subcontratistas"}}</th>
+              <th style="width: 30%;" class="px-1 py-[2px] xs:w-[75px]" scope="col">{{nombreDestajo || "Subcontratistas"}}</th>
             </tr>
           </thead>
           <tbody>
@@ -50,36 +50,42 @@
         </table>
       </div>
       <div class="contenedor-button">
-        <button class="buttons-fn" (click)="Finiquitar()" [disabled]="contratoBloqueado">Finiquitar</button>
-        <button class="buttons-fn" (click)="NewDestajo()">Nuevo</button>
+        <button class="button bg-colorButton hover:bg-colorButtonHover text-[#f2f2f2]" (click)="Finiquitar()" [disabled]="contratoBloqueado">Finiquitar</button>
+        <button class="button bg-colorButton hover:bg-colorButtonHover text-[#f2f2f2]" (click)="NewDestajo()">Nuevo</button>
       </div>
     </div>
   </div>
   <div>
-    <div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px;">
-      <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
-        <thead>
+    <div style="white-space: nowrap; margin: 0 auto;" class="overflow-x-auto w-full shadow-md rounded-lg mt-[0px]">
+      <table class="w-full text-sm mb-0">
+        <thead class="bg-primario text-white ">
           <tr>
-            <th class="cabecera1" scope="col">No.</th>
-            <th class="cabecera1" scope="col">Alta</th>
-            <th class="cabecera1" scope="col">% Anticipo</th>
-            <th class="cabecera1" scope="col">% IVA</th>
-            <th class="cabecera1" scope="col">Total de Destajo</th>
-            <th class="cabecera1" scope="col">Inicio</th>
-            <th class="cabecera1" scope="col">termino</th>
-            <th class="cabecera1" scope="col">Finiquito</th>
-            <th class="cabecera1" scope="col">Estatus</th>
+            <th class="px-1 py-[2px] xs:w-[75px]" scope="col">No.</th>
+            <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Alta</th>
+            <th class="px-1 py-[2px] xs:w-[75px]" scope="col">% Anticipo</th>
+            <th class="px-1 py-[2px] xs:w-[75px]" scope="col">% IVA</th>
+            <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Total de destajo</th>
+            <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Inicio</th>
+            <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Término</th>
+            <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Finiquito</th>
+            <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Estatus</th>
 
 
           </tr>
         </thead>
+        
         <tbody>
-          <tr>
+          <tr *ngIf="detallesContrato.length<=0" class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]" >
+            <td colspan="9" class="text-center">
+              No hay contratos para mostrar
+            </td>
+          </tr>
+          <tr class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]">
               <td class="td-0" scope="col">1</td>
               <td class="td-0" scope="col">29/mayo/2019</td>
-              <td class="td-0" scope="col">0.00</td>
-              <td class="td-0" scope="col">0.00</td>
-              <td class="td-0" scope="col">0.00</td>
+              <td class="td-0 text-end" scope="col">0.0000</td>
+              <td class="td-0 text-end" scope="col">0.0000</td>
+              <td class="td-0 text-end" scope="col">$0.0000</td>
               <td class="td-0" scope="col">
                 <input  class="input-fecha"  type="date">
               </td>
@@ -115,28 +121,35 @@
   </div>
   <div>
     
-    <div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px;">
-      <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
-        <thead>
+    <div style="white-space: nowrap; margin: 0 auto;" class="overflow-x-auto w-full shadow-md rounded-lg mt-[0px]">
+      <table class="w-full text-sm mb-0">
+        <thead class="bg-primario text-white ">
           <tr>
-            <th class="cabecera1" scope="col" style="width: 2%;">-</th>
-            <th class="cabecera1" scope="col" style="width: 14%;">Codigo</th>
-            <th class="cabecera1" scope="col" style="width: 30%;">Descripcion</th>
-            <th class="cabecera1" scope="col" style="width: 6%;">Unidad</th>
-            <th class="cabecera1" scope="col" style="width: 10%;">Cantidad</th>
-            <th class="cabecera1" scope="col" style="width: 10%;">Importe   </th>
-            <th class="cabecera1" scope="col" style="width: 6%;">Asignado</th>
-            <th class="cabecera1" scope="col" style="width: 6%;">% FA</th>
-            <th class="cabecera1" scope="col" style="width: 6%;">Acum.</th>
-            <th class="cabecera1" scope="col" style="width: 10%;">Importe Des.</th>
+            <th class="px-1 py-[2px] xs:w-[75px]" scope="col" style="width: 2%;">-</th>
+            <th class="px-1 py-[2px] xs:w-[75px]" scope="col" style="width: 14%;">Código</th>
+            <th class="px-1 py-[2px] xs:w-[75px]" scope="col" style="width: 30%;">Descripción</th>
+            <th class="px-1 py-[2px] xs:w-[75px]" scope="col" style="width: 6%;">Unidad</th>
+            <th class="px-1 py-[2px] xs:w-[75px]" scope="col" style="width: 10%;">Cantidad</th>
+            <th class="px-1 py-[2px] xs:w-[75px]" scope="col" style="width: 10%;">Importe   </th>
+            <th class="px-1 py-[2px] xs:w-[75px]" scope="col" style="width: 6%;">Asignado</th>
+            <th class="px-1 py-[2px] xs:w-[75px]" scope="col" style="width: 6%;">% FA</th>
+            <th class="px-1 py-[2px] xs:w-[75px]" scope="col" style="width: 6%;">Acum.</th>
+            <th class="px-1 py-[2px] xs:w-[75px]" scope="col" style="width: 10%;">Importe des.</th>
           </tr>
         </thead>
       </table>  
         <div>
+          <div *ngIf="detallesContrato.length<=0" class="w-full">
+            <tr class="text-center w-full flex justify-center">
+              <div class="text-gray-700 font-medium" >No hay contratos para mostrar</div>
+            </tr>
+          </div>
+          
           <tree-view [treeData]="detallesContrato">
             <ng-template let-detalle>
               <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
                 <tbody>
+                  
                   <tr>
                     <ng-template #tooltipContent>
                       <div style="overflow-y: auto; white-space: nowrap; margin: 0 auto; cursor: pointer; max-height: 100px; width: fit-content;">
@@ -205,7 +218,7 @@
                     <td
                       style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 10%; padding-left: 0px;"
                       class="cont-drill">
-                      <input autocomplete="off" type="text" class="" id="input-table"
+                      <input autocomplete="off" type="text" class="text-end" id="input-table"
                         [(ngModel)]="detalle.cantidadConFormato" readonly
                         style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;">
                     </td>
@@ -213,7 +226,7 @@
                     <td
                       style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 10%; padding-left: 0px;"
                       class="cont-drill">
-                      <input autocomplete="off" type="text" class="" id="input-table"
+                      <input autocomplete="off" type="text" class="text-end" id="input-table"
                         [(ngModel)]="detalle.importeConFormato" readonly
                         style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;">
                     </td>
@@ -221,7 +234,7 @@
                     <td
                       style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 6%; padding-left: 0px;"
                       class="cont-drill" *ngIf="!detalle.porcentajeDestajoEditando"  (click)="habilitarEdicion(detalle)">
-                      <input autocomplete="off" type="text" class="" id="input-table"
+                      <input autocomplete="off" type="text" class="text-end" id="input-table"
                         [(ngModel)]="detalle.porcentajeDestajoConFormato" readonly
                         [ngStyle]="{
                           'background-color':
@@ -236,7 +249,7 @@
                     <td
                       style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #e3292917; width: 6%; padding-left: 0px;"
                       class="cont-drill" *ngIf="detalle.porcentajeDestajoEditando">
-                      <input autocomplete="off" type="text" class="" id="input-table"
+                      <input autocomplete="off" type="text" class="text-end" id="input-table"
                         [(ngModel)]="detalle.porcentajeDestajo"
                         [ngStyle]="{
                           'background-color':
@@ -251,7 +264,7 @@
                     <td
                       style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 6%; padding-left: 0px;"
                       class="cont-drill" *ngIf="!detalle.porcentajeDestajoEditando"  (click)="habilitarEdicion(detalle)">
-                      <input autocomplete="off" type="text" class="" id="input-table"
+                      <input autocomplete="off" type="text" class="text-end" id="input-table"
                         [(ngModel)]="detalle.factorDestajoConFormato" readonly
                         [ngStyle]="{
                           'background-color': 
@@ -266,7 +279,7 @@
                     <td
                       style="border-right: 1px solid #ab090917; border-right: 1px solid #f2f2f217; width: 6%; padding-left: 0px;"
                       class="cont-drill" *ngIf="detalle.porcentajeDestajoEditando">
-                      <input autocomplete="off" type="text" class="" id="input-table"
+                      <input autocomplete="off" type="text" class="text-end" id="input-table"
                         [(ngModel)]="detalle.factorDestajo"
                         [ngStyle]="{
                           'background-color':
@@ -281,7 +294,7 @@
                     <td
                       style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 6%; padding-left: 0px;"
                       class="cont-drill">
-                      <input autocomplete="off" type="text" class="" id="input-table"
+                      <input autocomplete="off" type="text" class="text-end" id="input-table"
                         [(ngModel)]="detalle.porcentajeDestajoAcumuladoConFormato" readonly
                         [ngStyle]="{
                           'background-color':
@@ -296,7 +309,7 @@
                     <td
                       style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 10%; padding-left: 0px;"
                       class="cont-drill">
-                      <input autocomplete="off" type="text" class="" id="input-table"
+                      <input autocomplete="off" type="text" class="text-end" id="input-table"
                         [(ngModel)]="detalle.importeDestajoConFormato" readonly
                         
                         style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;">

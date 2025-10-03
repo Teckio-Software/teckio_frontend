@@ -55,6 +55,9 @@ export class ProyectoComponent implements OnInit {
   pages: number[] = [];
   visiblePages: number[] = [];
   totalPages = 0;
+
+  isLoading: boolean = true;
+
   /////////* PAGINATION */////////
 
   ngOnInit(): void {
@@ -104,6 +107,7 @@ export class ProyectoComponent implements OnInit {
         this.totalItems = proyectos.length;
         this.updatePagination();
         this.updatePaginatedData();
+        this.isLoading = false;
       });
   }
 
@@ -224,6 +228,7 @@ export class ProyectoComponent implements OnInit {
 
   updateVisiblePages() {
     const startPage = Math.max(1, this.currentPage - 2);
+    
     const endPage = Math.min(this.totalPages, startPage + 4);
 
     this.visiblePages = Array.from(
@@ -278,5 +283,18 @@ export class ProyectoComponent implements OnInit {
       .subscribe(() => {
         this.cargarRegistros();
       });
+  }
+
+  editarProyecto(proyecto: proyectoDTO){
+    const dialogRef = this.dialog.open(DialogNewProyectoComponent, {
+      data: {
+        menu1: this.menu1,
+        selectedEmpresa: this.selectedEmpresa,
+        proyecto : proyecto
+      },
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      this.cargarRegistros();
+    });
   }
 }

@@ -7,6 +7,9 @@ import { proyectoDTO } from '../tsProyecto';
 import { ProyectoService } from '../proyecto.service';
 import Swal from 'sweetalert2';
 import { ProyectoUsuarioService } from 'src/app/seguridad/usuario-multi-empresa-filtrado/proyecto-usuario/proyecto-usuario.service';
+import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
+import { timer } from 'rxjs';
+
 
 @Component({
   selector: 'app-dialog-new-proyecto',
@@ -43,87 +46,220 @@ export class DialogNewProyectoComponent {
   };
   selectedEmpresa: number;
 
-  parametrosRol : usuarioProyectoDTO = {
+  parametrosRol: usuarioProyectoDTO = {
     id: 0,
     idUsuario: 0,
     idEmpresa: 0,
     idProyecto: 0,
     nombreProyecto: '',
-    estatus: false
-  }
+    estatus: false,
+  };
+
+  errCo: RespuestaDTO = { estatus: false, descripcion: '' };
+  errNo: RespuestaDTO = { estatus: false, descripcion: '' };
+  errCP: boolean = false;
+  errDo: RespuestaDTO = { estatus: false, descripcion: '' };
+  errIVA: boolean = false;
+  errFI: boolean = false;
+  errFT: boolean = false;
+  errGlobal: boolean = false;
+  errorAnticipo: boolean = false;
+
   constructor(
     public dialogRef: MatDialogRef<DialogNewProyectoComponent>,
 
     private formBuilder: FormBuilder,
     private _snackBar: MatSnackBar,
     private proyectoService: ProyectoService,
-    private _usuarioProyectoService : ProyectoUsuarioService,
+    private _usuarioProyectoService: ProyectoUsuarioService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.menu1 = this.data.menu1;
     this.selectedEmpresa = this.data.selectedEmpresa;
+    
   }
   ngOnInit(): void {
     this.dialogRef.updateSize('70%');
 
-    this.form = this.formBuilder.group({
-      id: ['', { validators: [] }],
-      codigoProyecto: ['', { validators: [] }], //
-      nombre: ['', { validators: [] }], //
-      noSerie: [1, { validators: [] }], //
-      moneda: ['MXN', { validators: [] }],
-      presupuestoSinIva: [0, { validators: [] }], //
-      tipoCambio: ['', { validators: [] }], //
-      presupuestoSinIvaMonedaNacional: ['', { validators: [] }],
-      porcentajeIva: ['', { validators: [] }], //
-      presupuestoConIvaMonedaNacional: [0, { validators: [] }],
-      anticipo: ['', { validators: [] }], //
-      codigoPostal: ['', { validators: [] }], //
-      domicilio: ['', { validators: [] }], //
-      fechaInicio: ['', { validators: [] }], //
-      fechaFinal: ['', { validators: [] }], //
-      tipoProgramaActividad: ['', { validators: [] }], //
-      inicioSemana: ['', { validators: [] }], //
-      esSabado: [false, { validators: [] }], //
-      esDomingo: [false, { validators: [] }], //
-      idPadre: ['', { validators: [] }], //
-      nivel: ['', { validators: [] }], //
-    });
+    if (!this.data.proyecto) {
+      let fechaActual = new Date().toISOString().split('T')[0];
+      this.form = this.formBuilder.group({
+        id: [0, { validators: [] }],
+        codigoProyecto: ['', { validators: [] }], //
+        nombre: ['', { validators: [] }], //
+        noSerie: [1, { validators: [] }], //
+        moneda: ['MXN', { validators: [] }],
+        presupuestoSinIva: [0, { validators: [] }], //
+        tipoCambio: ['', { validators: [] }], //
+        presupuestoSinIvaMonedaNacional: ['', { validators: [] }],
+        porcentajeIva: ['', { validators: [] }], //
+        presupuestoConIvaMonedaNacional: [0, { validators: [] }],
+        anticipo: ['', { validators: [] }], //
+        codigoPostal: ['', { validators: [] }], //
+        domicilio: ['', { validators: [] }], //
+        fechaInicio: [fechaActual, { validators: [] }], //
+        fechaFinal: ['', { validators: [] }], //
+        tipoProgramaActividad: ['', { validators: [] }], //
+        inicioSemana: ['', { validators: [] }], //
+        esSabado: [false, { validators: [] }], //
+        esDomingo: [false, { validators: [] }], //
+        idPadre: ['', { validators: [] }], //
+        nivel: ['', { validators: [] }], //
+      });
+    } else {
+      let fechaInicio = this.data.proyecto.fechaInicio.split('T')[0];
+      let fechaFin = this.data.proyecto.fechaFinal.split('T')[0];
+
+      this.form = this.formBuilder.group({
+        id: [this.data.proyecto.id, { validators: [] }],
+        codigoProyecto: [this.data.proyecto.codigoProyecto, { validators: [] }], //
+        nombre: [this.data.proyecto.nombre, { validators: [] }], //
+        noSerie: [1, { validators: [] }], //
+        moneda: [this.data.proyecto.moneda, { validators: [] }],
+        presupuestoSinIva: [0, { validators: [] }], //
+        tipoCambio: ['', { validators: [] }], //
+        presupuestoSinIvaMonedaNacional: ['', { validators: [] }],
+        porcentajeIva: [this.data.proyecto.porcentajeIva, { validators: [] }], //
+        presupuestoConIvaMonedaNacional: [0, { validators: [] }],
+        anticipo: [this.data.proyecto.anticipo, { validators: [] }], //
+        codigoPostal: [this.data.proyecto.codigoPostal, { validators: [] }], //
+        domicilio: [this.data.proyecto.domicilio, { validators: [] }], //
+        fechaInicio: [fechaInicio, { validators: [] }], //
+        fechaFinal: [fechaFin, { validators: [] }], //
+        tipoProgramaActividad: ['', { validators: [] }], //
+        inicioSemana: ['', { validators: [] }], //
+        esSabado: [false, { validators: [] }], //
+        esDomingo: [false, { validators: [] }], //
+        idPadre: ['', { validators: [] }], //
+        nivel: ['', { validators: [] }], //
+      });
+    }
   }
 
+  /**
+   * Método para guardar un nuevo proyecto, validando que los campos no esten vacios
+   */
   guardar() {
     this.nuevoProyecto = this.form.value;
-    this.nuevoProyecto.id = 0;
     this.nuevoProyecto.nivel = 0;
     this.nuevoProyecto.presupuestoSinIvaMonedaNacional = 0;
     this.nuevoProyecto.nivel = 1;
     this.nuevoProyecto.idPadre = 0;
     this.nuevoProyecto.inicioSemana = 1;
-    this.nuevoProyecto.anticipo = 0;
+    if(this.nuevoProyecto.anticipo == null){
+      this.nuevoProyecto.anticipo = 0;
+    }
+    // this.nuevoProyecto.anticipo = 0;
     this.nuevoProyecto.tipoProgramaActividad = 1;
     this.nuevoProyecto.tipoCambio = 0;
     this.nuevoProyecto.esSabado = true;
     this.nuevoProyecto.esDomingo = true;
     this.nuevoProyecto.noSerie = 1;
-    this.nuevoProyecto.porcentajeIva = 16;
-    this.nuevoProyecto.moneda = 'MXN';
-    this.proyectoService
+
+    let c = true;
+
+    //Validaciones
+    if((this.nuevoProyecto.codigoProyecto == null || this.nuevoProyecto.codigoProyecto.trim() == '')&&
+      (this.nuevoProyecto.nombre == null || this.nuevoProyecto.nombre.trim() == '') &&
+      (this.nuevoProyecto.codigoPostal == null || this.nuevoProyecto.codigoPostal==0) &&
+      (this.nuevoProyecto.domicilio == null || this.nuevoProyecto.domicilio.trim() == '') &&
+      (this.nuevoProyecto.porcentajeIva == null || this.nuevoProyecto.porcentajeIva==0) &&
+      (this.nuevoProyecto.fechaInicio == null || this.nuevoProyecto.fechaInicio.toString() == '') &&
+      (this.nuevoProyecto.fechaFinal == null || this.nuevoProyecto.fechaFinal.toString() == '')
+    ){
+      this.errGlobal = true;
+      return;
+    }
+
+    if(this.nuevoProyecto.codigoProyecto == null || this.nuevoProyecto.codigoProyecto.trim() == ''){
+      this.errCo.estatus = true;
+      this.errCo.descripcion = 'El campo código es obligatorio';
+      c = false;
+    }
+    if(this.nuevoProyecto.nombre == null || this.nuevoProyecto.nombre.trim() == ''){
+      this.errNo.estatus = true;
+      this.errNo.descripcion = 'El campo nombre es obligatorio';
+      c = false;
+    }
+    if(this.nuevoProyecto.codigoPostal == null || this.nuevoProyecto.codigoPostal==0){
+      this.errCP = true;
+      c = false;
+    }
+    if(this.nuevoProyecto.domicilio == null || this.nuevoProyecto.domicilio.trim() == ''){
+      this.errDo.estatus = true;
+      this.errDo.descripcion = 'El campo domicilio es obligatorio';
+      c = false;
+    }
+    if(this.nuevoProyecto.porcentajeIva == null || this.nuevoProyecto.porcentajeIva==0){
+      this.errIVA = true;
+      c = false;
+    }
+    if(this.nuevoProyecto.fechaInicio == null || this.nuevoProyecto.fechaInicio.toString() == ''){
+      this.errFI = true;
+      c = false;
+    }
+    if(this.nuevoProyecto.fechaFinal == null || this.nuevoProyecto.fechaFinal.toString() == ''){
+      this.errFT = true;
+      c = false;
+    }
+    if(this.nuevoProyecto.codigoProyecto.length>30){
+      this.errCo.estatus = true;
+      this.errCo.descripcion = 'La longitud del código no puede ser mayor a 30 caracteres';
+      c= false;
+    }
+    if(this.nuevoProyecto.nombre.length>100){
+      this.errNo.estatus = true;
+      this.errNo.descripcion = 'La longitud del nombre no puede ser mayor a 100 caracteres';
+      c= false;
+    }
+    if(this.nuevoProyecto.domicilio.length>100){
+      this.errDo.estatus = true;
+      this.errDo.descripcion = 'La longitud del domicilio no puede ser mayor a 100 caracteres';
+      c= false;
+    }
+
+    if(!c){
+      return;
+    }
+
+    /////////
+
+    if(this.nuevoProyecto.id == 0){
+      this.proyectoService
       .crear(this.nuevoProyecto, this.selectedEmpresa)
       .subscribe((datos) => {
         if (datos.id > 0) {
           this.parametrosRol.idEmpresa = this.selectedEmpresa;
           this.parametrosRol.idProyecto = datos.id;
-          this._usuarioProyectoService.asignarRolDefault(this.parametrosRol).subscribe((datos) => {
-
-          });
+          this._usuarioProyectoService
+            .asignarRolDefault(this.parametrosRol)
+            .subscribe((datos) => {});
           this.dialogRef.close(true);
         } else {
           Swal.fire({
-            text: "No se creo el proyecto",
+            text: 'No se creo el proyecto',
             icon: 'error',
           });
         }
       });
+    }else{
+      this.proyectoService.editar(this.nuevoProyecto, this.selectedEmpresa).subscribe((datos) => {
+        if(!datos.estatus){
+          Swal.fire({
+            text: 'No se edito el proyecto',
+            icon: 'error',
+          });
+        }else{
+          this.dialogRef.close(true);
+        }
+      });
+    }
+  }
+
+  /**
+   * Método para limpiar el formulario
+   */
+  resetForm() {
     this.form.value.reset();
   }
 
@@ -134,4 +270,31 @@ export class DialogNewProyectoComponent {
   detenerCierre(event: MouseEvent) {
     event.stopPropagation();
   }
+
+  validarAnticipo(){
+    let anticipo = this.form.value.anticipo;    
+    if(anticipo > 100){
+      this.form.get('anticipo')?.setValue(100);
+      this.errorAnticipo = true;
+      timer(3000).subscribe(() => {
+        this.errorAnticipo = false;
+      });
+    }
+    if(anticipo < 0){
+      this.form.get('anticipo')?.setValue(0);
+      this.errorAnticipo = true;
+      timer(3000).subscribe(() => {
+        this.errorAnticipo = false;
+      });
+    }
+  }
+
+/**
+ * Selecciona todo el contenido de un input
+ * @param event Evento que se lanza cuando se selecciona todo el contenido de un input
+ */
+  selectAll(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  input.select();
+}
 }

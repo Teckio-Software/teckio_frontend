@@ -75,13 +75,13 @@
                 <img
                   (click)="desplegarInformacion(cotizacion)"
                   *ngIf="cotizacion.isExpanded"
-                  src="../../../../assets/arrow_down.svg"
+                  src="./assets/arrow_down.svg"
                   alt="icono de flecha abrir"
                 />
                 <img
                   (click)="desplegarInformacion(cotizacion)"
                   *ngIf="!cotizacion.isExpanded"
-                  src="../../../../assets/arrow_right.svg"
+                  src="./assets/arrow_right.svg"
                   alt="icono de flecha cerrar"
                 />
               </td>
@@ -165,7 +165,7 @@
                     ngbTooltip="Ver insumos"
                     triggers="mouseenter:mouseleave"
                     class="cursor-pointer mx-auto xs:w-4"
-                    src="../../../../assets/visibility_btn.svg"
+                    src="./assets/visibility_btn.svg"
                     alt="ver insumos"
                     (click)="seleccionado(cotizacion)"
                   />
@@ -175,7 +175,7 @@
                     ngbTooltip="Cerrar insumos"
                     triggers="mouseenter:mouseleave"
                     class="cursor-pointer mx-auto xs:w-4"
-                    src="../../../../assets/visibility-off_btn.svg"
+                    src="./assets/visibility-off_btn.svg"
                     alt="ver insumos"
                     (click)="seleccionado(cotizacion)"
                   />
@@ -238,9 +238,7 @@
     Insumos por cotización
   </p>
   <div class="flex justify-end">
-    <div
-      class="flex flex-row bg-white shadow-sm rounded-t-lg p-1 items-end"
-    >
+    <div class="flex flex-row bg-white shadow-sm rounded-t-lg p-1 items-end">
       <div
         class="flex items-center justify-center flex-shrink-0 h-10 w-10 rounded-xl bg-[#4eaac138] text-[#4eaac1]"
       >
@@ -346,7 +344,8 @@
                 />
               </td>
               <td class="px-1 py-[2px] min-w-2" scope="col">
-                <input *ngIf="ic.id != 0"
+                <input
+                  *ngIf="ic.id != 0"
                   autocomplete="off"
                   autocomplete="off"
                   class="dropdown1 w-full bg-transparent"
@@ -357,7 +356,8 @@
                   [disabled]="ic.id != 0"
                   (keydown.enter)="actualizarInsumoCotizado(ic)"
                 />
-                <input *ngIf="ic.id == 0"
+                <input
+                  *ngIf="ic.id == 0"
                   autocomplete="off"
                   autocomplete="off"
                   class="dropdown1 w-full bg-transparent"
@@ -370,7 +370,7 @@
                 />
               </td>
               <td class="px-1 py-[2px] min-w-2" scope="col">
-                {{ic.importeTotalConFormato}}
+                {{ ic.importeTotalConFormato }}
               </td>
               <!-- <td style="justify-content: center; align-items: center;" scope="col">
                 <button (click)="EliminarListaInsumosXCotizacion(ic.descripcion, ic.unidad)" class="button-filt"

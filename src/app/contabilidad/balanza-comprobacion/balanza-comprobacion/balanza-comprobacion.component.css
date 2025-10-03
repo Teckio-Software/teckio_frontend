@@ -1,13 +1,13 @@
 /*--------------filtrado--------------*/
 
-.cont-filtro {
+/* .cont-filtro {
   background-color: #115a9f27;
   width: 90%;
   margin: 0 auto;
   margin-bottom: 10px;
   border-radius: 7px;
   margin-top: 20px;
-}
+} */
 
 .contenedor-input {
   display: flex;
@@ -20,10 +20,10 @@
   align-items: center;
 }
 
-.cont-filt1 {
+/* .cont-filt1 {
   display: flex;
   justify-content: center;
-}
+} */
 
 .form-select {
   width: 80px;
@@ -422,12 +422,12 @@ list-style: none;
 }
 
 @media screen and (max-width: 945px) {
-  .cont-filt1 {
+  /* .cont-filt1 {
     display:grid;
     justify-content: center;
     grid-template-columns: 1fr 1fr;
     margin: 10px;
-  }
+  } */
   .contenedor-input {
     display: flex;
     justify-content: center;

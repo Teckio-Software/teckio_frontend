@@ -6,9 +6,14 @@ export interface GeneradoresDTO{
     ejeY: string;
     ejeZ: string;
     cantidad: number;
+    cantidadDecimal: string;
     x: number;
+    xDecimal: string;
     y: number;
+    yDecimal: string;
     z: number;
+    zDecimal: string;
     cantidadTotal: number;
+    totalDecimal:string;
     cantidadOperacion : string;
 }

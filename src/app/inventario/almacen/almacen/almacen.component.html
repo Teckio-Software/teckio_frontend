@@ -1,17 +1,46 @@
 <section>
   <!-- Button cotainer -->
-  <div class="flex mt-1 mb-2" *ngIf="proyectoSeleccionado">
+  <div
+    class="flex items-center mb-4 gap-2"
+    *ngIf="proyectoSeleccionado"
+  >
     <button
       (click)="openDialogWithoutRef()"
-      class="flex align-items-center rounded-md bg-colorButton transition-colors delay-75 hover:bg-colorButtonHover font-light text-white p-1"
+      class="flex items-center gap-2 rounded-md bg-colorButton transition-all duration-200 hover:bg-colorButtonHover text-white px-2 py-2 hover:shadow-md"
+      ngbTooltip="Nuevo almacén"
     >
-      <p
-        class="text-[#f2f2f2] titular bg-custom-bg w-52 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
-      >
+      <!-- <span class="font-medium text-base tracking-wide xs:text-sm">
         Nuevo almacén
-      </p>
-      <img class="xs:w-4" src="assets/add.svg" alt="botón agregar" />
+      </span> -->
+      <img class="w-5 xs:w-4" src="assets/add.svg" alt="botón agregar" />
     </button>
+    <select
+          [(ngModel)]="filtroAlmacen"
+          name=""
+          id=""
+          (input)="seleccionTipo($event)"
+          class="block h-auto px-3 py-1.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        >
+          <option value="0">Solo de Proyectos</option>
+          <option value="1">Solo Centrales</option>
+          <option value="2">Centrales y de Proyectos</option>
+        </select>
+
+    <!-- <div
+      class="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-md hover:bg-gray-100 transition-colors duration-200"
+    >
+      <div class="flex items-center gap-2">
+        <input
+          type="checkbox"
+          [(ngModel)]="mostrarCentrales"
+          (change)="cambiarSeleccion()"
+          class="w-4 h-4 rounded border-gray-300 text-colorButton focus:ring-colorButton transition-colors duration-200"
+        />
+        <p class="my-0 font-medium text-gray-700">
+          Mostrar centrales
+        </p>
+      </div>
+    </div> -->
   </div>
   <!-- Button cotainer  end -->
   <div
@@ -22,12 +51,12 @@
       <thead class="bg-primario text-white">
         <tr>
           <th scope="col" class="px-1 py-[2px] xs:w-[75px]" scope="col">
-            Codigo
+            Código
           </th>
           <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">
-            Nombre Almacén
+            Nombre almacén
           </th>
-          <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">Es Central</th>
+          <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">Es central</th>
           <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">Responsable</th>
           <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">Domicilio</th>
           <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">Colonia</th>
@@ -39,7 +68,231 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray300">
-        <tr *ngIf="almacenes.length === 0">
+        <ng-container *ngIf="isLoading">
+          <tr>
+              <!-- Código -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Nombre Almacen -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Es Central -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-12 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Responsable -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Domicilio -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-40 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!--Colonia -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Ciudad -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-32 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Teléfono -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-32 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Acciones -->
+              <td scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-12 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+            </tr>
+          <tr>
+              <!-- Código -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Nombre Almacen -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Es Central -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-12 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Responsable -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Domicilio -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-40 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!--Colonia -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Ciudad -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-32 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Teléfono -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-32 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Acciones -->
+              <td scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-12 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+            </tr>
+          <tr>
+              <!-- Código -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Nombre Almacen -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Es Central -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-12 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Responsable -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Domicilio -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-40 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!--Colonia -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Ciudad -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-32 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Teléfono -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-32 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Acciones -->
+              <td scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-12 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+            </tr>
+        </ng-container>
+        <tr *ngIf="almacenes.length === 0 && !isLoading">
           <td colspan="9" class="text-center text-gray-700 font-medium py-1">
             No hay almacenes creados.
           </td>
@@ -101,6 +354,9 @@
 
         <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
           <form [formGroup]="form">
+            <p *ngIf="errorGlobal" class="text-red-600 text-sm">
+              *Capture todos los campos obligatorios
+            </p>
             <!-- Código y nombre -->
             <div class="flex gap-4 mb-4">
               <div class="basis-1/2">
@@ -114,8 +370,12 @@
                   type="text"
                   id="codigo"
                   placeholder="Código"
+                  (change)="errorGlobal = false; errorCo = false"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+                <p *ngIf="errorCo" class="text-red-600">
+                  *El campo 'Código' es obligatorio
+                </p>
               </div>
 
               <div class="basis-1/2">
@@ -129,8 +389,12 @@
                   type="text"
                   id="almacenNombre"
                   placeholder="Nombre del almacén"
+                  (change)="errorGlobal = false; errorNom = false"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+                <p *ngIf="errorNom" class="text-red-600">
+                  *El campo 'Nombre almacén' es obligatorio
+                </p>
               </div>
             </div>
 
@@ -163,8 +427,12 @@
                   type="text"
                   id="responsable"
                   placeholder="Responsable"
+                  (change)="errorGlobal = false; errorResp = false"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+                <p *ngIf="errorResp" class="text-red-600">
+                  *El campo 'Responsable' es obligatorio
+                </p>
               </div>
 
               <div class="flex-1">
@@ -178,8 +446,14 @@
                   type="text"
                   id="telefono"
                   placeholder="Teléfono"
+                  (input)="filterNonNumeric($event)" 
+                  maxlength="10"
+                  (change)="errorGlobal = false; errorTel.estatus = false"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+                <p *ngIf="errorTel.estatus" class="text-red-600">
+                  *{{ errorTel.descripcion }}
+                </p>
               </div>
             </div>
 
@@ -196,8 +470,12 @@
                   type="text"
                   id="ciudad"
                   placeholder="Ciudad"
+                  (change)="errorGlobal = false; errorCiu = false"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+                <p *ngIf="errorCiu" class="text-red-600">
+                  *El campo 'Ciudad' es obligatorio
+                </p>
               </div>
               <div class="flex-1">
                 <label
@@ -210,8 +488,12 @@
                   type="text"
                   id="colonia"
                   placeholder="Colonia"
+                  (change)="errorGlobal = false; errorCol = false"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+                <p *ngIf="errorCol" class="text-red-600">
+                  *El campo 'Colonia' es obligatorio
+                </p>
               </div>
             </div>
 
@@ -227,8 +509,12 @@
                 type="text"
                 id="domicilio"
                 placeholder="Domicilio"
+                (change)="errorGlobal = false; errorDom = false"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
+              <p *ngIf="errorDom" class="text-red-600">
+                *El campo 'Domicilio' es obligatorio
+              </p>
             </div>
           </form>
         </div>

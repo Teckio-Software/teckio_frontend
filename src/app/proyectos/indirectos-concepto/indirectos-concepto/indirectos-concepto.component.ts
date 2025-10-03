@@ -54,7 +54,11 @@ export class IndirectosConceptoComponent {
     expandido: false,
     porcentajeIndirectoConFormato: '',
     posicion: 0,
-    codigoPadre: ''
+    codigoPadre: '',
+    esCatalogoGeneral: false,
+    esAvanceObra: false,
+    esAdicional: false,
+    esSeleccionado: false
   }
 
   PUEditando: boolean = false;

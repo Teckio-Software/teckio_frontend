@@ -27,22 +27,22 @@
             *ngFor="let iae of isumosentradaalmacen"
           >
             <td class="px-1 py-[2px] min-w-2" scope="col">
-              {{ iae.descripcionInsumo }}
+              {{ iae.descripcionInsumo  }}
             </td>
             <td class="px-1 py-[2px] min-w-2" scope="col">
-              {{ iae.unidadInsumo }}
+              {{ iae.unidadInsumo  }}
             </td>
-            <td class="px-1 py-[2px] min-w-2" scope="col">
-              {{ iae.cantidadPorRecibir }}
+            <td class="px-1 py-[2px] min-w-2 text-end" scope="col">
+              {{ iae.cantidadPorRecibir | number:"1.4-4" }}
             </td>
-            <td class="px-1 py-[2px] min-w-2" scope="col">
-              {{ iae.cantidadRecibida }}
+            <td class="px-1 py-[2px] min-w-2 text-end" scope="col">
+              {{ iae.cantidadRecibida | number:"1.4-4" }}
             </td>
-            <td class="px-1 py-[2px] min-w-2" scope="col">
+            <td class="px-1 py-[2px] min-w-2 text-end" scope="col">
               {{
                 iae.cantidadPorRecibir - iae.cantidadRecibida < 0
                   ? 0
-                  : iae.cantidadPorRecibir - iae.cantidadRecibida
+                  : iae.cantidadPorRecibir - iae.cantidadRecibida | number:"1.4-4"
               }}
             </td>
           </tr>

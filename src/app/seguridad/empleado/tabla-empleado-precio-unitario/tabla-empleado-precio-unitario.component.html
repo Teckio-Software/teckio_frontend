@@ -1,4 +1,4 @@
-<div class="" *ngIf="empleadoPrecioUnitarioReset.length > 0">
+<div class="rounded-lg" *ngIf="empleadoPrecioUnitarioReset.length > 0">
     <label class="labelProyecto1">Proyecto</label>
     <input autocomplete="off" class="form-contrtrol dropdown1" id="myInput" type="text" placeholder="Buscar"
       style="margin: 5px;" data-bs-toggle="dropdown" (keyup)="filtrarProyecto($event)"
@@ -10,19 +10,19 @@
       </li>
     </ul>
   </div>
-<div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px;">
-    <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos m-0">
-        <thead>
+<div class="overflow-y-auto overflow-x-auto w-full rounded-lg shadow-md whitespace-nowrap mx-auto">
+    <table class="text-sm w-full mb-0">
+        <thead class="bg-primario text-white ">
             <tr>
-                <th scope="col">Proyecto</th>
-                <th scope="col">Codigo</th>
-                <th scope="col">Descripcion</th>
-                <th scope="col">Unidad</th>
-                <th scope="col">Cantidad</th>
+                <th scope="col" class="px-1 py-[2px] xs:w-[75px]" >Proyecto</th>
+                <th scope="col" class="px-1 py-[2px] xs:w-[75px]" >Código</th>
+                <th scope="col" class="px-1 py-[2px] xs:w-[75px]" >Descripción</th>
+                <th scope="col" class="px-1 py-[2px] xs:w-[75px]" >Unidad</th>
+                <th scope="col" class="px-1 py-[2px] xs:w-[75px]" >Cantidad</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let PU of empleadoPrecioUnitario" [ngClass]="">
+            <tr *ngFor="let PU of empleadoPrecioUnitario" [ngClass]="" class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]">
                 <td scope="col">{{PU.nombreProyceto}}</td>
                 <td scope="col">{{PU.codigo}}</td>
                 <td scope="col">{{PU.descripcion}}</td>

@@ -138,6 +138,8 @@ export class PolizaComponent implements OnInit {
     'Registro3' /* ... */,
   ];
 
+  isLoading: boolean = true;
+
   // Función para autocompletar el dropdown
   autocompleteDropdown(event: Event) {
     const inputTexto: string = (
@@ -385,6 +387,7 @@ export class PolizaComponent implements OnInit {
       .obtenerTodosXEmpresa(this.selectedEmpresa)
       .subscribe((polizas) => {
         this.polizas = polizas;
+        this.isLoading = false;
       });
   }
 

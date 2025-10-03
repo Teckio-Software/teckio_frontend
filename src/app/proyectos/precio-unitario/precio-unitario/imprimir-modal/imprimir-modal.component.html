@@ -1,0 +1,460 @@
+<div
+  *ngIf="isOpen"
+  class="fixed inset-0 z-10 bg-black bg-opacity-50 flex items-center justify-center"
+  (click)="closeModal()"
+>
+  <div
+    class="relative transform rounded-lg bg-white text-left shadow-xl transition-all overflow-auto h-auto w-1/2"
+    (click)="detenerCierre($event)"
+  >
+    <!-- header -->
+    <div class="flex justify-between items-center border-b px-4 py-3">
+      <h2 class="font-semibold text-gray-800 tracking-wider text-lg">
+        {{ steps[currentStep] }}
+      </h2>
+      <button
+        type="button"
+        class="leading-none text-2xl px-3 py-1 text-gray-500 hover:text-gray-700 transition"
+        (click)="closeModal()"
+        aria-label="Cerrar modal"
+      >
+        &times;
+      </button>
+    </div>
+
+    <!-- contenido -->
+    <div class="bg-white px-6 py-4">
+      <div *ngIf="currentStep === 0">
+        <p class="text-red-600 text-base" *ngIf="isError">
+          Selecciona una opción antes de continuar.
+        </p>
+
+        <div class="flex gap-2 items-center mb-2">
+          <input
+            type="radio"
+            id="presupuesto"
+            name="tipoPresupuesto"
+            [(ngModel)]="tipoReporte"
+            value="presupuesto"
+          />
+          <label for="presupuesto" class="text-gray-600 text-base"
+            >Presupuesto</label
+          >
+        </div>
+
+        <div class="flex gap-2 items-center mb-2">
+          <input
+            type="radio"
+            id="presupuestoManoDeObra"
+            name="tipoPresupuesto"
+            [(ngModel)]="tipoReporte"
+            value="presupuestoManoDeObra"
+          />
+          <label for="presupuestoManoDeObra" class="text-gray-600 text-base"
+            >Presupuesto de mano de obra</label
+          >
+        </div>
+
+        <div class="flex gap-2 items-center mb-2">
+          <input
+            type="radio"
+            id="analisisPreciosUnitarios"
+            name="tipoPresupuesto"
+            [(ngModel)]="tipoReporte"
+            value="analisisPreciosUnitarios"
+          />
+          <label for="analisisPreciosUnitarios" class="text-gray-600 text-base"
+            >Análisis de precios unitarios</label
+          >
+        </div>
+
+        <div class="flex gap-2 items-center mb-2">
+          <input
+            type="radio"
+            id="explosionPreciosUnitarios"
+            name="tipoPresupuesto"
+            [(ngModel)]="tipoReporte"
+            value="explosionPreciosUnitarios"
+          />
+          <label for="explosionPreciosUnitarios" class="text-gray-600 text-base"
+            >Explosión de precios unitarios</label
+          >
+        </div>
+      </div>
+
+      <div *ngIf="currentStep === 1">
+        <p class="text-red-600 text-base" *ngIf="isError2">
+          Selecciona una opción antes de continuar.
+        </p>
+        <p class="text-red-600 text-base" *ngIf="isError3">
+          Selecciona una partida o concepto antes de continuar.
+        </p>
+        <div *ngIf="reportePresupuesto" class="grid grid-cols-2 gap-1">
+          <!-- rango de impresión -->
+          <div class="card flex justify-content-center">
+            <fieldset class="p-2">
+              <legend
+                class="text-base font-medium text-gray-800 tracking-wider"
+              >
+                Rango de impresión*
+              </legend>
+              <div class="flex gap-2">
+                <input
+                  type="radio"
+                  id="impresionCompleta"
+                  name="tipoImpresion"
+                  [(ngModel)]="tipoImpresion"
+                  value="impresionCompleta"
+                />
+                <label for="impresionCompleta" class="text-gray-600 text-base"
+                  >Completo</label
+                >
+              </div>
+              <div class="flex gap-2">
+                <input
+                  type="radio"
+                  id="impresionMarcada"
+                  name="tipoImpresion"
+                  [(ngModel)]="tipoImpresion"
+                  value="impresionMarcada"
+                />
+                <label for="impresionMarcada" class="text-gray-600 text-base"
+                  >Marcado</label
+                >
+              </div>
+            </fieldset>
+          </div>
+          <!-- precio de conceptos-->
+          <div class="card flex justify-content-center">
+            <fieldset class="p-2">
+              <legend
+                class="text-base font-medium text-gray-800 tracking-wider"
+              >
+                Precio de conceptos
+              </legend>
+              <div class="flex gap-2">
+                <input
+                  type="radio"
+                  id="costoDirecto"
+                  name="costoDirecto"
+                  [(ngModel)]="tipoPrecio"
+                  value="costoDirecto"
+                />
+                <label for="costoDirecto" class="text-gray-600 text-base"
+                  >Costo directo</label
+                >
+              </div>
+              <div class="flex gap-2">
+                <input
+                  type="radio"
+                  id="precioUnitario"
+                  name="tipoPrecio"
+                  [(ngModel)]="tipoPrecio"
+                  value="precioUnitario"
+                />
+                <label for="precioUnitario" class="text-gray-600 text-base"
+                  >Precio unitario</label
+                >
+              </div>
+              <div class="flex gap-2">
+                <input
+                  type="radio"
+                  id="precioUnitarioIVA"
+                  name="tipoPrecio"
+                  [(ngModel)]="tipoPrecio"
+                  value="precioUnitarioIVA"
+                />
+                <label for="precioUnitarioIVA" class="text-gray-600 text-base"
+                  >Precio unitario + impuesto</label
+                >
+              </div>
+            </fieldset>
+          </div>
+          <!-- opciones extra -->
+          <div class="card flex justify-content-center col-span-2">
+            <fieldset class="p-2">
+              <legend
+                class="text-base font-medium text-gray-800 tracking-wider"
+              >
+                Otras opciones
+              </legend>
+
+              <div class="flex gap-2">
+                <input
+                  type="checkbox"
+                  id="opcion2"
+                  [(ngModel)]="isImprimirImpuestos"
+                />
+                <label for="opcion2" class="text-gray-600 text-base"
+                  >Imprimir impuesto</label
+                >
+              </div>
+              <div class="flex gap-2">
+                <input
+                  type="checkbox"
+                  id="opcion3"
+                  [(ngModel)]="isImporteconLetra"
+                />
+                <label for="opcion3" class="text-gray-600 text-base"
+                  >Importe con letra</label
+                >
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div *ngIf="reporteManoDeObra" class="grid grid-cols-2 gap-1">
+          
+        </div>
+      </div>
+
+      <div *ngIf="currentStep === 2">
+        <div class="grid grid-cols-2 gap-1">
+          <!-- titulo -->
+          <div class="card flex justify-content-center">
+            <fieldset class="p-2">
+              <legend
+                class="text-base font-medium text-gray-800 tracking-wider"
+              >
+                Título
+              </legend>
+              <div class="flex gap-2">
+                <input
+                  [(ngModel)]="paramsImpresion.nombre"
+                  (keydown.enter)="editarParams(selectedParamId)"
+                  type="text"
+                  class="w-full px-2 py-1 border border-gray-200 rounded-md"
+                  placeholder="Ingresa el titulo del documento"
+                />
+              </div>
+            </fieldset>
+          </div>
+          <!-- otras opciones -->
+          <div class="card flex justify-content-center">
+            <fieldset class="p-2">
+              <legend
+                class="text-base font-medium text-gray-800 tracking-wider"
+              >
+                Otras opciones
+              </legend>
+              <p *ngIf="isParamGuardado" class="text-green-600 text-sm">
+                Parámetros guardados correctamente.
+              </p>
+              <p *ngIf="isParamDeleted" class="text-green-600 text-sm">
+                Parámetros eliminados correctamente.
+              </p>
+              <p *ngIf="tipoError" class="text-red-600 text-sm">
+                {{ tipoError }}
+              </p>
+              <div class="flex gap-2">
+                <div>
+                  <label for="importar">Importar opciones de impresión</label>
+                  <select
+                    [(ngModel)]="selectedParamId"
+                    (change)="seleccionarParams($event)"
+                    id="importar"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  >
+                    <option [ngValue]="0" selected>Elegir opción</option>
+                    <option
+                      *ngFor="let item of paramsImpresionLista"
+                      [value]="item.id"
+                    >
+                      {{ item.nombre }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="flex flex-row gap-2 mt-2">
+                <button
+                  (click)="crearConfiguracionParams()"
+                  class="px-2 py-1 bg-colorButton hover:bg-colorButtonHover text-white rounded-md transition"
+                >
+                  Guardar opciones
+                </button>
+                <button
+                  (click)="eliminarParams(selectedParamId)"
+                  class="px-2 py-1 bg-red-700 hover:bg-red-600 text-white rounded-md transition"
+                >
+                  Eliminar opciones
+                </button>
+              </div>
+            </fieldset>
+          </div>
+          <!-- encabezado -->
+          <div class="card flex justify-content-center col-span-2">
+            <fieldset class="p-2">
+              <legend
+                class="text-base font-medium text-gray-800 tracking-wider"
+              >
+                Encabezado (para cambiar de línea presiona Shift + Enter)
+              </legend>
+              <div class="grid grid-cols-3 gap-2">
+                <div>
+                  <label for="encabezadoSup">Izquierda</label>
+                  <textarea
+                    (keydown.enter)="editarParams(selectedParamId)"
+                    [(ngModel)]="paramsImpresion.encabezadoIzquierdo"
+                    id="encabezadoSup"
+                    class="w-full px-2 py-1 border border-gray-200 rounded-md"
+                    placeholder="Ingresa una descripción"
+                  ></textarea>
+                </div>
+                <div>
+                  <label for="encabezadoCentro">Centro</label>
+                  <textarea
+                    (keydown.enter)="editarParams(selectedParamId)"
+                    [(ngModel)]="paramsImpresion.encabezadoCentro"
+                    id="encabezadoCentro"
+                    class="w-full px-2 py-1 border border-gray-200 rounded-md"
+                    placeholder="Ingresa una descripción"
+                  ></textarea>
+                </div>
+                <div>
+                  <label for="encabezadoDerecha">Derecha</label>
+                  <textarea
+                    (keydown.enter)="editarParams(selectedParamId)"
+                    [(ngModel)]="paramsImpresion.encabezadoDerecho"
+                    id="encabezadoDerecha"
+                    class="w-full px-2 py-1 border border-gray-200 rounded-md"
+                    placeholder="Ingresa una descripción"
+                  ></textarea>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+          <!-- pie de página -->
+          <!-- <div class="card flex justify-content-center col-span-2">
+            <fieldset class="p-2">
+              <legend
+                class="text-base font-medium text-gray-800 tracking-wider"
+              >
+                Pie de página
+              </legend>
+              <div class="grid grid-cols-3 gap-2">
+                <div>
+                  <label for="pieIzq">Izquierda</label>
+                  <textarea
+                    (keydown.enter)="editarParams(selectedParamId)"
+                    [(ngModel)]="paramsImpresion.pieIzquierdo"
+                    id="pieIzq"
+                    class="w-full px-2 py-1 border border-gray-200 rounded-md"
+                    placeholder="Ingresa una descripción"
+                  ></textarea>
+                </div>
+                <div>
+                  <label for="pieCentro">Centro</label>
+                  <textarea
+                    (keydown.enter)="editarParams(selectedParamId)"
+                    [(ngModel)]="paramsImpresion.pieCentro"
+                    id="pieCentro"
+                    class="w-full px-2 py-1 border border-gray-200 rounded-md"
+                    placeholder="Ingresa una descripción"
+                  ></textarea>
+                </div>
+                <div>
+                  <label for="pieDerecha">Derecha</label>
+                  <textarea
+                    (keydown.enter)="editarParams(selectedParamId)"
+                    [(ngModel)]="paramsImpresion.pieDerecho"
+                    id="pieDerecha"
+                    class="w-full px-2 py-1 border border-gray-200 rounded-md"
+                    placeholder="Ingresa una descripción"
+                  ></textarea>
+                </div>
+              </div>
+            </fieldset>
+          </div> -->
+          <!-- márgenes de las páginas -->
+          <div class="card flex justify-content-center col-span-2">
+            <fieldset class="p-2">
+              <legend
+                class="text-base font-medium text-gray-800 tracking-wider"
+              >
+                Márgenes de las páginas (por defecto 30)
+              </legend>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label for="margenSuperior">Superior</label>
+                  <input
+                    (keydown.enter)="editarParams(selectedParamId)"
+                    [(ngModel)]="paramsImpresion.margenSuperior"
+                    id="margenSuperior"
+                    type="number"
+                    class="w-full px-2 py-1 border border-gray-200 rounded-md"
+                    placeholder="Ingresa un valor"
+                  />
+                </div>
+                <div>
+                  <label for="margenInferior">Inferior</label>
+                  <input
+                    (keydown.enter)="editarParams(selectedParamId)"
+                    [(ngModel)]="paramsImpresion.margenInferior"
+                    id="margenInferior"
+                    type="number"
+                    class="w-full px-2 py-1 border border-gray-200 rounded-md"
+                    placeholder="Ingresa un valor"
+                  />
+                </div>
+                <div>
+                  <label for="margenIzquierdo">Izquierdo</label>
+                  <input
+                    (keydown.enter)="editarParams(selectedParamId)"
+                    [(ngModel)]="paramsImpresion.margenIzquierdo"
+                    id="margenIzquierdo"
+                    type="number"
+                    class="w-full px-2 py-1 border border-gray-200 rounded-md"
+                    placeholder="Ingresa un valor"
+                  />
+                </div>
+                <div>
+                  <label for="margenDerecho">Derecho</label>
+                  <input
+                    (keydown.enter)="editarParams(selectedParamId)"
+                    [(ngModel)]="paramsImpresion.margenDerecho"
+                    id="margenDerecho"
+                    type="number"
+                    class="w-full px-2 py-1 border border-gray-200 rounded-md"
+                    placeholder="Ingresa un valor"
+                  />
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- botones -->
+    <div class="bg-gray-50 px-4 py-3 flex justify-between items-center gap-4">
+      <button
+        class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all disabled:opacity-50"
+        (click)="prevStep()"
+        [disabled]="currentStep === 0"
+      >
+        Atrás
+      </button>
+
+      <div class="ml-auto flex gap-3">
+        <button
+          *ngIf="currentStep < steps.length - 1"
+          class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md shadow-sm transition cursor-pointer"
+          (click)="nextStep()"
+        >
+          Siguiente
+        </button>
+
+        <button
+          *ngIf="currentStep === steps.length - 1"
+          (click)="finish()"
+          class="flex items-center gap-3 text-white py-2 px-6 rounded-lg font-medium bg-colorButton hover:bg-colorButtonHover transition 200ms xs:text-xs"
+        >
+          Descargar
+          <img
+            class="w-8 h-8 xs:w-5 xs:h-5"
+            src="./assets/pdf_icon.svg"
+            alt="icono pdf"
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

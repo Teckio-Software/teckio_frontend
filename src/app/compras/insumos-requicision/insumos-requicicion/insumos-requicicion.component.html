@@ -7,7 +7,7 @@
     triggers="mouseenter:mouseleave"
     ngbTooltip="Guardar"
     class="cursor-pointer xs:w-4 xs:h-4"
-    src="../../../../assets/save.svg"
+    src="./assets/save.svg"
     alt="Botón de guardar"
     (click)="agregarNuevoInsumo()"
   />
@@ -16,29 +16,32 @@
   <table class="w-full text-sm text-left xs:table-fixed">
     <thead class="bg-primario text-white">
       <tr class="xs:text-[10px]">
-        <th class="py-[2px] w-3 text-center xs:w-[50px] xs:hidden" scope="col">
+        <!-- <th class="py-[2px] w-3 text-center xs:w-[50px] xs:hidden" scope="col">
           Detalles
+        </th> -->
+        <th class="px-[2px] py-[2px] w-5 xs:w-[75px]" scope="col">
+          *Descripción
         </th>
         <th class="px-[2px] py-[2px] w-5 xs:w-[75px]" scope="col">
-          Descripción*
+          En stock
         </th>
-        <th class="px-[2px] py-[2px] w-4 xs:w-[50px]" scope="col">Unidad*</th>
+        <th class="px-[2px] py-[2px] w-4 xs:w-[50px]" scope="col">*Unidad</th>
         <th class="px-[2px] py-[2px] w-4 xs:w-[85px]" scope="col">
-          Tipo Insumo*
+          *Tipo insumo
         </th>
         <th class="px-[2px] py-[2px] w-3 xs:hidden" scope="col">
-          Costo Unitario
+          Costo unitario
         </th>
         <th class="px-[2px] py-[2px] w-4 xs:hidden" scope="col">
           C. Presupuesto
         </th>
-        <th class="px-[2px] py-[2px] w-4 xs:w-[65px]" scope="col">Cantidad*</th>
+        <th class="px-[2px] py-[2px] w-4 xs:w-[65px]" scope="col">*Cantidad</th>
         <!-- <th class="cabecera1" scope="col">Solicita</th> -->
         <th class="px-[2px] py-[2px] xs:px-[1px] w-6 xs:w-[90px]" scope="col">
-          Entrega*
+          *Entrega
         </th>
         <th class="px-[2px] py-[2px] w-8 xs:px-[1px] xs:hidden" scope="col">
-          Observaciones*
+          *Observaciones
         </th>
         <!-- <th class="cabecera1" scope="col">Acciones</th> -->
       </tr>
@@ -47,15 +50,15 @@
       <tr
         class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
       >
-        <td class="px-1 py-[2px] xs:hidden" scope="col">
+        <!-- <td class="px-1 py-[2px] xs:hidden" scope="col">
           <img
             ngbTooltip="Ver detalles"
             triggers="mouseenter:mouseleave"
             class="mx-auto cursor-pointer"
-            src="../../../../assets/more.svg"
+            src="./assets/more.svg"
             (click)="verDetalleInsumo()"
           />
-        </td>
+        </td> -->
         <td class="px-1 py-[2px]" scope="col" [formGroup]="form">
           <!-- <input
             HEAD
@@ -97,6 +100,9 @@
             </mat-option>
           </mat-autocomplete>
         </td>
+        <td class="px-1 py-[2px] text-end" [ngClass]="IdInsumo==0?'text-gray-900':disponibilidadInsumo>0?'text-yellow-500':'text-green-500'" scope="col">
+          {{ disponibilidadInsumo | number : '1.2-2' }}
+        </td>
         <td class="px-1 py-[2px]" scope="col" [formGroup]="form">
           <input
             placeholder="Unidad..."
@@ -123,7 +129,7 @@
             </option>
           </select>
         </td>
-        <td class="px-1 py-[2px] xs:hidden" scope="col" [formGroup]="form">
+        <td class="px-1 py-[2px] xs:hidden text-end" scope="col" [formGroup]="form">
           <!-- <input
             autocomplete="off"
             class="dropdown1 bg-transparent"
@@ -133,10 +139,9 @@
             formControlName="cUnitario"
             [disabled]="false"
           /> -->
-          {{form.get('cUnitario')?.value | number: '1.2-2'}}
-
+          ${{ form.get("cUnitario")?.value | number : "1.2-2" }}
         </td>
-        <td class="px-1 py-[2px] xs:hidden" scope="col" [formGroup]="form">
+        <td class="px-1 py-[2px] xs:hidden text-end" scope="col" [formGroup]="form">
           <!-- <input
             autocomplete="off"
             class="dropdown1 bg-transparent"
@@ -146,7 +151,7 @@
             formControlName="cPresupuestada"
             [disabled]="true"
           /> -->
-          {{form.get('cPresupuestada')?.value | number: '1.4-4'}}
+          ${{ form.get("cPresupuestada")?.value | number : "1.4-4" }}
         </td>
         <td
           class="px-1 py-[2px] w-[20%] xs:w-[5%]"
@@ -157,7 +162,7 @@
             min="1"
             placeholder="Cantidad..."
             autocomplete="off"
-            class="dropdown1 bg-transparent w-[75%] xs:w-[100%]"
+            class="dropdown1 bg-transparent w-[75%] xs:w-[100%] text-end"
             type="number"
             data-bs-toggle="dropdown"
             (keydown.enter)="agregarNuevoInsumo()"
@@ -217,21 +222,21 @@
         <th scope="col" class="px-[2px] py-[2px] xs:hidden">Folio</th>
         <th scope="col" class="px-[2px] py-[2px] xs:w-[65px]">Descripción</th>
         <th scope="col" class="px-[2px] py-[2px] xs:w-[30px]">Unidad</th>
-        <th scope="col" class="px-[2px] py-[2px] xs:w-[30px]">Cantidad*</th>
+        <th scope="col" class="px-[2px] py-[2px] xs:w-[30px]">*Cantidad</th>
         <th scope="col" class="px-[2px] py-[2px] xs:w-[85px] xs:hidden">
-          Observaciones*
+          *Observaciones
         </th>
         <th
           scope="col"
           class="px-[2px] py-[2px] text-center xs:w-[80px] xs:hidden"
         >
-          Estatus Compra
+          Estatus compra
         </th>
         <th
           scope="col"
           class="px-[2px] py-[2px] text-center xs:w-[80px] xs:hidden"
         >
-          Estatus Surtido
+          Estatus surtido
         </th>
         <th scope="col" class="px-[2px] py-[2px] text-center xs:w-[50px]">
           Acción
@@ -259,13 +264,13 @@
             <img
               (click)="desplegarInformacion(i)"
               *ngIf="i.isExpanded"
-              src="../../../../assets/arrow_down.svg"
+              src="./assets/arrow_down.svg"
               alt="icono de flecha abrir"
             />
             <img
               (click)="desplegarInformacion(i)"
               *ngIf="!i.isExpanded"
-              src="../../../../assets/arrow_right.svg"
+              src="./assets/arrow_right.svg"
               alt="icono de flecha cerrar"
             />
           </td>
@@ -305,7 +310,7 @@
             <input
               min="1"
               autocomplete="off"
-              class="bg-transparent xs:w-[75%]"
+              class="bg-transparent xs:w-[75%] text-end"
               type="number"
               data-bs-toggle="dropdown"
               (keydown.enter)="actualizarIXR(i)"
@@ -404,7 +409,7 @@
               ngbTooltip="Eliminar"
               triggers="mouseenter:mouseleave"
               (click)="handleClick(i.id)"
-              src="../../../../assets/delete.svg"
+              src="./assets/delete.svg"
               alt="delete"
             />
           </td>

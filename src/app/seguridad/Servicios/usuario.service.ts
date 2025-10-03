@@ -52,4 +52,8 @@ export class UsuarioService {
   obtenerRolesPorProyectoPorUsuario(registro: asignarRolAUsuarioEnEmpresaPorPoryectoDTO){
     return this.httpClient.post<rolProyectoEmpresaUsuarioDTO[]>(`${this.zvApiUrl}/obtenerRelacionesRolProyectoUsuario`, registro);
   }
+
+  CrearAdministradorRoles(registro: UsuarioEstructuraCorporativoDTO){
+    return this.httpClient.post<RespuestaDTO>(`${this.zvApiUrl}/CrearAdministradorRoles`, registro);
+  }
 }

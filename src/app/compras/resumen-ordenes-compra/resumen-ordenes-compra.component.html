@@ -4,7 +4,7 @@
   (selectedTabChange)="yourFn($event)"
   [selectedIndex]="selectedIndex"
 >
-  <mat-tab label="Resumen ordenes de compra">
+  <mat-tab label="Resumen órdenes de compra">
     <div *ngIf="selectedIndex === 0"></div>
   </mat-tab>
   <mat-tab label="Insumos comprados">
@@ -24,8 +24,8 @@
         >
           <option value="0">Todos</option>
           <option value="1">Pendientes</option>
-          <option value="2">Surtido Parcialmente</option>
-          <option value="3">Surtido Totalmente</option>
+          <option value="2">Surtido parcialmente</option>
+          <option value="3">Surtido totalmente</option>
         </select>
       </div>
     </div>
@@ -39,8 +39,8 @@
         >
           <option value="0">Todos</option>
           <option value="1">Pendientes</option>
-          <option value="2">Pagado Parcialmente</option>
-          <option value="3">Pagado Totalmente</option>
+          <option value="2">Pagado parcialmente</option>
+          <option value="3">Pagado totalmente</option>
         </select>
       </div>
     </div>
@@ -150,29 +150,205 @@
               Estatus
             </th>
             <th class="px-[2px] py-[2px] text-center xs:hidden" scope="col">
-              Insumos Comprados
+              Insumos comprados
             </th>
             <th class="px-[2px] py-[2px] text-center xs:hidden" scope="col">
-              Estatus Pagada
+              Estatus pagada
             </th>
             <th class="px-[2px] py-[2px] text-center" scope="col">Acciones</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray300">
-          <tr *ngIf="!filteredOrdenes">
+          <ng-container *ngIf="isLoadingOC">
+            <tr>
+              <!-- No. Orden -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Proyecto -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Registro -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Estatus -->
+              <td class="px-1" scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Insumos compartido -->
+              <td scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-40 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Estatus pagada -->
+              <td scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-40 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Acciones -->
+              <td scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-20 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <!-- No. Orden -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Proyecto -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Registro -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Estatus -->
+              <td class="px-1" scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Insumos compartido -->
+              <td scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-40 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Estatus pagada -->
+              <td scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-40 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Acciones -->
+              <td scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-20 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <!-- No. Orden -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Proyecto -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Registro -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Estatus -->
+              <td class="px-1" scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Insumos compartido -->
+              <td scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-40 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Estatus pagada -->
+              <td scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-40 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Acciones -->
+              <td scope="col">
+                <div role="status" class="flex justify-center max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-20 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+          <tr *ngIf="!filteredOrdenes && !isLoadingOC">
             <td
               scope="col"
               colspan="7"
               class="xs:hidden font-medium text-center text-gray700 hover:bg-gray200 animation duration-200"
             >
-              No hay ordenes de compra.
+              No hay órdenes de compra.
             </td>
             <td
               scope="col"
               colspan="5"
               class="md:hidden lg:hiddenfont-medium text-center text-gray700 hover:bg-gray200 animation duration-200 text-[8px]"
             >
-              No hay ordenes de compra.
+              No hay órdenes de compra.
             </td>
           </tr>
           <ng-container *ngFor="let oc of filteredOrdenes | async">
@@ -184,13 +360,13 @@
                 <img
                   (click)="desplegarInformacion(oc)"
                   *ngIf="oc.isExpanded"
-                  src="../../../../assets/arrow_down.svg"
+                  src="./assets/arrow_down.svg"
                   alt="icono de flecha abrir"
                 />
                 <img
                   (click)="desplegarInformacion(oc)"
                   *ngIf="!oc.isExpanded"
-                  src="../../../../assets/arrow_right.svg"
+                  src="./assets/arrow_right.svg"
                   alt="icono de flecha cerrar"
                 />
               </td>
@@ -287,7 +463,7 @@
                       ngbTooltip="Ver insumos"
                       triggers="mouseenter:mouseleave"
                       class="cursor-pointer mx-auto xs:w-4"
-                      src="../../../../assets/visibility_btn.svg"
+                      src="./assets/visibility_btn.svg"
                       alt="ver insumos"
                       (click)="showModal(oc)"
                     />
@@ -297,7 +473,7 @@
                       ngbTooltip="Cargar facturas"
                       triggers="mouseenter:mouseleave"
                       class="cursor-pointer mx-auto xs:w-4"
-                      src="../../../../assets/upload_file.svg"
+                      src="./assets/upload_file.svg"
                       alt="ver insumos"
                       (click)="nuevaFacturaOrdenCompra(oc.id)"
                     />
@@ -311,7 +487,7 @@
             >
               <td class="px-1 py-[2px]" scope="col" colspan="5">
                 <div class="flex gap-1">
-                  <label class="font-bold">Fecha de Registro:</label>
+                  <label class="font-bold">Fecha de registro:</label>
                   {{ oc.fechaRegistro | date : "dd-MM-yyyy" }}
                 </div>
               </td>
@@ -400,26 +576,154 @@
             ></th>
             <th class="px-1 py-[2px]" scope="col">No. Orden</th>
             <th class="px-1 py-[2px]" scope="col">Cantidad</th>
-            <th class="px-1 py-[2px]" scope="col">Precio Unitario</th>
+            <th class="px-1 py-[2px]" scope="col">Precio unitario</th>
             <th class="px-1 py-[2px]" scope="col">Importe sin IVA</th>
             <th class="px-1 py-[2px]" scope="col">Importe con IVA</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray300">
-          <tr *ngIf="!ordenesCommpraXInsumo.length">
+          <ng-container *ngIf="isLoadingIC">
+            <tr>
+              <!-- No. Orden -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Cantidad -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Precio Unitario -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Importe sin IVA -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Importe con IVA -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-40 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <!-- No. Orden -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Cantidad -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Precio Unitario -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Importe sin IVA -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Importe con IVA -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-40 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <!-- No. Orden -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Cantidad -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Precio Unitario -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Importe sin IVA -->
+              <td class="px-1" scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+              <!-- Importe con IVA -->
+              <td scope="col">
+                <div role="status" class="max-w-sm animate-pulse">
+                  <div
+                    class="h-5 bg-gray300 rounded-full w-40 mt-1 mb-1 xs:h-3 mt-1 mb-1"
+                  ></div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+          <tr *ngIf="!ordenesCommpraXInsumo.length && !isLoadingIC">
             <td
               scope="col"
               colspan="7"
               class="xs:hidden font-medium text-center text-gray700 hover:bg-gray200 animation duration-200"
             >
-              No hay ordenes de compra.
+              No hay órdenes de compra.
             </td>
             <td
               scope="col"
               colspan="5"
               class="md:hidden lg:hiddenfont-medium text-center text-gray700 hover:bg-gray200 animation duration-200 text-[8px]"
             >
-              No hay ordenes de compra.
+              No hay órdenes de compra.
             </td>
           </tr>
           <ng-container *ngFor="let oc of ordenesCommpraXInsumo">
@@ -427,10 +731,10 @@
               class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
             >
               <td class="px-1 py-[2px]" scope="col">{{ oc.noOrdenCompra }}</td>
-              <td class="px-1 py-[2px]" scope="col">{{ oc.cantidad }}</td>
-              <td class="px-1 py-[2px]" scope="col">{{ oc.precioUnitario }}</td>
-              <td class="px-1 py-[2px]" scope="col">{{ oc.importeSinIva }}</td>
-              <td class="px-1 py-[2px]" scope="col">{{ oc.importeConIva }}</td>
+              <td class="px-1 py-[2px] text-end" scope="col">{{ oc.cantidad }}</td>
+              <td class="px-1 py-[2px] text-end" scope="col">${{ oc.precioUnitario }}</td>
+              <td class="px-1 py-[2px] text-end" scope="col">${{ oc.importeSinIva }}</td>
+              <td class="px-1 py-[2px] text-end" scope="col">${{ oc.importeConIva }}</td>
             </tr>
           </ng-container>
         </tbody>
@@ -492,7 +796,7 @@
                   triggers="mouseenter:mouseleave"
                 >
                   <img
-                    src="../../../../assets//check_circle.svg"
+                    src="./assets/check_circle.svg"
                     alt=""
                     (click)="cargarFactura()"
                   />
@@ -582,7 +886,7 @@
                           <tr class="xs:text-[10px]">
                             <th class="px-1 py-[2px]" scope="col">Uuid</th>
                             <th class="px-1 py-[2px]" scope="col">
-                              Fecha Emision
+                              Fecha emision
                             </th>
                             <th class="px-1 py-[2px]" scope="col">Total</th>
                             <th class="px-1 py-[2px] text-center" scope="col">
@@ -666,7 +970,7 @@
                                   <img
                                     (click)="autorizarFactura(fxoc)"
                                     *ngIf="fxoc.estatus == 1"
-                                    src="../../../../assets/authorize_facture.svg"
+                                    src="./assets/authorize_facture.svg"
                                     alt=""
                                     class="cursor-pointer mx-auto"
                                     ngbTooltip="Autorizar"
@@ -675,7 +979,7 @@
                                   <img
                                     (click)="cancelarFactura(fxoc)"
                                     *ngIf="fxoc.estatus == 1"
-                                    src="../../../../assets/authorize_facture.svg"
+                                    src="./assets/authorize_facture.svg"
                                     alt=""
                                     class="cursor-pointer mx-auto"
                                     ngbTooltip="Cancelar"
@@ -702,7 +1006,7 @@
                             <th class="px-1 py-[2px]" scope="col">Unidad</th>
                             <th class="px-1 py-[2px]" scope="col">Cantidad</th>
                             <th class="px-1 py-[2px]" scope="col">
-                              Precion Unitario
+                              Precion unitario
                             </th>
                             <th class="px-1 py-[2px]" scope="col">Descuento</th>
                             <th class="px-1 py-[2px]" scope="col">Importe</th>

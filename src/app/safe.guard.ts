@@ -8,42 +8,27 @@ import { proyectoDTO } from './proyectos/proyecto/tsProyecto';
 // const seguridadService = inject(SeguridadService);
 // const router = inject(Router);
 
-export function verificarRol(
-  rol: string,
-  seguridadService: SeguridadService,
-  router: Router
-): boolean {
-  const idEmpresa = seguridadService.obtenIdEmpresaLocalStorage();
-  if (idEmpresa === undefined || idEmpresa === null || idEmpresa === '') {
-    router.navigate(['**']);
-    return false;
-  }
-
-  const rolActual = seguridadService.zfObtenerCampoJwt(rol);
-
-  console.log('Roles del JWT', rolActual);
-  console.log('Rol que pide la sección', rol);
-
-  if (rol === rolActual) {
-    console.log('Tiene el rol correcto');
-    return true;
-  }
-
-  console.log('No tiene el rol correcto');
-  router.navigate(['**']);
-  return false;
-}
-
 export function esAdminUsuarioCorporativoFuntion(): boolean {
   const seguridadService = inject(SeguridadService);
   const router = inject(Router);
-  if (seguridadService.zfObtenerCampoJwt('role') === 'Administrador') {
+  if (
+    seguridadService.zfObtenerCampoJwt('role') === 'Administrador' ||
+    seguridadService.zfObtenerCampoJwt('role') === 'AdministradorRoles'
+  ) {
     return true;
   }
   router.navigate(['**']);
   return false;
 
   //return seguridadService.zfObtenerCampoJwt('role') === 'admin' ? true : false;
+}
+
+export function esAdminRoles(): boolean {
+  const seguridadService = inject(SeguridadService);
+  if (seguridadService.zfObtenerCampoJwt('role') === 'AdministradorRoles') {
+    return true;
+  }
+  return false;
 }
 
 export function esCotizacionFuncion(): boolean {

@@ -4,13 +4,13 @@ td {
     padding: 0 10px;
     height: 5px;
   }
-  th {
+  /* th {
     background-color: #21416e;
     height: 1px;
     color: #f2f2f2;
     border: 1px solid #4e4c4c54;
     padding: 0 10px;
-  }
+  } */
   .dropdown {
     max-width: 100%;
     width: 250px;

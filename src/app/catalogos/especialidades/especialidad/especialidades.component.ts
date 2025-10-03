@@ -34,6 +34,8 @@ export class EspecialidadesComponent implements OnInit {
   paginaActual = 1;
   cantidadRegistrosAMostrar = 10;
 
+  isLoading: boolean = true;
+
   /////////* PAGINATION */////////
   paginatedEspecialidad: especialidadDTO[] = [];
   currentPage = 1;
@@ -73,6 +75,7 @@ export class EspecialidadesComponent implements OnInit {
         this.totalItems = especialidades.length;
         this.updatePagination();
         this.updatePaginatedData();
+        this.isLoading = false;
       });
   }
 
@@ -166,7 +169,7 @@ export class EspecialidadesComponent implements OnInit {
     const dialogRef = this.dialog.open(ModalAlertComponent, {
       data: {
         titulo: '',
-        mensaje: '¿Quieres eliminar el periodo?',
+        mensaje: '¿Quieres eliminar la especialidad?',
         funcionAceptarEspecialidad: this.borrar.bind(this),
         especialidadId: especialidadId,
       },

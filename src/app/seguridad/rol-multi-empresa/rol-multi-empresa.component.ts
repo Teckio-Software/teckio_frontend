@@ -86,6 +86,8 @@ export class RolMultiEmpresaComponent implements OnInit {
   alertaTipo: AlertaTipo = AlertaTipo.none;
   AlertaTipo = AlertaTipo;
 
+  isLoading: boolean = true;
+
   @ViewChildren('inputRol') inputsRol!: QueryList<ElementRef<HTMLInputElement>>;
 
   constructor(
@@ -363,6 +365,7 @@ export class RolMultiEmpresaComponent implements OnInit {
           this.selectedCorporativo = this.corporativos[0].id;
           this.cambiaCorporativo(this.selectedCorporativo);
         }
+        this.isLoading = false;
       });
   }
   limpiarDesdeRol() {

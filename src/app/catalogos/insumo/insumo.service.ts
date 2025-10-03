@@ -44,4 +44,8 @@ export class InsumoService {
     const params = new HttpParams({fromObject: valores});
     return this.httpClient.get<InsumoDTO[]>(`${this.apiUrl}/${idEmpresa}/buscar`, {params, observe: 'response'});
   }
+
+  public obtenerTodos(idEmpresa: number){
+    return this.httpClient.get<InsumoDTO[]>(`${this.apiUrl}/${idEmpresa}/obtenerTodos`);
+  }
 }

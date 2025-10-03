@@ -37,6 +37,7 @@ export class ProyectoUsuarioComponent implements OnInit {
   };
 
   selectedProyectoId: number = 0;
+  agregarSelectedProyectoId: number = 0;
 
   alertaSuccess: boolean = false;
   alertaMessage: string = '';
@@ -67,6 +68,7 @@ export class ProyectoUsuarioComponent implements OnInit {
       .obtenerTodosSinEstructurar(this.selectedEmpresa)
       .subscribe((proyectos: proyectoDTO[]) => {
         this.proyectos = proyectos;
+        console.log(this.proyectos);
       });
 
     this._ProyectoUsuarioService
@@ -86,6 +88,10 @@ export class ProyectoUsuarioComponent implements OnInit {
       });
 
     this.obtenerRoles();
+  }
+
+  get tieneEmpresaYRol(): boolean {
+    return this.registros.some((r) => r.estatus && !!r.idRol) ?? false;
   }
 
   asignarProyecto(idProyecto: number) {
@@ -127,7 +133,7 @@ export class ProyectoUsuarioComponent implements OnInit {
     };
 
     this.usuarioService.asignarRolesPorProyecto(parametro).subscribe(() => {
-      this.obtenerRelaciones(usuarioProyecto);
+      // this.obtenerRelaciones(usuarioProyecto);
     });
   }
 
@@ -142,7 +148,7 @@ export class ProyectoUsuarioComponent implements OnInit {
 
     this.selectedProyectoId = id;
     this.asignarProyecto(id);
-    this.selectedProyectoId = 0;
+    this.agregarSelectedProyectoId = 0;
   }
 
   obtenerRelaciones(registro: usuarioProyectoDTO) {

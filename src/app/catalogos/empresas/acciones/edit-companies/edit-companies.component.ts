@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { EmpresaDTO } from 'src/app/catalogos/empresas/empresa';
 import { EmpresaService } from '../../empresa.service';
+import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
+import { log } from 'console';
 @Component({
   selector: 'app-edit-companies',
   templateUrl: './edit-companies.component.html',
@@ -13,6 +15,8 @@ export class EditCompaniesComponent {
   botonAccion: string = 'Guardar';
   accion!:string;
   formulario: FormGroup;
+
+  errorRFC: RespuestaDTO = {estatus: false, descripcion: ''};
 
   constructor(
     private modalActual: MatDialogRef<EditCompaniesComponent>,
@@ -63,6 +67,7 @@ export class EditCompaniesComponent {
 
 
   guardarEmpresa(){
+    this.errorRFC.estatus = false;
     this._empresa = {
       id: this.datos.id,
       nombreComercial: this.formulario.get('razonSocial')?.value,
@@ -75,6 +80,21 @@ export class EditCompaniesComponent {
       guidEmpresa: '',
       codigoPostal: ''
     };
+    let c = true;
+    if(this._empresa.rfc.length<12){
+      this.errorRFC.estatus = true;
+      this.errorRFC.descripcion = 'El RFC debe tener 12 o 13 caracteres';
+      c = false;
+    }
+    if(this._empresa.rfc.includes(' ')){
+      this.errorRFC.estatus = true;
+      this.errorRFC.descripcion = 'El RFC no debe tener espacios';
+      c = false;
+    }
+    if(!c){
+      console.log('No se van a guardar');
+      return;
+    }
     console.log(this._empresa);
     if (this.datos != null && this.datos.id > 0) {
       this._empresaServicio.editar(this._empresa).subscribe(() => {

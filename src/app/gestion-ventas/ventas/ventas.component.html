@@ -1,10 +1,17 @@
 <section>
   <div>
     <div>
+      <app-alert
+        *ngIf="alertaTipo !== AlertaTipo.none"
+        [alertaTipo]="alertaTipo"
+        [alertaMessage]="alertaMessage"
+        (close)="cerrarAlerta()"
+      >
+      </app-alert>
       <!-- Button cotainer -->
-      <div class="flex mt-1 mb-2">
+      <div class="flex mt-1 gap-2">
         <button
-          (click)="openModal()"
+          (click)="crearOrdenVenta()"
           class="flex align-items-center rounded-md bg-colorButton transition-colors delay-75 hover:bg-colorButtonHover font-light text-white p-1"
         >
           <p
@@ -15,357 +22,924 @@
           <img class="xs:w-4" src="assets/add.svg" alt="botón agregar" />
         </button>
       </div>
-      <!-- Button cotainer  end -->
-
-      <p class="text-sm font-medium mb-2 text-gray700 xs:text-[10px]">
-        Campos obligatorios marcados con <span class="font-bold">*</span>
-      </p>
-    </div>
-
-    <!-- Table -->
-    <div class="overflow-x-auto shadow-md rounded-lg">
-      <!-- Table container -->
-      <div>
-        <table class="w-full text-sm xs:table-fixed">
-          <thead class="bg-primario text-white">
-            <tr class="xs:text-[10px]">
-              <th scope="col" class="px-1 py-[2px] xs:w-[75px]">Venta no.</th>
-              <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">Elaboró</th>
-              <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">
-                Registro
-              </th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray300">
-            <ng-container>
-              <tr
-                class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
-                *ngFor="let orden of ordenesVenta"
+      <div class="flex mt-1 gap-2">
+        <select
+          [(ngModel)]="filtroEstatus"
+          name=""
+          id=""
+          (input)="seleccionEstatus($event)"
+          class="block w-full h-auto px-3 py-1.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        >
+          <option value="">Estatus...</option>
+          <option value="0">Capturada</option>
+          <option value="1">Autorizada</option>
+          <option value="2">Cancelada</option>
+          <option value="3">Pagada</option>
+        </select>
+        <div class="">
+          <input
+            type="text"
+            placeholder="Seleccione usuario"
+            autocomplete="off"
+            class="block w-48 px-3 py-1.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            (input)="filtrarUsuario($event)"
+            (click)="mostrarListaUsuario = !mostrarListaUsuario"
+            [(ngModel)]="nombreUsuario"
+          />
+          <div *ngIf="mostrarListaUsuario">
+            <ul
+              *ngFor="let usuario of listaUsuarios"
+              class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-auto max-h-48 overflow-y-auto shadow-lg"
+            >
+              <li
+                class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                (click)="seleccionarUsuario(usuario)"
               >
-                <td class="px-1 py-[2px]" scope="col">{{orden.numeroOrdenVenta}} </td>
-                <td class="px-1 py-[2px]" scope="col">{{orden.elaboro}} </td>
-                <td class="px-1 py-[2px]" scope="col">{{orden.fechaRegistro | date: 'dd/MM/yyyy HH:mm:ss'}} </td>
+                {{ usuario }}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <input
+          type="date"
+          ngbTooltip="Fecha de inicio"
+          [(ngModel)]="fechaInicio"
+          (change)="filtrarTablaOrdenesVenta()"
+          class="block w-full h-auto px-3 py-1.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+        <input
+          type="date"
+          ngbTooltip="Fecha de termino"
+          [(ngModel)]="fechaFin"
+          (change)="filtrarTablaOrdenesVenta()"
+          class="block w-full h-auto px-3 py-1.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+        <div class="flex items-center">
+          <button (click)="limpiarFiltros()" class="w-7 h-7">
+            <img src="assets/delete filter.svg" alt="botón agregar" />
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Button cotainer  end -->
+
+    <p class="text-sm font-medium mb-2 text-gray700 xs:text-[10px]">
+      Campos obligatorios marcados con <span class="font-bold">*</span>
+    </p>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto shadow-md rounded-lg">
+    <!-- Table container -->
+    <div>
+      <table class="w-full text-sm xs:table-fixed">
+        <thead class="bg-primario text-white">
+          <tr class="xs:text-[10px]">
+            <th scope="col" class="px-1 py-[2px] xs:w-[75px]">Venta no.</th>
+            <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">Elaboró</th>
+            <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">Registro</th>
+            <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">Estatus</th>
+            <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">Total</th>
+            <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">Accion</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray300">
+          <ng-container>
+            <ng-container *ngIf="isLoading">
+              <tr>
+                <!-- Venta no. -->
+                <td class="px-1" scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Elaboró -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Registro -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <!-- Venta no. -->
+                <td class="px-1" scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Elaboró -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Registro -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <!-- Venta no. -->
+                <td class="px-1" scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Elaboró -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
+                <!-- Registro -->
+                <td scope="col">
+                  <div role="status" class="max-w-sm animate-pulse">
+                    <div
+                      class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+                    ></div>
+                  </div>
+                </td>
               </tr>
             </ng-container>
-          </tbody>
-        </table>
+            <tr *ngIf="ordenesVentaReset.length == 0" class="xs:hidden">
+              <td
+                colspan="6"
+                class="text-center text-gray-700 font-medium py-1 xs:text-xs"
+              >
+                No hay ordenes de venta creadas.
+              </td>
+            </tr>
+            <tr
+              *ngIf="ordenesVentaReset.length != 0 && ordenesVenta.length == 0"
+              class="xs:hidden"
+            >
+              <td
+                colspan="6"
+                class="text-center text-gray-700 font-medium py-1 xs:text-xs"
+              >
+                No se encontraron resultados con los filtros seleccionados.
+              </td>
+            </tr>
+            <tr
+              class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+              *ngFor="let orden of ordenesVenta"
+            >
+              <td class="px-1 py-[2px]" scope="col">
+                {{ orden.numeroOrdenVenta }}
+              </td>
+              <td class="px-1 py-[2px]" scope="col">{{ orden.elaboro }}</td>
+              <td class="px-1 py-[2px]" scope="col">
+                {{ orden.fechaRegistro | date : "dd/MM/yyyy HH:mm:ss" }}
+              </td>
+              <td class="px-1 py-[2px]" scope="col">
+                <div class="flex h-full">
+                  <div
+                    class="bg-red-100 rounded-lg w-28 h-5 xs:w-18"
+                    *ngIf="orden.estatus === 2"
+                  >
+                    <p class="text-red-500 text-center">Cancelada</p>
+                  </div>
+                  <div
+                    class="bg-green100 rounded-lg w-28 h-5 xs:w-18"
+                    *ngIf="orden.estatus === 3"
+                  >
+                    <p class="text-green600 text-center">Pagado</p>
+                  </div>
+                  <div
+                    class="bg-blue100 rounded-lg w-28 h-5 xs:w-18"
+                    *ngIf="orden.estatus === 1"
+                  >
+                    <p class="text-blue600 text-center">Autorizada</p>
+                  </div>
+                  <div
+                    class="bg-blue100 rounded-lg w-28 h-5 xs:w-18"
+                    *ngIf="orden.estatus === 0"
+                  >
+                    <p class="text-blue600 text-center">Capturada</p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-1 py-[2px]" scope="col">
+                {{ orden.importeTotal | currency }}
+              </td>
+              <td class="px-1 py-[2px]" scope="col">
+                <div class="flex gap-2">
+                  <button>
+                    <img
+                      ngbTooltip="Ver detalles"
+                      triggers="mouseenter:mouseleave"
+                      class="cursor-pointer"
+                      src="./assets/visibility_btn.svg"
+                      alt="ver detalles"
+                      (click)="openModal(orden)"
+                    />
+                  </button>
+                  <button
+                    *ngIf="usuarioSesion == orden.elaboro && orden.estatus == 0"
+                  >
+                    <img
+                      ngbTooltip="Cancelar"
+                      triggers="mouseenter:mouseleave"
+                      class="cursor-pointer w-6"
+                      src="./assets/cancel.svg"
+                      alt="eliminar"
+                      (click)="abrirModalCancelarOrdenVenta(orden.id)"
+                    />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div
+    class="fixed inset-0 z-10 w-screen overflow-y-auto"
+    *ngIf="isModalOpen"
+    (click)="closeModal()"
+  >
+    <div
+      class="content-center sm:flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0"
+    >
+      <div
+        class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl"
+        (click)="detenerCierre($event)"
+      >
+        <!-- Cabecera -->
+        <div
+          class="bg-white px-4 pb-2 pt-2 sm:p-6 sm:pb-4 flex justify-between border-b-2"
+        >
+          <h2 class="font-semibold text-gray-800 tracking-wider text-lg mt-3">
+            Orden de venta
+          </h2>
+          <button
+            type="button"
+            class="leading-none text-2xl px-3 py-1 text-gray-500 hover:text-gray-700"
+            (click)="closeModal()"
+          >
+            &times;
+          </button>
+        </div>
+
+        <!-- contenido -->
+        <div class="bg-white px-4 pb-4 pt-2 sm:p-6 sm:pb-4">
+          <div>
+            <div class="mb-3">
+              <label
+                class="block text-sm font-medium text-gray-700 mb-1"
+                for="almacen"
+                >Cliente</label
+              >
+              <div class="relative w-full" #lista>
+                <input
+                  type="text"
+                  placeholder="Seleccionar..."
+                  autocomplete="off"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  (input)="filtrarCliente($event)"
+                  (keydown.enter)="guardarOrdenVenta()"
+                  (click)="listaClientes = !listaClientes"
+                  [(ngModel)]="this.ordenVenta.razonSocialCliente"
+                />
+                <div *ngIf="listaClientes">
+                  <cdk-virtual-scroll-viewport
+                    itemSize="36"
+                    class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-[300px] h-36 overflow-auto shadow-lg"
+                  >
+                    <div
+                      *cdkVirtualFor="let cliente of clientes"
+                      (click)="seleccionarCliente(cliente)"
+                      class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                      style="height: 36px; box-sizing: border-box"
+                    >
+                      {{ cliente.razonSocial }}
+                    </div>
+                  </cdk-virtual-scroll-viewport>
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label
+                class="block text-sm font-medium text-gray-700"
+                for="almacen"
+                >Observaciones</label
+              >
+              <textarea
+                name=""
+                id=""
+                [(ngModel)]="ordenVenta.observaciones"
+                rows="2"
+                (keydown.enter)="guardarOrdenVenta()"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              ></textarea>
+            </div>
+            <div class="mb-3">
+              <!-- <button
+                (click)="agregarDetalle()"
+                class="flex align-items-center rounded-md bg-colorButton transition-colors delay-75 hover:bg-colorButtonHover font-light text-white p-1"
+              >
+                <p
+                  class="text-[#f2f2f2] titular bg-custom-bg w-52 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
+                >
+                  Agregar Producto
+                </p>
+                <img class="xs:w-4" src="assets/add.svg" alt="botón agregar" />
+              </button> -->
+              <div class="flex gap-4 items-center">
+                <p class="text-red-600 font-normal text-xs m-0">
+                  {{ mensajeAlerta }}
+                </p>
+                <div class="flex gap-4">
+                  <button
+                    *ngIf="esEliminar"
+                    class="text-red-600 font-normal text-xs underline"
+                    (click)="eliminarRegistro()"
+                  >
+                    Si
+                  </button>
+                  <button
+                    *ngIf="esEliminar"
+                    class="text-red-600 font-normal text-xs underline"
+                    (click)="noEliminar()"
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="rounded-lg shadow-md overflow-hidden">
+              <div class="overflow-y-auto max-h-[150px] w-full">
+                <table class="w-full text-sm">
+                  <thead class="bg-primario text-white sticky top-0">
+                    <tr class="xs:text-[10px]">
+                      <th class="px-1 py-[2px] w-[40%]" scope="col">
+                        *Producto/Servicio
+                      </th>
+                      <th class="px-1 py-[2px] w-[15%]" scope="col">
+                        *Cantidad
+                      </th>
+                      <th class="px-1 py-[2px] w-[15%]" scope="col">
+                        *PrecioUnitario
+                      </th>
+                      <th class="px-1 py-[2px] w-[15%]" scope="col">
+                        Descuento
+                      </th>
+                      <th class="px-1 py-[2px] w-[15%]" scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray300">
+                    <tr
+                      class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+                    >
+                      <td class="px-1 py-[2px] w-[40%]" scope="col">
+                        <div class="relative w-full" #lista>
+                          <input
+                            type="text"
+                            placeholder="Seleccionar..."
+                            autocomplete="off"
+                            class="form-contrtrol w-full"
+                            (input)="filtrarProducto($event)"
+                            (keydown.enter)="
+                              guardarDetalle(nuevoDetalleOrdenVenta)
+                            "
+                            (click)="
+                              listaProductoYServicio = !listaProductoYServicio
+                            "
+                            [(ngModel)]="nuevoDetalleOrdenVenta.descripcion"
+                            [disabled]="esEliminar"
+                          />
+                          <div *ngIf="listaProductoYServicio">
+                            <cdk-virtual-scroll-viewport
+                              itemSize="36"
+                              class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-[300px] h-32 overflow-auto shadow-lg"
+                            >
+                              <div
+                                *cdkVirtualFor="
+                                  let productoServicio of productosYServicio
+                                "
+                                (click)="seleccionarProducto(productoServicio)"
+                                class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                style="height: 36px; box-sizing: border-box"
+                              >
+                                {{ productoServicio.descripcion }}
+                              </div>
+                            </cdk-virtual-scroll-viewport>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="px-1 py-[2px] w-[15%]" scope="col">
+                        <input
+                          min="1"
+                          placeholder="Cantidad..."
+                          autocomplete="off"
+                          class="dropdown1 bg-transparent w-[75%] xs:w-[100%] text-right"
+                          type="number"
+                          data-bs-toggle="dropdown"
+                          [(ngModel)]="nuevoDetalleOrdenVenta.cantitdad"
+                          (keydown.enter)="
+                            guardarDetalle(nuevoDetalleOrdenVenta)
+                          "
+                        />
+                      </td>
+                      <td class="px-1 py-[2px] w-[15%]" scope="col">
+                        <input
+                          min="1"
+                          placeholder="Cantidad..."
+                          autocomplete="off"
+                          class="dropdown1 bg-transparent w-[75%] xs:w-[100%] text-right"
+                          type="number"
+                          data-bs-toggle="dropdown"
+                          [(ngModel)]="nuevoDetalleOrdenVenta.precioUnitario"
+                          (keydown.enter)="
+                            guardarDetalle(nuevoDetalleOrdenVenta)
+                          "
+                        />
+                      </td>
+                      <td class="px-1 py-[2px] w-[15%]" scope="col">
+                        <input
+                          min="1"
+                          placeholder="Cantidad..."
+                          autocomplete="off"
+                          class="dropdown1 bg-transparent w-[75%] xs:w-[100%] text-right"
+                          type="number"
+                          data-bs-toggle="dropdown"
+                          [(ngModel)]="nuevoDetalleOrdenVenta.descuento"
+                          (keydown.enter)="
+                            guardarDetalle(nuevoDetalleOrdenVenta)
+                          "
+                        />
+                      </td>
+                      <td class="px-1 py-[2px] w-[15%]" scope="col"></td>
+                    </tr>
+                    <ng-container
+                      *ngFor="
+                        let detalle of ordenVenta.detalleOrdenVenta;
+                        let i = index
+                      "
+                    >
+                      <tr
+                        class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+                        [ngClass]="{
+                          'change-background-color':
+                            detalle == selectedDetalleOrdenVenta
+                        }"
+                        (click)="selectedDetalleOrdenVenta = detalle"
+                      >
+                        <td class="px-1 py-[2px] w-[40%]" scope="col">
+                          <div class="relative w-full">
+                            <input
+                              type="text"
+                              placeholder="Seleccionar..."
+                              autocomplete="off"
+                              class="form-contrtrol w-full"
+                              [(ngModel)]="detalle.descripcion"
+                              readonly
+                              [disabled]="esEliminar"
+                              (click)="selectedIndexOrdenVenta = i"
+                            />
+                          </div>
+                        </td>
+                        <td class="px-1 py-[2px] w-[15%]" scope="col" *ngIf="selectedIndexOrdenVenta == i" >
+                          <input
+                            min="1"
+                            placeholder="Cantidad..."
+                            autocomplete="off"
+                            class="dropdown1 bg-transparent w-[75%] xs:w-[100%] text-right"
+                            type="number"
+                            data-bs-toggle="dropdown"
+                            (keydown.enter)="
+                              guardarDetalle(nuevoDetalleOrdenVenta)
+                            "
+                            [(ngModel)]="detalle.cantitdad"
+                            [disabled]="esEliminar"
+                          />
+                        </td>
+                        <td class="px-1 py-[2px] w-[15%]" *ngIf="selectedIndexOrdenVenta != i" 
+                            (click)="selectedIndexOrdenVenta = i"
+                        >
+                        <div class="w-[75%] xs:w-[100%] text-end">
+                          {{detalle.cantitdad | number: '1.4-4'}}
+                          </div>
+                        </td>
+                        <td class="px-1 py-[2px] w-[15%]" scope="col" *ngIf="selectedIndexOrdenVenta == i">
+                          <input
+                            min="1"
+                            placeholder="Cantidad..."
+                            autocomplete="off"
+                            class="dropdown1 bg-transparent w-[75%] xs:w-[100%] text-right"
+                            type="number"
+                            data-bs-toggle="dropdown"
+                            (keydown.enter)="
+                              guardarDetalle(nuevoDetalleOrdenVenta)
+                            "
+                            [(ngModel)]="detalle.precioUnitario"
+                            [disabled]="esEliminar"
+                          />
+                        </td>
+                        <td class="px-1 py-[2px] w-[15%]" *ngIf="selectedIndexOrdenVenta != i" 
+                            (click)="selectedIndexOrdenVenta = i"
+                        >
+                        <div class="w-[75%] xs:w-[100%] text-end">
+                          ${{detalle.precioUnitario | number: '1.2-2'}}
+                          </div>
+                        </td>
+                        <td class="px-1 py-[2px] w-[15%]" scope="col" *ngIf="selectedIndexOrdenVenta == i">
+                          <input
+                            min="1"
+                            placeholder="Cantidad..."
+                            autocomplete="off"
+                            class="dropdown1 bg-transparent w-[75%] xs:w-[100%] text-right"
+                            type="number"
+                            data-bs-toggle="dropdown"
+                            (keydown.enter)="
+                              guardarDetalle(nuevoDetalleOrdenVenta)
+                            "
+                            [(ngModel)]="detalle.descuento"
+                            [disabled]="esEliminar"
+                          />
+                        </td>
+                        <td class="px-1 py-[2px] w-[15%]" *ngIf="selectedIndexOrdenVenta != i" 
+                            (click)="selectedIndexOrdenVenta = i"
+                        >
+                        <div class="w-[75%] xs:w-[100%] text-end">
+                          {{detalle.descuento | number: '1.2-2'}}
+                        </div>
+                        </td>
+                        <td class="px-1 py-[2px] w-[15%]" scope="col">
+                          <div class="flex gap-2">
+                            <button
+                              ngbTooltip="Ver Impuestos"
+                              triggers="mouseenter:mouseleave"
+                              (click)="verImpuestos(detalle)"
+                              [disabled]="esEliminar"
+                            >
+                              <img
+                                class="cursor-pointer mx-auto xs:w-4"
+                                src="./assets/visibility_btn.svg"
+                                alt="ver insumos"
+                              />
+                            </button>
+                            <button
+                              ngbTooltip="Ver Impuestos"
+                              triggers="mouseenter:mouseleave"
+                              [disabled]="esEliminar"
+                              (click)="eliminarDetalle(detalle)"
+                            >
+                              <img
+                                ngbTooltip="Eliminar detalle"
+                                triggers="mouseenter:mouseleave"
+                                class="cursor-pointer mx-auto xs:w-4"
+                                src="assets/delete.svg"
+                                alt="ver insumos"
+                              />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="impuestosOpen" class="mt-2">
+            <div class="rounded-lg shadow-md overflow-hidden">
+              <div class="overflow-y-auto max-h-[150px] w-full">
+                <table class="w-full text-sm">
+                  <thead class="bg-primario text-white sticky top-0">
+                    <tr>
+                      <th class="px-1 py-[2px] w-[20%]" scope="col">
+                        *Impuesto
+                      </th>
+                      <th class="px-1 py-[2px] w-[20%]" scope="col">*Factor</th>
+                      <th class="px-1 py-[2px] w-[20%]" scope="col">
+                        *Categoria
+                      </th>
+                      <th class="px-1 py-[2px] w-[20%]" scope="col">*Tasa</th>
+                      <th class="px-1 py-[2px] w-[20%]" scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray300">
+                    <ng-container
+                      *ngFor="let impuesto of impuestosDetalleOrdenVenta"
+                    >
+                      <tr
+                        class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+                        (click)="selectedImpuesto = impuesto"
+                      >
+                        <td class="px-1 py-[2px]" scope="col">
+                          <div class="relative w-full" #lista>
+                            <input
+                              type="text"
+                              placeholder="Impuesto..."
+                              autocomplete="off"
+                              class="form-contrtrol w-full"
+                              (click)="
+                                mostrarListaImpuestos = !mostrarListaImpuestos
+                              "
+                              [(ngModel)]="impuesto.descripcionTipoImpuesto"
+                              readonly
+                              [disabled]="esEliminar"
+                            />
+
+                            <div
+                              *ngIf="
+                                mostrarListaImpuestos &&
+                                impuesto.id == selectedImpuesto.id
+                              "
+                            >
+                              <ul
+                                class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-auto max-h-48 overflow-y-auto shadow-lg"
+                              >
+                                <li
+                                  *ngFor="let tipo of tiposImpuesto"
+                                  (click)="seleccionarImpuestos(tipo, impuesto)"
+                                  class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                >
+                                  {{ tipo.descripcionImpuesto }}
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-1 py-[2px]" scope="col">
+                          <div class="relative w-full" #lista>
+                            <input
+                              type="text"
+                              placeholder="Factor..."
+                              autocomplete="off"
+                              class="form-contrtrol w-full"
+                              (click)="
+                                mostrarListaFactores = !mostrarListaFactores
+                              "
+                              [(ngModel)]="impuesto.descripcionTipoFactor"
+                              readonly
+                              [disabled]="esEliminar"
+                            />
+
+                            <div
+                              *ngIf="
+                                mostrarListaFactores &&
+                                impuesto.id == selectedImpuesto.id
+                              "
+                            >
+                              <ul
+                                class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-auto max-h-48 overflow-y-auto shadow-lg"
+                              >
+                                <li
+                                  *ngFor="let tipo of tiposFactor"
+                                  (click)="seleccionarFactores(tipo, impuesto)"
+                                  class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                >
+                                  {{ tipo.descripcion }}
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-1 py-[2px]" scope="col">
+                          <div class="relative w-full" #lista>
+                            <input
+                              type="text"
+                              placeholder="Categoria.."
+                              autocomplete="off"
+                              class="form-contrtrol w-full"
+                              (click)="
+                                mostrarListaCategoria = !mostrarListaCategoria
+                              "
+                              [(ngModel)]="
+                                impuesto.descripcionCategoriaImpuesto
+                              "
+                              readonly
+                              [disabled]="esEliminar"
+                            />
+
+                            <div
+                              *ngIf="
+                                mostrarListaCategoria &&
+                                impuesto.id == selectedImpuesto.id
+                              "
+                            >
+                              <ul
+                                class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-auto max-h-48 overflow-y-auto shadow-lg"
+                              >
+                                <li
+                                  *ngFor="let categoria of categoriaImpuesto"
+                                  (click)="
+                                    seleccionarCategorias(categoria, impuesto)
+                                  "
+                                  class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                >
+                                  {{ categoria.tipo }}
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-1 py-[2px]" scope="col">
+                          <input
+                            min="1"
+                            placeholder="Categoria.."
+                            autocomplete="off"
+                            class="form-contrtrol w-full"
+                            type="number"
+                            data-bs-toggle="dropdown"
+                            (keydown.enter)="agregarImpuesto(impuesto)"
+                            [(ngModel)]="impuesto.tasaCuota"
+                            [disabled]="esEliminar"
+                          />
+                        </td>
+                        <td class="px-1 py-[2px]" scope="col">
+                          <div class="flex">
+                            <button
+                              ngbTooltip="Ver Impuestos"
+                              triggers="mouseenter:mouseleave"
+                              [disabled]="esEliminar"
+                              (click)="eliminarImpuesto(impuesto)"
+                            >
+                              <img
+                                class="cursor-pointer mx-auto xs:w-4"
+                                src="assets/delete.svg"
+                                alt="ver insumos"
+                              />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="px-4 py-3 flex justify-end gap-4">
+          <!-- <button
+            class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
+            (click)="guardarOrdenVenta()"
+          >
+            Aceptar
+          </button> -->
+          <button
+            class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
+            (click)="closeModal()"
+          >
+            Cancelar
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<div
-  *ngIf="isModalOpen"
-  class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center animate-fadeIn"
->
+<section>
   <div
-    class="z-50 bg-gray100 rounded-xl shadow-lg px-6 py-3 w-[50%] h-[90%] relative overflow-auto xs:w-full"
+    class="fixed inset-0 z-10 w-screen overflow-y-auto"
+    *ngIf="isOpenModalCancelar"
+    (click)="cerrarModalCancelarOrdenVenta()"
   >
-    <div class="flex justify-end items-center">
-      <button
-        class="text-3xl text-gray500 hover:text-gray700 transition 200ms"
-        (click)="closeModal()"
+    <div
+      class="content-center sm:flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0"
+    >
+      <div
+        class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl"
+        (click)="detenerCierre($event)"
       >
-        ×
-      </button>
-    </div>
-
-    <!-- contenido -->
-    <div class="bg-white px-4 pb-4 sm:p-2 sm:pb-4">
-      <div>
-        <div class="mb-3">
-          <label class="block text-sm font-medium text-gray-700" for="almacen"
-            >Cliente</label
-          >
-          <select
-            class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            [(ngModel)]="ordenVenta.idCliente"
-          >
-            <option
-              class="text-gray-700"
-              [ngValue]="0"
-              disabled
-              selected
-              hidden
-            >
-              Selecciona un Cliente..
-            </option>
-            <option [ngValue]="cliente.id" *ngFor="let cliente of clientes">
-              {{ cliente.razonSocial }}
-            </option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label class="block text-sm font-medium text-gray-700" for="almacen"
-            >Observaciones</label
-          >
-          <textarea
-            name=""
-            id=""
-            [(ngModel)]="ordenVenta.observaciones"
-            rows="2"
-            class="w-full"
-          ></textarea>
-        </div>
-        <div class="mb-3">
+        <!-- Cabecera -->
+        <div
+          class="bg-white px-4 pb-2 pt-2 sm:p-6 sm:pb-4 flex justify-between border-b-2"
+        >
+          <h2 class="font-semibold text-gray-800 tracking-wider text-lg mt-3">
+            Cancelar Orden de Venta
+          </h2>
           <button
-            (click)="agregarDetalle()"
-            class="flex align-items-center rounded-md bg-colorButton transition-colors delay-75 hover:bg-colorButtonHover font-light text-white p-1"
+            type="button"
+            class="leading-none text-2xl px-3 py-1 text-gray-500 hover:text-gray-700"
+            (click)="cerrarModalCancelarOrdenVenta()"
           >
-            <p
-              class="text-[#f2f2f2] titular bg-custom-bg w-52 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
-            >
-              Agregar Producto
-            </p>
-            <img class="xs:w-4" src="assets/add.svg" alt="botón agregar" />
+            &times;
+          </button>
+        </div>
+
+        <!-- contenido -->
+        <div class="bg-white px-4 pb-4 pt-2 sm:p-6 sm:pb-4">
+          <div>
+            <div class="mb-3">
+              <label
+                class="block text-sm font-medium text-gray-700 mb-1"
+                for="almacen"
+                >Selecciona un almacén antes de cancelar</label
+              >
+              <div class="relative w-full" #lista>
+                <input
+                  type="text"
+                  placeholder="Seleccionar..."
+                  autocomplete="off"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  (input)="filtrarAlmacen($event)"
+                  (click)="SlistaAlmacenes = !SlistaAlmacenes"
+                  [(ngModel)]="this.nombreAlmacen"
+                />
+                <div *ngIf="SlistaAlmacenes">
+                  <cdk-virtual-scroll-viewport
+                    itemSize="50"
+                    class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-[300px] h-36 overflow-auto shadow-lg"
+                  >
+                    <div
+                      *cdkVirtualFor="let almacen of listaAlmacenes"
+                      (click)="seleccionarAlmacen(almacen)"
+                      class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                      style="height: 36px; box-sizing: border-box"
+                    >
+                      {{ almacen.almacenNombre }}
+                    </div>
+                  </cdk-virtual-scroll-viewport>
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <!-- <button
+                (click)="agregarDetalle()"
+                class="flex align-items-center rounded-md bg-colorButton transition-colors delay-75 hover:bg-colorButtonHover font-light text-white p-1"
+              >
+                <p
+                  class="text-[#f2f2f2] titular bg-custom-bg w-52 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
+                >
+                  Agregar Producto
+                </p>
+                <img class="xs:w-4" src="assets/add.svg" alt="botón agregar" />
+              </button> -->
+              <div class="flex gap-4 items-center">
+                <p class="text-red-600 font-normal text-xs m-0">
+                  {{ mensajeAlerta }}
+                </p>
+                <div class="flex gap-4">
+                  <button
+                    *ngIf="esEliminar"
+                    class="text-red-600 font-normal text-xs underline"
+                    (click)="eliminarRegistro()"
+                  >
+                    Si
+                  </button>
+                  <button
+                    *ngIf="esEliminar"
+                    class="text-red-600 font-normal text-xs underline"
+                    (click)="noEliminar()"
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+          </div>
+        </div>
+        <div class="px-4 py-3 flex justify-end gap-4">
+          <button
+            class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
+            (click)="cancelarOrdenVenta()"
+          >
+            Aceptar
+          </button>
+          <button
+            class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
+            (click)="cerrarModalCancelarOrdenVenta()"
+          >
+            Cancelar
           </button>
         </div>
       </div>
-      <div>
-        <div class="rounded-lg shadow-md overflow-hidden">
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm xs:table-fixed">
-              <thead class="bg-primario text-white">
-                <tr class="xs:text-[10px]">
-                  <!-- <th class="px-1 py-[2px]" scope="col">Estimacion</th> -->
-                  <th class="px-1 py-[2px]" scope="col">Producto/Servicion</th>
-                  <th class="px-1 py-[2px]" scope="col">Cantidad</th>
-                  <th class="px-1 py-[2px] text-center" scope="col">
-                    PrecioUnitario
-                  </th>
-                  <th class="px-1 py-[2px] text-center" scope="col">
-                    Descuento
-                  </th>
-                  <th class="px-1 py-[2px] text-center" scope="col">Accion</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray300">
-                <ng-container
-                  *ngFor="let detalle of ordenVenta.detalleOrdenVenta"
-                >
-                  <tr
-                    class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
-                    [ngClass]="{
-                      'change-background-color':
-                        detalle == selectedDetalleOrdenVenta
-                    }"
-                  >
-                    <!-- <td class="px-1 py-[2px]" scope="col">
-                      <input
-                        min="1"
-                        placeholder="Cantidad..."
-                        autocomplete="off"
-                        class="dropdown1 bg-transparent w-[75%] xs:w-[100%]"
-                        type="number"
-                        data-bs-toggle="dropdown"
-                        (keydown.enter)="editarDetalle(detalle)"
-                        [(ngModel)]="detalle.idEstimacion"
-                      />
-                    </td> -->
-                    <td class="px-1 py-[2px]" scope="col">
-                      <input
-                        autocomplete="off"
-                        class="form-contrtrol dropdown2"
-                        id="myInput"
-                        type="text"
-                        style="margin: 5px"
-                        [(ngModel)]="detalle.idProductoYservicio"
-                        data-bs-toggle="dropdown"
-                        (keyup)="filtrarProducto($event)"
-                        (keydown.enter)="editarDetalle(detalle)"
-                        style="
-                          border: 0.5px solid #ffffff4d;
-                          border-radius: 3px;
-                          width: 100%;
-                          background-color: rgba(0, 0, 0, 0.164);
-                        "
-                      />
-                      <ul
-                        class="dropdown-menu"
-                        style="z-index: 9999; position: absolute"
-                      >
-                        <li style="overflow-y: scroll; height: 60px">
-                          <option
-                            class="option-hover"
-                            *ngFor="let producto of productosYServicio"
-                            [value]="producto.id"
-                            (click)=" detalle.idProductoYservicio = (producto.id)"
-                          >
-                            {{ producto.codigo }} || {{ producto.descripcion }}
-                          </option>
-                        </li>
-                      </ul>
-                    </td>
-                    <td class="px-1 py-[2px]" scope="col">
-                      <input
-                        min="1"
-                        placeholder="Cantidad..."
-                        autocomplete="off"
-                        class="dropdown1 bg-transparent w-[75%] xs:w-[100%]"
-                        type="number"
-                        data-bs-toggle="dropdown"
-                        (keydown.enter)="editarDetalle(detalle)"
-                        [(ngModel)]="detalle.cantitdad"
-                      />
-                    </td>
-                    <td class="px-1 py-[2px]" scope="col">
-                      <input
-                        min="1"
-                        placeholder="Cantidad..."
-                        autocomplete="off"
-                        class="dropdown1 bg-transparent w-[75%] xs:w-[100%]"
-                        type="number"
-                        data-bs-toggle="dropdown"
-                        (keydown.enter)="editarDetalle(detalle)"
-                        [(ngModel)]="detalle.precioUnitario"
-                      />
-                    </td>
-                    <td class="px-1 py-[2px]" scope="col">
-                      <input
-                        min="1"
-                        placeholder="Cantidad..."
-                        autocomplete="off"
-                        class="dropdown1 bg-transparent w-[75%] xs:w-[100%]"
-                        type="number"
-                        data-bs-toggle="dropdown"
-                        (keydown.enter)="editarDetalle(detalle)"
-                        [(ngModel)]="detalle.descuento"
-                      />
-                    </td>
-                    <td class="px-1 py-[2px]" scope="col">
-                      <div class="flex">
-                        <div>
-                          <img
-                            ngbTooltip="Ver insumos"
-                            triggers="mouseenter:mouseleave"
-                            class="cursor-pointer mx-auto xs:w-4"
-                            src="../../../../assets/visibility_btn.svg"
-                            alt="ver insumos"
-                            (click)="verImpuestos(detalle)"
-                          />
-                        </div>
-                        <div class="flex">
-                          <img
-                            (click)="eliminarDetalle(detalle)"
-                            src="../../../../assets/authorize_facture.svg"
-                            alt=""
-                            class="cursor-pointer mx-auto"
-                            ngbTooltip="Eliminar"
-                            triggers="mouseenter:mouseleave"
-                          />
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                </ng-container>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div *ngIf="impuestosOpen" class="mt-2">
-        <div class="rounded-lg shadow-md overflow-hidden">
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm xs:table-fixed">
-              <thead class="bg-primario text-white">
-                <tr class="xs:text-[10px]">
-                  <th class="px-1 py-[2px]" scope="col">Impuesto</th>
-                  <th class="px-1 py-[2px]" scope="col">Factor</th>
-                  <th class="px-1 py-[2px]" scope="col">Categoria</th>
-                  <th class="px-1 py-[2px] text-center" scope="col">Tasa</th>
-                  <th class="px-1 py-[2px] text-center" scope="col">Accion</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray300">
-                <ng-container
-                  *ngFor="let impuesto of impuestosDetalleOrdenVenta"
-                >
-                  <tr
-                    class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
-                  >
-                    <td class="px-1 py-[2px]" scope="col">
-                      <input
-                        min="1"
-                        placeholder="Cantidad..."
-                        autocomplete="off"
-                        class="dropdown1 bg-transparent w-[75%] xs:w-[100%]"
-                        type="number"
-                        data-bs-toggle="dropdown"
-                        (keydown.enter)="agregarImpuesto(impuesto)"
-                        [(ngModel)]="impuesto.idTipoImpuesto"
-                      />
-                    </td>
-                    <td class="px-1 py-[2px]" scope="col">
-                      <input
-                        min="1"
-                        placeholder="Cantidad..."
-                        autocomplete="off"
-                        class="dropdown1 bg-transparent w-[75%] xs:w-[100%]"
-                        type="number"
-                        data-bs-toggle="dropdown"
-                        (keydown.enter)="agregarImpuesto(impuesto)"
-                        [(ngModel)]="impuesto.idTipoFactor"
-                      />
-                    </td>
-                    <td class="px-1 py-[2px]" scope="col">
-                      <input
-                        min="1"
-                        placeholder="Cantidad..."
-                        autocomplete="off"
-                        class="dropdown1 bg-transparent w-[75%] xs:w-[100%]"
-                        type="number"
-                        data-bs-toggle="dropdown"
-                        (keydown.enter)="agregarImpuesto(impuesto)"
-                        [(ngModel)]="impuesto.idCategoriaImpuesto"
-                      />
-                    </td>
-                    <td class="px-1 py-[2px]" scope="col">
-                      <input
-                        min="1"
-                        placeholder="Cantidad..."
-                        autocomplete="off"
-                        class="dropdown1 bg-transparent w-[75%] xs:w-[100%]"
-                        type="number"
-                        data-bs-toggle="dropdown"
-                        (keydown.enter)="agregarImpuesto(impuesto)"
-                        [(ngModel)]="impuesto.tasaCuota"
-                      />
-                    </td>
-                    <td class="px-1 py-[2px]" scope="col">
-                      <div class="flex">
-                        <img
-                          src="../../../../assets/authorize_facture.svg"
-                          alt=""
-                          class="cursor-pointer mx-auto"
-                          ngbTooltip="Eliminar"
-                          triggers="mouseenter:mouseleave"
-                          (click)="eliminarImpuesto(impuesto)"
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                </ng-container>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="bg-gray-50 px-2 py-2 sm:flex sm:flex-row-reverse sm:px-6 sm:gap-4"
-    >
-      <button
-        class="bg-[#51aec7] hover:bg-[#002B53] text-[#f2f2f2] py-2 px-4 rounded-sm mr-2 mt-3 inline-flex w-full justify-center shadow-sm ring-1 ring-inset sm:mt-0 sm:w-auto"
-        (click)="guardarOrdenVenta()"
-      >
-        Aceptar
-      </button>
-      <button
-        class="mt-3 inline-flex w-full justify-center rounded-sm bg-[#51aec7] text-[#f2f2f2] px-3 py-2 text-sm shadow-sm ring-1 ring-inset hover:bg-[#B05B5B] sm:mt-0 sm:w-auto"
-        (click)="closeModal()"
-      >
-        Cancelar
-      </button>
     </div>
   </div>
-</div>
+</section>

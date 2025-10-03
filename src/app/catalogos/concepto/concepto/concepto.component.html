@@ -21,16 +21,16 @@
     <table class="w-full text-sm xs:table-fixed">
       <thead class="bg-primario text-white">
         <tr>
-          <th class="px-1 py-[2px] xs:w-[75px]" scope="col">Código*</th>
+          <th class="px-1 py-[2px] xs:w-[75px]" scope="col">*Código</th>
           <th class="px-[2px] py-[2px] xs:w-[70px]" scope="col">
-            Descripción*
+            *Descripción
           </th>
           <th class="px-[2px] py-[2px] xs:w-[75px] text-center" scope="col">
-            Unidad*
+            *Unidad
           </th>
-          <th class="px-[2px] py-[2px] xs:w-[75px]" scope="col">Costo*</th>
+          <th class="px-[2px] py-[2px] xs:w-[75px]" scope="col">*Costo</th>
           <th class="px-[2px] py-[2px] xs:w-[75px]" scope="col">
-            Especialidad*
+            *Especialidad
           </th>
           <th class="px-[2px] py-[2px] xs:w-[75px] text-center" scope="col">
             Acciones
@@ -38,7 +38,168 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray300">
-        <tr *ngIf="conceptos.length == 0">
+        <ng-container *ngIf="isLoading">
+          <tr>
+            <!-- Código -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Descripción -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Unidad -->
+            <td class="px-1" scope="col">
+              <div role="status" class="flex justify-center animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-24 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Costo -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Especialidad -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Acciones -->
+            <td scope="col">
+              <div
+                role="status"
+                class="flex justify-center align-items-centermax-w-sm animate-pulse"
+              >
+                <div
+                  class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <!-- Código -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Descripción -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Unidad -->
+            <td class="px-1" scope="col">
+              <div role="status" class="flex justify-center animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-24 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Costo -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Especialidad -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Acciones -->
+            <td scope="col">
+              <div
+                role="status"
+                class="flex justify-center align-items-centermax-w-sm animate-pulse"
+              >
+                <div
+                  class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <!-- Código -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Descripción -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Unidad -->
+            <td class="px-1" scope="col">
+              <div role="status" class="flex justify-center animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-24 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Costo -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Especialidad -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Acciones -->
+            <td scope="col">
+              <div
+                role="status"
+                class="flex justify-center align-items-centermax-w-sm animate-pulse"
+              >
+                <div
+                  class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        <tr *ngIf="conceptos.length == 0 && !isLoading">
           <td colspan="6" class="text-center text-gray-700 font-medium py-1">
             No hay conceptos creados.
           </td>
@@ -74,13 +235,22 @@
               (keydown.enter)="editar(concepto)"
             />
           </td>
-          <td class="px-1 py-[2px]">
+          <td class="px-1 py-[2px]" *ngIf="selectedConcepto == concepto.id">
             <input
               type="text"
-              class="bg-transparent w-full"
+              class="bg-transparent w-full text-end"
               id="input-table"
               [(ngModel)]="concepto.costoUnitario"
               (keydown.enter)="editar(concepto)"
+            />
+          </td>
+          <td class="px-1 py-[2px]" *ngIf="selectedConcepto != concepto.id" >
+            <input
+              type="text"
+              class="bg-transparent w-full text-end"
+              id="input-table"
+              [(ngModel)]="concepto.costoUnitarioConFormato"
+              (click)="selectConcepto(concepto.id)"
             />
           </td>
           <td class="px-1 py-[2px]">

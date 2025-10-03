@@ -321,7 +321,6 @@ export class AppComponent implements OnInit {
   selectionChangeContratista(event: MatAutocompleteSelectedEvent) {
     const selectedProyecto = event.option.value;
     this.isLoading = true;
-    console.log('seleccionando...', this.isLoading);
 
     this.proyectoControl.setValue(selectedProyecto.nombre);
     const exixteProyecto = this.proyectos.filter(
@@ -351,7 +350,6 @@ export class AppComponent implements OnInit {
                 this._UsuarioEmpresaService.zfGuardarToken(datos);
                 this.zvSeguridadService.actualizarToken(datos.token);
                 this.proyectoStateService.setProyectoNombre(selectedProyecto);
-
                 this.isLoading = false;
               });
           });

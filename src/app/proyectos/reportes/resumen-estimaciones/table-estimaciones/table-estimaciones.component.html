@@ -1,10 +1,10 @@
 <section>
-    <div style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 10px;">
+    <div class="overflow-x-auto shadow-md rounded-lg w-full" style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 10px;">
 
         <table class="table-striped table-hover titulo-arbol2" class="resizable-container" style="height: 0px">
             <thead>
                 <tr>
-                    <th colspan="9" class="style-encabezado-ac-act">Detalles estimaciones</th>
+                    <th colspan="9" class="bg-colorButton p-[1px] px-[20px] text-gray-600 text-center  border-white font-medium border-t-[1.5px] border-l-[1.5px] border-r-[1.5px">Detalles estimaciones</th>
 
 
 
@@ -12,25 +12,14 @@
             </thead>
 
             <thead>
-                <th class="cabecera" style="width: 2% ">-</th>
-                <th class="cabecera" style="width: 8%">Código</th>
-                <th class="cabecera" style="width: 18%">Descripción</th>
-                <th class="cabecera" style="width: 6%">Unidad</th>
-                <th class="cabecera" style="width: 6%">Cantidad</th>
-                <th class="cabecera" style="width: 6%">Importe</th>
-
-
-
-
-
-
-
-                <th class="cabecera" style="width: 6%">Avance</th>
-                <th class="cabecera" style="width: 6%">%</th>
-                <th class="cabecera" style="width: 6%">Importe</th>
-
-
-
+                <th class="bg-primario text-white p-[1px] text-sm font-semibold" style="width: 2% ">-</th>
+                <th class="bg-primario text-white p-[1px] text-sm font-semibold" style="width: 8%">Código</th>
+                <th class="bg-primario text-white p-[1px] text-sm font-semibold" style="width: 18%">Descripción</th>
+                <th class="bg-primario text-white p-[1px] text-sm font-se mibold" style="width: 6%">Cantidad</th>
+                <th class="bg-primario text-white p-[1px] text-sm font-semibold" style="width: 6%">Importe</th>
+                <th class="bg-primario text-white p-[1px] text-sm font-semibold" style="width: 6%">Avance</th>
+                <th class="bg-primario text-white p-[1px] text-sm font-semibold" style="width: 6%">%</th>
+                <th class="bg-primario text-white p-[1px] text-sm font-semibold" style="width: 6%">Importe</th>
 
             </thead>
         </table>
@@ -44,7 +33,7 @@
                 <ng-template let-estimacion>
                     <table class="table-striped table-hover table-arbol">
                         <tbody>
-                            <tr>
+                            <tr class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]">
                                 <td style="width: 2%; border-right: 1px solid #f2f2f217;" class="cont-drill">
                                     <!-- concepto: precioUnitario.tipoPrecioUnitario ==1 -->
                                     <div class="contenedores" style="display: flex;">
@@ -78,20 +67,20 @@
 
                                 <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 6%; padding-left: 0px;"
                                     class="cont-drill">
-                                    <input disabled autocomplete="off" type="text" class="" id="input-table"
+                                    <input disabled autocomplete="off" type="text" class="text-end" id="input-table"
                                         [(ngModel)]="estimacion.cantidadConFormato" readonly
                                         style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;">
                                 </td>
 
                                 <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 6%; padding-left: 0px;"
                                     class="cont-drill">
-                                    <input disabled autocomplete="off" type="text" class="" id="input-table"
+                                    <input disabled autocomplete="off" type="text" class="text-end" id="input-table"
                                         [(ngModel)]="estimacion.importeConFormato" readonly
                                         style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;">
                                 </td>
                                 <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 6%; padding-left: 0px;"
                                     class="cont-drill">
-                                    <input disabled autocomplete="off" type="text" class="" id="input-table"
+                                    <input disabled autocomplete="off" type="text" class="text-end" id="input-table"
                                         [(ngModel)]="estimacion.cantidadAvanceConFormato" readonly
                                        
                                         style="border: none; border-radius: 3px; width: 100%;" [ngStyle]="{
@@ -104,7 +93,7 @@
                                 </td>
                                 <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 6%; padding-left: 0px;"
                                     class="cont-drill">
-                                    <input disabled autocomplete="off" type="text" class="" id="input-table"
+                                    <input disabled autocomplete="off" type="text" class="text-end" id="input-table"
                                         [(ngModel)]="estimacion.porcentajeAvanceConFormato" readonly
                                     
                                         style="border: none; border-radius: 3px; width: 100%;" [ngStyle]="{
@@ -117,7 +106,7 @@
                                 </td>
                                 <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 6%; padding-left: 0px;"
                                     class="cont-drill">
-                                    <input disabled autocomplete="off" type="text" class="" id="input-table"
+                                    <input disabled autocomplete="off" type="text" class="text-end" id="input-table"
                                         [(ngModel)]="estimacion.importeDeAvanceConFormato" readonly
                                         style="border: none; border-radius: 3px; width: 100%;" [ngStyle]="{
                                                 'background-color':

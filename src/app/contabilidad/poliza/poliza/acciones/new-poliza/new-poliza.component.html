@@ -89,7 +89,7 @@
         <table #tablaMenu class="table table-striped table-hover mt-2">
           <thead>
             <tr>
-              <th class="cabecera" scope="col" style="width: 50%;">Cuenta Contable</th>
+              <th class="cabecera" scope="col" style="width: 50%;">Cuenta contable</th>
               <th class="cabecera" scope="col" style="width: 20%;">Concepto</th>
               <th class="cabecera" scope="col" style="width: 15%;">Debe</th>
               <th class="cabecera" scope="col" style="width: 15%;">Haber</th>
@@ -109,7 +109,7 @@
                 </select>
 <!--
                 <div class="input-group mb-3">
-                  <button class="btn  dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #0084ffd3; color: #f2f2f2;">Cuenta Contable</button>
+                  <button class="btn  dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #0084ffd3; color: #f2f2f2;">Cuenta contable</button>
                   <ul class="dropdown-menu cuentas-contables">
                     <li *ngFor="let cuentaContable of cuentasContables"><p class="dropdown-item">{{cuentaContable.codigo}} / {{cuentaContable.descripcion}}</p></li>
                   </ul>
@@ -121,12 +121,12 @@
                   [(ngModel)]="polizaDetalle.concepto" (keydown.enter)="agregarDetalle(polizaDetalle)">
               </td>
               <td style="width: 15%;" class="body-table">
-                <input type="text" class="bg-transparent w-full" id="input-table"
+                <input type="text" class="bg-transparent w-full text-end" id="input-table"
                   [(ngModel)]="polizaDetalle.debe" (keydown.enter)="agregarDetalle(polizaDetalle)"
                   (ngModelChange)="reiniciaHaber(polizaDetalle)">
               </td>
               <td style="width: 15%;" class="body-table">
-                <input type="text" class="bg-transparent w-full" id="input-table"
+                <input type="text" class="bg-transparent w-full text-end" id="input-table"
                   [(ngModel)]="polizaDetalle.haber" (keydown.enter)="agregarDetalle(polizaDetalle)"
                   (ngModelChange)="reiniciaDebe(polizaDetalle)">
               </td>
@@ -146,11 +146,11 @@
                 
               </td>
               <td class="cont-total" colspan="1">
-                <input type="text" class="bg-transparent w-full" id="input-table" [(ngModel)]="totalDebeCreacion"
+                <input type="text" class="bg-transparent w-full text-end" id="input-table" [(ngModel)]="totalDebeCreacion"
                   disabled>
               </td>
               <td class="cont-total" colspan="1">
-                <input type="text" class="bg-transparent w-full" id="input-table" [(ngModel)]="totalHaberCreacion"
+                <input type="text" class="bg-transparent w-full text-end" id="input-table" [(ngModel)]="totalHaberCreacion"
                   disabled>
               </td>
             </tr>

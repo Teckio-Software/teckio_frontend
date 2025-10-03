@@ -1,74 +1,155 @@
 <div class="fixed inset-0 z-10 w-screen overflow-y-auto" (click)="cerrar()">
-    <div class="content-center sm:flex min-h-full items-cen justify-center p-4 text-center sm:items-center sm:p-0">
-        <!-- Evita que el clic se propague al contenedor padre (overlay) -->
+  <div
+    class="content-center sm:flex min-h-full items-cen justify-center p-4 text-center sm:items-center sm:p-0"
+  >
+    <!-- Evita que el clic se propague al contenedor padre (overlay) -->
 
-        <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-7xl"
-            (click)="detenerCierre($event)">
-            <!-- detenerCierre(event: MouseEvent): Método que detiene la propagación del evento de clic cuando se hace clic dentro del contenido del modal, asegurando que el modal no se cierre inadvertidamente. -->
-            <div class="m-2 flex justify-between">
-                <h2 class="font-normal tracking-[2px] leading-8  text-base">Nueva Cuenta Bancaria</h2>
-                <button type="button" class=" leading-none absolute top-0 right-0 px-4 py-3 text-2xl"
-                    (click)="cerrar()">&times;</button>
-
+    <div
+      class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-7xl"
+      (click)="detenerCierre($event)"
+    >
+      <!-- detenerCierre(event: MouseEvent): Método que detiene la propagación del evento de clic cuando se hace clic dentro del contenido del modal, asegurando que el modal no se cierre inadvertidamente. -->
+      <div class="m-2 flex justify-between rounded-lg">
+        <h2 class="font-normal tracking-[2px] leading-8 text-base">
+          Nueva cuenta bancaria
+        </h2>
+        <button
+          type="button"
+          class="leading-none absolute top-0 right-0 px-4 py-3 text-2xl"
+          (click)="cerrar()"
+        >
+          &times;
+        </button>
+      </div>
+      <div class="bg-white px-4 pb-4 sm:p-2 sm:pb-4">
+        <div>
+          <div *ngIf="errorGlobal" class="text-red-500 text-sm mb-2">
+            *Capture todos los campos obligatorios
+          </div>
+          <form [formGroup]="formulario">
+            <div class="mb-3">
+              <label
+                class="block text-sm font-medium text-gray-700"
+                for="almacen"
+                >Banco</label
+              >
+              <select
+                class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                formControlName="Banco"
+                (change)="errorBanco = false; errorGlobal = false"
+              >
+                <option class="text-gray-700" value="" disabled selected hidden>
+                  Selecciona un banco...
+                </option>
+                <option [ngValue]="banco.id" *ngFor="let banco of bancos">
+                  {{ banco.nombre }}
+                </option>
+              </select>
+              <div *ngIf="errorBanco" class="text-red-500 text-sm mb-2">
+                *El campo 'Banco' es requerido
+              </div>
             </div>
-            <div class="bg-white px-4 pb-4 sm:p-2 sm:pb-4">
-                <div>
-                    <form [formGroup]="formulario">
-
-                        <div class="mb-3">
-                            <label class="block text-sm font-medium text-gray-700" for="almacen">Banco</label>
-                            <select class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500
-                     focus:border-indigo-500 sm:text-sm" formControlName="Banco">
-                                <option class="text-gray-700" value="" disabled selected hidden>Selecciona un banco..
-                                </option>
-                                <option [ngValue]="banco.id" *ngFor="let banco of bancos">{{banco.nombre}}</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="block text-sm font-medium text-gray-700" for="name">Nuemro de cuenta</label>
-                            <input
-                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                type="text" id="persona" name="persona" placeholder="Escribe el nombre completo"
-                                formControlName="NumeroCuenta" />
-                        </div>
-                        <div class="mb-3">
-                            <label class="block text-sm font-medium text-gray-700" for="name">Nuemro de sucursal</label>
-                            <input
-                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                type="text" id="persona" name="persona" placeholder="Escribe el nombre completo"
-                                formControlName="NumeroSucursal" />
-                        </div>
-                        <div class="mb-3">
-                            <label class="block text-sm font-medium text-gray-700" for="name">Nuemro de clabe</label>
-                            <input
-                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                type="text" id="persona" name="persona" placeholder="Escribe el nombre completo"
-                                formControlName="CuentaClabe" />
-                        </div>
-                        <div class="mb-3">
-                            <label class="block text-sm font-medium text-gray-700" for="almacen">Tipo moneda</label>
-                            <select class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500
-                     focus:border-indigo-500 sm:text-sm" formControlName="TipoMoneda">
-                                <option class="text-gray-700" value="" disabled selected hidden>Selecciona un almacén..
-                                </option>
-                                <option [ngValue]="1">MXN</option>
-                                <option [ngValue]="2">USD</option>
-                                <option [ngValue]="3">EUR</option>
-                            </select>
-                        </div>
-                    </form>
-
-                </div>
+            <div class="mb-3">
+              <label class="block text-sm font-medium text-gray-700" for="name"
+                >Número de cuenta</label
+              >
+              <input
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                type="text"
+                id="persona"
+                name="persona"
+                placeholder="Escribe el número de cuenta"
+                formControlName="NumeroCuenta"
+                appOnlyNumbers
+                maxlength="10"
+                (change)="errorNumCuenta.estatus= false; errorGlobal = false"
+              />
+              <p [ngClass]="formulario.value.NumeroCuenta.length>=10? 'text-green-400' : errorNumCuenta.estatus ? 'text-red-500' : 'text-gray-500'" class="text-sm w-full text-end">{{formulario.value.NumeroCuenta.length}}/10</p>
+              <div *ngIf="errorNumCuenta.estatus" class="text-red-500 text-sm mb-2">
+                *{{errorNumCuenta.descripcion}}
+              </div>
             </div>
-            <div class="bg-gray-50 px-2 py-2 sm:flex sm:flex-row-reverse sm:px-6 sm:gap-4">
-                <button
-                    class="bg-[#51aec7] hover:bg-[#002B53] text-[#f2f2f2]  py-2 px-4 rounded-sm mr-2 mt-3  inline-flex w-full justify-center shadow-sm ring-1 ring-inset  sm:mt-0 sm:w-auto"
-                    (click)="guardarCuentaBancariaC()">Aceptar</button>
-                <button
-                    class="mt-3 inline-flex w-full justify-center rounded-sm bg-[#51aec7] text-[#f2f2f2] px-3 py-2 text-sm shadow-sm ring-1 ring-inset  hover:bg-[#B05B5B] sm:mt-0 sm:w-auto  "
-                    (click)="cerrar()">Cancelar</button>
+            <div class="mb-3">
+              <label class="block text-sm font-medium text-gray-700" for="name"
+                >Número de sucursal</label
+              >
+              <input
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                type="text"
+                id="persona"
+                name="persona"
+                placeholder="Escribe el número de sucursal"
+                formControlName="NumeroSucursal"
+                appOnlyNumbers
+                maxlength="20"
+                (change)="errorNumSucursal.estatus = false; errorGlobal = false"
+              />
+              <p [ngClass]="formulario.value.NumeroSucursal.length>=20? 'text-green-400' : errorNumSucursal.estatus ? 'text-red-500' : 'text-gray-500'" class="text-sm w-full text-end">{{formulario.value.NumeroSucursal.length}}/20</p>
+              <div *ngIf="errorNumSucursal.estatus" class="text-red-500 text-sm mb-2">
+                *{{errorNumSucursal.descripcion}}
+              </div>
             </div>
-
+            <div class="mb-3">
+              <label class="block text-sm font-medium text-gray-700" for="name"
+                >Número de clabe</label
+              >
+              <input
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                type="text"
+                id="persona"
+                name="persona"
+                placeholder="Escribe el número de clabe"
+                formControlName="CuentaClabe"
+                appOnlyNumbers
+                maxlength="18"
+                (change)="errorClabe.estatus= false; errorGlobal = false"
+              />
+              <p [ngClass]="formulario.value.CuentaClabe.length>=18? 'text-green-400' : errorClabe.estatus ? 'text-red-500' : 'text-gray-500'" class="text-sm w-full text-end">{{formulario.value.CuentaClabe.length}}/18</p>
+              <div *ngIf="errorClabe.estatus" class="text-red-500 text-sm mb-2">
+                *{{errorClabe.descripcion}}
+              </div>
+            </div>
+            <div class="mb-3">
+              <label
+                class="block text-sm font-medium text-gray-700"
+                for="almacen"
+                >Tipo moneda</label
+              >
+              <select
+                class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                formControlName="TipoMoneda"
+                (change)="errorTipoMoneda = false; errorGlobal = false"
+              >
+                <option class="text-gray-700" value="" disabled selected hidden>
+                  Selecciona un tipo de moneda..
+                </option>
+                <option [ngValue]="1">MXN</option>
+                <option [ngValue]="2">USD</option>
+                <option [ngValue]="3">EUR</option>
+              </select>
+              <div *ngIf="errorTipoMoneda" class="text-red-500 text-sm mb-2">
+                *El campo 'Tipo moneda' es requerido
+              </div>
+            </div>
+          </form>
         </div>
+      </div>
+      <div
+        class="bg-gray-50 px-2 py-2 sm:flex sm:flex-row-reverse sm:px-6 sm:gap-4"
+      >
+        <button
+          class="bg-[#51aec7] hover:bg-[#002B53] text-[#f2f2f2] py-2 px-4 rounded-sm mr-2 mt-3 inline-flex w-full justify-center shadow-sm ring-1 ring-inset sm:mt-0 sm:w-auto"
+          (click)="guardarCuentaBancariaC()"
+        >
+          Aceptar
+        </button>
+        <button
+          class="mt-3 inline-flex w-full justify-center rounded-sm bg-[#51aec7] text-[#f2f2f2] px-3 py-2 text-sm shadow-sm ring-1 ring-inset hover:bg-[#B05B5B] sm:mt-0 sm:w-auto"
+          (click)="cerrar()"
+        >
+          Cancelar
+        </button>
+      </div>
     </div>
+  </div>
 </div>

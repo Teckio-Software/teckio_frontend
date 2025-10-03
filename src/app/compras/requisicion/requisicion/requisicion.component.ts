@@ -15,9 +15,6 @@ import { ModalNewRequisicionComponent } from '../modal-new-requisicion/modal-new
 import { esCotizacionFuncion } from 'src/app/safe.guard';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { AlertaTipo } from 'src/app/utilidades/alert/alert.component';
-import { ModalAlertComponent } from 'src/app/utilidades/modal-alert/modal-alert.component';
-import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
-import { th } from 'date-fns/locale';
 
 @Component({
   selector: 'app-requisicion',
@@ -228,8 +225,10 @@ export class RequisicionComponent implements OnInit {
       .eliminar(this.selectedEmpresa, id)
       .subscribe((datos) => {
         if (datos.estatus) {
+          this.veiewInsumos = false;
           this.alerta(AlertaTipo.delete, 'Requisición eliminada');
           this.cargarRegistros();
+          this.insumosEstado = false;
         } else {
           this.alerta(AlertaTipo.error, datos.descripcion);
         }
@@ -313,6 +312,7 @@ export class RequisicionComponent implements OnInit {
     this.noRequisicion = '';
     this.observacion = requisicion.observaciones;
   }
+
 
   VerInsumosRequisicion() {
     this.idCotizacion = 0;
@@ -488,6 +488,12 @@ export class RequisicionComponent implements OnInit {
 
   getPaginationInfo() {
     return `Página ${this.currentPage} de ${this.totalPages}`;
+  }
+
+  regresarARequisiciones(){
+    this.veiewInsumos = false; 
+    this.cargarRegistros(); 
+    this.insumosEstado = false;
   }
   ///////////* PAGINATION */////////
 }

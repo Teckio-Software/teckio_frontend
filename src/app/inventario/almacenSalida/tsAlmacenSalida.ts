@@ -1,10 +1,8 @@
-import { almacenSalidaInsumosCreacionDTO } from "../almacenSalidaInsumos/tsAlmacenSalidaInsumos";
+import { almacenSalidaInsumosCreacionDTO } from '../almacenSalidaInsumos/tsAlmacenSalidaInsumos';
 
-
-
-export interface almacenSalidaDTO{
+export interface almacenSalidaDTO {
   id: number;
-  codigoSalida : string;
+  codigoSalida: string;
   idAlmacen: number;
   almacenNombre: string;
   esAlmacenCentral: boolean;
@@ -12,29 +10,40 @@ export interface almacenSalidaDTO{
   descripcionProyecto: string;
   fechaRegistroSalida: Date;
   fechaAutorizacionSalida: Date;
-  fechaRegistro : Date;
-  observaciones : string;
+  fechaRegistro: Date;
+  observaciones: string;
   estatus: number;
   autorizo: string;
   personaRecibio: string;
   personaSurtio: string;
 }
 
-export interface almacenSalidaCreacionDTO{
+export interface almacenSalidaCreacionDTO {
   idAlmacen: number;
   personaRecibio: string;
-  observaciones : string;
+  observaciones: string;
   ListaAlmacenSalidaInsumoCreacion: almacenSalidaInsumosCreacionDTO[];
-  esBaja : boolean;
+  esBaja: boolean;
 }
 
-
-export interface insumosExistenciaDTO{
-  idInsumo : number;
-  codigo : string;
-  descripcion : string;
-  unidad : string;
-  cantidadDisponible : number;
-  esPrestamo : boolean;
+export interface insumosExistenciaDTO {
+  idInsumo: number;
+  codigo: string;
+  descripcion: string;
+  unidad: string;
+  cantidadDisponible: number;
+  esPrestamo: boolean;
   cantidadPorSalir: number;
+}
+
+export interface transpasoAlmacenDTO {
+  idAlmacenOrigen: number;
+  idAlmacenDestino: number;
+  insumos: transpasoAlmacenInsumoDTO[];
+}
+
+export interface transpasoAlmacenInsumoDTO {
+  idInsumo: number;
+  cantidadExistencia: number;
+  nombreInsumo: string;
 }

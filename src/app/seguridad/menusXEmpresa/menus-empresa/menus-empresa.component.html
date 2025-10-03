@@ -1,82 +1,145 @@
-
-
-
 <section>
-
-
-
-
-  <div class="formulario">
-    <div class="cont-formulario"  style="margin-top: 10px;">
-      <mat-label>Corporativos</mat-label>
-      <mat-select  class="bg-[#ffffff]" (valueChange)="cambiaCorporativo($event)">
-        <mat-option *ngFor="let corporativo of corporativos" [value]="corporativo.id">{{ corporativo.nombre }}</mat-option>
+  <div class="flex gap-4 justify-center">
+    <!-- Select Corporativo -->
+    <div
+      class="flex items-center space-x-4 w-96 h-10 px-4 rounded-lg bg-colorButton hover:bg-colorButtonHover transition-colors delay-75"
+    >
+      <mat-label class="text-white text-base">Corporativo:</mat-label>
+      <mat-select
+        class="flex-1 text-white text-base"
+        [(value)]="selectedCorporativo"
+        (valueChange)="cambiaCorporativo($event)"
+      >
+        <mat-option value="" disabled>Seleccione un corporativo</mat-option>
+        <mat-option
+          *ngFor="let corporativo of corporativos"
+          [value]="corporativo.id"
+          class="text-base"
+        >
+          {{ corporativo.nombre }}
+        </mat-option>
       </mat-select>
     </div>
-    <div class="cont-formulario"  style="margin-top: 10px;">
-      <mat-label>Empresas</mat-label>
-      <mat-select class="bg-[#ffffff]" (valueChange)="cambiaEmpresa($event)">
-        <mat-option *ngFor="let empresa of empresas" [value]="empresa.id">
+
+    <!-- Select Empresa -->
+    <div
+      class="flex items-center space-x-4 w-96 h-10 px-4 rounded-lg bg-colorButton hover:bg-colorButtonHover transition-colors delay-75"
+    >
+      <mat-label class="text-white text-base">Empresa:</mat-label>
+      <mat-select
+        class="flex-1 text-white text-base"
+        [(value)]="selectedEmpresa"
+        (valueChange)="cambiaEmpresa($event)"
+      >
+        <mat-option value="" disabled>Seleccione una empresa</mat-option>
+        <mat-option
+          *ngFor="let empresa of empresas"
+          [value]="empresa.id"
+          class="text-base"
+        >
           {{ empresa.nombreComercial }}
         </mat-option>
       </mat-select>
     </div>
-</div>
+  </div>
 
-
-
-<div class="flex gap-2">
-
-  <div class="contenedor-tabla"
-  style="overflow-x: auto; white-space: nowrap; width: 95%; margin: 0 auto; ">
-  <table class="table table-striped rounded table-hover orden  tabla-detalle-pagos">
-      <thead>
+  <div class="flex gap-2 mt-2">
+    <div class="contenedor-tabla overflow-x-auto w-full rounded-lg shadow-md">
+      <table class="w-full">
+        <thead class="bg-primario text-white">
           <tr>
-            <th class="text-center"  scope="col">Menú</th>
-            <th class="text-center" scope="col">Activar</th>
+            <th class="text-center py-1" scope="col">Menú</th>
+            <th class="py-1" scope="col">Activar</th>
           </tr>
-      </thead>
-      <tbody>
-          <tr *ngFor="let registro of dataMenu">
-            <td class="text-center">{{ registro.descripcion}}</td>
-            <td>
-              <div class="form-check form-switch" style="padding: 0px auto;">
-                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" [(ngModel)]="registro.esAutorizado" (change)="autorizaMenu(registro)">
-                <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+        </thead>
+        <tbody class="divide-y divide-gray300">
+          <tr
+            *ngIf="dataMenu.length == 0"
+            class="lg:hidden md:hidden xl:hidden"
+          >
+            <td
+              colspan="4"
+              class="text-center text-gray-700 font-medium py-1 xs:text-xs"
+            >
+              No hay corporativo y empresa seleccionada.
+            </td>
+          </tr>
+          <tr
+            *ngFor="let registro of dataMenu"
+            class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+          >
+            <td class="text-center px-1 py-1">
+              {{ registro.descripcion }}
+            </td>
+            <td class="px-1 py-1">
+              <div class="flex items-center">
+                <label class="inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    value=""
+                    class="sr-only peer"
+                    checked
+                    [(ngModel)]="registro.esAutorizado"
+                    (change)="autorizaMenu(registro)"
+                  />
+                  <div
+                    class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"
+                  ></div>
+                </label>
               </div>
             </td>
           </tr>
-      </tbody>
-  </table>
+        </tbody>
+      </table>
+    </div>
+
+    <div
+      *ngIf="dataSeccionFiltrado.length > 0"
+      class="contenedor-tabla"
+      style="
+        overflow-x: auto;
+        white-space: nowrap;
+        width: 95%;
+        margin: 0 auto;
+        margin-top: 0px;
+      "
+    >
+      <table
+        class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos"
+      >
+        <thead>
+          <tr>
+            <th class="text-center" scope="col">Permisos</th>
+            <th class="text-center" scope="col">Activar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let registro of dataSeccionFiltrado">
+            <td
+              class="text-center"
+              (click)="cargarRegistrosActividades(registro.idSeccion)"
+            >
+              {{ registro.descripcion }}
+            </td>
+            <td>
+              <div class="form-check form-switch" style="padding: 0px auto">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id="flexSwitchCheckChecked"
+                  checked
+                  [(ngModel)]="registro.esAutorizado"
+                />
+                <label
+                  class="form-check-label"
+                  for="flexSwitchCheckChecked"
+                ></label>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-
-  <div  *ngIf="dataSeccionFiltrado.length > 0" class="contenedor-tabla"
-  style="overflow-x: auto; white-space: nowrap; width: 95%; margin: 0 auto; margin-top: 0px;">
-  <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
-      <thead>
-        <tr>
-          <th class="text-center" scope="col">Permisos</th>
-          <th class="text-center" scope="col">Activar</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let registro of dataSeccionFiltrado" >
-          <td class="text-center"  (click)="cargarRegistrosActividades(registro.idSeccion)">{{
-            registro.descripcion}}
-          </td>
-          <td >
-            <div class="form-check form-switch" style="padding: 0px auto;">
-              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked
-                [(ngModel)]="registro.esAutorizado">
-              <label class="form-check-label" for="flexSwitchCheckChecked"></label>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-  </table>
-  </div>
-</div>
-
-
-
 </section>

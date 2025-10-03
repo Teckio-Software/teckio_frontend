@@ -27,6 +27,7 @@ export class ClientesComponent {
 
   selectedIndex: number = 0;
 
+  isLoading: boolean = false;
 
   constructor(
     private dialog: MatDialog,
@@ -58,6 +59,7 @@ export class ClientesComponent {
       if (this.clientes.length > 0) {
         this.existenClientes = true;
       }
+      this.isLoading = false;
     });
   }
 

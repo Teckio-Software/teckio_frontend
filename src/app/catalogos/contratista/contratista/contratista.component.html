@@ -21,7 +21,7 @@
       <thead class="bg-primario text-white">
         <tr>
           <th class="px-1 py-[2px]" class="px-1 py-[2px] xs:w-[75px]">
-            Razon Social
+            Razón social
           </th>
           <th class="px-1 py-[2px]" class="px-[2px] py-[2px] xs:w-[70px]">
             RFC
@@ -30,7 +30,7 @@
             Representante legal
           </th>
           <th class="px-1 py-[2px]" class="px-[2px] py-[2px] xs:w-[70px]">
-            Telefono
+            Teléfono
           </th>
           <th class="px-1 py-[2px]" class="px-[2px] py-[2px] xs:w-[70px]">
             Email
@@ -53,7 +53,240 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray300">
-        <tr *ngIf="paginatedContratista.length == 0">
+        <ng-container *ngIf="isLoading">
+          <tr>
+            <!-- Razón Social -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- RFC -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Representante legal -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Teléfono -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Email -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Domicilio -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- No. Exterior -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-24 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Tipo -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Acciones -->
+            <td scope="col">
+              <div
+                role="status"
+                class="flex justify-center align-items-centermax-w-sm animate-pulse"
+              >
+                <div
+                  class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <!-- Razón Social -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- RFC -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Representante legal -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Teléfono -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Email -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Domicilio -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- No. Exterior -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-24 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Tipo -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Acciones -->
+            <td scope="col">
+              <div
+                role="status"
+                class="flex justify-center align-items-centermax-w-sm animate-pulse"
+              >
+                <div
+                  class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <!-- Razón Social -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- RFC -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Representante legal -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Teléfono -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Email -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Domicilio -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- No. Exterior -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-24 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Tipo -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div
+                  class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+            <!-- Acciones -->
+            <td scope="col">
+              <div
+                role="status"
+                class="flex justify-center align-items-centermax-w-sm animate-pulse"
+              >
+                <div
+                  class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+                ></div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        <tr *ngIf="paginatedContratista.length == 0 && !isLoading">
           <td colspan="6" class="text-center text-gray-700 font-medium py-1">
             No hay requisiciones creadas.
           </td>
@@ -128,7 +361,7 @@
             <div class="flex flex-wrap justify-center gap-2">
               <button
                 (click)="abrirModalCBContratista(contratista.id)"
-                ngbTooltip="Nueva Cuenta Bancaria"
+                ngbTooltip="Nueva cuenta bancaria"
                 placement="top"
                 triggers="mouseenter:mouseleave"
                 class="bg-[#51aec7] hover:bg-hoverButton transition-colors duration-200 w-5 h-5 flex items-center justify-center rounded-md"
@@ -171,7 +404,7 @@
 
               <button
                 (click)="abrirModalCCContratista(contratista)"
-                ngbTooltip="Asignar Cuenta Contable"
+                ngbTooltip="Asignar cuenta contable"
                 placement="left"
                 triggers="mouseenter:mouseleave"
                 class="bg-[#51aec7] hover:bg-hoverButton transition-colors duration-200 w-5 h-5 flex items-center justify-center rounded-md"
@@ -239,7 +472,7 @@
     (selectedTabChange)="yourFn($event)"
     [selectedIndex]="selectedIndex"
   >
-    <mat-tab label="Cuentas Bancarias">
+    <mat-tab label="Cuentas bancarias">
       <div>
         <app-cuentas-bancarias-contratista
           *appRecarga="appRefrescar"

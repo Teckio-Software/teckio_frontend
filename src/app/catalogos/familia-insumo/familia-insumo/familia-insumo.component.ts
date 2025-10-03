@@ -42,6 +42,9 @@ export class FamiliaInsumoComponent {
     pages: number[] = [];
     visiblePages: number[] = [];
     totalPages = 0;
+
+    isLoading: boolean = true;
+
     /////////* PAGINATION */////////
 
   constructor(private familiaService: FamiliaInsumoService
@@ -67,6 +70,7 @@ export class FamiliaInsumoComponent {
     this.familiaService.obtenerTodosSinPaginar(this.selectedEmpresa)
     .subscribe((familias) =>{
       this.familias = familias;
+      this.isLoading = false;
       this.totalItems = familias.length;
       this.updatePagination();
       this.updatePaginatedData();
