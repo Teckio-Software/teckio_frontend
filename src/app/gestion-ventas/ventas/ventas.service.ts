@@ -66,4 +66,8 @@ export class VentasService {
   public editarImpuesto(impuesto : ImpuestoDetalleOrdenVentaDTO, idEmp: number){
     return this.HttpClient.put<RespuestaDTO>(`${this.apiUrl}/${idEmp}/editarImpuestoDetalleOrdenVenta`, impuesto);
   }
+
+  public autorizarOrdenVenta(ordenVenta: OrdenVentaDTO, idEmp : number){
+    return this.HttpClient.put<RespuestaDTO>(`${this.apiUrl}/${idEmp}/autorizar`, ordenVenta);
+  }
 }
