@@ -1,6 +1,5 @@
 import { proyectoDTO } from './../../../proyecto/tsProyecto';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-
 import { imprimirReporte, imprimirReporteAnalisisPU } from './imprimirReportes';
 import { precioUnitarioDTO } from '../../tsPrecioUnitario';
 import { ParametrosImprimirPuService } from './services/parametros-imprimir-pu.service';
@@ -39,11 +38,14 @@ export class ImprimirModalComponent {
   @Input() preciosUnitarios: precioUnitarioDTO[] = [];
   @Input() marcados: precioUnitarioDTO[] = [];
   @Input() proyecto!: proyectoDTO;
+  @Input() total: number = 0;
   @Input() totalSinIva!: string;
   @Input() totalConIva!: string;
   @Input() totalSinFormato!: number;
   @Input() totalIva!: string;
-  @Output() close = new EventEmitter<void>();
+  @Input() totalSinFormatoIva!: number;
+  @Input() totalSinFormatoSinIva!: number;
+  @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
   tipoReporte: string = '';
   tipoImpresion: string = '';
@@ -53,12 +55,13 @@ export class ImprimirModalComponent {
   pieCentro: string = '';
   pieDerecha: string = '';
 
-  selectedEmpresa: number = 0;
   selectedParams?: ParametrosImpresionPu;
+  selectedEmpresa: number = 0;
   selectedParamId: number = 0;
 
   isParamGuardado: boolean = false;
   isParamDeleted: boolean = false;
+
   reportePresupuesto: boolean = false;
   reporteManoDeObra: boolean = false;
   reporteAnalisisPrecioUnitario: boolean = false;
@@ -66,14 +69,16 @@ export class ImprimirModalComponent {
   isImprimirImpuestos: boolean = true;
   isImprimirConCostoDirecto: boolean = false;
   isImprimirPU: boolean = false;
+  isImprimirPUIVA: boolean = false;
   isImprimirPuMasIVA: boolean = false;
   isError: boolean = false;
   isError2: boolean = false;
   isError3: boolean = false;
+  isError4: boolean = false;
 
-  currentStep = 0;
+  currentStep: number = 0;
   /** Títulos visibles del wizard de pasos del modal. */
-  steps = [
+  steps: string[] = [
     'Selecciona el reporte a imprimir',
     'Opciones del reporte',
     'Opciones de impresión',
@@ -113,9 +118,7 @@ export class ImprimirModalComponent {
     private seguridadService: SeguridadService,
     private precioUnitarioService: PrecioUnitarioService
   ) {
-    const idEmpresa: number = Number(
-      seguridadService.obtenIdEmpresaLocalStorage()
-    );
+    const idEmpresa: number = Number(seguridadService.obtenIdEmpresaLocalStorage());
 
     this.selectedEmpresa = idEmpresa;
   }
@@ -130,9 +133,11 @@ export class ImprimirModalComponent {
    * a this.paramsImpresion.
    * @param event Evento que se lanza al cambiar el selector de parámetros.
    */
-  seleccionarParams(event: Event) {
-    const id = Number((event.target as HTMLSelectElement).value);
-    const seleccionado = this.paramsImpresionLista.find((p) => p.id === id);
+  seleccionarParams(event: Event): void {
+    const id: number = Number((event.target as HTMLSelectElement).value);
+    const seleccionado: ParametrosImpresionPu | undefined = this.paramsImpresionLista.find(
+      (p) => p.id === id,
+    );
 
     if (seleccionado) {
       this.paramsImpresion = { ...seleccionado };
@@ -145,43 +150,41 @@ export class ImprimirModalComponent {
    * muestra un mensaje de confirmación por 3 segundos.
    * Si ocurre un error, se muestra un mensaje de error por 3 segundos.
    */
-  crearConfiguracionParams() {
-    this.parametrosImpresion
-      .crear(this.selectedEmpresa, this.paramsImpresion)
-      .subscribe({
-        next: (datos: RespuestaDTO) => {
-          if (datos.estatus) {
-            this.isParamGuardado = true;
-            this.obtenerParametrosImpresion();
-          } else {
-            this.isParamGuardado = false;
-            this.tipoError = datos.descripcion || 'Ocurrió un error';
-          }
-          setTimeout(() => {
-            this.isParamGuardado = false;
-            this.tipoError = '';
-          }, 3000);
-        },
-        error: (err) => {
+  crearConfiguracionParams(): void {
+    this.parametrosImpresion.crear(this.selectedEmpresa, this.paramsImpresion).subscribe({
+      next: (datos: RespuestaDTO) => {
+        if (datos.estatus) {
+          this.isParamGuardado = true;
+          this.obtenerParametrosImpresion();
+        } else {
           this.isParamGuardado = false;
-          this.tipoError = 'Error al conectar con el servidor';
-          console.error(err);
+          this.tipoError = datos.descripcion || 'Ocurrió un error';
+        }
+        setTimeout(() => {
+          this.isParamGuardado = false;
+          this.tipoError = '';
+        }, 3000);
+      },
+      error: (err) => {
+        this.isParamGuardado = false;
+        this.tipoError = 'Error al conectar con el servidor';
+        console.error(err);
 
-          setTimeout(() => {
-            this.tipoError = '';
-          }, 3000);
-        },
-      });
+        setTimeout(() => {
+          this.tipoError = '';
+        }, 3000);
+      },
+    });
   }
 
   /**
    * Obtiene la lista de parámetros de impresión para la empresa seleccionada en
    * this.selectedEmpresa y la asigna a this.paramsImpresionLista.
    */
-  obtenerParametrosImpresion() {
+  obtenerParametrosImpresion(): void {
     this.parametrosImpresion
       .obtenerTodos(this.selectedEmpresa)
-      .subscribe((datos) => {
+      .subscribe((datos: ParametrosImpresionPu[]) => {
         this.paramsImpresionLista = datos;
       });
   }
@@ -191,30 +194,28 @@ export class ImprimirModalComponent {
    *
    * @param id El ID del registro a editar.
    */
-  editarParams(id: number) {
-    this.parametrosImpresion
-      .editar(this.selectedEmpresa, this.paramsImpresion)
-      .subscribe({
-        next: (datos) => {
-          this.paramsImpresion.id = id;
-          if (datos.estatus) {
-            this.isParamGuardado = true;
-            this.obtenerParametrosImpresion();
-          } else {
-            this.isParamGuardado = false;
-            this.tipoError = datos.descripcion || 'Ocurrió un error';
-          }
-          setTimeout(() => {
-            this.isParamGuardado = false;
-            this.tipoError = '';
-          }, 3000);
-        },
-        error: (err) => {
+  editarParams(id: number): void {
+    this.parametrosImpresion.editar(this.selectedEmpresa, this.paramsImpresion).subscribe({
+      next: (datos: RespuestaDTO) => {
+        this.paramsImpresion.id = id;
+        if (datos.estatus) {
+          this.isParamGuardado = true;
+          this.obtenerParametrosImpresion();
+        } else {
           this.isParamGuardado = false;
-          this.tipoError = 'Error al conectar con el servidor';
-          console.error(err);
-        },
-      });
+          this.tipoError = datos.descripcion || 'Ocurrió un error';
+        }
+        setTimeout(() => {
+          this.isParamGuardado = false;
+          this.tipoError = '';
+        }, 3000);
+      },
+      error: (err) => {
+        this.isParamGuardado = false;
+        this.tipoError = 'Error al conectar con el servidor';
+        console.error(err);
+      },
+    });
   }
 
   /**
@@ -223,9 +224,9 @@ export class ImprimirModalComponent {
    * Si ocurre un error, se muestra un mensaje de error por 3 segundos.
    * @param id El ID del registro a eliminar.
    */
-  eliminarParams(id: number) {
+  eliminarParams(id: number): void {
     this.parametrosImpresion.eliminar(this.selectedEmpresa, id).subscribe({
-      next: (datos) => {
+      next: (datos: RespuestaDTO) => {
         if (datos.estatus) {
           this.isParamDeleted = true;
           this.paramsImpresion = {
@@ -266,7 +267,7 @@ export class ImprimirModalComponent {
   /**
    * Cierra el modal y emite un evento de cierre.
    */
-  closeModal() {
+  closeModal(): void {
     this.close.emit();
   }
 
@@ -275,7 +276,7 @@ export class ImprimirModalComponent {
    * cierre el modal accidentalmente al hacer clic en el contenido del mismo.
    * @param event El evento de clic.
    */
-  detenerCierre(event: MouseEvent) {
+  detenerCierre(event: MouseEvent): void {
     event.stopPropagation();
   }
 
@@ -291,6 +292,12 @@ export class ImprimirModalComponent {
    */
   nextStep() {
     if(this.tipoReporte === 'analisisPreciosUnitarios') {
+      if(ObtenerPUPlanos(this.preciosUnitarios).length <= 0){        
+        this.isError4 = true;
+        console.log(this.isError4);
+
+        return;
+      }
       this.currentStep = 2
     }
     this.isError = false;
@@ -351,26 +358,36 @@ export class ImprimirModalComponent {
    * Retrocede al paso anterior en el modal, reiniciando el estado de error
    * de selección de opciones.
    */
-  prevStep() {
+  prevStep(): void {
     this.isError = false;
+    if(this.tipoReporte === 'analisisPreciosUnitarios') {
+      this.currentStep = 0
+    }
     if (this.currentStep > 0) {
       this.currentStep--;
     }
   }
 
   /**
-   * Genera el reporte en PDF según la selección hecha en el modal.
-   *
-   * Se crea un objeto `Reporte` con los datos necesarios y se llama a la función
-   * `imprimirReporte()` para generar el PDF.
-   *
-   * Si se ha seleccionado la impresión completa, se genera el reporte para todos
-   * los precios unitarios.
-   *
-   * Si se ha seleccionado la impresión marcada, se genera el reporte solo para
-   * los precios unitarios marcados.
+   * Finaliza el proceso de impresión, ejecutando la lógica definida
+   * en logicaImpresion().
    */
-  finish() {
+  finish(): void {
+    this.logicaImpresion();
+  }
+
+  /**
+   * Realiza la lógica de impresión de reportes, determinando el tipo de reporte y
+   * los totales a imprimir.
+   *
+   * Se define el tipo de reporte según el valor de tipoReporte y se llena el
+   * objeto de reporte con los valores correspondientes.
+   *
+   * Se activan las banderas de precios unitarios segun el tipo de precio seleccionado.
+   * Se envía el objeto de reporte a imprimir a la logica de impresión.
+   */
+  logicaImpresion(): void {
+    //reportes definidos de acuerdo a si es completo o marcado
     const reporte: Reporte = {
       precioUnitario: this.preciosUnitarios,
       detallesPrecioUnitario: [],
@@ -385,14 +402,18 @@ export class ImprimirModalComponent {
       importeConLetra: this.isImporteconLetra,
       totalConIVA: this.totalConIva,
       totalSinFormato: this.totalSinFormato,
+      totalSinIva: this.totalSinIva,
+      total: this.total,
       proyecto: this.proyecto,
       totalIva: this.totalIva,
       imprimirImpuesto: this.isImprimirImpuestos,
       imprimirConCostoDirecto: this.isImprimirConCostoDirecto,
       imprimirConPrecioUnitario: this.isImprimirPU,
-      imprimirConPUMasIva: this.isImprimirPuMasIVA,
+      imprimirConPrecioUnitarioIVA: this.isImprimirPUIVA,
+      imprimirConPUMasIva: this.isImprimirPuMasIVA
     };
 
+    //si es marcado, se llena el arreglo de marcados en lugar del completo
     const reporteMarcado: Reporte = {
       precioUnitario: this.marcados,
       detallesPrecioUnitario: [],
@@ -407,18 +428,23 @@ export class ImprimirModalComponent {
       importeConLetra: this.isImporteconLetra,
       totalConIVA: this.totalConIva,
       totalSinFormato: this.totalSinFormato,
+      totalSinIva: this.totalSinIva,
+      total: this.total,
       proyecto: this.proyecto,
       totalIva: this.totalIva,
       imprimirImpuesto: this.isImprimirImpuestos,
       imprimirConCostoDirecto: this.isImprimirConCostoDirecto,
       imprimirConPrecioUnitario: this.isImprimirPU,
-      imprimirConPUMasIva: this.isImprimirPuMasIVA,
+      imprimirConPrecioUnitarioIVA: this.isImprimirPUIVA,
+      imprimirConPUMasIva: this.isImprimirPuMasIVA
     };
 
+    // definir el tipo de reporte
     switch (this.tipoReporte) {
       case 'presupuesto':
         this.reportePresupuesto = true;
 
+        let reporteBase: Reporte = reporte;
         if (this.tipoImpresion === 'impresionCompleta') {
           if (this.tipoPrecio === 'costoDirecto') {
             reporte.imprimirConCostoDirecto = true;
@@ -478,67 +504,87 @@ export class ImprimirModalComponent {
         
         break;
 
+        //si es impresion marcada, se asigna el reporte marcado como base y los totales se calculan de acuerdo a los marcados
+        if (this.tipoImpresion === 'impresionMarcada') {
+          for (let i = 0; i < reporte.precioUnitario.length; i++) {
+            this.total = this.total + reporte.precioUnitario[i].importe;
+          }
+          reporteBase = reporteMarcado;
+        }
+
+        //se limpian las banderas de precios
+        flagsPreciosUnitarios(reporteBase);
+        //se activan las banderas de precios unitarios segun el tipo de precio seleccionado
+        setFlagsPorTipoPrecio(reporteBase, this.tipoPrecio);
+
+        //se envia el objeto de reporte a imprimir a la logica de impresión
+        imprimirReporte(reporteBase);
+        break;
       default:
-        console.log(
-          `No hay lógica implementada para el tipo de reporte: ${this.tipoReporte}`
-        );
+        console.log(`No hay lógica implementada para el tipo de reporte: ${this.tipoReporte}`);
     }
   }
 }
 
 /**
- * Filtra los nodos de una lista de precios unitarios según si tienen la propiedad "seleccionado" en true.
- * 
- * @param {precioUnitarioDTO[]} lista - La lista de precios unitarios que se va a filtrar.
- * @returns {precioUnitarioDTO[]} - La lista de precios unitarios filtrada.
+ * Establece las banderas de impresión de precios unitarios en false.
+ *
+ * @param {Reporte} reporte - El objeto de tipo `Reporte` que se
+ *     va a imprimir.
  */
-// function filtrarListaRecursivo(lista: precioUnitarioDTO[]): precioUnitarioDTO[] {
-//   return lista
-//     .map((nodo) => filtrarSeleccionados(nodo))
-//     .flat();
-// }
 
-/**
- * Filtra los nodos de un árbol de precios unitarios según si tienen la propiedad "seleccionado" en true.
- * @param {precioUnitarioDTO} nodo - El nodo del árbol que se va a filtrar.
- * @returns {precioUnitarioDTO | null} - El nodo filtrado o null si no se cumple con la condición.
- */
-// function filtrarSeleccionados(nodo: precioUnitarioDTO): precioUnitarioDTO[]{
-//   const hijosSeleccionados = nodo.hijos
-//     .map(hijo => filtrarSeleccionados(hijo))
-//     .flat();
-
-//   if(nodo.esSeleccionado){
-//     return [{
-//       ...nodo,
-//       hijos: hijosSeleccionados
-//     }]
-//   }
-
-//   return hijosSeleccionados;
-// }
-
-function ObtenerPUPlanos(nodos: precioUnitarioDTO[]): precioUnitarioDTO[] {
-  const puPlanos: precioUnitarioDTO[] = [];
-  for (const nodo of nodos) {
-    if(nodo.tipoPrecioUnitario!=0 && nodo.esSeleccionado){
-      puPlanos.push(nodo);
-    }
-    if (nodo.hijos && nodo.hijos.length > 0) {
-      puPlanos.push(...ObtenerPUPlanos(nodo.hijos));
-    }
-  }
-  return puPlanos;
+function flagsPreciosUnitarios(reporte: Reporte): void {
+  reporte.imprimirConCostoDirecto = false;
+  reporte.imprimirConPrecioUnitario = false;
+  reporte.imprimirConPrecioUnitarioIVA = false;
 }
 
-// function ObtenerIds(nodos: precioUnitarioDTO[]): number[] {
-//   const ids: number[] = [];
-//   for (const nodo of nodos) {
-//     if(nodo.tipoPrecioUnitario!=0)
-//     ids.push(nodo.id);
-//     if (nodo.hijos && nodo.hijos.length > 0) {
-//       ids.push(...ObtenerIds(nodo.hijos));
-//     }
-//   }
-//   return ids;
-// }
+/**
+ * Establece las banderas de impresión de precios unitarios
+ * según el tipo de precio.
+ *
+ * @param {Reporte} reporte - El objeto de tipo `Reporte`
+ *     que se va a imprimir.
+ * @param {string} tipoPrecio - El tipo de precio que se va
+ *     a imprimir.
+ *
+ * Se establecerá una bandera en true según el tipo de
+ *     precio. Si el tipo de precio no es reconocido,
+ *     se mostrará un mensaje de error en la consola.
+ */
+  function setFlagsPorTipoPrecio(reporte: Reporte, tipoPrecio: string): void {
+    switch (tipoPrecio) {
+      case 'costoDirecto':
+        reporte.imprimirConCostoDirecto = true;
+        break;
+      case 'precioUnitario':
+        reporte.imprimirConPrecioUnitario = true;
+        break;
+      case 'precioUnitarioIVA':
+        reporte.imprimirConPrecioUnitarioIVA = true;
+        break;
+
+      default:
+        console.log('Tipo de precio no reconocido', tipoPrecio);
+    }
+  }
+
+  /* Función que itera un array de nodos de precio unitario y devuelve un
+  * array con los nodos de manera plana que están
+  * seleccionados.
+  * @param {precioUnitarioDTO[]} nodos - Array de nodos de precio unitario
+  * @returns {precioUnitarioDTO[]} - Array con los nodos de tipo "Planos" y
+  * seleccionados
+  */
+  function ObtenerPUPlanos(nodos: precioUnitarioDTO[]): precioUnitarioDTO[] {
+    const puPlanos: precioUnitarioDTO[] = [];
+    for (const nodo of nodos) {
+      if(nodo.tipoPrecioUnitario!=0 && nodo.esSeleccionado){
+        puPlanos.push(nodo);
+      }
+      if (nodo.hijos && nodo.hijos.length > 0) {
+        puPlanos.push(...ObtenerPUPlanos(nodo.hijos));
+      }
+    }
+    return puPlanos;
+  }

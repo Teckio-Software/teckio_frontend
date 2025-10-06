@@ -1,0 +1,158 @@
+﻿<section class="space-y-6">
+  <header class="flex flex-col gap-4 rounded-xl p-2 sm:flex-row sm:items-center sm:justify-between">
+    <div class="space-y-1">
+      <h2 class="titular m-0 text-3xl font-semibold text-gray700">Glosario de términos</h2>
+    </div>
+    <button
+      (click)="crearTermino()"
+      class="flex align-items-center rounded-md bg-colorButton transition-colors delay-75 hover:bg-colorButtonHover font-light text-white p-1"
+    >
+      <p
+        class="text-[#f2f2f2] titular bg-custom-bg w-52 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
+      >
+        Nuevo término
+      </p>
+      <img class="xs:w-4" src="assets/add.svg" alt="botón agregar" />
+    </button>
+  </header>
+
+  <div class="rounded-xl border border-gray300 bg-[#ffffff] shadow-md">
+    <div
+      class="flex flex-col gap-4 border-b border-gray200 p-4 lg:flex-row lg:items-end lg:justify-between"
+    >
+      <div class="w-full lg:max-w-sm">
+        <div
+          class="flex justify-start max-w-sm bg-white rounded-lg my-1 border border-gray-200"
+          x-data="{ search: '' }"
+        >
+          <div class="w-full">
+            <input
+              type="search"
+              #inputFiltrado
+              class="w-full px-4 py-1 text-[#1f2937] rounded-full focus:outline-none"
+              placeholder="Buscar término o palabra clave..."
+              [(ngModel)]="searchTerm"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+          <div>
+            <button
+              disabled
+              type="submit"
+              class="flex items-center bg-[#4EAAC1] justify-center w-7 h-7 text-white rounded-r-lg"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-2 text-sm font-medium text-gray600">
+        <button
+          type="button"
+          class="rounded-md border border-gray300 bg-[#ffffff] px-4 py-2 transition hover:border-colorButton hover:bg-gray-100"
+          (click)="setOrderMode('az')"
+          [ngClass]="{
+            'border-colorButton bg-colorButton text-white hover:bg-colorButton': orderMode === 'az',
+          }"
+        >
+          Ordenar A-Z
+        </button>
+        <button
+          type="button"
+          class="rounded-md border border-gray300 bg-[#ffffff] px-4 py-2 transition hover:border-colorButton hover:bg-gray-100"
+          (click)="setOrderMode('recent')"
+          [ngClass]="{
+            'border-colorButton bg-colorButton text-white hover:bg-colorButton':
+              orderMode === 'recent',
+          }"
+        >
+          Más recientes
+        </button>
+      </div>
+    </div>
+
+    <div class="divide-y divide-gray200">
+      <ng-container *ngIf="!isLoading; else loadingState">
+        <ng-container *ngIf="terminos.length; else emptyState">
+          <ng-container *ngIf="terminosFiltrados.length; else noResultsState">
+            <article
+              *ngFor="let termino of terminosFiltrados"
+              class="flex flex-col gap-4 px-4 py-1 sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div>
+                <h3 class="m-0 text-lg font-semibold text-gray800">{{ termino.termino }}</h3>
+                <p class="mt-0 text-sm text-gray600 sm:max-w-7xl text-justify">
+                  {{ termino.definicion }}
+                </p>
+              </div>
+              <div class="flex flex-wrap gap-2 text-sm">
+                <button
+                  type="button"
+                  (click)="editarTermino(termino)"
+                  class="inline-flex items-center gap-2 rounded-md border border-gray300 px-4 py-2 text-gray600 transition hover:border-colorButton hover:bg-gray-100"
+                >
+                  <img src="assets/edit.svg" alt="Icono de editar" class="w-4" />
+                  Editar
+                </button>
+                <button
+                  type="button"
+                  (click)="eliminarTermino(termino)"
+                  class="inline-flex items-center gap-2 rounded-md border border-error-200 px-4 py-2 text-error-600 hover:bg-gray-100"
+                >
+                  <img src="assets/delete.svg" alt="Ícono de eliminar" class="w-5" />
+                  Eliminar
+                </button>
+              </div>
+            </article>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+
+  <app-modal-glosario
+    [isOpen]="isModalOpen"
+    [mode]="modalMode"
+    [termino]="selectedTermino"
+    (close)="cerrarModal()"
+    (completed)="manejarAccionExitosa()"
+  ></app-modal-glosario>
+
+  <ng-template #noResultsState>
+    <div class="space-y-2 p-8 text-center text-sm text-gray500">
+      <p class="font-medium text-gray600">No encontramos coincidencias.</p>
+      <p>Intenta con otro término o limpia los filtros.</p>
+    </div>
+  </ng-template>
+
+  <ng-template #loadingState>
+    <div class="space-y-4 p-6">
+      <div class="h-6 w-40 animate-pulse rounded bg-gray200"></div>
+      <div class="h-4 w-full animate-pulse rounded bg-gray200"></div>
+      <div class="h-4 w-5/6 animate-pulse rounded bg-gray200"></div>
+    </div>
+  </ng-template>
+
+  <ng-template #emptyState>
+    <div class="space-y-2 p-8 text-center text-sm text-gray500">
+      <p class="font-medium text-gray600">Aun no hay términos registrados.</p>
+      <p>
+        Da clic en "Nuevo término" para agregar la primera definición y comenzar a construir el
+        glosario.
+      </p>
+    </div>
+  </ng-template>
+</section>

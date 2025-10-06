@@ -16,10 +16,13 @@ export interface Reporte {
   importeConLetra: boolean;
   totalConIVA: string;
   totalSinFormato: number;
+  totalSinIva: string;
+  total: number;
   proyecto: proyectoDTO;
   totalIva: string;
   imprimirImpuesto: boolean;
   imprimirConCostoDirecto: boolean;
   imprimirConPrecioUnitario: boolean;
+  imprimirConPrecioUnitarioIVA: boolean;
   imprimirConPUMasIva: boolean;
 }

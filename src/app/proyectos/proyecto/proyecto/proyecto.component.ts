@@ -1,13 +1,16 @@
-import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
-import { ProyectoService } from "../proyecto.service";
-import { proyectoDTO } from "../tsProyecto";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatDialog } from "@angular/material/dialog";
-import { SeguridadService } from "src/app/seguridad/seguridad.service";
-import { DialogNewProyectoComponent } from "../dialog-new-proyecto/dialog-new-proyecto.component";
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ProyectoService } from '../proyecto.service';
+import { proyectoDTO } from '../tsProyecto';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { SeguridadService } from 'src/app/seguridad/seguridad.service';
+import { DialogNewProyectoComponent } from '../dialog-new-proyecto/dialog-new-proyecto.component';
 
-
+interface ProyectoDialogResult {
+  action: 'create' | 'edit';
+  proyecto: proyectoDTO;
+}
 
 @Component({
   selector: 'app-proyecto',
@@ -41,7 +44,7 @@ export class ProyectoComponent implements OnInit {
     expandido: false,
     hijos: [],
   };
-  proyectos!: proyectoDTO[];
+  proyectos: proyectoDTO[] = [];
   form!: FormGroup;
   selectedEmpresa = 0;
   menu1 = true;
@@ -93,22 +96,20 @@ export class ProyectoComponent implements OnInit {
     private formBuilder: FormBuilder,
 
     private dialog: MatDialog,
-    private _SeguridadEmpresa: SeguridadService
+    private _SeguridadEmpresa: SeguridadService,
   ) {
     let idEmpresa = _SeguridadEmpresa.obtenIdEmpresaLocalStorage();
     this.selectedEmpresa = Number(idEmpresa);
   }
 
   cargarRegistros() {
-    this.proyectoService
-      .obtener(this.selectedEmpresa)
-      .subscribe((proyectos) => {
-        this.proyectos = proyectos;
-        this.totalItems = proyectos.length;
-        this.updatePagination();
-        this.updatePaginatedData();
-        this.isLoading = false;
-      });
+    this.proyectoService.obtener(this.selectedEmpresa).subscribe((proyectos) => {
+      this.proyectos = proyectos;
+      this.totalItems = proyectos.length;
+      this.updatePagination();
+      this.updatePaginatedData();
+      this.isLoading = false;
+    });
   }
 
   expansionDominio(proyecto: proyectoDTO): void {
@@ -163,13 +164,11 @@ export class ProyectoComponent implements OnInit {
       return;
     }
     let proyectoGuardado = proyecto;
-    this.proyectoService
-      .crearYObtener(proyecto, this.selectedEmpresa)
-      .subscribe((proyecto) => {
-        proyectoGuardado = proyecto;
-        this.proyectoPadre.hijos.shift();
-        this.proyectoPadre.hijos.push(proyectoGuardado);
-      });
+    this.proyectoService.crearYObtener(proyecto, this.selectedEmpresa).subscribe((proyecto) => {
+      proyectoGuardado = proyecto;
+      this.proyectoPadre.hijos.shift();
+      this.proyectoPadre.hijos.push(proyectoGuardado);
+    });
     this.seEstaCreando = false;
   }
 
@@ -189,11 +188,9 @@ export class ProyectoComponent implements OnInit {
     this.nuevoProyecto.noSerie = 1;
     this.nuevoProyecto.porcentajeIva = 16;
     this.nuevoProyecto.moneda = 'MXN';
-    this.proyectoService
-      .crear(this.nuevoProyecto, this.selectedEmpresa)
-      .subscribe(() => {
-        this.cargarRegistros();
-      });
+    this.proyectoService.crear(this.nuevoProyecto, this.selectedEmpresa).subscribe(() => {
+      this.cargarRegistros();
+    });
     this.form.value.reset();
   }
 
@@ -213,9 +210,43 @@ export class ProyectoComponent implements OnInit {
         selectedEmpresa: this.selectedEmpresa,
       },
     });
-    dialogRef.afterClosed().subscribe(() => {
-      this.cargarRegistros();
+    dialogRef.afterClosed().subscribe((result) => {
+      this.handleDialogResult(result);
     });
+  }
+
+  private handleDialogResult(result: ProyectoDialogResult | boolean | undefined) {
+    if (result === undefined || result === false) {
+      return;
+    }
+
+    if (typeof result === 'boolean') {
+      if (result) {
+        this.cargarRegistros();
+      }
+      return;
+    }
+
+    if (result.action === 'create') {
+      this.proyectos = [result.proyecto, ...this.proyectos];
+      this.totalItems = this.proyectos.length;
+      this.currentPage = 1;
+      this.updatePagination();
+      this.updatePaginatedData();
+      return;
+    }
+
+    if (result.action === 'edit') {
+      const index = this.proyectos.findIndex((proyecto) => proyecto.id === result.proyecto.id);
+
+      if (index === -1) {
+        this.cargarRegistros();
+        return;
+      }
+
+      this.proyectos[index] = { ...this.proyectos[index], ...result.proyecto };
+      this.updatePaginatedData();
+    }
   }
 
   /////////* PAGINATION */////////
@@ -231,10 +262,7 @@ export class ProyectoComponent implements OnInit {
     
     const endPage = Math.min(this.totalPages, startPage + 4);
 
-    this.visiblePages = Array.from(
-      { length: endPage - startPage + 1 },
-      (_, i) => startPage + i
-    );
+    this.visiblePages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
 
     if (this.totalPages < 5) {
       this.visiblePages = this.pages;
@@ -278,23 +306,21 @@ export class ProyectoComponent implements OnInit {
 
   eliminarProyecto(proyecto: proyectoDTO) {
     const idProyecto = proyecto.id;
-    this.proyectoService
-      .eliminar(idProyecto, this.selectedEmpresa)
-      .subscribe(() => {
-        this.cargarRegistros();
-      });
+    this.proyectoService.eliminar(idProyecto, this.selectedEmpresa).subscribe(() => {
+      this.cargarRegistros();
+    });
   }
 
-  editarProyecto(proyecto: proyectoDTO){
+  editarProyecto(proyecto: proyectoDTO) {
     const dialogRef = this.dialog.open(DialogNewProyectoComponent, {
       data: {
         menu1: this.menu1,
         selectedEmpresa: this.selectedEmpresa,
-        proyecto : proyecto
+        proyecto: proyecto,
       },
     });
-    dialogRef.afterClosed().subscribe(() => {
-      this.cargarRegistros();
+    dialogRef.afterClosed().subscribe((result) => {
+      this.handleDialogResult(result);
     });
   }
 }

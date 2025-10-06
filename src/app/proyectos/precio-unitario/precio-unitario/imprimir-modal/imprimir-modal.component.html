@@ -37,9 +37,7 @@
             [(ngModel)]="tipoReporte"
             value="presupuesto"
           />
-          <label for="presupuesto" class="text-gray-600 text-base"
-            >Presupuesto</label
-          >
+          <label for="presupuesto" class="text-gray-600 text-base">Presupuesto</label>
         </div>
 
         <div class="flex gap-2 items-center mb-2">
@@ -86,6 +84,9 @@
         <p class="text-red-600 text-base" *ngIf="isError2">
           Selecciona una opción antes de continuar.
         </p>
+        <p class="text-red-600 text-base" *ngIf="isError4">
+          Selecciona al menos un concepto antes de imprimir.
+        </p>
         <p class="text-red-600 text-base" *ngIf="isError3">
           Selecciona una partida o concepto antes de continuar.
         </p>
@@ -93,9 +94,7 @@
           <!-- rango de impresión -->
           <div class="card flex justify-content-center">
             <fieldset class="p-2">
-              <legend
-                class="text-base font-medium text-gray-800 tracking-wider"
-              >
+              <legend class="text-base font-medium text-gray-800 tracking-wider">
                 Rango de impresión*
               </legend>
               <div class="flex gap-2">
@@ -106,9 +105,7 @@
                   [(ngModel)]="tipoImpresion"
                   value="impresionCompleta"
                 />
-                <label for="impresionCompleta" class="text-gray-600 text-base"
-                  >Completo</label
-                >
+                <label for="impresionCompleta" class="text-gray-600 text-base">Completo</label>
               </div>
               <div class="flex gap-2">
                 <input
@@ -118,18 +115,14 @@
                   [(ngModel)]="tipoImpresion"
                   value="impresionMarcada"
                 />
-                <label for="impresionMarcada" class="text-gray-600 text-base"
-                  >Marcado</label
-                >
+                <label for="impresionMarcada" class="text-gray-600 text-base">Marcado</label>
               </div>
             </fieldset>
           </div>
           <!-- precio de conceptos-->
           <div class="card flex justify-content-center">
             <fieldset class="p-2">
-              <legend
-                class="text-base font-medium text-gray-800 tracking-wider"
-              >
+              <legend class="text-base font-medium text-gray-800 tracking-wider">
                 Precio de conceptos
               </legend>
               <div class="flex gap-2">
@@ -140,9 +133,7 @@
                   [(ngModel)]="tipoPrecio"
                   value="costoDirecto"
                 />
-                <label for="costoDirecto" class="text-gray-600 text-base"
-                  >Costo directo</label
-                >
+                <label for="costoDirecto" class="text-gray-600 text-base">Costo directo</label>
               </div>
               <div class="flex gap-2">
                 <input
@@ -152,9 +143,7 @@
                   [(ngModel)]="tipoPrecio"
                   value="precioUnitario"
                 />
-                <label for="precioUnitario" class="text-gray-600 text-base"
-                  >Precio unitario</label
-                >
+                <label for="precioUnitario" class="text-gray-600 text-base">Precio unitario</label>
               </div>
               <div class="flex gap-2">
                 <input
@@ -165,7 +154,7 @@
                   value="precioUnitarioIVA"
                 />
                 <label for="precioUnitarioIVA" class="text-gray-600 text-base"
-                  >Precio unitario + impuesto</label
+                  >Precio unitario + impuestos</label
                 >
               </div>
             </fieldset>
@@ -173,31 +162,17 @@
           <!-- opciones extra -->
           <div class="card flex justify-content-center col-span-2">
             <fieldset class="p-2">
-              <legend
-                class="text-base font-medium text-gray-800 tracking-wider"
-              >
+              <legend class="text-base font-medium text-gray-800 tracking-wider">
                 Otras opciones
               </legend>
 
               <div class="flex gap-2">
-                <input
-                  type="checkbox"
-                  id="opcion2"
-                  [(ngModel)]="isImprimirImpuestos"
-                />
-                <label for="opcion2" class="text-gray-600 text-base"
-                  >Imprimir impuesto</label
-                >
+                <input type="checkbox" id="opcion2" [(ngModel)]="isImprimirImpuestos" />
+                <label for="opcion2" class="text-gray-600 text-base">Imprimir impuesto</label>
               </div>
               <div class="flex gap-2">
-                <input
-                  type="checkbox"
-                  id="opcion3"
-                  [(ngModel)]="isImporteconLetra"
-                />
-                <label for="opcion3" class="text-gray-600 text-base"
-                  >Importe con letra</label
-                >
+                <input type="checkbox" id="opcion3" [(ngModel)]="isImporteconLetra" />
+                <label for="opcion3" class="text-gray-600 text-base">Importe con letra</label>
               </div>
             </fieldset>
           </div>
@@ -212,11 +187,7 @@
           <!-- titulo -->
           <div class="card flex justify-content-center">
             <fieldset class="p-2">
-              <legend
-                class="text-base font-medium text-gray-800 tracking-wider"
-              >
-                Título
-              </legend>
+              <legend class="text-base font-medium text-gray-800 tracking-wider">Título</legend>
               <div class="flex gap-2">
                 <input
                   [(ngModel)]="paramsImpresion.nombre"
@@ -231,9 +202,7 @@
           <!-- otras opciones -->
           <div class="card flex justify-content-center">
             <fieldset class="p-2">
-              <legend
-                class="text-base font-medium text-gray-800 tracking-wider"
-              >
+              <legend class="text-base font-medium text-gray-800 tracking-wider">
                 Otras opciones
               </legend>
               <p *ngIf="isParamGuardado" class="text-green-600 text-sm">
@@ -255,10 +224,7 @@
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                   >
                     <option [ngValue]="0" selected>Elegir opción</option>
-                    <option
-                      *ngFor="let item of paramsImpresionLista"
-                      [value]="item.id"
-                    >
+                    <option *ngFor="let item of paramsImpresionLista" [value]="item.id">
                       {{ item.nombre }}
                     </option>
                   </select>
@@ -283,9 +249,7 @@
           <!-- encabezado -->
           <div class="card flex justify-content-center col-span-2">
             <fieldset class="p-2">
-              <legend
-                class="text-base font-medium text-gray-800 tracking-wider"
-              >
+              <legend class="text-base font-medium text-gray-800 tracking-wider">
                 Encabezado (para cambiar de línea presiona Shift + Enter)
               </legend>
               <div class="grid grid-cols-3 gap-2">
@@ -367,9 +331,7 @@
           <!-- márgenes de las páginas -->
           <div class="card flex justify-content-center col-span-2">
             <fieldset class="p-2">
-              <legend
-                class="text-base font-medium text-gray-800 tracking-wider"
-              >
+              <legend class="text-base font-medium text-gray-800 tracking-wider">
                 Márgenes de las páginas (por defecto 30)
               </legend>
               <div class="grid grid-cols-2 gap-2">
@@ -448,11 +410,7 @@
           class="flex items-center gap-3 text-white py-2 px-6 rounded-lg font-medium bg-colorButton hover:bg-colorButtonHover transition 200ms xs:text-xs"
         >
           Descargar
-          <img
-            class="w-8 h-8 xs:w-5 xs:h-5"
-            src="./assets/pdf_icon.svg"
-            alt="icono pdf"
-          />
+          <img class="w-8 h-8 xs:w-5 xs:h-5" src="./assets/pdf_icon.svg" alt="icono pdf" />
         </button>
       </div>
     </div>

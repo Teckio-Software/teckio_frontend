@@ -1,24 +1,26 @@
 import { usuarioProyectoDTO } from './../../../seguridad/usuario-multi-empresa-filtrado/proyecto-usuario/tsUsuarioProyecto';
-import { Component, Inject } from '@angular/core';
+import { AfterViewInit, Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { proyectoDTO } from '../tsProyecto';
 import { ProyectoService } from '../proyecto.service';
 import Swal from 'sweetalert2';
+import { parsearErroresAPI, RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 import { ProyectoUsuarioService } from 'src/app/seguridad/usuario-multi-empresa-filtrado/proyecto-usuario/proyecto-usuario.service';
-import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 import { timer } from 'rxjs';
-
 
 @Component({
   selector: 'app-dialog-new-proyecto',
   templateUrl: './dialog-new-proyecto.component.html',
   styleUrls: ['./dialog-new-proyecto.component.css'],
 })
-export class DialogNewProyectoComponent {
+export class DialogNewProyectoComponent{
   form!: FormGroup;
   menu1: boolean;
+  dialogTitle = 'Nuevo proyecto';
+  primaryButtonLabel = 'Crear proyecto';
+  isEditing = false;
   nuevoProyecto: proyectoDTO = {
     id: 0,
     codigoProyecto: '',
@@ -72,11 +74,13 @@ export class DialogNewProyectoComponent {
     private _snackBar: MatSnackBar,
     private proyectoService: ProyectoService,
     private _usuarioProyectoService: ProyectoUsuarioService,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
     this.menu1 = this.data.menu1;
     this.selectedEmpresa = this.data.selectedEmpresa;
-    
+    this.isEditing = !!this.data.proyecto;
+    this.dialogTitle = this.isEditing ? 'Editar proyecto' : 'Nuevo proyecto';
+    this.primaryButtonLabel = this.isEditing ? 'Guardar cambios' : 'Crear proyecto';
   }
   ngOnInit(): void {
     this.dialogRef.updateSize('70%');
@@ -109,6 +113,11 @@ export class DialogNewProyectoComponent {
     } else {
       let fechaInicio = this.data.proyecto.fechaInicio.split('T')[0];
       let fechaFin = this.data.proyecto.fechaFinal.split('T')[0];
+      let cp = this.data.proyecto.codigoPostal.toString();
+      if(cp.length < 5){
+        let ceros = '0'.repeat(5 - cp.length);
+        cp = ceros + cp;
+      }
 
       this.form = this.formBuilder.group({
         id: [this.data.proyecto.id, { validators: [] }],
@@ -122,7 +131,7 @@ export class DialogNewProyectoComponent {
         porcentajeIva: [this.data.proyecto.porcentajeIva, { validators: [] }], //
         presupuestoConIvaMonedaNacional: [0, { validators: [] }],
         anticipo: [this.data.proyecto.anticipo, { validators: [] }], //
-        codigoPostal: [this.data.proyecto.codigoPostal, { validators: [] }], //
+        codigoPostal: [cp, { validators: [] }], //
         domicilio: [this.data.proyecto.domicilio, { validators: [] }], //
         fechaInicio: [fechaInicio, { validators: [] }], //
         fechaFinal: [fechaFin, { validators: [] }], //
@@ -156,102 +165,56 @@ export class DialogNewProyectoComponent {
     this.nuevoProyecto.esDomingo = true;
     this.nuevoProyecto.noSerie = 1;
 
-    let c = true;
-
-    //Validaciones
-    if((this.nuevoProyecto.codigoProyecto == null || this.nuevoProyecto.codigoProyecto.trim() == '')&&
-      (this.nuevoProyecto.nombre == null || this.nuevoProyecto.nombre.trim() == '') &&
-      (this.nuevoProyecto.codigoPostal == null || this.nuevoProyecto.codigoPostal==0) &&
-      (this.nuevoProyecto.domicilio == null || this.nuevoProyecto.domicilio.trim() == '') &&
-      (this.nuevoProyecto.porcentajeIva == null || this.nuevoProyecto.porcentajeIva==0) &&
-      (this.nuevoProyecto.fechaInicio == null || this.nuevoProyecto.fechaInicio.toString() == '') &&
-      (this.nuevoProyecto.fechaFinal == null || this.nuevoProyecto.fechaFinal.toString() == '')
-    ){
-      this.errGlobal = true;
-      return;
-    }
-
-    if(this.nuevoProyecto.codigoProyecto == null || this.nuevoProyecto.codigoProyecto.trim() == ''){
-      this.errCo.estatus = true;
-      this.errCo.descripcion = 'El campo código es obligatorio';
-      c = false;
-    }
-    if(this.nuevoProyecto.nombre == null || this.nuevoProyecto.nombre.trim() == ''){
-      this.errNo.estatus = true;
-      this.errNo.descripcion = 'El campo nombre es obligatorio';
-      c = false;
-    }
-    if(this.nuevoProyecto.codigoPostal == null || this.nuevoProyecto.codigoPostal==0){
-      this.errCP = true;
-      c = false;
-    }
-    if(this.nuevoProyecto.domicilio == null || this.nuevoProyecto.domicilio.trim() == ''){
-      this.errDo.estatus = true;
-      this.errDo.descripcion = 'El campo domicilio es obligatorio';
-      c = false;
-    }
-    if(this.nuevoProyecto.porcentajeIva == null || this.nuevoProyecto.porcentajeIva==0){
-      this.errIVA = true;
-      c = false;
-    }
-    if(this.nuevoProyecto.fechaInicio == null || this.nuevoProyecto.fechaInicio.toString() == ''){
-      this.errFI = true;
-      c = false;
-    }
-    if(this.nuevoProyecto.fechaFinal == null || this.nuevoProyecto.fechaFinal.toString() == ''){
-      this.errFT = true;
-      c = false;
-    }
-    if(this.nuevoProyecto.codigoProyecto.length>30){
-      this.errCo.estatus = true;
-      this.errCo.descripcion = 'La longitud del código no puede ser mayor a 30 caracteres';
-      c= false;
-    }
-    if(this.nuevoProyecto.nombre.length>100){
-      this.errNo.estatus = true;
-      this.errNo.descripcion = 'La longitud del nombre no puede ser mayor a 100 caracteres';
-      c= false;
-    }
-    if(this.nuevoProyecto.domicilio.length>100){
-      this.errDo.estatus = true;
-      this.errDo.descripcion = 'La longitud del domicilio no puede ser mayor a 100 caracteres';
-      c= false;
-    }
-
-    if(!c){
-      return;
-    }
-
-    /////////
-
-    if(this.nuevoProyecto.id == 0){
-      this.proyectoService
-      .crear(this.nuevoProyecto, this.selectedEmpresa)
-      .subscribe((datos) => {
-        if (datos.id > 0) {
-          this.parametrosRol.idEmpresa = this.selectedEmpresa;
-          this.parametrosRol.idProyecto = datos.id;
-          this._usuarioProyectoService
-            .asignarRolDefault(this.parametrosRol)
-            .subscribe((datos) => {});
-          this.dialogRef.close(true);
-        } else {
-          Swal.fire({
-            text: 'No se creo el proyecto',
-            icon: 'error',
-          });
-        }
+    if (this.nuevoProyecto.id == 0) {
+      this.proyectoService.crear(this.nuevoProyecto, this.selectedEmpresa).subscribe({
+        next: (datos) => {
+          if (datos.id > 0) {
+            this.parametrosRol.idEmpresa = this.selectedEmpresa;
+            this.parametrosRol.idProyecto = datos.id;
+            this._usuarioProyectoService.asignarRolDefault(this.parametrosRol).subscribe({
+              error: (error) =>
+                this.mostrarError('No se pudo asignar el rol default del proyecto', error),
+            });
+            const proyectoCreado = { ...datos, ...this.nuevoProyecto, id: datos.id };
+            this.proyectoService.OnChange.emit(this.selectedEmpresa);
+            this.form.reset();
+            this.dialogRef.close({
+              action: 'create',
+              proyecto: proyectoCreado,
+            });
+            Swal.fire({
+              title: 'Proyecto creado correctamente.',
+              icon: 'success',
+            });
+          } else {
+            Swal.fire({
+              title: 'No se pudo crear el proyecto',
+              text: 'El servidor no devolvió un identificador valido.',
+              icon: 'error',
+            });
+          }
+        },
+        error: (error) => {
+          this.mostrarError('No se pudo crear el proyecto', error);
+        },
       });
-    }else{
-      this.proyectoService.editar(this.nuevoProyecto, this.selectedEmpresa).subscribe((datos) => {
-        if(!datos.estatus){
-          Swal.fire({
-            text: 'No se edito el proyecto',
-            icon: 'error',
+    } else {
+      this.proyectoService.editar(this.nuevoProyecto, this.selectedEmpresa).subscribe({
+        next: (datos) => {
+          this.proyectoService.OnChange.emit(this.selectedEmpresa);
+          this.form.reset();
+          this.dialogRef.close({
+            action: 'edit',
+            proyecto: { ...this.nuevoProyecto },
           });
-        }else{
-          this.dialogRef.close(true);
-        }
+          Swal.fire({
+            title: 'Proyecto editado correctamente.',
+            icon: 'success',
+          });
+        },
+        error: (error) => {
+          this.mostrarError('No se pudo editar el proyecto', error);
+        },
       });
     }
   }
@@ -264,13 +227,26 @@ export class DialogNewProyectoComponent {
   }
 
   cerrarDialog() {
-    this.dialogRef.close(false); // Cierra el modal sin guardar
+    this.dialogRef.close(false);
   }
 
   detenerCierre(event: MouseEvent) {
     event.stopPropagation();
   }
 
+  private mostrarError(titulo: string, error: any) {
+    const errores = parsearErroresAPI(error);
+    const mensaje =
+      errores.length > 0
+        ? errores.join('\n')
+        : 'Ocurrió un problema al comunicarse con el servidor.';
+    Swal.fire({
+      title: titulo,
+      text: mensaje,
+      icon: 'error',
+    });
+  }
+  
   validarAnticipo(){
     let anticipo = this.form.value.anticipo;    
     if(anticipo > 100){

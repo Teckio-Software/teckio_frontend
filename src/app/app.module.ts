@@ -168,6 +168,10 @@ import { OnlyNumbersDirective } from './directiva/onlynumbers.directive';
 import { AuditoriaService } from './seguridad/auditorias/auditorias.service';
 import { AuditoriasComponent } from './seguridad/auditorias/auditorias.component';
 
+import { GlosarioComponent } from './documentacion/glosario/glosario.component';
+import { ModalGlosarioComponent } from './documentacion/modal-glosario/modal-glosario.component';
+import { DocumentacionModule } from './documentacion/documentacion.module';
+
 export function playerFactory() {
   return player;
 }
@@ -317,6 +321,8 @@ export function playerFactory() {
     ModalAsigacionComponent,
     ProductosServiciosComponent,
     ImprimirModalComponent,
+    GlosarioComponent,
+    ModalGlosarioComponent,
     UppercaseInputDirective,
     OnlyNumbersDirective,
     AuditoriasComponent

@@ -155,13 +155,13 @@ export class VentasComponent {
 
   listaAlmacenes: almacenDTO[] = [];
   listaAlmacenesReset: almacenDTO[] = [];
-  
+
   nombreAlmacen: string = '';
 
   alertaSuccess: boolean = false;
-    alertaMessage: string = '';
-    alertaTipo: AlertaTipo = AlertaTipo.none;
-    AlertaTipo = AlertaTipo;
+  alertaMessage: string = '';
+  alertaTipo: AlertaTipo = AlertaTipo.none;
+  AlertaTipo = AlertaTipo;
   listaUsuarios: string[] = [];
   listaUsuariosReset: string[] = [];
 
@@ -174,8 +174,7 @@ export class VentasComponent {
     private _ordenVentaService: VentasService,
     private _clienteService: ClienteService,
     private _prodYserService: ProductoYServicioService,
-    private almacenService: AlmacenService,
-    
+    private almacenService: AlmacenService
   ) {
     let IdEmpresa = _seguridadService.obtenIdEmpresaLocalStorage();
     this.selectedEmpresa = Number(IdEmpresa);
@@ -217,7 +216,7 @@ export class VentasComponent {
   /**
    * Carga la lista de almacenes sin paginar
    */
-  cargarAlmacenes(){
+  cargarAlmacenes() {
     /**
      * Servicio que se encarga de obtener todos los almacenes sin paginar
      */
@@ -236,7 +235,7 @@ export class VentasComponent {
       error: () => {
         //Imprime mensaje de error.
       },
-    })
+    });
     this.filtroEstatus = '';
   }
 
@@ -265,23 +264,21 @@ export class VentasComponent {
     /**
      * Servicio que se encarga de obtener todos los productos y servicios
      */
-    this._prodYserService
-      .obtenerTodos(this.selectedEmpresa)
-      .subscribe({
-        /**
-         * Callback que se ejecuta cuando se obtiene la lista de productos y servicios
-         * @param datos lista de productos y servicios
-         */
-        next: (datos) => {
-          this.productosYServicio = datos;
-          this.productosYServicioReset = datos;
-        },
-        /**
-         * Callback que se ejecuta cuando hay un error al obtener la lista de productos y servicios
-         */
-        error: () => {
-          //Imprime mensaje de error.
-        },
+    this._prodYserService.obtenerTodos(this.selectedEmpresa).subscribe({
+      /**
+       * Callback que se ejecuta cuando se obtiene la lista de productos y servicios
+       * @param datos lista de productos y servicios
+       */
+      next: (datos) => {
+        this.productosYServicio = datos;
+        this.productosYServicioReset = datos;
+      },
+      /**
+       * Callback que se ejecuta cuando hay un error al obtener la lista de productos y servicios
+       */
+      error: () => {
+        //Imprime mensaje de error.
+      },
     });
   }
 
@@ -480,13 +477,13 @@ export class VentasComponent {
   //   });
   // }
 
-  abrirModalCancelarOrdenVenta(id: number){
+  abrirModalCancelarOrdenVenta(id: number) {
     this.mensajeAlerta = '';
     this.isOpenModalCancelar = true;
     this.cancelarOrdenVentaDTO.idOrdenVenta = id;
   }
 
-  cerrarModalCancelarOrdenVenta(){
+  cerrarModalCancelarOrdenVenta() {
     this.mensajeAlerta = '';
     this.isOpenModalCancelar = false;
     this.cancelarOrdenVentaDTO.idOrdenVenta = 0;
@@ -494,8 +491,43 @@ export class VentasComponent {
     this.nombreAlmacen = '';
     this.SlistaAlmacenes = false;
   }
+
+  autorizarOrdenVenta(ordenVenta: OrdenVentaDTO) {
+    Swal.fire({
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      showCancelButton: true,
+      html: `<p>¿Estás seguro de que deseas autorizar esta venta?</p>`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this._ordenVentaService
+          .autorizarOrdenVenta(ordenVenta, this.selectedEmpresa)
+          .subscribe({
+            next: (resp) => {
+              if (resp.estatus) {
+                this.alerta(AlertaTipo.save, resp.descripcion);
+                this.cargarOrdenesVenta();
+              } else {
+                this.alerta(AlertaTipo.error, resp.descripcion);
+              }
+            },
+            error: () => {
+              this.alerta(
+                AlertaTipo.error,
+                'Error al autorizar la orden de venta.'
+              );
+              //Mensaje de error
+            },
+          });
+      } else {
+        return;
+      }
+      this.ChangeDetectorRef.detectChanges();
+    });
+  }
+
   cancelarOrdenVenta() {
-    if(this.cancelarOrdenVentaDTO.idAlmacenDestino == 0){
+    if (this.cancelarOrdenVentaDTO.idAlmacenDestino == 0) {
       this.mensajeAlerta = 'Selecciona un almacen';
       return;
     }
@@ -510,16 +542,19 @@ export class VentasComponent {
           .cancelar(this.selectedEmpresa, this.cancelarOrdenVentaDTO)
           .subscribe({
             next: (resp) => {
-              if(resp.estatus){
+              if (resp.estatus) {
                 this.alerta(AlertaTipo.save, resp.descripcion);
                 this.cerrarModalCancelarOrdenVenta();
                 this.cargarOrdenesVenta();
-              }else{
+              } else {
                 this.alerta(AlertaTipo.error, resp.descripcion);
               }
             },
             error: () => {
-              this.alerta(AlertaTipo.error, 'Error al cancelar la orden de venta.');
+              this.alerta(
+                AlertaTipo.error,
+                'Error al cancelar la orden de venta.'
+              );
               //Mensaje de error
             },
           });
@@ -780,14 +815,13 @@ export class VentasComponent {
            */
           next: (resp) => {
             // Carga la lista de ordenes de venta
-            if(resp.estatus){
+            if (resp.estatus) {
               this.alerta(AlertaTipo.save, resp.descripcion);
               this.cargarOrdenesVenta();
               this.bloquearBotonCrear();
-            }else{
+            } else {
               this.alerta(AlertaTipo.error, resp.descripcion);
             }
-            
           },
           /**
            * Se llama cuando se produce un error al crear la orden de venta.
@@ -799,7 +833,10 @@ export class VentasComponent {
           },
         });
     } else {
-      this.alerta(AlertaTipo.error, 'No se permiten crear ordenes de venta seguidas.');
+      this.alerta(
+        AlertaTipo.error,
+        'No se permiten crear ordenes de venta seguidas.'
+      );
     }
   }
 
@@ -848,25 +885,25 @@ export class VentasComponent {
   }
 
   alerta(tipo: AlertaTipo, mensaje: string = '') {
-      if (tipo === AlertaTipo.none) {
-        this.cerrarAlerta();
-        return;
-      }
-  
-      this.alertaTipo = tipo;
-      this.alertaMessage = mensaje || 'Ocurrió un error';
-      this.alertaSuccess = true;
-  
-      setTimeout(() => {
-        this.cerrarAlerta();
-      }, 3000);
+    if (tipo === AlertaTipo.none) {
+      this.cerrarAlerta();
+      return;
     }
-  
-    cerrarAlerta() {
-      this.alertaSuccess = false;
-      this.alertaTipo = AlertaTipo.none;
-      this.alertaMessage = '';
-    }
+
+    this.alertaTipo = tipo;
+    this.alertaMessage = mensaje || 'Ocurrió un error';
+    this.alertaSuccess = true;
+
+    setTimeout(() => {
+      this.cerrarAlerta();
+    }, 3000);
+  }
+
+  cerrarAlerta() {
+    this.alertaSuccess = false;
+    this.alertaTipo = AlertaTipo.none;
+    this.alertaMessage = '';
+  }
 
   seleccionEstatus(event: any) {
     this.filtroEstatus = event.target.value;
@@ -933,7 +970,7 @@ export class VentasComponent {
     const [y, m, d] = iso.split('-').map(Number);
     return new Date(y, m - 1, d); // ← local, sin saltos por zona
   }
-  
+
   limpiarFiltros() {
     this.nombreUsuario = '';
     this.filtroEstatus = '';

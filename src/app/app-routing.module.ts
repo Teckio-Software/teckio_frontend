@@ -1,3 +1,4 @@
+import { GlosarioRoutingModule } from './documentacion/glosario/glosario-routing.module';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
@@ -81,13 +82,13 @@ const routes: Routes = [
         (module) => module.ConceptoModule
       ),
   },
-  {
-    path: 'tipopoliza',
-    loadChildren: () =>
-      import(`./contabilidad/tipos-polizas/tipo-poliza.module`).then(
-        (module) => module.TipoPolizaModule
-      ),
-  },
+  // {
+  //   path: 'tipopoliza',
+  //   loadChildren: () =>
+  //     import(`./contabilidad/tipos-polizas/tipo-poliza.module`).then(
+  //       (module) => module.TipoPolizaModule
+  //     ),
+  // },
   {
     path: 'almacen',
     loadChildren: () =>
@@ -425,10 +426,18 @@ const routes: Routes = [
       ).then((module) => module.ProductosServiciosModule),
   },
   {
+   
     path: 'auditorias',
     loadChildren: () =>
       import(`./seguridad/auditorias/auditorias.module`).then(
         (module) => module.AuditoriasModule
+      ),
+  },
+  {
+     path: 'glosario',
+    loadChildren: () =>
+      import(`./documentacion/glosario/glosario.module`).then(
+        (module) => module.GlosarioModule
       ),
   },
 

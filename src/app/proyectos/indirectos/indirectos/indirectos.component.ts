@@ -43,6 +43,7 @@ export class IndirectosComponent {
     nivel: 0
   }
 
+  porcentajeRealConFormato: string = '';
   selectedIndex: number = -1;
 
   existenEstimaciones: boolean = false;
@@ -122,6 +123,14 @@ export class IndirectosComponent {
   cargarConjunto() {
     this._IndirectosService.ObtenerConjuntoIndirecto(this.selectedEmpresa, this.selectedProyecto).subscribe((datos) => {
       this.conjuntoIndirecto = datos;
+      console.log(this.conjuntoIndirecto);
+      this.porcentajeRealConFormato = new Intl.NumberFormat('es-MX', {
+          style: 'percent',
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format(
+          (this.conjuntoIndirecto.porcentaje - 1)
+        );
       if (this.conjuntoIndirecto.id != 0) {
         this.existeConjunto = true;
       }

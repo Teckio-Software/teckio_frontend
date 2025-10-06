@@ -14,9 +14,7 @@ export function parsearErroresAPI(zResponse: any): string[] {
     if (typeof zResponse.error === 'string') {
       zvListaResultados.push(zResponse.error);
     } else if (Array.isArray(zResponse.error)) {
-      zResponse.error.forEach((zValor: any) =>
-        zvListaResultados.push(zValor.description)
-      );
+      zResponse.error.forEach((zValor: any) => zvListaResultados.push(zValor.description));
     } else {
       //A veces lo que tenemos es un mapa de errores y campos
       const zvMapaErrores = zResponse.error.errors;
@@ -42,8 +40,7 @@ export function formatearFecha(zDate: Date) {
     month: '2-digit',
     day: '2-digit',
   });
-  const [{ value: month }, , { value: day }, , { value: year }] =
-    zvFormato.formatToParts(zDate);
+  const [{ value: month }, , { value: day }, , { value: year }] = zvFormato.formatToParts(zDate);
   return `${year}-${month}-${day}`;
 }
 
@@ -250,12 +247,12 @@ export const pages: Page[] = [
         imageUrl: 'assets/rubro.svg',
         permiso: ['SeccionRubro'],
       },
-      {
-        name: 'Tipo de Póliza',
-        link: '/tipopoliza',
-        imageUrl: 'assets/tipo-poliza.svg',
-        permiso: ['SeccionTipoPoliza'],
-      },
+      // {
+      //   name: 'Tipo de Poliza',
+      //   link: '/tipopoliza',
+      //   imageUrl: 'assets/tipo-poliza.svg',
+      //   permiso: ['SeccionTipoPoliza'],
+      // },
       {
         name: 'Cuenta contable',
         link: '/cuentacontable',
@@ -364,5 +361,19 @@ export const pages: Page[] = [
       }
     ],
     expanded: false,
+  },
+  {
+    name: 'Documentación',
+    link: '',
+    imageUrl: 'assets/documentacion.svg',
+    expanded: false,
+    nestedPages: [
+      {
+        name: 'Glosario de términos',
+        link: '/glosario',
+        imageUrl: 'assets/glosario.svg',
+        permiso: [''],
+      },
+    ],
   },
 ];
