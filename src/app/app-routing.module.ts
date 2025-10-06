@@ -440,6 +440,12 @@ const routes: Routes = [
         (module) => module.GlosarioModule
       ),
   },
+  {path: 'imagenes',
+    loadChildren: () =>
+      import(`./seguridad/imagenes/imagenes.module`).then(
+        (module) => module.ImagenesModule
+      ),
+  },
 
   { path: '**', redirectTo: '' },
 ];

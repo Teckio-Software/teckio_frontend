@@ -358,6 +358,12 @@ export const pages: Page[] = [
         link: '/auditorias',
         imageUrl: 'assets/requisicion.svg',
         permiso: ['Administrador'],
+      },
+      {
+        name: 'Imágenes',
+        link: '/imagenes',
+        imageUrl: 'assets/imagen.png',
+        permiso: ['Administrador'],
       }
     ],
     expanded: false,
