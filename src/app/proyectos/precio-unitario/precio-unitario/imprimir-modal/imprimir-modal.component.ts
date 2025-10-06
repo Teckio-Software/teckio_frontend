@@ -392,6 +392,8 @@ export class ImprimirModalComponent {
       imprimirConCostoDirecto: this.isImprimirConCostoDirecto,
       imprimirConPrecioUnitario: this.isImprimirPU,
       imprimirConPrecioUnitarioIVA: this.isImprimirPUIVA,
+      detallesPrecioUnitario: [],
+      imprimirConPUMasIva: this.isImprimirPuMasIVA
     };
 
     //si es marcado, se llena el arreglo de marcados en lugar del completo
@@ -410,13 +412,14 @@ export class ImprimirModalComponent {
       totalSinFormato: this.totalSinFormato,
       totalSinIva: this.totalSinIva,
       total: this.total,
-
       proyecto: this.proyecto,
       totalIva: this.totalIva,
       imprimirImpuesto: this.isImprimirImpuestos,
       imprimirConCostoDirecto: this.isImprimirConCostoDirecto,
       imprimirConPrecioUnitario: this.isImprimirPU,
       imprimirConPrecioUnitarioIVA: this.isImprimirPUIVA,
+      detallesPrecioUnitario: [],
+      imprimirConPUMasIva: this.isImprimirPuMasIVA
     };
 
     // definir el tipo de reporte
