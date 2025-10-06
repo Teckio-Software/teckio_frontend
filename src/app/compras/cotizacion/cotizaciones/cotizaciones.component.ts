@@ -67,6 +67,8 @@ export class CotizacionesComponent {
   idCotizacionParaOC: number = 0;
   appRecarga: number = 0;
 
+  selectedIndexImpuesto: number = -1;
+
   ngOnInit() {
     this.cargarRegistros();
     this._cotizacionService

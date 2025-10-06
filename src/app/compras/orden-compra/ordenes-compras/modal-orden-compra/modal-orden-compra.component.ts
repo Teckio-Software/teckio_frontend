@@ -395,7 +395,7 @@ export class ModalOrdenCompraComponent {
           { text: insumos.unidad, style: 'small' },
           { text: Number(insumos.cantidad).toFixed(4), style: 'small' },
           { text: `$${Number(insumos.precioUnitario).toFixed(2)}`, style: 'small' },
-          { text: Number(insumos.importeSinIva).toFixed(2), style: 'small' },
+          { text: `$${Number(insumos.importeSinIva).toFixed(2)}`, style: 'small' },
         ];
       }),
     ];
@@ -509,7 +509,7 @@ export class ModalOrdenCompraComponent {
               [
                 {
                   text: [
-                    { text: 'SUBTOTAL: ', bold: true },
+                    { text: 'SUBTOTAL: $', bold: true },
                     { text: `${this.subtotalConFormato} MXN` },
                   ],
                   style: 'small',
@@ -517,14 +517,14 @@ export class ModalOrdenCompraComponent {
               ],
               [
                 {
-                  text: [{ text: 'DESCUENTO: ', bold: true }, { text: '0.00' }],
+                  text: [{ text: 'DESCUENTO: $', bold: true }, { text: '0.00' }],
                   style: 'small',
                 },
               ],
               [
                 {
                   text: [
-                    { text: '+16% IVA.:', bold: true },
+                    { text: '+16% IVA.: $', bold: true },
                     { text: `${this.ivaConFormato}` },
                   ],
                   style: 'small',
@@ -533,7 +533,7 @@ export class ModalOrdenCompraComponent {
               [
                 {
                   text: [
-                    { text: `-0 % Ret I.S.R: `, bold: true },
+                    { text: `-0 % Ret I.S.R: $`, bold: true },
                     { text: `0.00` },
                   ],
                   style: 'small',
@@ -542,7 +542,7 @@ export class ModalOrdenCompraComponent {
               [
                 {
                   text: [
-                    { text: `-0 % Ret IVA: `, bold: true },
+                    { text: `-0 % Ret IVA: $`, bold: true },
                     { text: `0.00` },
                   ],
                   style: 'small',
@@ -551,7 +551,7 @@ export class ModalOrdenCompraComponent {
               [
                 {
                   text: [
-                    { text: 'TOTAL: ', bold: true },
+                    { text: 'TOTAL: $', bold: true },
                     { text: `${this.totalConFormato}` },
                   ],
                   style: 'small',

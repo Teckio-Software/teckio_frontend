@@ -15,6 +15,7 @@ import { EmpresaDTO } from './catalogos/empresas/empresa';
 import { usuarioUltimaSeccion } from './seguridad/seguridad-multi-empresa/tsSeguridadMultiEmpresa';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-root',
@@ -114,6 +115,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    initFlowbite();
     if (this.zvSeguridadService.zfEstaLogueadoBoolean()) {
       // this.obtenerProyectos();
       this.GuardarUltimoProyectoAndEmpresa();

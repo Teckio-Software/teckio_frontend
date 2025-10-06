@@ -74,6 +74,8 @@ export class CotizacionComponent implements OnInit {
   importeTotalCotizacion : number = 0;
   importeTotalCotizacionConFormato : string = "0.00"
 
+  selectedIndex: number = -1;
+
   // vardatos !: listaRequisicionDTO;
   // @ViewChild('closeModal') closeModal!: ElementRef
   constructor(
