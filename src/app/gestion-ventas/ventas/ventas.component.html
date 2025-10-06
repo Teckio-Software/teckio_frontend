@@ -185,7 +185,7 @@
                 </td>
               </tr>
             </ng-container>
-            <tr *ngIf="ordenesVentaReset.length == 0" class="xs:hidden">
+            <tr *ngIf="ordenesVentaReset.length == 0 && !isLoading" class="xs:hidden">
               <td
                 colspan="6"
                 class="text-center text-gray-700 font-medium py-1 xs:text-xs"
@@ -308,7 +308,7 @@
           class="bg-white px-4 pb-2 pt-2 sm:p-6 sm:pb-4 flex justify-between border-b-2"
         >
           <h2 class="font-semibold text-gray-800 tracking-wider text-lg mt-3">
-            Orden de Venta
+            Orden de venta
           </h2>
           <button
             type="button"
@@ -547,10 +547,11 @@
                               [(ngModel)]="detalle.descripcion"
                               readonly
                               [disabled]="esEliminar"
+                              (click)="selectedIndexOrdenVenta = i"
                             />
                           </div>
                         </td>
-                        <td class="px-1 py-[2px] w-[15%]" scope="col">
+                        <td class="px-1 py-[2px] w-[15%]" scope="col" *ngIf="selectedIndexOrdenVenta == i" >
                           <input
                             min="1"
                             placeholder="Cantidad..."
@@ -565,7 +566,14 @@
                             [disabled]="esEliminar"
                           />
                         </td>
-                        <td class="px-1 py-[2px] w-[15%]" scope="col">
+                        <td class="px-1 py-[2px] w-[15%]" *ngIf="selectedIndexOrdenVenta != i" 
+                            (click)="selectedIndexOrdenVenta = i"
+                        >
+                        <div class="w-[75%] xs:w-[100%] text-end">
+                          {{detalle.cantitdad | number: '1.4-4'}}
+                          </div>
+                        </td>
+                        <td class="px-1 py-[2px] w-[15%]" scope="col" *ngIf="selectedIndexOrdenVenta == i">
                           <input
                             min="1"
                             placeholder="Cantidad..."
@@ -580,7 +588,14 @@
                             [disabled]="esEliminar"
                           />
                         </td>
-                        <td class="px-1 py-[2px] w-[15%]" scope="col">
+                        <td class="px-1 py-[2px] w-[15%]" *ngIf="selectedIndexOrdenVenta != i" 
+                            (click)="selectedIndexOrdenVenta = i"
+                        >
+                        <div class="w-[75%] xs:w-[100%] text-end">
+                          ${{detalle.precioUnitario | number: '1.2-2'}}
+                          </div>
+                        </td>
+                        <td class="px-1 py-[2px] w-[15%]" scope="col" *ngIf="selectedIndexOrdenVenta == i">
                           <input
                             min="1"
                             placeholder="Cantidad..."
@@ -594,6 +609,13 @@
                             [(ngModel)]="detalle.descuento"
                             [disabled]="esEliminar"
                           />
+                        </td>
+                        <td class="px-1 py-[2px] w-[15%]" *ngIf="selectedIndexOrdenVenta != i" 
+                            (click)="selectedIndexOrdenVenta = i"
+                        >
+                        <div class="w-[75%] xs:w-[100%] text-end">
+                          {{detalle.descuento | number: '1.2-2'}}
+                        </div>
                         </td>
                         <td class="px-1 py-[2px] w-[15%]" scope="col">
                           <div class="flex gap-2">

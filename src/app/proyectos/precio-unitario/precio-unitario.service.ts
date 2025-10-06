@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import { InsumoParaExplosionDTO } from 'src/app/catalogos/insumo/tsInsumo';
 import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
+import { precioUnitarioDetalleDTO } from '../precio-unitario-detalle/tsPrecioUnitarioDetalle';
 
 @Injectable({
     providedIn: 'root'
@@ -26,6 +27,9 @@ export class PrecioUnitarioService {
         return this.HttpClient.get<precioUnitarioDTO[]>(`${this.apiUrl}/${idEmpresa}/obtenerConceptos/${idProyecto}`)
     }
 
+    public ObtenerDetallesPorPUImpresion(idEmpresa: number, ids: number[]): Observable<precioUnitarioDetalleDTO[]> {
+        return this.HttpClient.post<precioUnitarioDetalleDTO[]>(`${this.apiUrl}/${idEmpresa}/ObtenerDetallesPorPUImpresion`, ids)
+    }
 
     public autorizarPresupuesto(idProyecto: number, idEmpresa: number): Observable<any> {
         return this.HttpClient.get(`${this.apiUrl}/${idEmpresa}/AutorizarPresupuesto/${idProyecto}`)

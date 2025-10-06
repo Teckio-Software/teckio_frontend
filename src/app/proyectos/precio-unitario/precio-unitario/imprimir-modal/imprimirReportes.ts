@@ -6,6 +6,7 @@ import { image } from './types/imagen';
 import { numeroALetras } from 'src/app/compras/orden-compra/NumeroALetras';
 import { proyectoDTO } from 'src/app/proyectos/proyecto/tsProyecto';
 import { Reporte } from './types/reporte';
+import { style } from '@angular/animations';
 
 /**
  * Imprime un reporte de presupuesto en formato PDF.
@@ -13,7 +14,591 @@ import { Reporte } from './types/reporte';
  * @param {Reporte} reporte Información del presupuesto a imprimir.
  * @returns {void} No devuelve nada, descarga el archivo PDF.
  */
-export function imprimirReporte(reporte: Reporte): void {
+export function imprimirReporteAnalisisPU(reporte: Reporte) {
+  (<any>pdfMake).addVirtualFileSystem(pdfFonts);
+
+  let totalEnLetras: string;
+
+  const content: any[] = [];
+
+  const styles = {
+    header: {
+      fontSize: 10,
+    },
+    subheader: {
+      fontSize: 8,
+      bold: true,
+    },
+    quote: {
+      italics: true,
+      fontSize: 8,
+    },
+    small: {
+      fontSize: 8,
+    },
+    smallCantidad: {
+      fontSize: 8,
+      alignment: 'right',
+    },
+    smallCantidadTotal: {
+      fontSize: 8,
+      alignment: 'right',
+      bold: true,
+    },
+    smallRight: {
+      fontSize: 8,
+      alignment: 'right',
+    },
+    smallCenter: {
+      fontSize: 8,
+      alignment: 'center',
+    },
+    smallBold: {
+      fontSize: 8,
+      textAlign: 'center',
+      bold: true,
+    },
+    smallColored: {
+      fontSize: 8,
+      textAlign: 'center',
+      bold: true,
+      color: '#1c398e',
+    },
+    styleTotal: {
+      fontSize: 8,
+      textAlign: 'center',
+      bold: true,
+    },
+    bold: {
+      bold: true,
+    },
+    rounded: {
+      rounded: 10,
+    },
+    tableHeader: {
+      bold: true,
+      fontSize: 12,
+      color: 'black',
+    },
+  };
+
+  reporte.precioUnitario.forEach((pu, index) => {
+    //imagen
+  content.push({
+    columns: [
+      {
+        stack: [
+          {
+            image: image,
+            width: 60,
+            height: 60,
+            alignment: 'right',
+          },
+        ],
+      },
+    ],
+  });
+
+  content.push({
+    text: '\n',
+  });
+
+  content.push({
+    columns: [
+      {
+        stack: [
+          {
+            text: [{ text: `${reporte.encabezadoIzq}`, bold: true }],
+            style: 'header',
+            alignment: 'left',
+          },
+        ],
+      },
+      {
+        stack: [
+          {
+            text: [{ text: `${reporte.encabezadoCentro}`, bold: true }],
+            style: 'header',
+            alignment: 'center',
+          },
+        ],
+      },
+      {
+        stack: [
+          {
+            text: [{ text: `${reporte.encabezadoDerecha}`, bold: true }],
+            style: 'header',
+            alignment: 'right',
+          },
+        ],
+      },
+    ],
+  });
+
+  content.push({
+    text: '\n',
+  });
+
+  //tabla de proyecto - header y contenido
+  const tableBodyProject = [
+    [{ text: 'Análisis de precios unitarios', style: 'subheader' }],
+    [{ text: reporte.titulo, style: 'small' }],
+  ];
+
+  content.push({
+    margin: [0, 10, 0, 10],
+    layout: {
+      hLineColor: () => '#B9B9B9',
+      vLineColor: () => '#B9B9B9',
+      hLineWidth: () => 0.5,
+      vLineWidth: () => 0.5,
+    },
+    table: {
+      headerRows: 1,
+      widths: ['*'],
+      body: tableBodyProject,
+      style: 'tableHeader',
+    },
+  });
+
+
+    content.push({
+    columns: [
+        { width: '70%', text: `Clave: ${pu.codigo}`, style: 'small' },
+        { width: '15%', text: 'Unidad :', style: 'small'},
+        {width: '15%', text: `${pu.unidad}`, style: 'smallCenter'},
+    ],
+  });
+  content.push({
+    columns: [
+        { width: '70%', text: pu.descripcion, style: 'small' },
+        { width: '15%', text: 'Cantidad :\nPrecio unitario :\nTotal :', style: 'small'},
+        {width: '15%', text: `${pu.cantidadConFormato}\n${pu.precioUnitarioConFormato}\n${pu.importeConFormato}`, style: 'smallRight'},        
+    ],
+  });
+
+  const tableHeader = [
+    [
+      { text: 'C Clave', style: 'subheader', alignment: 'center' },
+      { text: 'Descripción', style: 'subheader', alignment: 'center' },
+      { text: 'Unidad', style: 'subheader', alignment: 'center' },
+      { text: 'Cantidad', style: 'subheader', alignment: 'center' },
+      {
+        text: 'Costo unitario',
+        style: 'subheader',
+        alignment: 'center',
+      },
+      { text: 'Total', style: 'subheader', alignment: 'center' },
+    ],
+  ];
+  content.push({
+    margin: [0, 0, 0, 0],
+    layout: {
+      hLineColor: () => '#B9B9B9',
+      hLineWidth: () => 0.5, // todas las líneas horizontales
+      vLineColor: () => '#B9B9B9',
+      vLineWidth: () => 0.5, // todas las líneas verticales
+    },
+    table: {
+      headerRows: 1,
+      widths: [70, '*', 30, 60, 60, 60],
+      body: tableHeader,
+    },
+  });
+
+  content.push({
+  text: 'Conceptos', style: 'subheader',
+  });
+
+  const tableBodyProyecto: any = [];
+
+
+
+  var detalles = reporte.detallesPrecioUnitario.filter(
+      (detalle) => detalle.idPrecioUnitario === pu.id
+    )
+    detalles.forEach(detalle => {
+      tableBodyProyecto.push([
+      {
+        text: (detalle.esCompuesto ? '+ ' : '  '),
+        style: { fontSize: 8 },
+      },
+      {
+        text: detalle.codigo,
+        style: detalle.esCompuesto ? { fontSize: 8, color: '#1c398e' } : { fontSize: 8 },
+      },
+      {
+        text: detalle.descripcion,
+        style: { fontSize: 8 },
+        
+      },
+      { text: detalle.unidad || '', style: 'small' },
+      {
+        text: detalle.cantidadConFormato || '',
+        style: detalle.esCompuesto ? { fontSize: 8, color: '#1c398e', alignment: 'right' } : { fontSize: 8, alignment: 'right' },
+      },
+      {
+        text: `$${detalle.costoBaseConFormato}` || '',
+        style: {fontSize: 8, color: '#1c398e', alignment: 'right'},
+      },
+      {
+        text: `${(detalle.importeConFormato)}` || '',
+        style: 'smallRight',
+      },
+    ]);
+    });
+
+    content.push({
+    margin: [0, 0, 0, 0],
+    layout: {
+      hLineWidth: () => 0, // todas las líneas horizontales
+      vLineWidth: () => 0, // todas las líneas verticales
+    },
+    table: {
+      headerRows: 0,
+      widths: [10, 60, '*', 30, 60, 60, 60],
+      body: tableBodyProyecto,
+    },
+  });
+
+  content.push({
+  text: 'Total de conceptos', style: 'subheader',
+  });
+
+  content.push({
+    columns: [
+      { width: '*', text: '' },
+      {
+        width: 'auto',
+        table: {
+          body: [
+            // booleano de iva opcional
+            // ...(reporte.imprimirImpuesto
+            //   ? [
+            //       [
+            //         {
+            //           text: 'IVA ' + reporte.proyecto.porcentajeIva + '%',
+            //           style: 'smallCantidadTotal',
+            //         },
+            //         {
+            //           text: ` ${reporte.totalIva}`,
+            //           style: 'smallCantidadTotal',
+            //           alignment: 'right',
+            //         },
+            //       ],
+            //     ]
+            //   : []),
+              [
+                { text: 'Costo directo', style: 'smallCantidadTotal'},
+                { text: pu.precioUnitarioConFormato, style: 'smallCantidadTotal'}
+              ],
+              [
+                { text: 'Indirectos', style: 'smallCantidadTotal'},
+                { text: pu.importeConFormato, style: 'smallCantidadTotal'}
+              ],
+              [
+                { text: 'Indirectos de campo', style: 'smallCantidadTotal'},
+                { text: pu.importeConFormato, style: 'smallCantidadTotal'}
+              ],
+              [
+                { text: 'Subtotal', style: 'smallCantidadTotal'},
+                { text: pu.importeConFormato, style: 'smallCantidadTotal'}
+              ],
+              [
+                { text: 'Financiamiento', style: 'smallCantidadTotal'},
+                { text: pu.importeConFormato, style: 'smallCantidadTotal'}
+              ],
+              [
+                { text: 'Subtotal', style: 'smallCantidadTotal'},
+                { text: pu.importeConFormato, style: 'smallCantidadTotal'}
+              ],
+              [
+                { text: 'Utilidad', style: 'smallCantidadTotal'},
+                { text: pu.importeConFormato, style: 'smallCantidadTotal'}
+              ],
+              [
+                { text: 'Cargos adicionales', style: 'smallCantidadTotal'},
+                { text: pu.importeConFormato, style: 'smallCantidadTotal'}
+              ],
+
+            [
+              { text: 'Precio unitario', style: 'smallCantidadTotal' },
+              {
+                text: `${pu.importeConFormato}`,
+                style: 'smallCantidadTotal',
+                alignment: 'right',
+              },
+            ],
+          ],
+        },
+        layout: {
+          hLineColor: () => '#fff',
+          vLineColor: () => '#fff',
+          hLineWidth: () => 0,
+          vLineWidth: () => 0,
+        },
+        margin: [0, 0, 0, 0],
+      },
+    ],
+  });
+
+  if (reporte.importeConLetra) {
+    totalEnLetras = numeroALetras(pu.importe);
+
+    content.push({
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: ['auto'],
+            body: [
+              [
+                {
+                  text: `${totalEnLetras}`,
+                  style: 'smallBold',
+                },
+              ],
+            ],
+          },
+          layout: {
+            hLineColor: () => '#fff',
+            vLineColor: () => '#fff',
+            hLineWidth: () => 0,
+            vLineWidth: () => 0,
+          },
+          margin: [0, 0, 0, 5],
+        },
+      ],
+    });
+  }
+
+  if(reporte.precioUnitario[index+1]!=null){
+    content.push([
+      {text: '', pageBreak: 'after'},
+    ])
+  }
+
+  });
+
+  
+
+  // Header de la tabla
+  // const tableHeader = [
+  //   [
+  //     { text: 'Clave', style: 'subheader', alignment: 'center' },
+  //     { text: 'Descripción', style: 'subheader', alignment: 'center' },
+  //     { text: 'Unidad', style: 'subheader', alignment: 'center' },
+  //     { text: 'Cantidad', style: 'subheader', alignment: 'center' },
+  //     {
+  //       text: reporte.imprimirConCostoDirecto ? 'Costo Directo' : 'P.U.',
+  //       style: 'subheader',
+  //       alignment: 'center',
+  //     },
+  //     { text: 'Total', style: 'subheader', alignment: 'center' },
+  //   ],
+  // ];
+
+  // content.push({
+  //   margin: [0, 0, 0, 0],
+  //   layout: {
+  //     hLineColor: () => '#B9B9B9',
+  //     hLineWidth: () => 0.5, // todas las líneas horizontales
+  //     vLineColor: () => '#B9B9B9',
+  //     vLineWidth: () => 0.5, // todas las líneas verticales
+  //   },
+  //   table: {
+  //     headerRows: 1,
+  //     widths: [85, '*', 30, 60, 60, 60],
+  //     body: tableHeader,
+  //   },
+  // });
+
+  // const tableBodyProyecto: any = [];
+
+  // reporte.precioUnitario.forEach((proyecto, index) => {
+  //   const esPadreConHijos = proyecto.hijos?.length > 0;
+
+    // tableBodyProyecto.push([
+    //   {
+    //     text: '',
+    //   },
+    //   {
+    //     text: proyecto.codigo,
+    //     style: esPadreConHijos ? { fontSize: 8, bold: true } : { fontSize: 8 },
+    //   },
+    //   {
+    //     text: proyecto.descripcion,
+    //     style: esPadreConHijos ? { fontSize: 8, bold: true } : { fontSize: 8 },
+    //     alignment: 'justify',
+    //   },
+    //   { text: esPadreConHijos ? '' : proyecto.unidad || '', style: 'small' },
+    //   {
+    //     text: esPadreConHijos ? '' : proyecto.cantidadConFormato || '',
+    //     style: 'small',
+    //   },
+    //   {
+    //     text: esPadreConHijos ? '' : proyecto.precioUnitarioConFormato || '',
+    //     style: 'small',
+    //   },
+    //   {
+    //     text: esPadreConHijos ? '' : proyecto.importeConFormato || '',
+    //     style: 'small',
+    //   },
+    // ]);
+
+    // filas de hijos
+    
+    // if (proyecto.hijos?.length > 0) {
+    //   const filasHijos = mapHijos(proyecto.hijos, 0, '', reporte);
+    //   filasHijos.forEach((filaHijo) => tableBodyProyecto.push(filaHijo));
+    // }
+  // });
+
+  // content.push({
+  //   margin: [0, 0, 0, 0],
+  //   layout: {
+  //     hLineWidth: () => 0, // todas las líneas horizontales
+  //     vLineWidth: () => 0, // todas las líneas verticales
+  //   },
+  //   table: {
+  //     headerRows: 0,
+  //     widths: [20, 60, '*', 30, 60, 60, 60],
+  //     body: tableBodyProyecto,
+  //   },
+  // });
+
+  // content.push({
+  //   text: '\n',
+  // });
+
+  // reporte.precioUnitario.forEach((precio) => {
+  //   content.push({
+  //     columns: [
+  //       { width: '*', text: '' },
+  //       {
+  //         width: 'auto',
+  //         table: {
+  //           widths: ['auto', 'auto'],
+  //           body: [
+  //             [
+  //               {
+  //                 text: `Subtotal de ${precio.codigo}`,
+  //                 style: 'styleTotal',
+  //               },
+  //               {
+  //                 text: `$ ${precio.importeConFormato}`,
+  //                 style: 'styleTotal',
+  //                 alignment: 'right',
+  //               },
+  //             ],
+  //           ],
+  //         },
+  //         layout: {
+  //           hLineColor: () => '#B9B9B9',
+  //           vLineColor: () => '#B9B9B9',
+  //           hLineWidth: () => 0,
+  //           vLineWidth: () => 0,
+  //         },
+  //         margin: [0, 0, 0, 5],
+  //       },
+  //     ],
+  //   });
+  // });
+
+  // content.push({
+  //   columns: [
+  //     { width: '*', text: '' },
+  //     {
+  //       width: 'auto',
+  //       table: {
+  //         body: [
+  //           // booleano de iva opcional
+  //           ...(reporte.imprimirImpuesto
+  //             ? [
+  //                 [
+  //                   {
+  //                     text: 'IVA ' + reporte.proyecto.porcentajeIva + '%',
+  //                     style: 'smallCantidadTotal',
+  //                   },
+  //                   {
+  //                     text: ` ${reporte.totalIva}`,
+  //                     style: 'smallCantidadTotal',
+  //                     alignment: 'right',
+  //                   },
+  //                 ],
+  //               ]
+  //             : []),
+
+  //           [
+  //             { text: 'Total', style: 'smallCantidadTotal' },
+  //             {
+  //               text: `${reporte.totalConIVA}`,
+  //               style: 'smallCantidadTotal',
+  //               alignment: 'right',
+  //             },
+  //           ],
+  //         ],
+  //       },
+  //       layout: {
+  //         hLineColor: () => '#B9B9B9',
+  //         vLineColor: () => '#B9B9B9',
+  //         hLineWidth: () => 0.5,
+  //         vLineWidth: () => 0.5,
+  //       },
+  //       margin: [0, 0, 0, 0],
+  //     },
+  //   ],
+  // });
+
+  // if (reporte.importeConLetra) {
+  //   totalEnLetras = numeroALetras(reporte.totalSinFormato);
+
+  //   content.push({
+  //     columns: [
+  //       { width: '*', text: '' },
+  //       {
+  //         width: 'auto',
+  //         table: {
+  //           widths: ['auto'],
+  //           body: [
+  //             [
+  //               {
+  //                 text: `${totalEnLetras}`,
+  //                 style: 'smallBold',
+  //               },
+  //             ],
+  //           ],
+  //         },
+  //         layout: {
+  //           hLineColor: () => '#B9B9B9',
+  //           vLineColor: () => '#B9B9B9',
+  //           hLineWidth: () => 0.5,
+  //           vLineWidth: () => 0.5,
+  //         },
+  //         margin: [0, 0, 0, 5],
+  //       },
+  //     ],
+  //   });
+  // }
+
+  const docDefinition: any = {
+    content,
+    styles,
+    pageMargins: [
+      reporte.margenIzquierdo,
+      reporte.margenSuperior,
+      reporte.margenDerecho,
+      reporte.margenInferior,
+    ],
+  };
+
+  pdfMake
+    .createPdf(docDefinition)
+    .download(`Análisis de precio unitario ${reporte.titulo}.pdf`);
+}
+
+export function imprimirReporte(reporte: Reporte) {
   (<any>pdfMake).addVirtualFileSystem(pdfFonts);
 
   let totalEnLetras: string;

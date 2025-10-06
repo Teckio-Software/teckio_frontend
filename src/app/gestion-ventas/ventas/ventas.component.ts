@@ -56,6 +56,8 @@ export class VentasComponent {
     razonSocialCliente: '',
   };
 
+  selectedIndexOrdenVenta: number = -1;
+
   cancelarOrdenVentaDTO: CancelarOrdenVentaDTO = {
     idOrdenVenta: 0,
     idAlmacenDestino: 0,
@@ -447,7 +449,7 @@ export class VentasComponent {
     } else {
       this.mensajeAlerta = '';
     }
-
+    this.selectedIndexOrdenVenta = -1;
     if (detalle.id == 0) {
       //crear nuevo detalle
       this.cargarOrdenVenta();

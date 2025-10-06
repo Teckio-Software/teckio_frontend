@@ -12,7 +12,7 @@
             <tr *ngFor="let IDE of detallesExistencia" class="font-medium text-gray-700 hover:bg-gray-200 transition-colors duration-200 xs:text-[8px]">
                 <td class="" scope="col" >{{IDE.tipoExistencia}}</td>
                 <td class="" scope="col">{{IDE.fechaRegistro | date:"dd-MM-yyyy"}}</td>
-                <td class="" scope="col">{{IDE.cantidadInsumos}}</td>
+                <td class="" scope="col">{{IDE.cantidadInsumos | number:'1.4-4' }}</td>
                 <td class="" scope="col">{{IDE.esNoConsumible ? "Si" : "No"}}</td>
             </tr>
         </tbody>

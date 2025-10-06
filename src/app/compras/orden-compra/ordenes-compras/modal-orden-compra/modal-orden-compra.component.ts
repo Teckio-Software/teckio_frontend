@@ -394,7 +394,7 @@ export class ModalOrdenCompraComponent {
           { text: insumos.descripcion, style: 'small' },
           { text: insumos.unidad, style: 'small' },
           { text: Number(insumos.cantidad).toFixed(4), style: 'small' },
-          { text: Number(insumos.precioUnitario).toFixed(2), style: 'small' },
+          { text: `$${Number(insumos.precioUnitario).toFixed(2)}`, style: 'small' },
           { text: Number(insumos.importeSinIva).toFixed(2), style: 'small' },
         ];
       }),

@@ -12,11 +12,8 @@ import { contratistaDTO } from 'src/app/catalogos/contratista/tsContratista';
 import { ContratistaService } from 'src/app/catalogos/contratista/contratista.service';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import { AlertaTipo, AlertComponent } from '../../alert/alert.component';
-<<<<<<< HEAD
 import { da, es } from 'date-fns/locale';
-=======
 import { RespuestaDTO } from '../../tsUtilidades';
->>>>>>> origin/JaviDev
 
 @Component({
   selector: 'app-modal-formulario',

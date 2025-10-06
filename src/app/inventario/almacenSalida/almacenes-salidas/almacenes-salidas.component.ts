@@ -79,6 +79,8 @@ export class AlmacenesSalidasComponent {
     cantidadPorSalir: 0,
   };
 
+  selectedIndex = -1;
+
   changeColor: any = null;
   appRegarga: number = 0;
   idSalidaAlmacen: number = 0;
@@ -372,11 +374,15 @@ export class AlmacenesSalidasComponent {
       this.insumosExistentes = this.insumosExistentesReset.filter(i=>this.transpaso.insumos.filter(insumo=>insumo.idInsumo==i.idInsumo).length==0);
 
       // Resetea el insumo seleccionado
+      this.cantidadDisponible = 0;
       this.selectedInsumo = {
         idInsumo:0,
         cantidadExistencia:0,
         nombreInsumo:''
       }
+
+      //Deselecciona el index
+      this.selectedIndex = -1;
     }
   }
 

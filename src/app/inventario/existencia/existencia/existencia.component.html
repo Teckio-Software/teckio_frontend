@@ -195,7 +195,7 @@
           {{ IE.unidad }}
         </td>
         <td class="px-1 py-1 text-end" [ngClass]="{ estilo1: IE.esDisponible }">
-          {{ IE.cantidadInsumos }}
+          {{ IE.cantidadInsumos | number: '1.4-4' }}
         </td>
       </tr>
     </tbody>

@@ -44,6 +44,7 @@ export class IndirectosComponent {
   }
 
   porcentajeRealConFormato: string = '';
+  selectedIndex: number = -1;
 
   existenEstimaciones: boolean = false;
 

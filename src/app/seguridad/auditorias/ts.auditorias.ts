@@ -6,5 +6,7 @@ export interface Logs {
   descripcion: string;
   dbContext: string;
   idUsuario: number;
+  nombreUsuario: string;
   idEmpresa: number;
+  nombreEmpresa: string;
 }
