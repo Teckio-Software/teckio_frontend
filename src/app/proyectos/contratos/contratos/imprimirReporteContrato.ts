@@ -190,14 +190,19 @@ export function imprimirReporteContratoPdf(reporte: ReporteContratoDTO) {
         table: {
           widths: ['50%', '50%'], // cada columna ocupa la mitad del ancho
           body: [[
-            { text: reporte.contrato.anticipoConFormato, style: 'small', alignment: 'right' },
-            { text: importeAnticipoConFormato, style: 'small', alignment: 'right' }
+            { text: reporte.contrato.anticipoConFormato, style: 'small', alignment: 'right' , margin: [0, 0, 0, 0],},
+            { text: importeAnticipoConFormato, style: 'small', alignment: 'right', margin: [0, 0, 0, 0], }
           ]]
         },
-      layout: 'noBorders', // quita los bordes de la tabla interna
+      layout: {
+    hLineWidth: () => 0,
+    vLineWidth: (i: number/*0..2*/) => (i === 1 ? 0.5 : 0), // solo la línea entre col 0 y 1
+    vLineColor: () => '#B9B9B9'
+  }, // quita los bordes de la tabla interna
+
       },
-      { text: reporte.contrato.ivaConFormato, style: 'small', alignment: 'right' },
-      { text: reporte.contrato.estatus === 0 ? "Capturado" : reporte.contrato.estatus === 1 ? "Autorizado" : reporte.contrato.estatus === 1 ? "Cerrado" : "Cancelado", style: 'small', alignment: 'left' },
+      { text: reporte.contrato.ivaConFormato, style: 'small', alignment: 'center' },
+      { text: reporte.contrato.estatus === 0 ? "Capturado" : reporte.contrato.estatus === 1 ? "Autorizado" : reporte.contrato.estatus === 1 ? "Cerrado" : "Cancelado", style: 'small', alignment: 'center' },
       { text: reporte.contrato.importeTotalConFormato, style: 'small', alignment: 'right' },
     ],
   ];
