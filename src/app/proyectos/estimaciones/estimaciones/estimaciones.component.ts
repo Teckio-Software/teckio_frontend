@@ -519,6 +519,8 @@ export class EstimacionesComponent implements OnInit {
     totalIva: string,
     totalConIVAnumber: number
   ) {
+    console.log('Anticipo: ',proyecto.anticipo+'%');
+    
     (<any>pdfMake).addVirtualFileSystem(pdfFonts);
   
     let totalEnLetras: string;
@@ -943,7 +945,7 @@ export class EstimacionesComponent implements OnInit {
       pageOrientation: 'landscape'
     };
   
-    pdfMake.createPdf(docDefinition).download();
+    pdfMake.createPdf(docDefinition).download(`Estimaciones.pdf`);
   }
 
   alerta(tipo: AlertaTipo, mensaje: string = '') {

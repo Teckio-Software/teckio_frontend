@@ -269,13 +269,51 @@ minimumFractionDigits: 2,
 maximumFractionDigits: 2,
 });
 
-  const indirectos = pu.porcentajeIndirecto*pu.precioUnitario;
+  let IndirectoPorcentaje = reporte.indirectos.find(i=>i.codigo === '001')?.porcentaje;
+  if(IndirectoPorcentaje == undefined){
+    IndirectoPorcentaje = 0
+  }
+  let IndirectoPorcentajeConFormato = reporte.indirectos.find(i=>i.codigo === '001')?.porcentajeConFormato;
+  if(IndirectoPorcentajeConFormato == undefined || IndirectoPorcentajeConFormato == null || IndirectoPorcentajeConFormato == ''){
+    IndirectoPorcentajeConFormato = '0.00%'
+  }
+  let FinanciamientoPorcentaje = reporte.indirectos.find(i=>i.codigo === '002')?.porcentaje;
+  if(FinanciamientoPorcentaje == undefined){
+    FinanciamientoPorcentaje = 0
+  }
+  let FinanciamientoPorcentajeConFormato = reporte.indirectos.find(i=>i.codigo === '002')?.porcentajeConFormato;
+  if(FinanciamientoPorcentajeConFormato == undefined || FinanciamientoPorcentajeConFormato == null || FinanciamientoPorcentajeConFormato == ''){
+    FinanciamientoPorcentajeConFormato = '0.00%'
+  }
+  let UtilidadPorcentajeConFormato = reporte.indirectos.find(i=>i.codigo === '003')?.porcentajeConFormato;
+  if(UtilidadPorcentajeConFormato == undefined || UtilidadPorcentajeConFormato == null || UtilidadPorcentajeConFormato == ''){
+    UtilidadPorcentajeConFormato = '0.00%'
+  }
+  let UtilidadPorcentaje = reporte.indirectos.find(i=>i.codigo === '003')?.porcentaje;
+  if(UtilidadPorcentaje == undefined){
+    UtilidadPorcentaje = 0
+  }
+  let CargosAdicionalesPorcentaje = reporte.indirectos.find(i=>i.codigo === '004')?.porcentaje;
+  if(CargosAdicionalesPorcentaje == undefined){
+    CargosAdicionalesPorcentaje = 0
+  }
+  let CargosAdicionalesPorcentajeConFormato = reporte.indirectos.find(i=>i.codigo === '004')?.porcentajeConFormato;
+  if(CargosAdicionalesPorcentajeConFormato == undefined || CargosAdicionalesPorcentajeConFormato == null || CargosAdicionalesPorcentajeConFormato == ''){
+    CargosAdicionalesPorcentajeConFormato = '0.00%'
+  }
+  const indirectos = (IndirectoPorcentaje/100)*pu.precioUnitario;
   const indirectosConFormato = formato.format(indirectos); 
-  const subtotal = pu.precioUnitario + indirectos;
-  const subtotalConFormato = formato.format(subtotal); 
+  const financiamientos = (FinanciamientoPorcentaje/100)*pu.precioUnitario;
+  const financiamientosConFormato = formato.format(financiamientos);
+  const utilidad = (UtilidadPorcentaje/100)*pu.precioUnitario;
+  const utilidadConFormato = formato.format(utilidad);
+  const cargosAdicionales = (CargosAdicionalesPorcentaje/100)*pu.precioUnitario;
+  const cargosAdicionalesConFormato = formato.format(cargosAdicionales);
   const cantidadIva = pu.precioUnitario * (reporte.proyecto.porcentajeIva / 100);  
   const cantidadIvaConFormato = formato.format(cantidadIva); 
-  const total = pu.precioUnitario + cantidadIva;
+  const subtotal = pu.precioUnitario + indirectos+utilidad+cargosAdicionales+financiamientos;
+  const subtotalConFormato = formato.format(subtotal); 
+  const total = subtotal + cantidadIva;
   const totalConFormato = formato.format(total); 
 
   content.push({
@@ -306,32 +344,20 @@ maximumFractionDigits: 2,
                 { text: pu.precioUnitarioConFormato, style: 'smallCantidadTotal'}
               ],
               [
-                { text: `Indirectos(${pu.porcentajeIndirecto}%)`, style: 'smallCantidadTotal'},
+                { text: `Indirectos(${IndirectoPorcentajeConFormato})`, style: 'smallCantidadTotal'},
                 { text: `$${indirectosConFormato}`, style: 'smallCantidadTotal'}
               ],
               [
-                { text: `Indirectos de campo(${pu.porcentajeIndirecto}%)`, style: 'smallCantidadTotal'},
-                { text: `$${indirectosConFormato}`, style: 'smallCantidadTotal'}
+                { text: `Financiamiento(${FinanciamientoPorcentajeConFormato})`, style: 'smallCantidadTotal'},
+                { text: `$${financiamientosConFormato}`, style: 'smallCantidadTotal'}
               ],
               [
-                { text: 'Subtotal', style: 'smallCantidadTotal'},
-                { text: `$${subtotalConFormato}`, style: 'smallCantidadTotal'}
+                { text: `Utilidad(${UtilidadPorcentajeConFormato})`, style: 'smallCantidadTotal'},
+                { text: `$${utilidadConFormato}`, style: 'smallCantidadTotal'}
               ],
               [
-                { text: `Financiamiento(${pu.porcentajeIndirecto}%)`, style: 'smallCantidadTotal'},
-                { text: `$${indirectosConFormato}`, style: 'smallCantidadTotal'}
-              ],
-              [
-                { text: 'Subtotal', style: 'smallCantidadTotal'},
-                { text: `$${subtotalConFormato}`, style: 'smallCantidadTotal'}
-              ],
-              [
-                { text: `Utilidad(${pu.porcentajeIndirecto}%)`, style: 'smallCantidadTotal'},
-                { text: `$${indirectosConFormato}`, style: 'smallCantidadTotal'}
-              ],
-              [
-                { text: `Cargos adicionales(${pu.porcentajeIndirecto}%)`, style: 'smallCantidadTotal'},
-                { text: `$${indirectosConFormato}`, style: 'smallCantidadTotal'}
+                { text: `Cargos adicionales(${CargosAdicionalesPorcentajeConFormato})`, style: 'smallCantidadTotal'},
+                { text: `$${cargosAdicionalesConFormato}`, style: 'smallCantidadTotal'}
               ],
             [
               { text: 'Precio unitario', style: 'smallCantidadTotal' },
@@ -341,6 +367,10 @@ maximumFractionDigits: 2,
                 alignment: 'right',
               },
             ],
+            [
+                { text: 'Subtotal', style: 'smallCantidadTotal'},
+                { text: `$${subtotalConFormato}`, style: 'smallCantidadTotal'}
+              ],
             [
               { text: `IVA(${reporte.proyecto.porcentajeIva})%`, style: 'smallCantidadTotal' },
               {
@@ -422,7 +452,7 @@ maximumFractionDigits: 2,
 
   pdfMake
     .createPdf(docDefinition)
-    .download(`Análisis de precio unitario ${reporte.titulo}.pdf`);
+    .download(`Análisis de precio unitario${reporte.titulo}.pdf`);
 }
 
 export function imprimirReporte(reporte: Reporte) {
