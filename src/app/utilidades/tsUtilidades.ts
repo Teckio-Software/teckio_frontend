@@ -189,7 +189,7 @@ export const pages: Page[] = [
         imageUrl: 'assets/salida2.svg',
         permiso: ['SeccionSalidaAlmacen'],
       },{
-        name: 'Transpaso almacén',
+        name: 'Traspaso almacén',
         link: '/almacentranspaso',
         imageUrl: 'assets/salida2.svg',
         permiso: ['SeccionTranspasoAlmacen'],
