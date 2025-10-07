@@ -81,10 +81,10 @@
                 placeholder="Escribe el número de sucursal"
                 formControlName="NumeroSucursal"
                 appOnlyNumbers
-                maxlength="20"
+                maxlength="5"
                 (change)="errorNumSucursal.estatus = false; errorGlobal = false"
               />
-              <p [ngClass]="formulario.value.NumeroSucursal.length>=20? 'text-green-400' : errorNumSucursal.estatus ? 'text-red-500' : 'text-gray-500'" class="text-sm w-full text-end">{{formulario.value.NumeroSucursal.length}}/20</p>
+              <p [ngClass]="formulario.value.NumeroSucursal.length>=3? 'text-green-400' : errorNumSucursal.estatus ? 'text-red-500' : 'text-gray-500'" class="text-sm w-full text-end">{{formulario.value.NumeroSucursal.length}}/5</p>
               <div *ngIf="errorNumSucursal.estatus" class="text-red-500 text-sm mb-2">
                 *{{errorNumSucursal.descripcion}}
               </div>

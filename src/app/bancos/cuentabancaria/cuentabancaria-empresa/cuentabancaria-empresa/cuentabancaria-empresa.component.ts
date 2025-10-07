@@ -96,9 +96,9 @@ export class CuentabancariaEmpresaComponent {
         this.errorNumCuenta.descripcion = "El campo 'Número de cuenta' es requerido";
         c = false;
       }
-      if (this.cuentaBancaria.numeroSucursal.trim().length<20){
+      if (this.cuentaBancaria.numeroSucursal.trim().length<3){
         this.errorNumSucursal.estatus = true;
-        this.errorNumSucursal.descripcion = "El campo 'Número de sucursal' debe tener 20 caracteres";
+        this.errorNumSucursal.descripcion = "El campo 'Número de sucursal' debe tener 3 caracteres";
         c = false;
       }
       if (this.cuentaBancaria.numeroSucursal.trim() == "" || this.cuentaBancaria.numeroSucursal == undefined){
