@@ -446,6 +446,13 @@ const routes: Routes = [
         (module) => module.ImagenesModule
       ),
   },
+  {
+    path: 'almacentranspaso',
+    loadChildren: () =>
+      import(`./inventario/almacenTranspaso/almacen-transpaso.module`).then(
+        (module) => module.AlmacenTranspasoModule
+      ),
+  },
 
   { path: '**', redirectTo: '' },
 ];

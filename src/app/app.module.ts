@@ -172,6 +172,7 @@ import { GlosarioComponent } from './documentacion/glosario/glosario.component';
 import { ModalGlosarioComponent } from './documentacion/modal-glosario/modal-glosario.component';
 import { DocumentacionModule } from './documentacion/documentacion.module';
 import { ImagenesComponent } from './seguridad/imagenes/imagenes.component';
+import { AlmacenTranspasoComponent } from './inventario/almacenTranspaso/almacen-transpaso.component';
 
 export function playerFactory() {
   return player;
@@ -328,6 +329,7 @@ export function playerFactory() {
     OnlyNumbersDirective,
     AuditoriasComponent,
     ImagenesComponent,
+    AlmacenTranspasoComponent
   ],
 
   imports: [
