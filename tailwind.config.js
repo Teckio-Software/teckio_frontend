@@ -2,7 +2,7 @@ import { extend } from "jquery";
 
 /** @type {import('tailwindcss').Config} */
 
-export const content = ["./src/**/*.{html,ts}"];
+export const content = ["./src/**/*.{html,ts}", "./node_modules/flowbite/**/*.js", "./node_modules/flowbite/**/*.ts"];
 export const theme = {
   extend: {
     fontFamily: {
@@ -71,5 +71,6 @@ export const theme = {
   plugins: [
     require("tailwindcss"),
     require("autoprefixer"),
+    require('flowbite/plugin')
   ],
 };

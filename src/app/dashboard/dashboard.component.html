@@ -1,0 +1,619 @@
+<div class="grid grid-cols-4 grid-rows-1 gap-4 w-full">
+  <div class="border border-[#d9d9d9] rounded-xl bg-white px-14 py-6">
+    <div class="flex flex-col gap-2">
+      <p class="m-0 text-[#838383] text-lg">Total de proyectos</p>
+      <p class="m-0 text-4xl font-black" [countUp]="numeroDeProyectos"></p>
+      <div class="m-0 flex gap-1 items-center">
+        <img
+          src="../../assets/arrow_up.svg"
+          alt="arrow up"
+          class="w-5 h-5 animate-bounce-once"
+        />
+        <div class="flex m-0">
+          <p class="m-0 text-xs text-[#009951]" [countUp]="10"></p>
+          <p class="m-0 text-xs text-[#009951]">%</p>
+        </div>
+        <p class="m-0 text-xs text-[#838383]">desde el mes anterior</p>
+      </div>
+    </div>
+  </div>
+  <div class="border border-[#d9d9d9] rounded-xl bg-white px-14 py-6">
+    <div class="flex flex-col gap-2">
+      <p class="m-0 text-[#838383] text-lg">Proyectos terminados</p>
+      <p class="m-0 text-4xl font-black" [countUp]="2"></p>
+      <div class="m-0 flex gap-1 items-center">
+        <img
+          src="../../assets/arrow_up.svg"
+          alt="arrow up"
+          class="w-5 h-5 animate-bounce-once"
+        />
+        <div class="flex m-0">
+          <p class="m-0 text-xs text-[#009951]" [countUp]="10"></p>
+          <p class="m-0 text-xs text-[#009951]">%</p>
+        </div>
+        <p class="m-0 text-xs text-[#838383]">desde el mes anterior</p>
+      </div>
+    </div>
+  </div>
+  <div class="border border-[#d9d9d9] rounded-xl bg-white px-14 py-6">
+    <div class="flex flex-col gap-2">
+      <p class="m-0 text-[#838383] text-lg">Proyectos en curso</p>
+      <p class="m-0 text-4xl font-black" [countUp]="30"></p>
+      <div class="m-0 flex gap-1 items-center">
+        <img
+          src="../../assets/arrow_up.svg"
+          alt="arrow up"
+          class="w-5 h-5 animate-bounce-once"
+        />
+        <div class="flex m-0">
+          <p class="m-0 text-xs text-[#009951]" [countUp]="10"></p>
+          <p class="m-0 text-xs text-[#009951]">%</p>
+        </div>
+        <p class="m-0 text-xs text-[#838383]">desde el mes anterior</p>
+      </div>
+    </div>
+  </div>
+  <div class="border border-[#d9d9d9] rounded-xl bg-white px-14 py-6">
+    <div class="flex flex-col gap-2">
+      <p class="m-0 text-[#838383] text-lg">Proyectos pendientes</p>
+      <p class="m-0 text-4xl font-black" [countUp]="2"></p>
+      <div class="m-0 flex gap-1 items-center">
+        <img
+          src="../../assets/arrow-down-solid-full.svg"
+          alt="arrow up"
+          class="w-5 h-5 animate-bounce-once"
+        />
+        <div class="flex m-0">
+          <p class="m-0 text-xs text-[#f04b49]" [countUp]="10"></p>
+          <p class="m-0 text-xs text-[#f04b49]">%</p>
+        </div>
+        <p class="m-0 text-xs text-[#838383]">desde el mes anterior</p>
+      </div>
+    </div>
+  </div>
+  <div
+    class="row-span-2 row-start-2 border border-[#d9d9d9] rounded-xl bg-white h-full"
+  >
+    <div
+      class="row-span-2 row-start-2 border border-[#d9d9d9] rounded-xl bg-white h-full flex items-center justify-center"
+    >
+      <div class="w-full h-[25rem] py-2 px-4 flex flex-col gap-2">
+        <div class="flex">
+          <p class="m-0 text-2xl font-black">$</p>
+          <p class="m-0 text-2xl font-black" [countUp]="300000.0"></p>
+        </div>
+
+        <div>
+          <div class="flex justify-between">
+            <p class="m-0 text-[#838383] text-lg">Balance trimestral</p>
+            <div class="flex items-center">
+              <p
+                class="m-0 text-lg text-[#009951] font-medium"
+                [countUp]="10"
+              ></p>
+              <p class="m-0 text-lg text-[#009951] font-medium">%</p>
+              <img
+                src="../../assets/arrow_up.svg"
+                alt="arrow up"
+                class="w-6 h-6 animate-bounce-once"
+              />
+            </div>
+          </div>
+        </div>
+
+        <p-chart
+          type="line"
+          [data]="data"
+          [options]="options"
+          class="w-full h-full mt-4"
+        ></p-chart>
+      </div>
+    </div>
+  </div>
+  <div
+    class="col-span-2 row-span-2 col-start-1 row-start-4 border border-[#d9d9d9] rounded-xl bg-white px-4 py-6 flex flex-col gap-3"
+  >
+    <p class="m-0 text-2xl font-black">Requisiciones</p>
+    <div class="h-px w-full bg-[#c5c5c5]"></div>
+    <table class="w-full">
+      <thead class="text-[#727272] text-base text-center">
+        <th class="font-medium">No. orden</th>
+        <th class="font-medium">Proyecto</th>
+        <th class="font-medium">Fecha de registro</th>
+        <th class="font-medium">Surtido</th>
+        <th class="font-medium">Estatus</th>
+        <th class="font-medium">Acciones</th>
+      </thead>
+      <tbody class="divide-y divide-[#c5c5c5] text-center align-middle">
+        <ng-container *ngIf="isLoading; else rows">
+          <tr *ngFor="let _ of [0, 1, 2, 3, 4]" class="hover:bg-transparent">
+            <td class="py-4 px-2">
+              <div
+                class="h-5 w-16 rounded animate-pulse bg-gray-100 mx-auto"
+              ></div>
+            </td>
+            <td class="py-4 px-2">
+              <div
+                class="h-5 w-28 rounded animate-pulse bg-gray-100 mx-auto"
+              ></div>
+            </td>
+            <td class="py-4 px-2">
+              <div
+                class="h-5 w-32 rounded animate-pulse bg-gray-100 mx-auto"
+              ></div>
+            </td>
+            <td class="py-4 px-2">
+              <div
+                class="h-5 w-24 rounded animate-pulse bg-gray-100 mx-auto"
+              ></div>
+            </td>
+            <td class="py-4 px-2">
+              <div
+                class="h-7 w-36 rounded-lg animate-pulse bg-gray-100 mx-auto"
+              ></div>
+            </td>
+            <td class="py-4 px-2">
+              <div
+                class="h-5 w-5 rounded-full animate-pulse bg-gray-100 mx-auto"
+              ></div>
+            </td>
+          </tr>
+        </ng-container>
+
+        <ng-template #rows>
+          <tr
+            *ngFor="let requisicion of requisiciones"
+            class="font-normal hover:bg-gray-50 transition"
+          >
+            <td class="py-4 px-2">
+              <p class="m-0">{{ requisicion.id }}</p>
+            </td>
+            <td class="py-4 px-2">
+              <p class="m-0">{{ requisicion.idProyecto }}</p>
+            </td>
+            <td class="py-4 px-2">
+              <p class="m-0">{{ formatFecha(requisicion.fechaRegistro) }}</p>
+            </td>
+            <td class="py-4 px-2">
+              <p
+                *ngIf="requisicion.estatusInsumosSurtIdos === 0"
+                class="text-red-500 font-medium m-0 align-middle"
+              >
+                Sin compras
+              </p>
+              <p
+                *ngIf="requisicion.estatusInsumosSurtIdos === 1"
+                class="text-amber-500 font-medium m-0 align-middle"
+              >
+                Pendiente
+              </p>
+              <p
+                *ngIf="requisicion.estatusInsumosSurtIdos === 2"
+                class="text-blue-600 font-medium m-0 align-middle"
+              >
+                Parcialmente
+              </p>
+              <p
+                *ngIf="requisicion.estatusInsumosSurtIdos === 3"
+                class="text-green-600 font-medium m-0 align-middle"
+              >
+                Surtido totalmente
+              </p>
+            </td>
+            <td class="py-4 px-2">
+              <div class="flex justify-center items-center">
+                <div
+                  *ngIf="requisicion.estatusInsumosComprados === 0"
+                  class="bg-amber-50 text-amber-500 font-medium rounded-lg px-2 py-1 w-36"
+                >
+                  Sin cotizaciones
+                </div>
+                <div
+                  *ngIf="requisicion.estatusInsumosComprados === 1"
+                  class="bg-blue-50 text-blue-500 font-medium rounded-lg px-2 py-1 w-36"
+                >
+                  Capturada
+                </div>
+                <div
+                  *ngIf="requisicion.estatusInsumosComprados === 2"
+                  class="bg-blue-50 text-blue-500 font-medium rounded-lg px-2 py-1 w-36"
+                >
+                  Autorizada
+                </div>
+                <div
+                  *ngIf="requisicion.estatusInsumosComprados === 3"
+                  class="bg-green-100 text-green-600 font-medium rounded-lg px-2 py-1 w-36"
+                >
+                  Comprada
+                </div>
+                <div
+                  *ngIf="requisicion.estatusInsumosComprados === 4"
+                  class="bg-red-100 text-red-600 font-medium rounded-lg px-2 py-1 w-36"
+                >
+                  Cancelada
+                </div>
+              </div>
+            </td>
+            <td class="py-4 px-2">
+              <button
+                class="p-2 rounded-full hover:bg-gray-100 active:bg-gray-200 transition"
+              >
+                <img
+                  src="./assets/arrow-right-solid-full.svg"
+                  alt="Ver detalle"
+                  class="w-5"
+                />
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </tbody>
+    </table>
+    <div class="flex justify-end">
+      <button
+        class="flex gap-2 items-center w-fit"
+        (click)="navigateToRequisiciones()"
+      >
+        <p class="m-0 text-[#3867ff] text-base font-medium">
+          Todas las requisiciones
+        </p>
+        <img
+          src="../../assets/chevron-right-solid-full.svg"
+          alt="Flecha derecha"
+          class="w-8 h-8 inline"
+        />
+      </button>
+    </div>
+  </div>
+  <div
+    class="col-span-2 row-span-2 col-start-2 row-start-2 border border-[#d9d9d9] rounded-xl bg-white px-4 py-6 flex flex-col gap-3"
+  >
+    <p class="m-0 text-2xl font-black">Progreso de los proyectos</p>
+    <div class="h-px w-full bg-[#c5c5c5]"></div>
+    <div class="flex justify-between">
+      <p class="m-0 text-[#838383] text-lg">
+        Proyectos: <span class="font-black text-black" [countUp]="30"></span>
+      </p>
+      <p class="m-0 text-[#838383] text-lg">
+        Porcentaje total: <span class="font-black text-black">93%</span>
+      </p>
+    </div>
+    <div class="flex flex-col gap-6">
+      <div class="flex flex-row gap-3 items-center justify-between">
+        <label for="file" class="text-lg w-1/4">Casa habitación de...</label>
+
+        <div class="w-3/4">
+          <app-progress-bar
+            [progress]="41"
+            [color]="'bg-blue-500'"
+          ></app-progress-bar>
+        </div>
+
+        <div class="flex w-12 justify-end">
+          <p class="text-lg font-black m-0" [countUp]="41"></p>
+          <p class="text-lg font-black m-0">%</p>
+        </div>
+      </div>
+      <div class="flex flex-row gap-3 items-center justify-between">
+        <label for="file" class="text-lg w-1/4">Local comercial de...</label>
+
+        <div class="w-3/4">
+          <app-progress-bar
+            [progress]="22"
+            [color]="'bg-red-500'"
+          ></app-progress-bar>
+        </div>
+
+        <div class="flex w-12 justify-end">
+          <p class="text-lg font-black m-0" [countUp]="22"></p>
+          <p class="text-lg font-black m-0">%</p>
+        </div>
+      </div>
+      <div class="flex flex-row gap-3 items-center justify-between">
+        <label for="file" class="text-lg w-1/4">Bodega industrial...</label>
+
+        <div class="w-3/4">
+          <app-progress-bar
+            [progress]="15"
+            [color]="'bg-pink-500'"
+          ></app-progress-bar>
+        </div>
+
+        <div class="flex w-12 justify-end">
+          <p class="text-lg font-black m-0" [countUp]="15"></p>
+          <p class="text-lg font-black m-0">%</p>
+        </div>
+      </div>
+      <div class="flex flex-row gap-3 items-center justify-between">
+        <label for="file" class="text-lg w-1/4">Cabaña turística en...</label>
+
+        <div class="w-3/4">
+          <app-progress-bar
+            [progress]="12"
+            [color]="'bg-green-500'"
+          ></app-progress-bar>
+        </div>
+
+        <div class="flex w-12 justify-end">
+          <p class="text-lg font-black m-0" [countUp]="12"></p>
+          <p class="text-lg font-black m-0">%</p>
+        </div>
+      </div>
+      <div class="flex flex-row gap-3 items-center justify-between">
+        <label for="file" class="text-lg w-1/4">Aulas escolares...</label>
+
+        <div class="w-3/4">
+          <app-progress-bar
+            [progress]="10"
+            [color]="'bg-purple-500'"
+          ></app-progress-bar>
+        </div>
+
+        <div class="flex w-12 justify-end">
+          <p class="text-lg font-black m-0" [countUp]="10"></p>
+          <p class="text-lg font-black m-0">%</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="row-span-2 col-start-4 row-start-2 border border-[#d9d9d9] rounded-xl bg-white px-4 py-6 flex flex-col gap-3"
+  >
+    <p class="m-0 text-2xl font-black">Proyectos en curso</p>
+    <div class="h-px w-full bg-white"></div>
+    <div class="flex justify-between text-lg">
+      <p class="m-0 text-[#838383]">Casa habitación de 2 plantas</p>
+      <div class="flex w-12 justify-end">
+        <p class="text-lg font-black m-0">$</p>
+        <p class="text-lg font-black m-0" [countUp]="1350000.54"></p>
+      </div>
+    </div>
+    <div class="h-px w-full bg-[#c5c5c5]"></div>
+    <div class="flex justify-between text-lg">
+      <p class="m-0 text-[#838383]">Local comercial de 2 niveles</p>
+      <div class="flex w-12 justify-end">
+        <p class="text-lg font-black m-0">$</p>
+        <p class="text-lg font-black m-0" [countUp]="2800000"></p>
+      </div>
+    </div>
+    <div class="h-px w-full bg-[#c5c5c5]"></div>
+    <div class="flex justify-between text-lg">
+      <p class="m-0 text-[#838383]">Bodega industrial ligera</p>
+      <div class="flex w-12 justify-end">
+        <p class="text-lg font-black m-0">$</p>
+        <p class="text-lg font-black m-0" [countUp]="1500000"></p>
+      </div>
+    </div>
+    <div class="h-px w-full bg-[#c5c5c5]"></div>
+    <div class="flex justify-between text-lg">
+      <p class="m-0 text-[#838383]">Cabaña turística en zona rural</p>
+      <div class="flex w-12 justify-end">
+        <p class="text-lg font-black m-0">$</p>
+        <p class="text-lg font-black m-0" [countUp]="900000"></p>
+      </div>
+    </div>
+    <div class="h-px w-full bg-[#c5c5c5]"></div>
+    <div class="flex justify-between text-lg">
+      <p class="m-0 text-[#838383]">Aulas escolares modulares</p>
+      <div class="flex w-12 justify-end">
+        <p class="text-lg font-black m-0">$</p>
+        <p class="text-lg font-black m-0" [countUp]="2500000"></p>
+      </div>
+    </div>
+    <div class="flex justify-end">
+      <button
+        class="flex gap-2 items-center w-fit"
+        (click)="navigateToProjects()"
+      >
+        <p class="m-0 text-[#3867ff] text-base font-medium">
+          Todos los proyectos
+        </p>
+        <img
+          src="../../assets/chevron-right-solid-full.svg"
+          alt="Flecha derecha"
+          class="w-8 h-8 inline"
+        />
+      </button>
+    </div>
+  </div>
+  <div
+    class="col-span-2 row-span-2 col-start-3 row-start-4 border border-[#d9d9d9] rounded-xl bg-white px-4 py-6 flex flex-col gap-3"
+  >
+    <p class="m-0 text-2xl font-black">Presupuestos</p>
+    <div class="h-px w-full bg-[#c5c5c5]"></div>
+    <table class="w-full">
+      <thead class="text-[#727272] text-base">
+        <th class="font-medium px-2">Nombre del proyecto</th>
+        <th class="font-medium px-2">Código</th>
+        <th class="font-medium px-2 text-center">Estatus</th>
+        <th class="font-medium px-2">Acciones</th>
+      </thead>
+      <tbody class="divide-y divide-[#c5c5c5] align-middle">
+        <ng-container *ngIf="isLoading; else row">
+          <tr *ngFor="let _ of [0, 1, 2, 3, 4]" class="hover:bg-transparent">
+            <td class="py-4 px-2">
+              <div class="h-5 w-48 rounded animate-pulse bg-gray-100"></div>
+            </td>
+            <td class="py-4 px-2">
+              <div class="h-5 w-24 rounded animate-pulse bg-gray-100"></div>
+            </td>
+            <td class="py-4 px-2">
+              <div class="flex justify-center items-center">
+                <div
+                  class="h-7 w-36 rounded-lg animate-pulse bg-gray-100"
+                ></div>
+              </div>
+            </td>
+            <td class="py-4 px-2">
+              <div class="h-5 w-5 rounded-full animate-pulse bg-gray-100"></div>
+            </td>
+          </tr>
+        </ng-container>
+
+        <!-- Datos -->
+        <ng-template #row>
+          <tr class="font-normal hover:bg-gray-50 transition">
+            <td class="py-4 px-3">
+              <p class="m-0">Casa habitación de 2 plantas</p>
+            </td>
+            <td class="py-4 px-3">
+              <p class="m-0">014579</p>
+            </td>
+            <td class="py-4 px-3">
+              <div class="flex justify-center items-center">
+                <div
+                  class="bg-amber-50 text-amber-500 font-medium rounded-lg px-2 py-1 w-36 text-center"
+                >
+                  En progreso
+                </div>
+              </div>
+            </td>
+
+            <td class="py-4 px-3">
+              <button
+                class="p-2 rounded-full hover:bg-gray-100 active:bg-gray-200 transition"
+              >
+                <img
+                  src="./assets/arrow-right-solid-full.svg"
+                  alt="Ver detalle"
+                  class="w-5"
+                />
+              </button>
+            </td>
+          </tr>
+          <tr class="font-normal hover:bg-gray-50 transition">
+            <td class="py-4 px-3">
+              <p class="m-0">Local comercial de 2 niveles</p>
+            </td>
+            <td class="py-4 px-3">
+              <p class="m-0">014579</p>
+            </td>
+            <td class="py-4 px-3">
+              <div class="flex justify-center items-center">
+                <div
+                  class="bg-green-100 text-green-600 font-medium rounded-lg px-2 py-1 w-36 text-center"
+                >
+                  Autorizado
+                </div>
+              </div>
+            </td>
+
+            <td class="py-4 px-3">
+              <button
+                class="p-2 rounded-full hover:bg-gray-100 active:bg-gray-200 transition"
+              >
+                <img
+                  src="./assets/arrow-right-solid-full.svg"
+                  alt="Ver detalle"
+                  class="w-5"
+                />
+              </button>
+            </td>
+          </tr>
+          <tr class="font-normal hover:bg-gray-50 transition">
+            <td class="py-4 px-3">
+              <p class="m-0">Bodega industrial ligera</p>
+            </td>
+            <td class="py-4 px-3">
+              <p class="m-0">014579</p>
+            </td>
+            <td class="py-4 px-3">
+              <div class="flex justify-center items-center">
+                <div
+                  class="bg-amber-50 text-amber-500 font-medium rounded-lg px-2 py-1 w-36 text-center"
+                >
+                  En progreso
+                </div>
+              </div>
+            </td>
+
+            <td class="py-4 px-3">
+              <button
+                class="p-2 rounded-full hover:bg-gray-100 active:bg-gray-200 transition"
+              >
+                <img
+                  src="./assets/arrow-right-solid-full.svg"
+                  alt="Ver detalle"
+                  class="w-5"
+                />
+              </button>
+            </td>
+          </tr>
+          <tr class="font-normal hover:bg-gray-50 transition">
+            <td class="py-4 px-3">
+              <p class="m-0">Cabaña turística en zona rural</p>
+            </td>
+            <td class="py-4 px-3">
+              <p class="m-0">014579</p>
+            </td>
+            <td class="py-4 px-3">
+              <div class="flex justify-center items-center">
+                <div
+                  class="bg-amber-50 text-amber-500 font-medium rounded-lg px-2 py-1 w-36 text-center"
+                >
+                  En progreso
+                </div>
+              </div>
+            </td>
+
+            <td class="py-4 px-3">
+              <button
+                class="p-2 rounded-full hover:bg-gray-100 active:bg-gray-200 transition"
+              >
+                <img
+                  src="./assets/arrow-right-solid-full.svg"
+                  alt="Ver detalle"
+                  class="w-5"
+                />
+              </button>
+            </td>
+          </tr>
+          <tr class="font-normal hover:bg-gray-50 transition">
+            <td class="py-4 px-3">
+              <p class="m-0">Aulas escolares modulares</p>
+            </td>
+            <td class="py-4 px-3">
+              <p class="m-0">014579</p>
+            </td>
+            <td class="py-4 px-3">
+              <div class="flex justify-center items-center">
+                <div
+                  class="bg-green-100 text-green-600 font-medium rounded-lg px-2 py-1 w-36 text-center"
+                >
+                  Autorizado
+                </div>
+              </div>
+            </td>
+
+            <td class="py-4 px-3">
+              <button
+                class="p-2 rounded-full hover:bg-gray-100 active:bg-gray-200 transition"
+              >
+                <img
+                  src="./assets/arrow-right-solid-full.svg"
+                  alt="Ver detalle"
+                  class="w-5"
+                />
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </tbody>
+    </table>
+    <div class="flex justify-end">
+      <button
+        class="flex gap-2 items-center w-fit"
+        (click)="navigateToRequisiciones()"
+      >
+        <p class="m-0 text-[#3867ff] text-base font-medium">
+          Todas los presupuestos
+        </p>
+        <img
+          src="../../assets/chevron-right-solid-full.svg"
+          alt="Flecha derecha"
+          class="w-8 h-8 inline"
+        />
+      </button>
+    </div>
+  </div>
+</div>
