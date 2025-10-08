@@ -1,3 +1,4 @@
+import { ChartModule } from 'primeng/chart';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -162,11 +163,14 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ProductosServiciosComponent } from './gestion-ventas/productos-servicios/productos-servicios.component';
 import { ImprimirModalComponent } from './proyectos/precio-unitario/precio-unitario/imprimir-modal/imprimir-modal.component';
 import { FieldsetModule } from 'primeng/fieldset';
-import { A11yModule } from "@angular/cdk/a11y";
+import { A11yModule } from '@angular/cdk/a11y';
 import { UppercaseInputDirective } from './directiva/uppercase.directive';
 import { OnlyNumbersDirective } from './directiva/onlynumbers.directive';
 import { AuditoriaService } from './seguridad/auditorias/auditorias.service';
 import { AuditoriasComponent } from './seguridad/auditorias/auditorias.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { CountUpDirective } from './directiva/countup.directive';
+import { ProgressBarComponent } from './dashboard/components/progress-bar/progress-bar.component';
 
 export function playerFactory() {
   return player;
@@ -319,8 +323,10 @@ export function playerFactory() {
     ImprimirModalComponent,
     UppercaseInputDirective,
     OnlyNumbersDirective,
-    AuditoriasComponent
-
+    AuditoriasComponent,
+    DashboardComponent,
+    CountUpDirective,
+    ProgressBarComponent,
   ],
 
   imports: [
@@ -344,7 +350,8 @@ export function playerFactory() {
     ScrollingModule,
     FieldsetModule,
     A11yModule,
-],
+    ChartModule,
+  ],
   exports: [LeftMenuComponent],
   providers: [
     SidenavService,
