@@ -1,3 +1,4 @@
+import { GlosarioRoutingModule } from './documentacion/glosario/glosario-routing.module';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -425,10 +426,18 @@ const routes: Routes = [
       ).then((module) => module.ProductosServiciosModule),
   },
   {
+
     path: 'auditorias',
     loadChildren: () =>
       import(`./seguridad/auditorias/auditorias.module`).then(
         (module) => module.AuditoriasModule,
+      ),
+  },
+  {
+     path: 'glosario',
+    loadChildren: () =>
+      import(`./documentacion/glosario/glosario.module`).then(
+        (module) => module.GlosarioModule
       ),
   },
 

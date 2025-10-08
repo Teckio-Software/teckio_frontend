@@ -19,3 +19,4 @@ describe('ModalNewRequisicionComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+ 

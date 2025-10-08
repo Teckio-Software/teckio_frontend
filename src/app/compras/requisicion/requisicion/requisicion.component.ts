@@ -491,8 +491,8 @@ export class RequisicionComponent implements OnInit {
   }
 
   regresarARequisiciones(){
-    this.veiewInsumos = false; 
-    this.cargarRegistros(); 
+    this.veiewInsumos = false;
+    this.cargarRegistros();
     this.insumosEstado = false;
   }
   ///////////* PAGINATION */////////

@@ -59,6 +59,7 @@ import Swal from 'sweetalert2';
 import { ModalAlertComponent } from 'src/app/utilidades/modal-alert/modal-alert.component';
 import { operacionesXPrecioUnitarioDetalleDTO } from '../../precio-unitario-detalle/tsOperacionesXPrecioUnitarioDetalle';
 import { EstimacionesService } from '../../estimaciones/estimaciones.service';
+import { AlertaTipo } from 'src/app/utilidades/alert/alert.component';
 import { error, log } from 'node:console';
 import { IndirectosServiceService } from '../../indirectos/indirectos-service.service';
 
@@ -235,7 +236,7 @@ export class PrecioUnitarioComponent implements OnInit {
   porcentajePrestaciones = 0;
   diasNoLaborales = 0;
   diasPagados = 0;
-  total = 0;
+  total: number = 0;
   totalConFormato = '';
   totalSinIvaConFormato = '';
   totalIvaConFormato = '';
@@ -480,7 +481,11 @@ export class PrecioUnitarioComponent implements OnInit {
 
   selectedGenerador: number = 0;
 
-  esCompuesto: boolean = false;
+    alertaSuccess: boolean = false;
+    alertaMessage: string = '';
+    alertaTipo: AlertaTipo = AlertaTipo.none;
+    AlertaTipo = AlertaTipo;
+    esCompuesto: boolean = false;
 
   @ViewChild('InputOperacionGenerador') InputOperacionGenerador: any;
 
@@ -577,6 +582,27 @@ export class PrecioUnitarioComponent implements OnInit {
     this.selectedProyecto = Number(idProyecto);
     this.selectedEmpresa = Number(idEmpresa);
     this.Unidades = this.unidades.Getunidades();
+  }
+
+  alerta(tipo: AlertaTipo, mensaje: string = '') {
+    if (tipo === AlertaTipo.none) {
+      this.cerrarAlerta();
+      return;
+    }
+
+    this.alertaTipo = tipo;
+    this.alertaMessage = mensaje || 'Ocurrió un error';
+    this.alertaSuccess = true;
+
+    setTimeout(() => {
+      this.cerrarAlerta();
+    }, 3000);
+  }
+
+  cerrarAlerta() {
+    this.alertaSuccess = false;
+    this.alertaTipo = AlertaTipo.none;
+    this.alertaMessage = '';
   }
 
   draggedItem: any;
@@ -974,6 +1000,8 @@ export class PrecioUnitarioComponent implements OnInit {
         if (this.preciosUnitarios.length > 0) {
           if (this.preciosUnitarios[0].esAvanceObra) {
             this.esAutorizado = true;
+          }else{
+            this.esAutorizado = false;
           }
         }
 
@@ -2330,11 +2358,11 @@ export class PrecioUnitarioComponent implements OnInit {
           ejeZ: '',
           cantidad: 0,
           x: 1,
-          xDecimal: '$1.00',
+          xDecimal: '1.00',
           y: 1,
-          yDecimal: '$1.00',
+          yDecimal: '1.00',
           z: 1,
-          zDecimal: '$1.00',
+          zDecimal: '1.00',
           cantidadTotal: 0,
           totalDecimal: '$0.00',
           cantidadDecimal: '0.00',
@@ -2750,12 +2778,12 @@ export class PrecioUnitarioComponent implements OnInit {
                 ejeZ: '',
                 cantidad: 0,
                 x: 1,
-                xDecimal: '$1.00',
+                xDecimal: '1.00',
                 y: 1,
-                yDecimal: '$1.00',
+                yDecimal: '1.00',
                 z: 1,
-                zDecimal: '$1.00',
-                totalDecimal: '$0.00',
+                zDecimal: '1.00',
+                totalDecimal: '0.00',
                 cantidadTotal: 0,
                 cantidadDecimal: '0.00',
                 cantidadOperacion: '',
@@ -2788,12 +2816,12 @@ export class PrecioUnitarioComponent implements OnInit {
                 ejeZ: '',
                 cantidad: 0,
                 x: 1,
-                xDecimal: '$1.00',
+                xDecimal: '1.00',
                 y: 1,
-                yDecimal: '$1.00',
+                yDecimal: '1.00',
                 z: 1,
-                zDecimal: '$1.00',
-                totalDecimal: '$0.00',
+                zDecimal: '1.00',
+                totalDecimal: '0.00',
                 cantidadTotal: 0,
                 cantidadDecimal: '0.00',
                 cantidadOperacion: '',
@@ -2841,12 +2869,12 @@ export class PrecioUnitarioComponent implements OnInit {
               ejeZ: '',
               cantidad: 0,
               x: 1,
-              xDecimal: '$1.00',
+              xDecimal: '1.00',
               y: 1,
-              yDecimal: '$1.00',
+              yDecimal: '1.00',
               z: 1,
-              zDecimal: '$1.00',
-              totalDecimal: '$0.00',
+              zDecimal: '1.00',
+              totalDecimal: '0.00',
               cantidadTotal: 0,
               cantidadDecimal: '0.00',
               cantidadOperacion: '',
@@ -4165,6 +4193,22 @@ export class PrecioUnitarioComponent implements OnInit {
       });
   }
 
+  RemoverAutorizacionPresupuesto() {
+    this.displayCarga = 'flex';
+    this.precioUnitarioService
+      .removerAutorizacionPresupuesto(this.selectedProyecto, this.selectedEmpresa)
+      .subscribe((datos) => {
+        if(datos.estatus){
+          this.cargarRegistros();
+          this.displayCarga = 'none';
+        }else{
+          this.displayCarga = 'none';
+          this.alerta(AlertaTipo.error, datos.descripcion);
+        }
+      });
+  }
+
+
   nuevaPartidaAdicional() {
     var ultimoPU = this.preciosUnitarios[this.preciosUnitarios.length - 1];
     this.preciosUnitarios.push({
@@ -4591,7 +4635,11 @@ export class PrecioUnitarioComponent implements OnInit {
     this.selectedCantidadConFormato = new Intl.NumberFormat('es-MX', {
       minimumFractionDigits: 4,
     }).format(this.selectedCantidad);
-    this.selectedRendimiento = 1 / this.selectedCantidad;
+    if(this.selectedCantidad == 0){
+      this.selectedRendimiento = 0;
+    }else{
+      this.selectedRendimiento = 1 / this.selectedCantidad;
+    }
     this.selectedRendimientoConFormato = new Intl.NumberFormat('es-MX', {
       minimumFractionDigits: 4,
     }).format(this.selectedRendimiento);
@@ -4617,10 +4665,18 @@ export class PrecioUnitarioComponent implements OnInit {
   }
 
   asignarCantidad(newValue: number) {
+    if(newValue == 0){
+      this.selectedRendimiento = 0;
+      return;
+    }
     this.selectedRendimiento = 1 / newValue;
   }
 
   asignarRendimiento(newValue: number) {
+    if(newValue == 0){
+      this.selectedCantidad = 0;
+      return;
+    }
     this.selectedCantidad = 1 / newValue;
   }
 
@@ -4842,10 +4898,6 @@ export class PrecioUnitarioComponent implements OnInit {
 
     this.preciosMarcados = this.obtenerPuSeleccionados(this.preciosUnitarios);
 
-    // this.total = 0;
-    // for (let i = 0; i < this.preciosMarcados.length; i++) {
-    //   this.total = this.total + this.preciosMarcados[i].importe;
-    // }
     this.totalConFormato = new Intl.NumberFormat('es-MX', {
       style: 'currency',
       currency: 'MXN',

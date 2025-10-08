@@ -42,7 +42,11 @@
                                             <option [value]="0">Simple</option>
                                             <option [value]="1">Compuesto</option>
                                         </select></td>
+<<<<<<< HEAD
+                                    <td scope="col">{{porcentajeRealConFormato}}</td>
+=======
                                     <td scope="col" class="text-end" >{{conjuntoIndirecto.porcentajeConFormato}}</td>
+>>>>>>> origin/JaviDev
                                 </tr>
                             </tbody>
                         </table>
@@ -67,7 +71,7 @@
                                             'colorNivel1' :indirecto.nivel == 1,
                                             'colorNivel2' :indirecto.nivel == 2,
                                             'colorNivel3' :indirecto.nivel == 3,
-                                            'colorNivel4' :indirecto.nivel == 4, 
+                                            'colorNivel4' :indirecto.nivel == 4,
                                             'colorNivel5' :indirecto.nivel == 5,
                                             'colorNivel6' :indirecto.nivel == 6,
                                             'colorNivel7' :indirecto.nivel == 7,
@@ -121,12 +125,12 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 15%;" 
+                                            <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 15%;"
                                                 class="cont-drill" (click)="seleccionar(indirecto)" [ngClass]="{
                                                     'paddingNivel1' :indirecto.nivel == 1,
                                                     'paddingNivel2' :indirecto.nivel == 2,
                                                     'paddingNivel3' :indirecto.nivel == 3,
-                                                    'paddingNivel4' :indirecto.nivel == 4, 
+                                                    'paddingNivel4' :indirecto.nivel == 4,
                                                     'paddingNivel5' :indirecto.nivel == 5,
                                                     'paddingNivel6' :indirecto.nivel == 6,
                                                     'paddingNivel7' :indirecto.nivel == 7,

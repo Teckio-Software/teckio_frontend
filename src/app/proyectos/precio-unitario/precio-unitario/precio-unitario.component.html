@@ -1,3 +1,10 @@
+<app-alert
+        *ngIf="alertaTipo !== AlertaTipo.none"
+        [alertaTipo]="alertaTipo"
+        [alertaMessage]="alertaMessage"
+        (close)="cerrarAlerta()"
+      >
+      </app-alert>
 <div [ngClass]="{ grid: isGrid, flex1: !isGrid }">
   <!---Contenedor 1---->
   <div class="contenedor1" style="width: 100%" *ngIf="contenedorPresupuesto">
@@ -132,6 +139,13 @@
                   (click)="autorizarPresupuesto(); mostrarMenu = false"
                 >
                   Autorizar presupuesto
+                </button>
+                <button
+                  *ngIf="esAutorizado"
+                  class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  (click)="RemoverAutorizacionPresupuesto(); mostrarMenu = false"
+                >
+                  Remover Autorizacion Presupuesto
                 </button>
                 <button
                   *ngIf="esAutorizado"
@@ -3153,6 +3167,7 @@
     [totalIva]="totalIvaConFormato"
     [proyecto]="proyectoSelected"
     [isOpen]="isOpenModalImprimir"
+    [total]="total"
     (close)="closeModal()"
   ></app-imprimir-modal>
 </div>

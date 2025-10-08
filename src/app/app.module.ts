@@ -172,6 +172,10 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { CountUpDirective } from './directiva/countup.directive';
 import { ProgressBarComponent } from './dashboard/components/progress-bar/progress-bar.component';
 
+import { GlosarioComponent } from './documentacion/glosario/glosario.component';
+import { ModalGlosarioComponent } from './documentacion/modal-glosario/modal-glosario.component';
+import { DocumentacionModule } from './documentacion/documentacion.module';
+
 export function playerFactory() {
   return player;
 }
@@ -321,6 +325,8 @@ export function playerFactory() {
     ModalAsigacionComponent,
     ProductosServiciosComponent,
     ImprimirModalComponent,
+    GlosarioComponent,
+    ModalGlosarioComponent,
     UppercaseInputDirective,
     OnlyNumbersDirective,
     AuditoriasComponent,
