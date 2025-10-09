@@ -1,3 +1,10 @@
+<app-alert
+        *ngIf="alertaTipo !== AlertaTipo.none"
+        [alertaTipo]="alertaTipo"
+        [alertaMessage]="alertaMessage"
+        (close)="cerrarAlerta()"
+      >
+      </app-alert>
 <section>
   <div class="flex justify-between">
     <button
@@ -58,6 +65,7 @@
       </div>
     </div>
   </div>
+  
 
   <div class="bg-white rounded-lg h-[45rem]">
     <!-- Pestañas -->
@@ -273,6 +281,7 @@
                       class="px-1 py-[2px]"
                     >
                       <button
+                        *ngIf="diasConsideradosFsiPagados.length > 2 || ParametrosFsrDTO.id == 0"
                         class="flex items-center justify-center"
                         placement="start"
                         ngbTooltip="Eliminar"
