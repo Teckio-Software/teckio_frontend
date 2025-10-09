@@ -1,10 +1,10 @@
 <app-alert
-        *ngIf="alertaTipo !== AlertaTipo.none"
-        [alertaTipo]="alertaTipo"
-        [alertaMessage]="alertaMessage"
-        (close)="cerrarAlerta()"
-      >
-      </app-alert>
+  *ngIf="alertaTipo !== AlertaTipo.none"
+  [alertaTipo]="alertaTipo"
+  [alertaMessage]="alertaMessage"
+  (close)="cerrarAlerta()"
+>
+</app-alert>
 <div [ngClass]="{ grid: isGrid, flex1: !isGrid }">
   <!---Contenedor 1---->
   <div class="contenedor1" style="width: 100%" *ngIf="contenedorPresupuesto">
@@ -67,11 +67,7 @@
     </div> -->
 
     <div class="flex justify-between items-center gap-2 w-[95%] ml-[2.4%]">
-      <div
-        *ngIf="!mostrarBotones && !contenedorCatalogoGeneral"
-        class="w-auto"
-        #menuContainer
-      >
+      <div *ngIf="!mostrarBotones && !contenedorCatalogoGeneral" class="w-auto" #menuContainer>
         <div class="cont-acciones flex justify-start items-center">
           <div class="relative inline-block text-left">
             <div class="flex items-center gap-2">
@@ -201,29 +197,30 @@
           ></textarea>
         </div>
       </div>
-       <div
-              *ngIf="mostrarMenuAlertas"
-              class="absolute right-96 top-14 z-50 mt-2 w-60 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-            >
-              <div class="py-1">
-                <button
-                  *ngIf="!existeCensatia"
-                  class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  (click)="openDialogFSR(); mostrarMenuAlertas = false"
-                >
-                  Configurar factor salario real
-                </button>
-                <button
-                  *ngIf="!existeIndirectos"
-                  class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  (click)="indirectos(); mostrarMenuAlertas = false"
-                >
-                  Configurar los indirectos
-                </button>
-              </div>
-            </div>
+      <div
+        *ngIf="mostrarMenuAlertas"
+        class="absolute right-96 top-14 z-50 mt-2 w-60 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+      >
+        <div class="py-1">
+          <button
+            *ngIf="!existeCensatia"
+            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            (click)="openDialogFSR(); mostrarMenuAlertas = false"
+          >
+            Configurar factor salario real
+          </button>
+          <button
+            *ngIf="!existeIndirectos"
+            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            (click)="indirectos(); mostrarMenuAlertas = false"
+          >
+            Configurar los indirectos
+          </button>
+        </div>
+      </div>
       <div class="flex gap-2" *ngIf="!contenedorCatalogoGeneral">
-        <button *ngIf="!existeCensatia || !existeIndirectos"
+        <button
+          *ngIf="!existeCensatia || !existeIndirectos"
           class="disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 rounded-md transition-all delay-75 py-2 px-2"
           placement="left"
           (click)="mostrarMenuAlertas = !mostrarMenuAlertas"
@@ -244,11 +241,7 @@
           placement="left"
           (click)="nuevaImportacionPresupuesto()"
         >
-          <img
-            src="./assets/upload.svg"
-            alt="Importar archivos"
-            class="w-8 h-8"
-          />
+          <img src="./assets/upload.svg" alt="Importar archivos" class="w-8 h-8" />
         </button>
         <button
           class="disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 rounded-md transition-all delay-75 py-2 px-2"
@@ -265,11 +258,9 @@
           />
         </button>
       </div>
-      
+
       <div class="flex-2" *ngIf="!contenedorCatalogoGeneral">
-        <div
-          class="relative group flex flex-row bg-white shadow-sm rounded-t-lg p-1 items-end"
-        >
+        <div class="relative group flex flex-row bg-white shadow-sm rounded-t-lg p-1 items-end">
           <div
             class="flex items-center justify-center flex-shrink-0 h-10 w-10 rounded-xl bg-[#4eaac138] text-[#4eaac1]"
           >
@@ -306,9 +297,7 @@
     </div>
 
     <div>
-      <table
-        class="table-striped table-hover overflow-x-auto w-[95%] ml-[2.4%]"
-      >
+      <table class="table-striped table-hover overflow-x-auto w-[95%] ml-[2.4%]">
         <thead class="bg-primario text-white">
           <th class="cabecera" style="width: 4%">-</th>
           <th class="cabecera" style="width: 14%">Código</th>
@@ -323,19 +312,14 @@
     </div>
     <!---------------------------Esquema de árbol tamaño 1---------------------------->
     <div
-      style="
-        overflow-y: auto;
-        white-space: nowrap;
-        margin: 0 auto;
-        cursor: pointer;
-      "
+      style="overflow-y: auto; white-space: nowrap; margin: 0 auto; cursor: pointer"
       class="floating-window"
       class="resizable-container"
       (mousedown)="onMouseDown($event)"
       (mouseup)="onMouseUp()"
       [ngClass]="{
         'change-height-table': esquemaArbol2,
-        'change-height-table1': !esquemaArbol2
+        'change-height-table1': !esquemaArbol2,
       }"
     >
       <tree-view [treeData]="preciosUnitarios">
@@ -343,42 +327,33 @@
           <table class="table-striped table-hover table-arbol">
             <tbody>
               <tr
-                [ngClass]="{'change-background-color': precioUnitario.esDetalle == true,
-                              'colorNivel1' :precioUnitario.nivel <= 1 && !precioUnitario.esDetalle,
-                              'colorNivel2' :precioUnitario.nivel == 2 && !precioUnitario.esDetalle,
-                              'colorNivel3' :precioUnitario.nivel == 3 && !precioUnitario.esDetalle,
-                              'colorNivel4' :precioUnitario.nivel == 4 && !precioUnitario.esDetalle,
-                              'colorNivel5' :precioUnitario.nivel == 5 && !precioUnitario.esDetalle,
-                              'colorNivel6' :precioUnitario.nivel == 6 && !precioUnitario.esDetalle,
-                              'colorNivel7' :precioUnitario.nivel == 7 && !precioUnitario.esDetalle,
-                            }"
+                [ngClass]="{
+                  'change-background-color': precioUnitario.esDetalle == true,
+                  colorNivel1: precioUnitario.nivel <= 1 && !precioUnitario.esDetalle,
+                  colorNivel2: precioUnitario.nivel == 2 && !precioUnitario.esDetalle,
+                  colorNivel3: precioUnitario.nivel == 3 && !precioUnitario.esDetalle,
+                  colorNivel4: precioUnitario.nivel == 4 && !precioUnitario.esDetalle,
+                  colorNivel5: precioUnitario.nivel == 5 && !precioUnitario.esDetalle,
+                  colorNivel6: precioUnitario.nivel == 6 && !precioUnitario.esDetalle,
+                  colorNivel7: precioUnitario.nivel == 7 && !precioUnitario.esDetalle,
+                }"
                 [draggable]="true"
                 (dragstart)="dragStart($event, precioUnitario)"
                 (dragover)="dragOver($event)"
                 (drop)="drop($event, precioUnitario)"
                 class="font-medium text-gray700"
               >
-                <td
-                  style="width: 4%; border-right: 1px solid #f2f2f217"
-                  class="cont-drill"
-                >
+                <td style="width: 4%; border-right: 1px solid #f2f2f217" class="cont-drill">
                   <div class="contenedores" style="display: flex">
                     <div *ngIf="precioUnitario.hijos.length > 0">
-                      <mat-icon
-                        class="test"
-                        (click)="expansionDominio(precioUnitario)"
-                      >
-                        {{
-                          precioUnitario.expandido
-                            ? " expand_more"
-                            : "chevron_right"
-                        }}
+                      <mat-icon class="test" (click)="expansionDominio(precioUnitario)">
+                        {{ precioUnitario.expandido ? ' expand_more' : 'chevron_right' }}
                       </mat-icon>
                     </div>
                     <div class="p-1 flex justify-center items-center">
                       <div
                         [ngClass]="{
-                          hidden: precioUnitario.hijos.length > 0
+                          hidden: precioUnitario.hijos.length > 0,
                         }"
                         class="w-6"
                       ></div>
@@ -391,10 +366,7 @@
                     </div>
                     <div>
                       <tr>
-                        <td
-                          style="width: 5%; border-right: 1px solid #f2f2f217"
-                          class="cont-drill"
-                        >
+                        <td style="width: 5%; border-right: 1px solid #f2f2f217" class="cont-drill">
                           <div>
                             <button
                               *ngIf="
@@ -426,9 +398,7 @@
                             >
                               <li class="cursor-pointer">
                                 <a
-                                  (click)="
-                                    crearPartidaAlMismoNivel(precioUnitario)
-                                  "
+                                  (click)="crearPartidaAlMismoNivel(precioUnitario)"
                                   *ngIf="precioUnitario.tipoPrecioUnitario == 0"
                                   class="cursor-auto dropdown-item block px-4 py-2 hover:bg-gray-100 hover:bg-[#4eaac154] hover:text-[#000000DE]"
                                   >Mismo nivel
@@ -453,8 +423,7 @@
                               <li
                                 class="cursor-pointer"
                                 *ngIf="
-                                  precioUnitario.tipoPrecioUnitario == 1 &&
-                                  precioUnitario.id != 0
+                                  precioUnitario.tipoPrecioUnitario == 1 && precioUnitario.id != 0
                                 "
                               >
                                 <a
@@ -466,11 +435,7 @@
                               </li>
                               <li class="cursor-pointer">
                                 <a
-                                  (click)="
-                                    explosionInsumoXPrecioUnitario(
-                                      precioUnitario
-                                    )
-                                  "
+                                  (click)="explosionInsumoXPrecioUnitario(precioUnitario)"
                                   class="dropdown-item block px-4 py-2 hover:bg-[#4eaac154] hover:text-[#000000DE]"
                                 >
                                   Explosión insumos
@@ -494,9 +459,7 @@
                               </li>
                               <li class="cursor-pointer">
                                 <a
-                                  (click)="
-                                    importarConceptoDesdeArmado(precioUnitario)
-                                  "
+                                  (click)="importarConceptoDesdeArmado(precioUnitario)"
                                   *ngIf="precioUnitario.tipoPrecioUnitario == 0"
                                   class="dropdown-item block px-4 py-2 hover:bg-[#4eaac154] hover:text-[#000000DE]"
                                 >
@@ -506,10 +469,7 @@
                               <li class="cursor-pointer">
                                 <a
                                   (click)="autorizarPartida(precioUnitario)"
-                                  *ngIf="
-                                    precioUnitario.nivel == 1 &&
-                                    precioUnitario.esAdicional
-                                  "
+                                  *ngIf="precioUnitario.nivel == 1 && precioUnitario.esAdicional"
                                   class="dropdown-item block px-4 py-2 hover:bg-[#4eaac154] hover:text-[#000000DE]"
                                 >
                                   Autorizar
@@ -531,11 +491,7 @@
                             placement="right"
                             triggers="mouseenter:mouseleave"
                           >
-                            <img
-                              class="p-[3px]"
-                              src="../../../../assets/ci.svg"
-                              alt=""
-                            />
+                            <img class="p-[3px]" src="../../../../assets/ci.svg" alt="" />
                           </button>
                         </td>
                       </tr>
@@ -593,10 +549,7 @@
                   "
                   class="cont-drill"
                   (click)="seleccionar(precioUnitario)"
-                  *ngIf="
-                    precioUnitario.tipoPrecioUnitario == 1 &&
-                    precioUnitario.id == 0
-                  "
+                  *ngIf="precioUnitario.tipoPrecioUnitario == 1 && precioUnitario.id == 0"
                 >
                   <input
                     autocomplete="off"
@@ -608,9 +561,7 @@
                     data-bs-toggle="dropdown"
                     (keyup)="filtrarConcepto($event)"
                     (keydown.enter)="crear(precioUnitario)"
-                    [readonly]="
-                      precioUnitario.esAvanceObra || contenedorCatalogoGeneral
-                    "
+                    [readonly]="precioUnitario.esAvanceObra || contenedorCatalogoGeneral"
                     style="
                       border: 0.5px solid #ffffff4d;
                       border-radius: 3px;
@@ -618,10 +569,7 @@
                       background-color: rgba(0, 0, 0, 0.164);
                     "
                   />
-                  <ul
-                    class="dropdown-menu"
-                    style="z-index: 9999; position: absolute"
-                  >
+                  <ul class="dropdown-menu" style="z-index: 9999; position: absolute">
                     <li style="overflow-y: scroll; height: 150px">
                       <option
                         class="option-hover"
@@ -652,14 +600,8 @@
                     id="input-table"
                     [(ngModel)]="precioUnitario.codigo"
                     (keydown.enter)="crear(precioUnitario)"
-                    [readonly]="
-                      precioUnitario.esAvanceObra || contenedorCatalogoGeneral
-                    "
-                    style="
-                      border: 0.5px solid #ffffff4d;
-                      border-radius: 3px;
-                      width: 100%;
-                    "
+                    [readonly]="precioUnitario.esAvanceObra || contenedorCatalogoGeneral"
+                    style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                   />
                 </td>
                 <td
@@ -671,10 +613,7 @@
                   "
                   class="cont-drill"
                   (click)="seleccionar(precioUnitario)"
-                  *ngIf="
-                    precioUnitario.id != 0 &&
-                    precioUnitario.tipoPrecioUnitario == 1
-                  "
+                  *ngIf="precioUnitario.id != 0 && precioUnitario.tipoPrecioUnitario == 1"
                 >
                   <input
                     autocomplete="off"
@@ -683,14 +622,8 @@
                     id="input-table"
                     [(ngModel)]="precioUnitario.codigo"
                     (keydown.enter)="crear(precioUnitario)"
-                    [readonly]="
-                      precioUnitario.esAvanceObra || contenedorCatalogoGeneral
-                    "
-                    style="
-                      border: 0.5px solid #ffffff4d;
-                      border-radius: 3px;
-                      width: 100%;
-                    "
+                    [readonly]="precioUnitario.esAvanceObra || contenedorCatalogoGeneral"
+                    style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                   />
                 </td>
                 <td
@@ -710,14 +643,8 @@
                     [(ngModel)]="precioUnitario.descripcion"
                     (keydown.enter)="crear(precioUnitario)"
                     (dblclick)="desplegarCampoEdicion(precioUnitario)"
-                    [readonly]="
-                      precioUnitario.esAvanceObra || contenedorCatalogoGeneral
-                    "
-                    style="
-                      border: 0.5px solid #ffffff4d;
-                      border-radius: 3px;
-                      width: 100%;
-                    "
+                    [readonly]="precioUnitario.esAvanceObra || contenedorCatalogoGeneral"
+                    style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                   />
                 </td>
                 <td
@@ -745,9 +672,7 @@
                     aria-label=".form-select-sm example"
                     id="select-table"
                     class="input-table"
-                    [disabled]="
-                      precioUnitario.esAvanceObra || contenedorCatalogoGeneral
-                    "
+                    [disabled]="precioUnitario.esAvanceObra || contenedorCatalogoGeneral"
                     [(ngModel)]="precioUnitario.unidad"
                     (ngModelChange)="crear(precioUnitario)"
                     style="
@@ -796,10 +721,7 @@
                   "
                   class="cont-drill"
                   (click)="seleccionar(precioUnitario)"
-                  *ngIf="
-                    precioUnitario.tipoPrecioUnitario == 1 &&
-                    !precioUnitario.cantidadEditado
-                  "
+                  *ngIf="precioUnitario.tipoPrecioUnitario == 1 && !precioUnitario.cantidadEditado"
                 >
                   <input
                     autocomplete="off"
@@ -807,12 +729,7 @@
                     class="input-table bg-transparent"
                     id="input-table"
                     [(ngModel)]="precioUnitario.cantidadConFormato"
-                    style="
-                      border: none;
-                      border-radius: 3px;
-                      width: 100%;
-                      text-align: right;
-                    "
+                    style="border: none; border-radius: 3px; width: 100%; text-align: right"
                     readonly
                   />
                 </td>
@@ -824,10 +741,7 @@
                   "
                   class="cont-drill"
                   (click)="seleccionar(precioUnitario)"
-                  *ngIf="
-                    precioUnitario.tipoPrecioUnitario == 1 &&
-                    precioUnitario.cantidadEditado
-                  "
+                  *ngIf="precioUnitario.tipoPrecioUnitario == 1 && precioUnitario.cantidadEditado"
                   (keydown.enter)="crear(precioUnitario)"
                 >
                   <input
@@ -836,9 +750,7 @@
                     class="input-table bg-transparent"
                     id="input-table"
                     [(ngModel)]="precioUnitario.cantidad"
-                    [readonly]="
-                      precioUnitario.esAvanceObra || contenedorCatalogoGeneral
-                    "
+                    [readonly]="precioUnitario.esAvanceObra || contenedorCatalogoGeneral"
                     style="
                       border: 0.5px solid #ffffff4d;
                       border-radius: 3px;
@@ -954,11 +866,7 @@
       </tree-view>
     </div>
 
-    <div
-      class="cont-tabla-center"
-      style="margin-top: 5px"
-      *ngIf="esquemaArbol2"
-    >
+    <div class="cont-tabla-center" style="margin-top: 5px" *ngIf="esquemaArbol2">
       <table class="w-full">
         <thead class="bg-primario text-white">
           <tr>
@@ -969,10 +877,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="let desglosado of desglosados"
-            class="font-medium text-gray700"
-          >
+          <tr *ngFor="let desglosado of desglosados" class="font-medium text-gray700">
             <td class="body-table" style="width: 25%">
               <input
                 autocomplete="off"
@@ -980,11 +885,7 @@
                 class="bg-transparent"
                 [(ngModel)]="desglosado.descripcion"
                 (click)="cargarRegistroDelDesglose(desglosado)"
-                style="
-                  border: 0.5px solid #ffffff4d;
-                  border-radius: 3px;
-                  width: 100%;
-                "
+                style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                 readonly
               />
             </td>
@@ -995,11 +896,7 @@
                 class="bg-transparent text-center"
                 [(ngModel)]="desglosado.unidad"
                 (click)="cargarRegistroDelDesglose(desglosado)"
-                style="
-                  border: 0.5px solid #ffffff4d;
-                  border-radius: 3px;
-                  width: 100%;
-                "
+                style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                 readonly
               />
             </td>
@@ -1066,10 +963,7 @@
     </div>
 
     <div class="w-[95%] ml-[2.4%]" *ngIf="selectedIndex === 0 && esquemaArbol3">
-      <div
-        class="flex justify-start max-w-sm bg-white rounded-lg my-2"
-        x-data="{ search: '' }"
-      >
+      <div class="flex justify-start max-w-sm bg-white rounded-lg my-2" x-data="{ search: '' }">
         <div class="w-full">
           <input
             (keyup)="filtrarArmados($event)"
@@ -1112,9 +1006,7 @@
             <th class="cabecera" scope="col" style="width: 5%">Unidad</th>
             <th class="cabecera" scope="col" style="width: 10%">Cantidad</th>
             <th class="cabecera" scope="col" style="width: 10%">Costo Base</th>
-            <th class="cabecera" scope="col" style="width: 10%">
-              Costo Unitario
-            </th>
+            <th class="cabecera" scope="col" style="width: 10%">Costo Unitario</th>
             <th class="cabecera" scope="col" style="width: 8%">Importe</th>
             <th class="cabecera" scope="col" style="width: 5%">Tipo</th>
             <th class="cabecera" scope="col" style="width: 5%">Familia</th>
@@ -1122,21 +1014,16 @@
         </thead>
         <tbody>
           <tr
-            *ngFor="let detalle of detalles | slice : inicio : termino"
+            *ngFor="let detalle of detalles | slice: inicio : termino"
             (click)="seleccionarPUDetalles(detalle)"
             [ngClass]="{
-              'change-background-color':
-                detalle.id == detalleSeleccionado.id && detalle.id != 0
+              'change-background-color': detalle.id == detalleSeleccionado.id && detalle.id != 0,
             }"
             class="font-medium text-gray700"
           >
             <!-- icono de opciones por concepto -->
             <td class="body-table" style="width: 2%">
-              <div
-                *ngIf="
-                  detalle.id != 0 && !precioUnitarioSeleccionado.esAvanceObra
-                "
-              >
+              <div *ngIf="detalle.id != 0 && !precioUnitarioSeleccionado.esAvanceObra">
                 <button
                   class="inline-flex items-center p-1 text-md font-medium text-center text-gray-900 rounded-lg"
                   type="button"
@@ -1190,10 +1077,7 @@
                 (click)="pruebaCont2(detalle)"
                 (keyup)="filtrarInsumo($event)"
                 (keydown.enter)="crearDetalle(detalle)"
-                [readonly]="
-                  precioUnitarioSeleccionado.esAvanceObra ||
-                  contenedorCatalogoGeneral
-                "
+                [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                 style="
                   border: 0.5px solid #ffffff4d;
                   border-radius: 3px;
@@ -1202,9 +1086,7 @@
                 "
               />
               <ul
-                *ngIf="
-                  insumos.length > 0 && !precioUnitarioSeleccionado.esAvanceObra
-                "
+                *ngIf="insumos.length > 0 && !precioUnitarioSeleccionado.esAvanceObra"
                 class="dropdown-menu"
                 style="z-index: 9999; position: absolute"
               >
@@ -1229,10 +1111,7 @@
                 id="input-table"
                 [(ngModel)]="detalle.descripcion"
                 (keydown.enter)="crearDetalle(detalle)"
-                [readonly]="
-                  precioUnitarioSeleccionado.esAvanceObra ||
-                  contenedorCatalogoGeneral
-                "
+                [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                 style="
                   border: 0.5px solid #ffffff4d;
                   border-radius: 3px;
@@ -1250,10 +1129,7 @@
                 style="width: 100%"
                 [(ngModel)]="detalle.unidad"
                 (ngModelChange)="crearDetalle(detalle)"
-                [disabled]="
-                  precioUnitarioSeleccionado.esAvanceObra ||
-                  contenedorCatalogoGeneral
-                "
+                [disabled]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                 style="
                   border: 0.5px solid #ffffff4d;
                   border: none;
@@ -1317,10 +1193,7 @@
                 autoClose="outside"
                 (keydown.enter)="crearDetalle(detalle)"
                 (click)="guardarRegistro(detalle)"
-                [readonly]="
-                  precioUnitarioSeleccionado.esAvanceObra ||
-                  contenedorCatalogoGeneral
-                "
+                [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                 style="
                   background-color: rgba(0, 0, 0, 0.164);
                   border: none;
@@ -1332,11 +1205,7 @@
               <ng-template #tooltipContent>
                 <div class="p-2">
                   <div class="flex gap-2 pb-3">
-                    <button
-                      (click)="selectRendimiento()"
-                      type="button"
-                      class="button-importar"
-                    >
+                    <button (click)="selectRendimiento()" type="button" class="button-importar">
                       Rendimiento
                     </button>
                     <button
@@ -1354,18 +1223,8 @@
                     >
                       <thead>
                         <tr>
-                          <th
-                            style="padding: 0; text-align: center"
-                            scope="col"
-                          >
-                            Cantidad
-                          </th>
-                          <th
-                            style="padding: 0; text-align: center"
-                            scope="col"
-                          >
-                            Rendimiento
-                          </th>
+                          <th style="padding: 0; text-align: center" scope="col">Cantidad</th>
+                          <th style="padding: 0; text-align: center" scope="col">Rendimiento</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1378,12 +1237,9 @@
                               style="padding: 0; text-align: center"
                               (ngModelChange)="asignarCantidad($event)"
                               [(ngModel)]="selectedCantidad"
-                              (keydown.enter)="
-                                asignarCantidadDetalleRendimiento()
-                              "
+                              (keydown.enter)="asignarCantidadDetalleRendimiento()"
                               [readonly]="
-                                precioUnitarioSeleccionado.esAvanceObra ||
-                                contenedorCatalogoGeneral
+                                precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral
                               "
                             />
                           </td>
@@ -1392,12 +1248,9 @@
                               style="padding: 0; text-align: center"
                               (ngModelChange)="asignarRendimiento($event)"
                               [(ngModel)]="selectedRendimiento"
-                              (keydown.enter)="
-                                asignarCantidadDetalleRendimiento()
-                              "
+                              (keydown.enter)="asignarCantidadDetalleRendimiento()"
                               [readonly]="
-                                precioUnitarioSeleccionado.esAvanceObra ||
-                                contenedorCatalogoGeneral
+                                precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral
                               "
                             />
                           </td>
@@ -1437,45 +1290,25 @@
                         <thead class="bg-primario">
                           <tr>
                             <th
-                              style="
-                                padding: 0;
-                                text-align: center;
-                                position: sticky;
-                                top: 0;
-                              "
+                              style="padding: 0; text-align: center; position: sticky; top: 0"
                               scope="col"
                             >
                               Descripción
                             </th>
                             <th
-                              style="
-                                padding: 0;
-                                text-align: center;
-                                position: sticky;
-                                top: 0;
-                              "
+                              style="padding: 0; text-align: center; position: sticky; top: 0"
                               scope="col"
                             >
                               Operación
                             </th>
                             <th
-                              style="
-                                padding: 0;
-                                text-align: center;
-                                position: sticky;
-                                top: 0;
-                              "
+                              style="padding: 0; text-align: center; position: sticky; top: 0"
                               scope="col"
                             >
                               Resultado
                             </th>
                             <th
-                              style="
-                                padding: 0;
-                                text-align: center;
-                                position: sticky;
-                                top: 0;
-                              "
+                              style="padding: 0; text-align: center; position: sticky; top: 0"
                               scope="col"
                             >
                               Accion
@@ -1488,9 +1321,7 @@
                               <input
                                 style="padding: 0; text-align: center"
                                 [(ngModel)]="operacion.descripcion"
-                                (keydown.enter)="
-                                  crearOperacionDetalle(operacion)
-                                "
+                                (keydown.enter)="crearOperacionDetalle(operacion)"
                                 [readonly]="
                                   precioUnitarioSeleccionado.esAvanceObra ||
                                   contenedorCatalogoGeneral
@@ -1501,9 +1332,7 @@
                               <input
                                 style="padding: 0; text-align: center"
                                 [(ngModel)]="operacion.operacion"
-                                (keydown.enter)="
-                                  crearOperacionDetalle(operacion)
-                                "
+                                (keydown.enter)="crearOperacionDetalle(operacion)"
                                 [readonly]="
                                   precioUnitarioSeleccionado.esAvanceObra ||
                                   contenedorCatalogoGeneral
@@ -1515,9 +1344,7 @@
                                 style="padding: 0; text-align: center"
                                 readonly
                                 [(ngModel)]="operacion.resultado"
-                                (keydown.enter)="
-                                  crearOperacionDetalle(operacion)
-                                "
+                                (keydown.enter)="crearOperacionDetalle(operacion)"
                               />
                             </td>
                             <td *ngIf="operacion.id != 0">
@@ -1532,10 +1359,7 @@
                                 "
                                 (click)="EliminarOperacion(operacion)"
                               >
-                                <img
-                                  src="assets/delete.svg"
-                                  alt="add cotizacion"
-                                />
+                                <img src="assets/delete.svg" alt="add cotizacion" />
                               </button>
                             </td>
                             <td *ngIf="operacion.id == 0"></td>
@@ -1590,10 +1414,7 @@
                 id="input-table"
                 [(ngModel)]="detalle.costoBase"
                 (keydown.enter)="crearDetalle(detalle)"
-                [readonly]="
-                  precioUnitarioSeleccionado.esAvanceObra ||
-                  contenedorCatalogoGeneral
-                "
+                [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                 style="
                   border: 0.5px solid #ffffff4d;
                   border: none;
@@ -1626,11 +1447,9 @@
               class="body-table"
               [ngClass]="{
                 'text-green-700': detalle.idTipoInsumo == 10001,
-                'text-orange-500': detalle.idTipoInsumo == 10007
+                'text-orange-500': detalle.idTipoInsumo == 10007,
               }"
-              *ngIf="
-                detalle.idTipoInsumo == 10001 || detalle.idTipoInsumo == 10007
-              "
+              *ngIf="detalle.idTipoInsumo == 10001 || detalle.idTipoInsumo == 10007"
             >
               <input
                 autocomplete="off"
@@ -1712,10 +1531,7 @@
                 [(ngModel)]="detalle.importe"
                 *ngIf="detalle.cantidadEditado"
                 (keydown.enter)="editarDetalleImporte(detalle)"
-                [readonly]="
-                  precioUnitarioSeleccionado.esAvanceObra ||
-                  contenedorCatalogoGeneral
-                "
+                [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                 style="
                   background-color: rgba(0, 0, 0, 0.164);
                   border: none;
@@ -1732,17 +1548,10 @@
                 class="bg-transparent"
                 id="select-table"
                 style="width: 100%"
-                [disabled]="
-                  precioUnitarioSeleccionado.esAvanceObra ||
-                  contenedorCatalogoGeneral
-                "
+                [disabled]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                 [(ngModel)]="detalle.idTipoInsumo"
                 (ngModelChange)="crearDetalle(detalle)"
-                style="
-                  border: 0.5px solid #ffffff4d;
-                  border: none;
-                  border-radius: 3px;
-                "
+                style="border: 0.5px solid #ffffff4d; border: none; border-radius: 3px"
               >
                 <option value="0"></option>
                 <option *ngFor="let tipo of tiposInsumos" [value]="tipo.id">
@@ -1757,19 +1566,13 @@
                 class="bg-transparent"
                 id="select-table"
                 style="width: 100%"
-                [disabled]="
-                  precioUnitarioSeleccionado.esAvanceObra ||
-                  contenedorCatalogoGeneral
-                "
+                [disabled]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                 [(ngModel)]="detalle.idFamiliaInsumo"
                 (ngModelChange)="crearDetalle(detalle)"
                 style="border: none; border-radius: 3px"
               >
                 <option value="0"></option>
-                <option
-                  *ngFor="let familia of familiasInsumos"
-                  [value]="familia.id"
-                >
+                <option *ngFor="let familia of familiasInsumos" [value]="familia.id">
                   {{ familia.descripcion }}
                 </option>
               </select>
@@ -1913,14 +1716,7 @@
               >
                 Ancho
               </th>
-              <th
-                class="cabecera"
-                scope="col"
-                style="width: 10%"
-                *ngIf="esM3 == true"
-              >
-                Alto
-              </th>
+              <th class="cabecera" scope="col" style="width: 10%" *ngIf="esM3 == true">Alto</th>
               <th
                 class="cabecera"
                 scope="col"
@@ -1953,18 +1749,10 @@
           </thead>
           <tbody
             *ngIf="
-              esKg == true ||
-              esTon == true ||
-              esM == true ||
-              esM2 == true ||
-              esM3 == true ||
-              esPza
+              esKg == true || esTon == true || esM == true || esM2 == true || esM3 == true || esPza
             "
           >
-            <tr
-              *ngFor="let generador of generadores"
-              class="font-medium text-gray700"
-            >
+            <tr *ngFor="let generador of generadores" class="font-medium text-gray700">
               <td class="body-table" style="width: 10%">
                 <input
                   autocomplete="off"
@@ -1972,10 +1760,7 @@
                   id="input-table"
                   [(ngModel)]="generador.codigo"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="
-                    precioUnitarioSeleccionado.esAvanceObra ||
-                    contenedorCatalogoGeneral
-                  "
+                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                   style="
                     border: none;
                     border-radius: 3px;
@@ -1992,10 +1777,7 @@
                   id="input-table"
                   [(ngModel)]="generador.ejeX"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="
-                    precioUnitarioSeleccionado.esAvanceObra ||
-                    contenedorCatalogoGeneral
-                  "
+                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                   maxlength="20"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -2013,10 +1795,7 @@
                   id="input-table"
                   [(ngModel)]="generador.ejeY"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="
-                    precioUnitarioSeleccionado.esAvanceObra ||
-                    contenedorCatalogoGeneral
-                  "
+                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                   maxlength="20"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -2034,10 +1813,7 @@
                   id="input-table"
                   [(ngModel)]="generador.ejeZ"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="
-                    precioUnitarioSeleccionado.esAvanceObra ||
-                    contenedorCatalogoGeneral
-                  "
+                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                   maxlength="20"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -2048,11 +1824,7 @@
                 />
               </td>
 
-              <td
-                class="body-table"
-                style="width: 10%"
-                *ngIf="selectedGenerador == generador.id"
-              >
+              <td class="body-table" style="width: 10%" *ngIf="selectedGenerador == generador.id">
                 <input
                   autocomplete="off"
                   type="text"
@@ -2060,10 +1832,7 @@
                   class="text-end"
                   [(ngModel)]="generador.cantidad"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="
-                    precioUnitarioSeleccionado.esAvanceObra ||
-                    contenedorCatalogoGeneral
-                  "
+                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                   (dblclick)="abrirOperacionCantidadGenerador(generador)"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -2074,11 +1843,7 @@
                 />
               </td>
 
-              <td
-                class="body-table"
-                style="width: 10%"
-                *ngIf="selectedGenerador != generador.id"
-              >
+              <td class="body-table" style="width: 10%" *ngIf="selectedGenerador != generador.id">
                 <input
                   autocomplete="off"
                   type="text"
@@ -2086,10 +1851,7 @@
                   class="text-end"
                   [(ngModel)]="generador.cantidadDecimal"
                   (click)="seleccionarGenerador(generador)"
-                  [readonly]="
-                    precioUnitarioSeleccionado.esAvanceObra ||
-                    contenedorCatalogoGeneral
-                  "
+                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                   (dblclick)="abrirOperacionCantidadGenerador(generador)"
                   style="
                     border: 0.5px solid #ffffff4d;
@@ -2112,10 +1874,7 @@
                   class="text-end"
                   [(ngModel)]="generador.x"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="
-                    precioUnitarioSeleccionado.esAvanceObra ||
-                    contenedorCatalogoGeneral
-                  "
+                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                   style="
                     border: 0.5px solid #ffffff4d;
                     border-radius: 3px;
@@ -2136,10 +1895,7 @@
                   class="text-end"
                   (click)="seleccionarGenerador(generador)"
                   [(ngModel)]="generador.xDecimal"
-                  [readonly]="
-                    precioUnitarioSeleccionado.esAvanceObra ||
-                    contenedorCatalogoGeneral
-                  "
+                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                   style="
                     border: 0.5px solid #ffffff4d;
                     border-radius: 3px;
@@ -2152,10 +1908,7 @@
               <td
                 class="body-table"
                 style="width: 10%"
-                *ngIf="
-                  (esM2 == true || esM3 == true) &&
-                  selectedGenerador == generador.id
-                "
+                *ngIf="(esM2 == true || esM3 == true) && selectedGenerador == generador.id"
               >
                 <input
                   autocomplete="off"
@@ -2164,10 +1917,7 @@
                   class="text-end"
                   [(ngModel)]="generador.y"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="
-                    precioUnitarioSeleccionado.esAvanceObra ||
-                    contenedorCatalogoGeneral
-                  "
+                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                   style="
                     border: 0.5px solid #ffffff4d;
                     border-radius: 3px;
@@ -2179,10 +1929,7 @@
               <td
                 class="body-table"
                 style="width: 10%"
-                *ngIf="
-                  (esM2 == true || esM3 == true) &&
-                  selectedGenerador != generador.id
-                "
+                *ngIf="(esM2 == true || esM3 == true) && selectedGenerador != generador.id"
               >
                 <input
                   autocomplete="off"
@@ -2192,10 +1939,7 @@
                   (click)="seleccionarGenerador(generador)"
                   [(ngModel)]="generador.yDecimal"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="
-                    precioUnitarioSeleccionado.esAvanceObra ||
-                    contenedorCatalogoGeneral
-                  "
+                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                   style="
                     border: 0.5px solid #ffffff4d;
                     border-radius: 3px;
@@ -2216,10 +1960,7 @@
                   class="text-end"
                   [(ngModel)]="generador.z"
                   (keydown.enter)="crearGenerador(generador)"
-                  [readonly]="
-                    precioUnitarioSeleccionado.esAvanceObra ||
-                    contenedorCatalogoGeneral
-                  "
+                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                   style="
                     border: 0.5px solid #ffffff4d;
                     border-radius: 3px;
@@ -2241,10 +1982,7 @@
                   class="text-end"
                   (click)="seleccionarGenerador(generador)"
                   [(ngModel)]="generador.zDecimal"
-                  [readonly]="
-                    precioUnitarioSeleccionado.esAvanceObra ||
-                    contenedorCatalogoGeneral
-                  "
+                  [readonly]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                   style="
                     border: 0.5px solid #ffffff4d;
                     border-radius: 3px;
@@ -2254,7 +1992,7 @@
                 />
               </td>
 
-              <td class="body-table text-end" style="width: 10%" >
+              <td class="body-table text-end" style="width: 10%">
                 {{ generador.totalDecimal }}
               </td>
 
@@ -2264,10 +2002,7 @@
                   class="cursor-pointer"
                   data-bs-toggle="modal"
                   (click)="eliminarGenerador(generador)"
-                  [disabled]="
-                    precioUnitarioSeleccionado.esAvanceObra ||
-                    contenedorCatalogoGeneral
-                  "
+                  [disabled]="precioUnitarioSeleccionado.esAvanceObra || contenedorCatalogoGeneral"
                 >
                   <img src="./assets/delete.svg" alt="Eliminar" class="w-6" />
                 </button>
@@ -2295,11 +2030,7 @@
   </div>
   <!--Contenedor Tabla FSR-->
   <div *ngIf="contenedorFSR">
-    <app-dialog-fsr
-      *appRecarga="appRecarga"
-      (cerrarFSR)="cerrarFSR($event)"
-      [dataFSR]="dataFSR"
-    >
+    <app-dialog-fsr *appRecarga="appRecarga" (cerrarFSR)="cerrarFSR($event)" [dataFSR]="dataFSR">
     </app-dialog-fsr>
   </div>
   <!---------------------------Tabla Muestra Detalle------------------------------>
@@ -2370,19 +2101,10 @@
         (mouseup)="onMouseUp()"
         (mousemove)="onMouseMove($event)"
       >
-        <table
-          class="table table-striped table-hover titulo-arbol2"
-          class="w-[95%] ml-[2.4%]"
-        >
+        <table class="table table-striped table-hover titulo-arbol2" class="w-[95%] ml-[2.4%]">
           <thead>
             <th class="cabecera" style="width: 4.5%">-</th>
-            <th
-              class="cabecera"
-              style="width: 1%"
-              *ngIf="seEstaCopiandoConcepto == true"
-            >
-              *
-            </th>
+            <th class="cabecera" style="width: 1%" *ngIf="seEstaCopiandoConcepto == true">*</th>
             <th class="cabecera" style="width: 10%">Código</th>
             <th class="cabecera" style="width: 18.5%">Descripción</th>
             <th class="cabecera" style="width: 8%">Unidad</th>
@@ -2392,17 +2114,12 @@
           </thead>
         </table>
         <div
-          style="
-            overflow-y: auto;
-            white-space: nowrap;
-            margin: 0 auto;
-            cursor: pointer;
-          "
+          style="overflow-y: auto; white-space: nowrap; margin: 0 auto; cursor: pointer"
           class="floating-window"
           class="resizable-container"
           [ngClass]="{
             'change-height-table': esquemaArbol5,
-            'change-height-table1': !esquemaArbol5
+            'change-height-table1': !esquemaArbol5,
           }"
         >
           <tree-view [treeData]="preciosUnitariosParaCopiar">
@@ -2410,10 +2127,7 @@
               <table class="table-striped table-hover table-arbol">
                 <tbody>
                   <tr>
-                    <td
-                      style="width: 4.5%; border-right: 1px solid #f2f2f217"
-                      class="cont-drill"
-                    >
+                    <td style="width: 4.5%; border-right: 1px solid #f2f2f217" class="cont-drill">
                       <!-- concepto: precioUnitario.tipoPrecioUnitario ==1 -->
                       <div class="contenedores" style="display: flex">
                         <div *ngIf="precioUnitarioParaCopiar.hijos.length > 0">
@@ -2423,9 +2137,7 @@
                             *ngIf="precioUnitarioParaCopiar.nivel <= 7"
                           >
                             {{
-                              precioUnitarioParaCopiar.expandido
-                                ? " expand_more"
-                                : "chevron_right"
+                              precioUnitarioParaCopiar.expandido ? ' expand_more' : 'chevron_right'
                             }}
                           </mat-icon>
 
@@ -2451,9 +2163,7 @@
                         id="flexCheckChecked"
                         checked
                         [(ngModel)]="precioUnitarioParaCopiar.seleccionado"
-                        (ngModelChange)="
-                          seleccionarHijos(precioUnitarioParaCopiar)
-                        "
+                        (ngModelChange)="seleccionarHijos(precioUnitarioParaCopiar)"
                       />
                     </td>
 
@@ -2472,11 +2182,7 @@
                         id="input-table"
                         [(ngModel)]="precioUnitarioParaCopiar.codigo"
                         id="displayName"
-                        style="
-                          border: 0.5px solid #ffffff4d;
-                          border-radius: 3px;
-                          width: 100%;
-                        "
+                        style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                         readonly
                       />
                     </td>
@@ -2496,11 +2202,7 @@
                         id="input-table"
                         [(ngModel)]="precioUnitarioParaCopiar.descripcion"
                         id="displayName"
-                        style="
-                          border: 0.5px solid #ffffff4d;
-                          border-radius: 3px;
-                          width: 100%;
-                        "
+                        style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                         readonly
                       />
                     </td>
@@ -2520,11 +2222,7 @@
                         id="input-table"
                         [(ngModel)]="precioUnitarioParaCopiar.unidad"
                         id="displayName"
-                        style="
-                          border: 0.5px solid #ffffff4d;
-                          border-radius: 3px;
-                          width: 100%;
-                        "
+                        style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                         readonly
                       />
                     </td>
@@ -2542,15 +2240,9 @@
                         type="text"
                         class="input-table bg-transparent"
                         id="input-table"
-                        [(ngModel)]="
-                          precioUnitarioParaCopiar.cantidadConFormato
-                        "
+                        [(ngModel)]="precioUnitarioParaCopiar.cantidadConFormato"
                         id="displayName"
-                        style="
-                          border: 0.5px solid #ffffff4d;
-                          border-radius: 3px;
-                          width: 100%;
-                        "
+                        style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                         readonly
                       />
                     </td>
@@ -2569,15 +2261,9 @@
                         type="text"
                         class="input-table bg-transparent"
                         id="input-table"
-                        [(ngModel)]="
-                          precioUnitarioParaCopiar.precioUnitarioConFormato
-                        "
+                        [(ngModel)]="precioUnitarioParaCopiar.precioUnitarioConFormato"
                         id="displayName"
-                        style="
-                          border: 0.5px solid #ffffff4d;
-                          border-radius: 3px;
-                          width: 100%;
-                        "
+                        style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                         readonly
                       />
                       <div style="position: absolute"></div>
@@ -2592,26 +2278,16 @@
                         color: blue;
                       "
                       class="cont-drill"
-                      (click)="
-                        cargarDetallesXIdPrecioUnitarioCopia1(
-                          precioUnitarioParaCopiar
-                        )
-                      "
+                      (click)="cargarDetallesXIdPrecioUnitarioCopia1(precioUnitarioParaCopiar)"
                     >
                       <input
                         autocomplete="off"
                         type="text"
                         class="input-table bg-transparent"
                         id="input-table"
-                        [(ngModel)]="
-                          precioUnitarioParaCopiar.precioUnitarioConFormato
-                        "
+                        [(ngModel)]="precioUnitarioParaCopiar.precioUnitarioConFormato"
                         id="displayName"
-                        style="
-                          border: 0.5px solid #ffffff4d;
-                          border-radius: 3px;
-                          width: 100%;
-                        "
+                        style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                         readonly
                       />
                       <div style="position: absolute"></div>
@@ -2632,11 +2308,7 @@
                         id="input-table"
                         [(ngModel)]="precioUnitarioParaCopiar.importeConFormato"
                         id="displayName"
-                        style="
-                          border: 0.5px solid #ffffff4d;
-                          border-radius: 3px;
-                          width: 100%;
-                        "
+                        style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                         readonly
                       />
                     </td>
@@ -2649,27 +2321,18 @@
       </div>
 
       <!---------------------------Tabla Muestra Detalle------------------------------>
-      <div
-        class="cont-tabla-center"
-        style="margin-top: 5px"
-        *ngIf="seSeleccinaCopia == true"
-      >
+      <div class="cont-tabla-center" style="margin-top: 5px" *ngIf="seSeleccinaCopia == true">
         <table>
           <thead class="bg-primario">
             <tr>
-              <th class="cabecera" scope="col" style="width: 25%">
-                Descripción
-              </th>
+              <th class="cabecera" scope="col" style="width: 25%">Descripción</th>
               <th class="cabecera" scope="col" style="width: 25%">Unidad</th>
               <th class="cabecera" scope="col" style="width: 25%">Cantidad</th>
               <th class="cabecera" scope="col" style="width: 25%">Costo</th>
             </tr>
           </thead>
           <tbody>
-            <tr
-              *ngFor="let desglosado of desglosadosCopia"
-              class="font-medium text-gray700"
-            >
+            <tr *ngFor="let desglosado of desglosadosCopia" class="font-medium text-gray700">
               <td
                 class="body-table"
                 style="width: 25%"
@@ -2681,11 +2344,7 @@
                   class="bg-transparent"
                   [(ngModel)]="desglosado.descripcion"
                   (click)="cargarRegistroDelDesglose(desglosado)"
-                  style="
-                    border: 0.5px solid #ffffff4d;
-                    border-radius: 3px;
-                    width: 100%;
-                  "
+                  style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                   readonly
                 />
               </td>
@@ -2700,11 +2359,7 @@
                   class="bg-transparent"
                   [(ngModel)]="desglosado.unidad"
                   (click)="cargarRegistroDelDesglose(desglosado)"
-                  style="
-                    border: 0.5px solid #ffffff4d;
-                    border-radius: 3px;
-                    width: 100%;
-                  "
+                  style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                   readonly
                 />
               </td>
@@ -2719,11 +2374,7 @@
                   class="bg-transparent"
                   [(ngModel)]="desglosado.cantidadConFormato"
                   (click)="cargarRegistroDelDesglose(desglosado)"
-                  style="
-                    border: 0.5px solid #ffffff4d;
-                    border-radius: 3px;
-                    width: 100%;
-                  "
+                  style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                   readonly
                 />
               </td>
@@ -2738,11 +2389,7 @@
                   class="bg-transparent"
                   [(ngModel)]="desglosado.costoConFormato"
                   (click)="cargarRegistroDelDesglose(desglosado)"
-                  style="
-                    border: 0.5px solid #ffffff4d;
-                    border-radius: 3px;
-                    width: 100%;
-                  "
+                  style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                   readonly
                 />
               </td>
@@ -2752,11 +2399,7 @@
       </div>
 
       <!--Tabla 3-->
-      <div
-        class="cont-tabla"
-        style="margin-top: 10px"
-        *ngIf="seSeleccinaCopia == true"
-      >
+      <div class="cont-tabla" style="margin-top: 10px" *ngIf="seSeleccinaCopia == true">
         <div class="contenedor-filttro" style="margin-bottom: 5px">
           <label for="input-table" class="icon-search">
             <svg
@@ -2807,9 +2450,7 @@
                 *
               </th>
               <th class="cabecera" scope="col" style="width: 10%">Código</th>
-              <th class="cabecera" scope="col" style="width: 34%">
-                Descripcion
-              </th>
+              <th class="cabecera" scope="col" style="width: 34%">Descripcion</th>
               <th class="cabecera" scope="col" style="width: 8%">Unidad</th>
               <th class="cabecera" scope="col" style="width: 10%">Cantidad</th>
               <th class="cabecera" scope="col" style="width: 15%">Costo</th>
@@ -2817,10 +2458,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              class="font-medium text-gray700"
-              *ngFor="let detalle of detallesCopia"
-            >
+            <tr class="font-medium text-gray700" *ngFor="let detalle of detallesCopia">
               <td
                 class="body-table"
                 style="width: 2%"
@@ -2856,11 +2494,7 @@
                   id="input-table"
                   [(ngModel)]="detalle.codigo"
                   id="displayName"
-                  style="
-                    border: 0.5px solid #ffffff4d;
-                    border-radius: 3px;
-                    width: 100%;
-                  "
+                  style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                   readonly
                 />
               </td>
@@ -2874,11 +2508,7 @@
                   (dblclick)="desplegarCampoDescripcion(detalle)"
                   [(ngModel)]="detalle.descripcion"
                   id="displayName"
-                  style="
-                    border: 0.5px solid #ffffff4d;
-                    border-radius: 3px;
-                    width: 100%;
-                  "
+                  style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                   readonly
                 />
               </td>
@@ -2891,11 +2521,7 @@
                   id="input-table"
                   [(ngModel)]="detalle.unidad"
                   id="displayName"
-                  style="
-                    border: 0.5px solid #ffffff4d;
-                    border-radius: 3px;
-                    width: 100%;
-                  "
+                  style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                   readonly
                 />
               </td>
@@ -2908,20 +2534,12 @@
                   id="input-table"
                   [(ngModel)]="detalle.cantidadConFormato"
                   id="displayName"
-                  style="
-                    border: 0.5px solid #ffffff4d;
-                    border-radius: 3px;
-                    width: 100%;
-                  "
+                  style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                   readonly
                 />
               </td>
 
-              <td
-                class="body-table"
-                style="width: 10%"
-                *ngIf="!detalle.esCompuesto"
-              >
+              <td class="body-table" style="width: 10%" *ngIf="!detalle.esCompuesto">
                 <input
                   autocomplete="off"
                   type="text"
@@ -2929,20 +2547,12 @@
                   id="input-table"
                   [(ngModel)]="detalle.costoUnitarioConFormato"
                   id="displayName"
-                  style="
-                    border: 0.5px solid #ffffff4d;
-                    border-radius: 3px;
-                    width: 100%;
-                  "
+                  style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                   readonly
                 />
               </td>
 
-              <td
-                class="body-table"
-                style="width: 15%; color: blue"
-                *ngIf="detalle.esCompuesto"
-              >
+              <td class="body-table" style="width: 15%; color: blue" *ngIf="detalle.esCompuesto">
                 <input
                   autocomplete="off"
                   type="text"
@@ -2950,11 +2560,7 @@
                   id="input-table"
                   [(ngModel)]="detalle.costoUnitarioConFormato"
                   id="displayName"
-                  style="
-                    border: 0.5px solid #ffffff4d;
-                    border-radius: 3px;
-                    width: 100%;
-                  "
+                  style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                   readonly
                 />
               </td>
@@ -2967,11 +2573,7 @@
                   id="input-table"
                   [(ngModel)]="detalle.importeConFormato"
                   id="displayName"
-                  style="
-                    border: 0.5px solid #ffffff4d;
-                    border-radius: 3px;
-                    width: 100%;
-                  "
+                  style="border: 0.5px solid #ffffff4d; border-radius: 3px; width: 100%"
                   readonly
                 />
               </td>
@@ -2994,11 +2596,7 @@
 <div [style.display]="displayCarga" class="contenedor-ventana z-50">
   <div class="ventana-bloque"></div>
   <div class="contenedor-spinner">
-    <div
-      class="spinner-border spinner"
-      role="status"
-      style="color: #4eaac1"
-    ></div>
+    <div class="spinner-border spinner" role="status" style="color: #4eaac1"></div>
     <p
       style="
         position: fixed;
@@ -3016,10 +2614,7 @@
 
 <ng-template #dialogPresupuestoExcel>
   <section>
-    <div
-      class="fixed inset-0 w-screen overflow-y-auto"
-      (click)="limpiarCargarExcel()"
-    >
+    <div class="fixed inset-0 w-screen overflow-y-auto" (click)="limpiarCargarExcel()">
       <div
         class="content-center sm:flex min-h-full items-center justify-center p-4 text-center sm:p-0"
       >
@@ -3029,9 +2624,7 @@
         >
           <!-- header -->
           <div class="flex justify-between items-center border-b px-4 py-3">
-            <h2 class="font-semibold text-gray-800 tracking-wider text-lg">
-              Importar archivo
-            </h2>
+            <h2 class="font-semibold text-gray-800 tracking-wider text-lg">Importar archivo</h2>
             <button
               type="button"
               class="leading-none text-2xl px-3 py-1 text-gray-500 hover:text-gray-700"
@@ -3044,9 +2637,7 @@
           <!-- input de archivos -->
           <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div class="mb-4">
-              <div
-                class="overflow-x-auto whitespace-nowrap w-full mx-auto mt-4"
-              >
+              <div class="overflow-x-auto whitespace-nowrap w-full mx-auto mt-4">
                 <div class="flex items-center justify-center">
                   <div
                     class="inline-flex w-full max-w-lg items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-6"
@@ -3075,25 +2666,15 @@
                           d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"
                         />
                       </svg>
-                      <span class="text-sm font-medium"
-                        >Seleccionar archivos</span
-                      >
+                      <span class="text-sm font-medium">Seleccionar archivos</span>
                     </label>
                   </div>
                 </div>
-                <p
-                  *ngIf="selectedFileName"
-                  class="mt-2 text-gray-700 text-sm text-center"
-                >
+                <p *ngIf="selectedFileName" class="mt-2 text-gray-700 text-sm text-center">
                   Archivos seleccionados:
-                  <span class="font-semibold">{{
-                    archivosCargarExcels?.length
-                  }}</span>
+                  <span class="font-semibold">{{ archivosCargarExcels?.length }}</span>
                 </p>
-                <p
-                  *ngIf="mensajeModal"
-                  class="mt-2 text-red-700 text-sm text-center"
-                >
+                <p *ngIf="mensajeModal" class="mt-2 text-red-700 text-sm text-center">
                   {{ mensajeModal }}
                 </p>
               </div>
@@ -3104,7 +2685,8 @@
           <div class="bg-gray-50 px-4 py-3 flex justify-end gap-2">
             <button
               class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex items-center shadow-sm ring-1 ring-inset transition-all relative"
-              (click)="handleClick($event)" [disabled]="displayCarga == 'flex'"
+              (click)="handleClick($event)"
+              [disabled]="displayCarga == 'flex'"
             >
               <span
                 class="mr-2 relative"
@@ -3112,11 +2694,7 @@
                 style="cursor: pointer"
                 title="Mostrar info"
               >
-                <img
-                  src="../../../../assets/info_excel.svg"
-                  alt="Info Icon"
-                  class="w-5"
-                />
+                <img src="../../../../assets/info_excel.svg" alt="Info Icon" class="w-5" />
                 <div
                   *ngIf="tooltipVisible"
                   class="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-sm px-3 py-1 rounded-lg shadow-lg whitespace-nowrap z-50"
@@ -3129,13 +2707,15 @@
             </button>
             <button
               class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
-              (click)="cargarPresupuestoOpus()" [disabled]="displayCarga == 'flex'"
+              (click)="cargarPresupuestoOpus()"
+              [disabled]="displayCarga == 'flex'"
             >
               Importar Opus
             </button>
             <button
               class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
-              (click)="limpiarCargarExcel()" [disabled]="displayCarga == 'flex'"
+              (click)="limpiarCargarExcel()"
+              [disabled]="displayCarga == 'flex'"
             >
               Cancelar
             </button>
@@ -3147,15 +2727,9 @@
 </ng-template>
 
 <div *ngIf="isOpenModal">
-  <app-precio-unitario-modal
-    [isOpen]="isOpenModal"
-    (close)="closeModal()"
-    [detalle]="detalle"
-  >
+  <app-precio-unitario-modal [isOpen]="isOpenModal" (close)="closeModal()" [detalle]="detalle">
   </app-precio-unitario-modal>
 </div>
-
-
 
 <div *ngIf="isOpenModalImprimir">
   <app-imprimir-modal
@@ -3173,10 +2747,7 @@
 </div>
 <ng-template #dialogCatalogoRemplazar>
   <section>
-    <div
-      class="fixed inset-0 z-10 w-screen overflow-y-auto"
-      (click)="limpiarRemplazarCatalogo()"
-    >
+    <div class="fixed inset-0 z-10 w-screen overflow-y-auto" (click)="limpiarRemplazarCatalogo()">
       <div
         class="content-center sm:flex min-h-full items-center justify-center p-4 text-center sm:p-0"
       >
@@ -3201,8 +2772,7 @@
           <!-- tabla del concepto a remplazar -->
           <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <p class="font-normal text-gray700 text-base mb-4">
-              Ya existe un concepto con este código en el catálogo general. Haga
-              clic en
+              Ya existe un concepto con este código en el catálogo general. Haga clic en
               <span class="font-medium">Reemplazar</span> si desea sustituirlo.
             </p>
             <div class="mb-4">
@@ -3211,27 +2781,13 @@
                   <thead class="bg-primario text-white">
                     <th scope="col"></th>
 
-                    <th scope="col" class="px-1 py-[2px] xs:w-[75px]">
-                      Código
-                    </th>
-                    <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">
-                      Descripción
-                    </th>
-                    <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">
-                      Unidad
-                    </th>
-                    <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">
-                      Cantidad
-                    </th>
-                    <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">
-                      Costo Directo
-                    </th>
-                    <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">
-                      P. U.
-                    </th>
-                    <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">
-                      Total
-                    </th>
+                    <th scope="col" class="px-1 py-[2px] xs:w-[75px]">Código</th>
+                    <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">Descripción</th>
+                    <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">Unidad</th>
+                    <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">Cantidad</th>
+                    <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">Costo Directo</th>
+                    <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">P. U.</th>
+                    <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">Total</th>
                   </thead>
                   <tbody>
                     <tr
@@ -3247,10 +2803,7 @@
                       </td>
                       <td
                         class="px-1 py-[2px]"
-                        *ngIf="
-                          precioUnitario.id != 0 &&
-                          precioUnitario.tipoPrecioUnitario == 1
-                        "
+                        *ngIf="precioUnitario.id != 0 && precioUnitario.tipoPrecioUnitario == 1"
                       >
                         <input
                           class="w-28"
@@ -3270,10 +2823,7 @@
                           readonly
                         />
                       </td>
-                      <td
-                        class="px-1 py-[2px]"
-                        *ngIf="precioUnitario.tipoPrecioUnitario == 1"
-                      >
+                      <td class="px-1 py-[2px]" *ngIf="precioUnitario.tipoPrecioUnitario == 1">
                         <select
                           aria-label=".form-select-sm example"
                           id="select-table"
@@ -3310,8 +2860,7 @@
                         "
                         class="cont-drill"
                         *ngIf="
-                          precioUnitario.tipoPrecioUnitario == 1 &&
-                          !precioUnitario.cantidadEditado
+                          precioUnitario.tipoPrecioUnitario == 1 && !precioUnitario.cantidadEditado
                         "
                       >
                         <input
@@ -3323,10 +2872,7 @@
                           readonly
                         />
                       </td>
-                      <td
-                        class="px-1 py-[2px]"
-                        *ngIf="precioUnitario.tipoPrecioUnitario == 1"
-                      >
+                      <td class="px-1 py-[2px]" *ngIf="precioUnitario.tipoPrecioUnitario == 1">
                         <input
                           class="w-28"
                           autocomplete="off"
@@ -3337,10 +2883,7 @@
                           readonly
                         />
                       </td>
-                      <td
-                        class="px-1 py-[2px]"
-                        *ngIf="precioUnitario.tipoPrecioUnitario == 1"
-                      >
+                      <td class="px-1 py-[2px]" *ngIf="precioUnitario.tipoPrecioUnitario == 1">
                         <input
                           class="w-28"
                           autocomplete="off"
