@@ -128,9 +128,18 @@ export class EstimacionesComponent implements OnInit {
   esPza = false;
 
   alertaSuccess: boolean = false;
-      alertaMessage: string = '';
-      alertaTipo: AlertaTipo = AlertaTipo.none;
-      AlertaTipo = AlertaTipo;
+  alertaMessage: string = '';
+  alertaTipo: AlertaTipo = AlertaTipo.none;
+  AlertaTipo = AlertaTipo;
+
+  isOpenModal: boolean = false;
+
+  // tipoReporte: string = '';
+  isReporteIVA: boolean = false;
+  isReporteAnticipo: boolean = false;
+  isReporteConLetras: boolean = false;
+
+  isError1: boolean = false;
 
   constructor(
     private estimacionesService: EstimacionesService,
@@ -499,7 +508,7 @@ export class EstimacionesComponent implements OnInit {
   }
 
   imprimir(){
-    this.imprimirReporte(this.estimaciones,'','','','',30,30,30,30,true,this.totalEstimacionesConFormato,this.totalEstimacionesConIvaConFormato,this.proyectos[0],this.ivaEstimacionesConFormato, this.totalEstimacionesConIva)
+    this.imprimirReporte(this.estimaciones,'','','','',30,30,30,30,this.isReporteConLetras,this.totalEstimacionesConFormato,this.totalEstimacionesConIvaConFormato,this.proyectos[0],this.ivaEstimacionesConFormato, this.ivaEstimaciones, this.totalEstimacionesConIva, this.totalEstimaciones);
   }
 
   imprimirReporte(
@@ -517,8 +526,11 @@ export class EstimacionesComponent implements OnInit {
     totalConIVA: string,
     proyecto: proyectoDTO,
     totalIva: string,
-    totalConIVAnumber: number
+    totalIvaNumber: number,
+    totalConIVAnumber: number,
+    totalSinIVANumber: number
   ) {
+    console.log('Proyecto: ',proyecto);
     console.log('Anticipo: ',proyecto.anticipo+'%');
     
     (<any>pdfMake).addVirtualFileSystem(pdfFonts);
@@ -780,75 +792,32 @@ export class EstimacionesComponent implements OnInit {
       const totalMasIva: number = Number(
         (Number(precio.importe) * 0.16).toFixed(2)
       );
-  
-      // const subtotal = (Number(precio.importe) - totalMasIva).toFixed(2);
-  
-      // content.push({
-      //   columns: [
-      //     { width: '*', text: '' },
-      //     {
-      //       width: 'auto',
-      //       table: {
-      //         widths: ['auto', 'auto'],
-      //         body: [
-      //           [
-      //             {
-      //               text: `Subtotal de ${precio.codigo}`,
-      //               style: 'styleTotal',
-      //             },
-      //             {
-      //               text: `$ ${precio.importeConFormato}`,
-      //               style: 'styleTotal',
-      //               alignment: 'right',
-      //             },
-      //           ],
-      //         ],
-      //       },
-      //       layout: {
-      //         hLineColor: () => '#B9B9B9',
-      //         vLineColor: () => '#B9B9B9',
-      //         hLineWidth: () => 0,
-      //         vLineWidth: () => 0,
-      //       },
-      //       margin: [0, 0, 0, 5],
-      //     },
-      //   ],
-      // });
     });
 
-    // content.push({
-    //   columns: [
-    //     { width: '*', text: '' },
-    //     {
-    //       width: 'auto',
-    //       table: {
-    //         body: [
-    //           [
-                
-    //             {
-    //               text: `Total:`,
-    //               style: 'smallCantidadTotal',
-    //               alignment: 'right',
-    //             },
-    //             { text: numeroALetras(totalConIVAnumber), style: 'smallCantidadTotal'},
-    //           ],
-    //         ],
-    //       },
-    //       layout: {
-    //         hLineColor: () => '#B9B9B9',
-    //         vLineColor: () => '#B9B9B9',
-    //         hLineWidth: () => 0.5,
-    //         vLineWidth: () => 0.5,
-    //       },
-    //       margin: [0, 0, 0, 5],
-    //     },
-    //   ],
-      
-    // })
-  
+    //Define el valor del iva, si el reporte es de iva toma el valor que le llega desde la función, de lo contrario será 0
+    const valorIva = this.isReporteIVA ? totalIvaNumber : 0;
+    // const valorIva = this.tipoReporte == 'reporteIVA' ? 160000 : 0;
+    const total = calcularTotal(totalSinIVANumber, valorIva);
+    // const total = calcularTotal(1000000, valorIva);
+    const totalconFormato: string = new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+    }).format(total);
+    //En función de este total ya sea con o sin iva se calcula para el anticipo y la estimación
+    const anticipo = calcularAnticipo(total, proyecto.anticipo);
+    const anticipoconFormato: string = new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+    }).format(anticipo);
+    const estimacion = calcularEstimacion(total, anticipo);
+    const estimacionconFormato: string = new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+    }).format(estimacion);
+    
+
     content.push({
       columns: [
-        { width: '*', text: '' },
         { width: '*', text: '' },
         {
           width: 'auto',
@@ -864,8 +833,28 @@ export class EstimacionesComponent implements OnInit {
                   style: 'smallCantidadTotal',
                   alignment: 'right',
                 },
-                {}
-              ],
+              ]
+            ],
+          },
+          layout: {
+            hLineColor: () => '#B9B9B9',
+            vLineColor: () => '#B9B9B9',
+            hLineWidth: () => 0,
+            vLineWidth: () => 0,
+          },
+          margin: [0, 0, 0, 0],
+        },
+      ],
+    });
+    
+    if(this.isReporteIVA){
+      content.push({
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            body: [
               [
                 {
                   text: 'IVA ' + proyecto.porcentajeIva + '%',
@@ -876,29 +865,127 @@ export class EstimacionesComponent implements OnInit {
                   style: 'smallCantidadTotal',
                   alignment: 'right',
                 },
-                {}
-              ],
-              [
-                { text: 'Total', style: 'smallCantidadTotal' },
-                {
-                  text: ` ${totalConIVA}`,
-                  style: 'smallCantidadTotal',
-                  alignment: 'right',
-                },
-                {text: numeroALetras(totalConIVAnumber), style: 'smallCantidadTotal'}
               ],
             ],
           },
           layout: {
             hLineColor: () => '#B9B9B9',
             vLineColor: () => '#B9B9B9',
-            hLineWidth: () => 0.5,
-            vLineWidth: () => 0.5,
+            hLineWidth: () => 0,
+            vLineWidth: () => 0,
           },
-          margin: [0, 0, 0, 5],
+          margin: [0, 0, 0, 0],
         },
       ],
     });
+    }
+
+    if(this.isReporteAnticipo){
+      content.push({
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            body: [
+              [
+                {
+                  text: 'Anticipo ' + proyecto.anticipo + '%',
+                  style: 'smallCantidadTotal',
+                },
+                {
+                  text: ` ${anticipoconFormato}`,
+                  style: 'smallCantidadTotal',
+                  alignment: 'right',
+                },
+              ],
+              [
+                {
+                  text: 'Estimación',
+                  style: 'smallCantidadTotal',
+                },
+                {
+                  text: ` ${estimacionconFormato}`,
+                  style: 'smallCantidadTotal',
+                  alignment: 'right',
+                },
+              ],
+            ],
+          },
+          layout: {
+            hLineColor: () => '#B9B9B9',
+            vLineColor: () => '#B9B9B9',
+            hLineWidth: () => 0,
+            vLineWidth: () => 0,
+          },
+          margin: [0, 0, 0, 0],
+        },
+      ],
+    });
+    }
+
+    if(importeConLetra){
+       content.push({
+      columns: [
+        { width: '*', text: '' },
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            body: [
+              [
+                { text: 'Total', style: 'smallCantidadTotal' },
+                {
+                  text: ` ${ totalconFormato}`,
+                  style: 'smallCantidadTotal',
+                  alignment: 'right',
+                },
+                {text: numeroALetras(total), style: 'smallCantidadTotal'}
+              ],
+            ],
+          },
+          layout: {
+            hLineColor: () => '#B9B9B9',
+            vLineColor: () => '#B9B9B9',
+            hLineWidth: () => 0,
+            vLineWidth: () => 0,
+          },
+          margin: [0, 0, 0, 0],
+        },
+      ],
+    });
+    }else{
+       content.push({
+      columns: [
+        { width: '*', text: '' },
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            body: [
+              [
+                { text: 'Total', style: 'smallCantidadTotal' },
+                {
+                  text: ` ${ totalconFormato}`,
+                  style: 'smallCantidadTotal',
+                  alignment: 'right',
+                },
+              ],
+            ],
+          },
+          layout: {
+            hLineColor: () => '#B9B9B9',
+            vLineColor: () => '#B9B9B9',
+            hLineWidth: () => 0,
+            vLineWidth: () => 0,
+          },
+          margin: [0, 0, 0, 0],
+        },
+      ],
+    });
+    }
+
+    
   
     // if (importeConLetra) {
     //   precioUnitario.forEach((proyecto) => {
@@ -968,6 +1055,56 @@ export class EstimacionesComponent implements OnInit {
       this.alertaTipo = AlertaTipo.none;
       this.alertaMessage = '';
     }
+
+  cerrarModal(){
+    this.isOpenModal = false;
+    this.isError1 = false;
+    this.isReporteAnticipo = false;
+    this.isReporteIVA = false;
+    this.isReporteConLetras = false;
+  }
+
+  abrirModalImprimir(){
+    this.isOpenModal = true;
+  }
+
+  detenerCierre(event: MouseEvent) {
+      event.stopPropagation();
+    }
+}
+
+/**
+ * Calcula el valor del anticipo en relacion con el total.
+ * @param {number} total - El subtotal.
+ * @param {number}anticipo - El porcentaje del anticipo.
+ * @returns {number} El valor del anticipo.
+ */
+export function calcularAnticipo(total: number, anticipo: number): number {
+  let valor = total*anticipo/100;
+  return valor;
+}
+
+/**
+ * Calcula el valor de la estimación en relación con el total y el anticipo.
+ * @param {number} total - El total.
+ * @param {number}anticipo - El valor del anticipo.
+ * @returns {number} El valor de la estimación.
+ */
+function calcularEstimacion(total: number, anticipo: number): number {
+  let valor = total;
+  valor -= anticipo;
+  return valor;
+}
+
+/**
+ * Calcula el valor total de una estimación, teniendo en cuenta el subtotal y el IVA.
+ * @param {number} subtotal - El subtotal.
+ * @param {number} iva - El valor del IVA.
+ * @returns {number} El valor total de la estimación.
+ */
+function calcularTotal(subtotal: number, iva: number): number {
+  let valor = subtotal + iva;
+  return valor;
 }
 
 function mapHijos(hijos: any[], nivel = 1, prefijo = ''): any[] {
