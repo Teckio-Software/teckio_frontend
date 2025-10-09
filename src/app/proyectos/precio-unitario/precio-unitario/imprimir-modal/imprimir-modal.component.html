@@ -82,7 +82,10 @@
 
       <div *ngIf="currentStep === 1">
         <p class="text-red-600 text-base" *ngIf="isError2">
-          Selecciona una opción antes de continuar.
+          Selecciona el tipo de impresión antes de continuar.
+        </p>
+        <p class="text-red-600 text-base" *ngIf="isError5">
+          Selecciona un tipo de precio de conceptos antes de continuar.
         </p>
         <p class="text-red-600 text-base" *ngIf="isError4">
           Selecciona al menos un concepto antes de imprimir.
@@ -177,9 +180,7 @@
             </fieldset>
           </div>
         </div>
-        <div *ngIf="reporteManoDeObra" class="grid grid-cols-2 gap-1">
-          
-        </div>
+        <div *ngIf="reporteManoDeObra" class="grid grid-cols-2 gap-1"></div>
       </div>
 
       <div *ngIf="currentStep === 2">
