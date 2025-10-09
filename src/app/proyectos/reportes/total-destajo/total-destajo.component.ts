@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ProyectoService } from '../../proyecto/proyecto.service';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import { ReportesService } from '../reportes.service';
@@ -15,6 +15,7 @@ import { formatDate } from '@angular/common';
 export class TotalDestajoComponent {
 
   @Output() total = new EventEmitter();
+  @Input() esDestajo : boolean = false;
 
   changeColor: any = null;
 
@@ -61,7 +62,7 @@ export class TotalDestajoComponent {
   ngOnInit(): void {
     let perametros: parametrosParaBuscarContratos = {
       idProyecto: this.selectedProyecto,
-      tipoContrato: false,
+      tipoContrato: this.esDestajo,
       idContratista: 0,
       idContrato: 0,
       fechaInicio: null,
@@ -83,6 +84,7 @@ export class TotalDestajoComponent {
   }
 
   verConceptos(idContratista: number) {
+    this.parametrosConceptos.tipoContrato = this.esDestajo;
     this.changeColor = idContratista;
     this.contratistaSeleccionado = true;
     this.appRecarga += 1;

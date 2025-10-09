@@ -99,8 +99,15 @@ export const pages: Page[] = [
         //SeccionContrato
       },
       {
-        name: 'Reportes',
-        link: '/reportes',
+        name: 'Destajos',
+        link: '/destajos',
+        imageUrl: 'assets/facturas.svg',
+        permiso: [''],
+        //SeccionAvanceObra
+      },
+      {
+        name: 'Subcontratos',
+        link: '/subcontratos',
         imageUrl: 'assets/facturas.svg',
         permiso: [''],
         //SeccionAvanceObra

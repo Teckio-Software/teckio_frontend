@@ -1,3 +1,4 @@
+import { ReportesRoutingModule } from './proyectos/reportes/reportes-routing.module';
 import { GlosarioRoutingModule } from './documentacion/glosario/glosario-routing.module';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -384,10 +385,17 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'reportes',
+    path: 'destajos',
     loadChildren: () =>
       import(`./proyectos/reportes/reportes.module`).then(
         (module) => module.ReportesModule
+      ),
+  },
+  {
+    path: 'subcontratos',
+    loadChildren: () =>
+      import(`./proyectos/reportes-subcontratos/reportes-subcontratos.module`).then(
+        (module) => module.ReportesSubcontratosModule
       ),
   },
   {
@@ -426,7 +434,7 @@ const routes: Routes = [
       ).then((module) => module.ProductosServiciosModule),
   },
   {
-   
+
     path: 'auditorias',
     loadChildren: () =>
       import(`./seguridad/auditorias/auditorias.module`).then(

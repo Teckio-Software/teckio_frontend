@@ -171,6 +171,7 @@ import { AuditoriasComponent } from './seguridad/auditorias/auditorias.component
 import { GlosarioComponent } from './documentacion/glosario/glosario.component';
 import { ModalGlosarioComponent } from './documentacion/modal-glosario/modal-glosario.component';
 import { DocumentacionModule } from './documentacion/documentacion.module';
+import { ReportesSubcontratosComponent } from './proyectos/reportes-subcontratos/reportes-subcontratos/reportes-subcontratos.component';
 
 export function playerFactory() {
   return player;
@@ -325,7 +326,8 @@ export function playerFactory() {
     ModalGlosarioComponent,
     UppercaseInputDirective,
     OnlyNumbersDirective,
-    AuditoriasComponent
+    AuditoriasComponent,
+    ReportesSubcontratosComponent
 
   ],
 

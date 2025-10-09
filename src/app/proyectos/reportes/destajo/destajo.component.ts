@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { EstimacionesService } from '../../estimaciones/estimaciones.service';
 import { ProyectoService } from '../../proyecto/proyecto.service';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
@@ -24,6 +24,7 @@ export class DestajoComponent {
   filteredcontratista: Observable<contratistaDTO[]> = new Observable<contratistaDTO[]>();
 
   @Output() total = new EventEmitter();
+  @Input() esDestajo : boolean = false;
 
   selectedPeriodo : number = 0;
   selectedProyecto : number = 0;
@@ -57,7 +58,8 @@ export class DestajoComponent {
     porcentajeDestajo: 0,
     porcentajeDestajoConFormato: '',
     importeDestajo: 0,
-    importeDestajoConFormato: ''
+    importeDestajoConFormato: '',
+    tipoContrato: false
   }
 
 
@@ -88,22 +90,22 @@ export class DestajoComponent {
       let idProyecto = _seguridadService.obtenerIdProyectoLocalStorage();
       this.selectedProyecto = Number(idProyecto);
       this.selectedEmpresa = Number(idEmpresa);
-     
+
      }
 
      private _filter(value: string): contratistaDTO[] {
       const filterValue = this._normalizeValue(String(value));
-  
-  
-      return this.contratistas.filter(contratista => 
+
+
+      return this.contratistas.filter(contratista =>
         this._normalizeValue(contratista.razonSocial).includes(filterValue)
       );
     }
-  
+
     private _normalizeValue(value: string): string {
       return value.toLowerCase().replace(/\s/g, '');
     }
-  
+
 
      ngOnInit(): void {
       this.total.emit(this.totalDestajos);
@@ -124,6 +126,11 @@ export class DestajoComponent {
       this.contratistaService.obtenerTodos(this.selectedEmpresa)
       .subscribe((contratistas) => {
         this.contratistas = contratistas;
+        if(this.esDestajo){
+          this.contratistas = contratistas.filter(z => z.esProveedorServicio == true);
+        }else{
+          this.contratistas = contratistas.filter(z => z.esProveedorMaterial == true && z.esProveedorServicio == true);
+        }
         this.filteredcontratista = this.contratistaControl.valueChanges.pipe(
           startWith(''),
           map(value => {
@@ -133,7 +140,7 @@ export class DestajoComponent {
         );
       })
     }
-    
+
 
     filtrarDestajo(){
       console.log("este es el peridod", this.selectedEmpresa, this.selectedProyecto, this.selectedPeriodo);
@@ -141,6 +148,7 @@ export class DestajoComponent {
       this.parametroDestajos.idContratista = this.selectedContratista;
       this.parametroDestajos.idContrato = this.selectedContrato;
       this.parametroDestajos.idProyecto = this.selectedProyecto;
+      this.parametroDestajos.tipoContrato = this.esDestajo;
 
       if(this.parametroDestajos.idPeriodoEstimacion == 0 || this.parametroDestajos.idContratista == 0){
         console.log("no hay seleccion");
@@ -159,7 +167,7 @@ export class DestajoComponent {
     onSelectionSeleccionContratista(event: Event) {
       const inputElement = event.target as HTMLInputElement;
       const selectedValue = inputElement.value;
-  
+
       //  si uri quiere ver el proyecto seleccionado completo
       const selectedContratista = this.contratistas.find(z => z.razonSocial === selectedValue);
       if (selectedContratista) {
@@ -179,7 +187,11 @@ export class DestajoComponent {
         }
         this.contratosService.obtenerDestajos(parametros, this.selectedEmpresa)
           .subscribe((contratos) => {
-            this.contratos = contratos
+            this.contratos = contratos;
+            if(this.esDestajo){
+            this.contratos = this.contratos.filter(x => x.tipoContrato == true);
+            }else{
+              this.contratos = this.contratos.filter(x => x.tipoContrato == false);}
           })
       this.filtrarDestajo();
 
@@ -267,7 +279,12 @@ export class DestajoComponent {
       }
       this.contratosService.obtenerDestajos(parametros, this.selectedEmpresa)
         .subscribe((contratos) => {
-          this.contratos = contratos
+          this.contratos = contratos;
+          if(this.esDestajo){
+          this.contratos = this.contratos.filter(x => x.tipoContrato == true);
+          }else{
+            this.contratos = this.contratos.filter(x => x.tipoContrato == false);
+          }
         })
     this.filtrarDestajo();
 

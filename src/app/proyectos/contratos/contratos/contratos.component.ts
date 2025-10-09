@@ -1,3 +1,4 @@
+import { contratoDTO } from './../tsContratos';
 import { ReporteContratoDTO } from './ReporteContrato';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ProyectoService } from '../../proyecto/proyecto.service';
@@ -6,7 +7,6 @@ import { pruebaDTO } from 'src/app/contabilidad/cuenta-contable/tsCuentaContable
 import { ContratoService } from '../contratos.service';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import {
-  contratoDTO,
   destajistasXConceptoDTO,
   detalleXContratoDTO,
   detalleXContratoParaTablaDTO,
@@ -123,6 +123,11 @@ export class ContratosComponent implements OnInit {
         .obtenerDestajos(parametros, this.selectedEmpresa)
         .subscribe((contratos) => {
           this.contratos = contratos;
+          if(this.esDestajoOContrato){
+          this.contratos = this.contratos.filter(z => z.tipoContrato == true);
+        }else{
+          this.contratos = this.contratos.filter(z => z.tipoContrato == false);
+        }
         });
     }
     this.registroEditado.porcentajeDestajoEditando = false;
@@ -209,7 +214,6 @@ export class ContratosComponent implements OnInit {
 
     // Después de limpiar, asigna el nuevo valor de nombreDestajo
     this.nombreDestajo = selectedValueNombreDestajo;
-    console.log('valro selected', selectedValueNombreDestajo);
 
     // Actualiza contratistas basado en la selección
     if (this.nombreDestajo === 'Subcontratistas') {
@@ -235,20 +239,13 @@ export class ContratosComponent implements OnInit {
 
   // Método para limpiar o restablecer datos
   limpiarDatos(): void {
-    this.nombreDestajo = ''; // Restablece nombreDestajo
-    this.contratistas = []; // Reinicia la lista de contratistas
-    this.esDestajoOContrato = false; // Restablece a un valor booleano inicial
-
-    // Añade aquí cualquier otra variable que necesites limpiar o restablecer
-    // Por ejemplo:
-    // this.algunOtroEstado = false; // Si tienes otros estados booleanos
-    // this.otraSeleccion = null; // Si tienes otras selecciones
-    // this.algunObjeto = { propiedad1: '', propiedad2: 0 }; // Si tienes objetos
-
-    // Si usas formularios reactivos, restablece el formulario
-    // if (this.miFormulario) {
-    //   this.miFormulario.reset();
-    // }
+    this.contratistaSeleccionado = '';
+    this.selectedContratista = 0;
+    this.contratos = [];
+    this.contratoSeleccionadoDescripcion = '';
+    this.contratoSeleccionado = 0;
+    this.detallesContrato = [];
+    this.contratoSeleccionadoInformacion.id = 0;
   }
 
   // Función para manejar el cambio de estado
@@ -335,6 +332,11 @@ export class ContratosComponent implements OnInit {
               .obtenerDestajos(parametros, this.selectedEmpresa)
               .subscribe((contratos) => {
                 this.contratos = contratos;
+                if(this.esDestajoOContrato){
+          this.contratos = this.contratos.filter(z => z.tipoContrato == true);
+        }else{
+          this.contratos = this.contratos.filter(z => z.tipoContrato == false);
+        }
               });
           }
           this.displayCarga = 'none';
@@ -365,6 +367,11 @@ estaEditandoContrato() {
           .obtenerDestajos(parametros, this.selectedEmpresa)
           .subscribe((contratos) => {
             this.contratos = contratos;
+            if(this.esDestajoOContrato){
+          this.contratos = this.contratos.filter(z => z.tipoContrato == true);
+        }else{
+          this.contratos = this.contratos.filter(z => z.tipoContrato == false);
+        }
             let contrato = this.contratos.filter(z => z.id == this.contratoSeleccionadoInformacion.id);
             this.contratoSeleccionadoInformacion = contrato[0];
             this.contratoSeleccionadoInformacion.anticipoConFormato = new Intl.NumberFormat('es-MX', {
@@ -432,6 +439,11 @@ estaEditandoContrato() {
       .obtenerDestajos(parametros, this.selectedEmpresa)
       .subscribe((contratos) => {
         this.contratos = contratos;
+        if(this.esDestajoOContrato){
+          this.contratos = this.contratos.filter(z => z.tipoContrato == true);
+        }else{
+          this.contratos = this.contratos.filter(z => z.tipoContrato == false);
+        }
         this.displayCarga = 'none';
       });
     this.registroEditado.porcentajeDestajoEditando = false;
