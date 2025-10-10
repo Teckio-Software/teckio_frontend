@@ -7,6 +7,7 @@ import { numeroALetras } from 'src/app/compras/orden-compra/NumeroALetras';
 import { proyectoDTO } from 'src/app/proyectos/proyecto/tsProyecto';
 import { Reporte } from './types/reporte';
 import { style } from '@angular/animations';
+import { de } from 'date-fns/locale';
 
 /**
  * Imprime un reporte de presupuesto en formato PDF.
@@ -81,7 +82,6 @@ export function imprimirReporteAnalisisPU(reporte: Reporte) {
       color: 'black',
     },
   };
-
   reporte.precioUnitario.forEach((pu, index) => {
     //imagen
   content.push({
@@ -89,7 +89,7 @@ export function imprimirReporteAnalisisPU(reporte: Reporte) {
       {
         stack: [
           {
-            image: image,
+            image: reporte.base64!=''? reporte.base64: image,
             width: 60,
             height: 60,
             alignment: 'right',
@@ -437,6 +437,414 @@ maximumFractionDigits: 2,
     ])
   }
 
+  });
+
+  const docDefinition: any = {
+    content,
+    styles,
+    pageMargins: [
+      reporte.margenIzquierdo,
+      reporte.margenSuperior,
+      reporte.margenDerecho,
+      reporte.margenInferior,
+    ],
+  };
+
+  pdfMake
+    .createPdf(docDefinition)
+    .download(`Análisis de precio unitario${reporte.titulo}.pdf`);
+}
+
+export function imprimirReporteManoObra(reporte: Reporte) {
+  (<any>pdfMake).addVirtualFileSystem(pdfFonts);
+  let totalEnLetras: string;
+  const content: any[] = [];
+  const styles = {
+    header: {
+      fontSize: 10,
+    },
+    subheader: {
+      fontSize: 8,
+      bold: true,
+    },
+    quote: {
+      italics: true,
+      fontSize: 8,
+    },
+    small: {
+      fontSize: 8,
+    },
+    smallCantidad: {
+      fontSize: 8,
+      alignment: 'right',
+    },
+    smallCantidadTotal: {
+      fontSize: 8,
+      alignment: 'right',
+      bold: true,
+    },
+    smallRight: {
+      fontSize: 8,
+      alignment: 'right',
+    },
+    smallCenter: {
+      fontSize: 8,
+      alignment: 'center',
+    },
+    smallBold: {
+      fontSize: 8,
+      textAlign: 'center',
+      bold: true,
+    },
+    smallColored: {
+      fontSize: 8,
+      textAlign: 'center',
+      bold: true,
+      color: '#1c398e',
+    },
+    styleTotal: {
+      fontSize: 8,
+      textAlign: 'center',
+      bold: true,
+    },
+    bold: {
+      bold: true,
+    },
+    rounded: {
+      rounded: 10,
+    },
+    tableHeader: {
+      bold: true,
+      fontSize: 12,
+      color: 'black',
+    },
+  };
+
+  //imagen
+  content.push({
+    columns: [
+      {
+        stack: [
+          {
+            image: reporte.base64!=''? reporte.base64: image,
+            width: 60,
+            height: 60,
+            alignment: 'right',
+          },
+        ],
+      },
+    ],
+  });
+  content.push({
+    text: '\n',
+  });
+  content.push({
+    columns: [
+      {
+        stack: [
+          {
+            text: [{ text: `${reporte.encabezadoIzq}`, bold: true }],
+            style: 'header',
+            alignment: 'left',
+          },
+        ],
+      },
+      {
+        stack: [
+          {
+            text: [{ text: `${reporte.encabezadoCentro}`, bold: true }],
+            style: 'header',
+            alignment: 'center',
+          },
+        ],
+      },
+      {
+        stack: [
+          {
+            text: [{ text: `${reporte.encabezadoDerecha}`, bold: true }],
+            style: 'header',
+            alignment: 'right',
+          },
+        ],
+      },
+    ],
+  });
+
+  content.push({
+    text: '\n',
+  });
+
+  //tabla de proyecto - header y contenido
+  const tableBodyProject = [
+    [{ text: 'Presupuesto de mano de obra', style: 'subheader' }],
+    [{ text: reporte.titulo, style: 'small' }],
+  ];
+
+  content.push({
+    margin: [0, 10, 0, 10],
+    layout: {
+      hLineColor: () => '#B9B9B9',
+      vLineColor: () => '#B9B9B9',
+      hLineWidth: () => 0.5,
+      vLineWidth: () => 0.5,
+    },
+    table: {
+      headerRows: 1,
+      widths: ['*'],
+      body: tableBodyProject,
+      style: 'tableHeader',
+    },
+  });
+
+  const tableHeader = [
+    [
+      { text: 'C Clave', style: 'subheader', alignment: 'center' },
+      { text: 'Descripción', style: 'subheader', alignment: 'center' },
+      { text: 'Unidad', style: 'subheader', alignment: 'center' },
+      { text: 'Cantidad', style: 'subheader', alignment: 'center' },
+      {
+        text: 'Costo unitario',
+        style: 'subheader',
+        alignment: 'center',
+      },
+      { text: 'Total', style: 'subheader', alignment: 'center' },
+    ],
+  ];
+  content.push({
+    margin: [0, 0, 0, 0],
+    layout: {
+      hLineColor: () => '#B9B9B9',
+      hLineWidth: () => 0.5, // todas las líneas horizontales
+      vLineColor: () => '#B9B9B9',
+      vLineWidth: () => 0.5, // todas las líneas verticales
+    },
+    table: {
+      headerRows: 1,
+      widths: [70, '*', 30, 60, 60, 60],
+      body: tableHeader,
+    },
+  });
+  let tableBodyProyecto: any = [];
+  reporte.precioUnitario.forEach((pu, index) => {
+    var detalles = reporte.detallesPrecioUnitario.filter((detalle) => detalle.idPrecioUnitario === pu.id)
+    if(detalles.length>0){
+      // content.push({
+      //   text: pu.descripcion, style: 'subheader',
+      // });
+      detalles.forEach(detalle => {
+      tableBodyProyecto.push([
+      {
+        text: (detalle.esCompuesto ? '+ ' : '  '),
+        style: { fontSize: 8 },
+      },
+      {
+        text: detalle.codigo,
+        style: detalle.esCompuesto ? { fontSize: 8, color: '#1c398e' } : { fontSize: 8 },
+      },
+      {
+        text: detalle.descripcion,
+        style: { fontSize: 8 },
+        
+      },
+      { text: detalle.unidad || '', style: 'small' },
+      {
+        text: detalle.cantidadConFormato || '',
+        style: detalle.esCompuesto ? { fontSize: 8, color: '#1c398e', alignment: 'right' } : { fontSize: 8, alignment: 'right' },
+      },
+      {
+        text: `$${detalle.costoBaseConFormato}` || '',
+        style: {fontSize: 8, color: '#1c398e', alignment: 'right'},
+      },
+      {
+        text: `${(detalle.importeConFormato)}` || '',
+        style: 'smallRight',
+      },
+      ]);
+      content.push({
+        margin: [0, 0, 0, 0],
+        layout: {
+          hLineWidth: () => 0, // todas las líneas horizontales
+          vLineWidth: () => 0, // todas las líneas verticales
+        },
+        table: {
+          headerRows: 0,
+          widths: [10, 60, '*', 30, 60, 60, 60],
+          body: tableBodyProyecto,
+        },
+      });
+    tableBodyProyecto = [];
+    });
+    content.push({
+    text: 'Total de conceptos', style: 'subheader',
+    });
+
+      // Formatear con separadores de miles y dos decimales
+    const formato = new Intl.NumberFormat('es-ES', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    });
+
+    let IndirectoPorcentaje = reporte.indirectos.find(i=>i.codigo === '001')?.porcentaje;
+    if(IndirectoPorcentaje == undefined){
+      IndirectoPorcentaje = 0
+    }
+    let IndirectoPorcentajeConFormato = reporte.indirectos.find(i=>i.codigo === '001')?.porcentajeConFormato;
+    if(IndirectoPorcentajeConFormato == undefined || IndirectoPorcentajeConFormato == null || IndirectoPorcentajeConFormato == ''){
+      IndirectoPorcentajeConFormato = '0.00%'
+    }
+    let FinanciamientoPorcentaje = reporte.indirectos.find(i=>i.codigo === '002')?.porcentaje;
+    if(FinanciamientoPorcentaje == undefined){
+      FinanciamientoPorcentaje = 0
+    }
+    let FinanciamientoPorcentajeConFormato = reporte.indirectos.find(i=>i.codigo === '002')?.porcentajeConFormato;
+    if(FinanciamientoPorcentajeConFormato == undefined || FinanciamientoPorcentajeConFormato == null || FinanciamientoPorcentajeConFormato == ''){
+      FinanciamientoPorcentajeConFormato = '0.00%'
+    }
+    let UtilidadPorcentajeConFormato = reporte.indirectos.find(i=>i.codigo === '003')?.porcentajeConFormato;
+    if(UtilidadPorcentajeConFormato == undefined || UtilidadPorcentajeConFormato == null || UtilidadPorcentajeConFormato == ''){
+      UtilidadPorcentajeConFormato = '0.00%'
+    }
+    let UtilidadPorcentaje = reporte.indirectos.find(i=>i.codigo === '003')?.porcentaje;
+    if(UtilidadPorcentaje == undefined){
+      UtilidadPorcentaje = 0
+    }
+    let CargosAdicionalesPorcentaje = reporte.indirectos.find(i=>i.codigo === '004')?.porcentaje;
+    if(CargosAdicionalesPorcentaje == undefined){
+      CargosAdicionalesPorcentaje = 0
+    }
+    let CargosAdicionalesPorcentajeConFormato = reporte.indirectos.find(i=>i.codigo === '004')?.porcentajeConFormato;
+    if(CargosAdicionalesPorcentajeConFormato == undefined || CargosAdicionalesPorcentajeConFormato == null || CargosAdicionalesPorcentajeConFormato == ''){
+      CargosAdicionalesPorcentajeConFormato = '0.00%'
+    }
+    const indirectos = (IndirectoPorcentaje/100)*pu.precioUnitario;
+    const indirectosConFormato = formato.format(indirectos); 
+    const financiamientos = (FinanciamientoPorcentaje/100)*pu.precioUnitario;
+    const financiamientosConFormato = formato.format(financiamientos);
+    const utilidad = (UtilidadPorcentaje/100)*pu.precioUnitario;
+    const utilidadConFormato = formato.format(utilidad);
+    const cargosAdicionales = (CargosAdicionalesPorcentaje/100)*pu.precioUnitario;
+    const cargosAdicionalesConFormato = formato.format(cargosAdicionales);
+    const cantidadIva = pu.precioUnitario * (reporte.proyecto.porcentajeIva / 100);  
+    const cantidadIvaConFormato = formato.format(cantidadIva); 
+    const subtotal = pu.precioUnitario + indirectos+utilidad+cargosAdicionales+financiamientos;
+    const subtotalConFormato = formato.format(subtotal); 
+    const total = subtotal + cantidadIva;
+    const totalConFormato = formato.format(total); 
+
+    content.push({
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            body: [
+              // booleano de iva opcional
+              // ...(reporte.imprimirImpuesto
+              //   ? [
+              //       [
+              //         {
+              //           text: 'IVA ' + reporte.proyecto.porcentajeIva + '%',
+              //           style: 'smallCantidadTotal',
+              //         },
+              //         {
+              //           text: ` ${reporte.totalIva}`,
+              //           style: 'smallCantidadTotal',
+              //           alignment: 'right',
+              //         },
+              //       ],
+              //     ]
+              //   : []),
+                [
+                  { text: 'Costo directo', style: 'smallCantidadTotal'},
+                  { text: pu.precioUnitarioConFormato, style: 'smallCantidadTotal'}
+                ],
+                [
+                  { text: `Indirectos(${IndirectoPorcentajeConFormato})`, style: 'smallCantidadTotal'},
+                  { text: `$${indirectosConFormato}`, style: 'smallCantidadTotal'}
+                ],
+                [
+                  { text: `Financiamiento(${FinanciamientoPorcentajeConFormato})`, style: 'smallCantidadTotal'},
+                  { text: `$${financiamientosConFormato}`, style: 'smallCantidadTotal'}
+                ],
+                [
+                  { text: `Utilidad(${UtilidadPorcentajeConFormato})`, style: 'smallCantidadTotal'},
+                  { text: `$${utilidadConFormato}`, style: 'smallCantidadTotal'}
+                ],
+                [
+                  { text: `Cargos adicionales(${CargosAdicionalesPorcentajeConFormato})`, style: 'smallCantidadTotal'},
+                  { text: `$${cargosAdicionalesConFormato}`, style: 'smallCantidadTotal'}
+                ],
+              [
+                { text: 'Precio unitario', style: 'smallCantidadTotal' },
+                {
+                  text: `${pu.precioUnitarioConFormato}`,
+                  style: 'smallCantidadTotal',
+                  alignment: 'right',
+                },
+              ],
+              [
+                  { text: 'Subtotal', style: 'smallCantidadTotal'},
+                  { text: `$${subtotalConFormato}`, style: 'smallCantidadTotal'}
+                ],
+              [
+                { text: `IVA(${reporte.proyecto.porcentajeIva})%`, style: 'smallCantidadTotal' },
+                {
+                  text: `$${cantidadIvaConFormato}`,
+                  style: 'smallCantidadTotal',
+                  alignment: 'right',
+                },
+              ],
+              [
+                { text: 'Total', style: 'smallCantidadTotal' },
+                {
+                  text: `$${totalConFormato}`,
+                  style: 'smallCantidadTotal',
+                  alignment: 'right',
+                },
+              ],
+            ],
+          },
+          layout: {
+            hLineColor: () => '#fff',
+            vLineColor: () => '#fff',
+            hLineWidth: () => 0,
+            vLineWidth: () => 0,
+          },
+          margin: [0, 0, 0, 0],
+        },
+      ],
+    });
+    if (reporte.importeConLetra) {
+    totalEnLetras = numeroALetras(total);
+
+    content.push({
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: ['auto'],
+            body: [
+              [
+                {
+                  text: `${totalEnLetras}`,
+                  style: 'smallBold',
+                },
+              ],
+            ],
+          },
+          layout: {
+            hLineColor: () => '#fff',
+            vLineColor: () => '#fff',
+            hLineWidth: () => 0,
+            vLineWidth: () => 0,
+          },
+          margin: [0, 0, 0, 5],
+        },
+      ],
+    });
+  }
+  }
   });
 
   const docDefinition: any = {

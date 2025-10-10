@@ -28,4 +28,5 @@ export interface Reporte {
   imprimirConPrecioUnitarioIVA: boolean;
   imprimirConPUMasIva: boolean;
   indirectos: IndirectosDTO[];
+  base64: string; 
 }

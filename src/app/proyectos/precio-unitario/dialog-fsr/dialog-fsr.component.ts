@@ -114,7 +114,6 @@ export class DialogFSRComponent {
     private _SeguridadService: SeguridadService,
     private estimacionesService: EstimacionesService,
     private proyectoService: ProyectoService,
-
     // @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     let Empresa = this._SeguridadService.obtenIdEmpresaLocalStorage();
@@ -123,7 +122,6 @@ export class DialogFSRComponent {
     this.selectedProyecto = Number(Proyecto);
     // console.log(this.dataFSR);
     // this.esAutorizado = this.dataFSR.esAutorizado;
-    
   }
 
   ngOnInit(): void {
@@ -133,7 +131,7 @@ export class DialogFSRComponent {
         if (datos.length > 0) {
           this.existenEstimaciones = true;
         }
-      });
+      }); 
     console.log(
       'datos recibidos dias Considerados No trabajados',
       this.selectedEmpresa
@@ -399,7 +397,7 @@ export class DialogFSRComponent {
          this.ParametrosFsrDTO.infonavit <= 0 ||
          this.ParametrosFsrDTO.uma <= 0){
           //Alerta por datos faltantes, provisionalmente un console.log y todos los datos son obligatorios
-          this.alerta(AlertaTipo.error, 'Capture todos los campos.', 3000);
+          this.alerta(AlertaTipo.warn, 'Capture todos los campos.', 3000);
           // console.log('faltan datos');
            return;
          }
@@ -409,10 +407,11 @@ export class DialogFSRComponent {
         .subscribe({next:(datos) => {
           if(datos.estatus){
             this.ObtenerFS();
+            console.log('Alerta ejecutada');
             this.alerta(AlertaTipo.save, datos.descripcion, 8000);
           this.calcularDias();
           }else{
-            this.alerta(AlertaTipo.error, datos.descripcion, 8000);
+            this.alerta(AlertaTipo.warn, datos.descripcion, 8000);
           }
         },error:()=>{
           //Mensaje de error
