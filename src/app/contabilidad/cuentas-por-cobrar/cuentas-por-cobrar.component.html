@@ -23,8 +23,13 @@
       </div>
     </div>
     <!-- busqueda y filtros -->
-    <div class="flex gap-3 px-3">
+    <div class="flex items-center gap-3 px-3">
       <div class="relative">
+        <img
+          src="./assets/search.svg"
+          alt="Buscar"
+          class="w-4 h-4 absolute inset-y-0 left-2 my-auto text-gray-500 pointer-events-none"
+        />
         <input
           class="w-64 pl-8 pr-2 py-2 bg-gris border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black"
           id="cuenta"
@@ -32,64 +37,46 @@
           placeholder="Buscar"
           autocomplete="off"
         />
-        <img
-          src="./assets/search.svg"
-          alt="Buscar"
-          class="w-4 h-4 absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
-        />
-        <div class="hidden">
-          <cdk-virtual-scroll-viewport
-            itemSize="36"
-            class="absolute z-50 left-0 top-full mt-1 bg-white border border-gray-200 rounded-md w-72 h-48 overflow-auto shadow-lg"
-          >
-            <div
-              class="px-4 py-2 cursor-pointer hover:bg-gray-100"
-              style="height: 36px; box-sizing: border-box"
-            >
-              prueba
-            </div>
-          </cdk-virtual-scroll-viewport>
-        </div>
       </div>
+
       <select
-        id="countries"
-        class="bg-gris border border-[#929292] text-[#929292] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-3 py-2"
+        class="bg-gris border border-[#929292] text-[#929292] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 px-3 py-2 w-auto min-w-fit"
       >
         <option selected disabled>Proveedor</option>
-        <option value="US">United States</option>
-        <option value="CA">Canada</option>
-        <option value="FR">France</option>
-        <option value="DE">Germany</option>
+        <option>United States</option>
+        <option>Canada</option>
+        <option>France</option>
+        <option>Germany</option>
       </select>
+
       <select
-        id="countries"
-        class="bg-gris border border-[#929292] text-[#929292] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-3 py-2"
+        class="bg-gris border border-[#929292] text-[#929292] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 px-3 py-2 w-40 min-w-fit"
       >
         <option selected disabled>Saldo pendiente</option>
-        <option value="US">United States</option>
-        <option value="CA">Canada</option>
-        <option value="FR">France</option>
-        <option value="DE">Germany</option>
+        <option>United States</option>
+        <option>Canada</option>
+        <option>France</option>
+        <option>Germany</option>
       </select>
+
       <select
-        id="countries"
-        class="bg-gris border border-[#929292] text-[#929292] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-3 py-2"
+        class="bg-gris border border-[#929292] text-[#929292] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 px-3 py-2 w-auto min-w-fit"
       >
         <option selected disabled>Fecha</option>
-        <option value="US">United States</option>
-        <option value="CA">Canada</option>
-        <option value="FR">France</option>
-        <option value="DE">Germany</option>
+        <option>United States</option>
+        <option>Canada</option>
+        <option>France</option>
+        <option>Germany</option>
       </select>
+
       <select
-        id="countries"
-        class="bg-gris border border-[#929292] text-[#929292] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-3 py-2"
+        class="bg-gris border border-[#929292] text-[#929292] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 px-3 py-2 w-auto min-w-fit"
       >
         <option selected disabled>Estatus</option>
-        <option value="US">United States</option>
-        <option value="CA">Canada</option>
-        <option value="FR">France</option>
-        <option value="DE">Germany</option>
+        <option>United States</option>
+        <option>Canada</option>
+        <option>France</option>
+        <option>Germany</option>
       </select>
     </div>
 
