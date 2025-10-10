@@ -298,6 +298,12 @@ export const pages: Page[] = [
         permiso: ['SeccionCuentaBancaria'],
       },
       {
+        name: 'Cuentas por cobrar',
+        link: '/cuentas-por-cobrar',
+        imageUrl: 'assets/cuenta-bancaria.svg',
+        permiso: ['SeccionCuentaBancaria'],
+      },
+      {
         name: 'Movimiento bancario',
         link: '/movimientobancario',
         imageUrl: 'assets/movimiento-bancario.png',
@@ -365,7 +371,7 @@ export const pages: Page[] = [
         link: '/auditorias',
         imageUrl: 'assets/requisicion.svg',
         permiso: ['Administrador'],
-      }
+      },
     ],
     expanded: false,
   },

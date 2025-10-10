@@ -222,10 +222,10 @@
                 disabled
               />
             </td>
+            <td class="px-1 py-[2px] text-end">{{ proyecto.anticipo }}%</td>
             <td class="px-1 py-[2px] text-end">
-              {{ proyecto.anticipo }}%
+              {{ proyecto.porcentajeIva }}%
             </td>
-            <td class="px-1 py-[2px] text-end">{{ proyecto.porcentajeIva }}%</td>
             <td class="px-1 py-[2px]">
               <div class="flex justify-center m-0.5">
                 <button
@@ -281,7 +281,7 @@
                   'bg-colorButton text-[#ffffff] shadow-md':
                     currentPage === page,
                   'border border-blue-gray-100 bg-transparent text-blue-gray-500 hover:bg-[#2d748d]':
-                    currentPage !== page
+                    currentPage !== page,
                 }"
                 [class.active]="page === currentPage"
                 (click)="goToPage(page)"
