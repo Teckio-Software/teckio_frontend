@@ -212,8 +212,6 @@ export function imprimirReporteAnalisisPU(reporte: Reporte) {
 
   const tableBodyProyecto: any = [];
 
-
-
   var detalles = reporte.detallesPrecioUnitario.filter(
       (detalle) => detalle.idPrecioUnitario === pu.id
     )
@@ -265,6 +263,59 @@ export function imprimirReporteAnalisisPU(reporte: Reporte) {
   text: 'Total de conceptos', style: 'subheader',
   });
 
+  // Formatear con separadores de miles y dos decimales
+const formato = new Intl.NumberFormat('es-ES', {
+minimumFractionDigits: 2,
+maximumFractionDigits: 2,
+});
+
+  let IndirectoPorcentaje = reporte.indirectos.find(i=>i.codigo === '001')?.porcentaje;
+  if(IndirectoPorcentaje == undefined){
+    IndirectoPorcentaje = 0
+  }
+  let IndirectoPorcentajeConFormato = reporte.indirectos.find(i=>i.codigo === '001')?.porcentajeConFormato;
+  if(IndirectoPorcentajeConFormato == undefined || IndirectoPorcentajeConFormato == null || IndirectoPorcentajeConFormato == ''){
+    IndirectoPorcentajeConFormato = '0.00%'
+  }
+  let FinanciamientoPorcentaje = reporte.indirectos.find(i=>i.codigo === '002')?.porcentaje;
+  if(FinanciamientoPorcentaje == undefined){
+    FinanciamientoPorcentaje = 0
+  }
+  let FinanciamientoPorcentajeConFormato = reporte.indirectos.find(i=>i.codigo === '002')?.porcentajeConFormato;
+  if(FinanciamientoPorcentajeConFormato == undefined || FinanciamientoPorcentajeConFormato == null || FinanciamientoPorcentajeConFormato == ''){
+    FinanciamientoPorcentajeConFormato = '0.00%'
+  }
+  let UtilidadPorcentajeConFormato = reporte.indirectos.find(i=>i.codigo === '003')?.porcentajeConFormato;
+  if(UtilidadPorcentajeConFormato == undefined || UtilidadPorcentajeConFormato == null || UtilidadPorcentajeConFormato == ''){
+    UtilidadPorcentajeConFormato = '0.00%'
+  }
+  let UtilidadPorcentaje = reporte.indirectos.find(i=>i.codigo === '003')?.porcentaje;
+  if(UtilidadPorcentaje == undefined){
+    UtilidadPorcentaje = 0
+  }
+  let CargosAdicionalesPorcentaje = reporte.indirectos.find(i=>i.codigo === '004')?.porcentaje;
+  if(CargosAdicionalesPorcentaje == undefined){
+    CargosAdicionalesPorcentaje = 0
+  }
+  let CargosAdicionalesPorcentajeConFormato = reporte.indirectos.find(i=>i.codigo === '004')?.porcentajeConFormato;
+  if(CargosAdicionalesPorcentajeConFormato == undefined || CargosAdicionalesPorcentajeConFormato == null || CargosAdicionalesPorcentajeConFormato == ''){
+    CargosAdicionalesPorcentajeConFormato = '0.00%'
+  }
+  const indirectos = (IndirectoPorcentaje/100)*pu.precioUnitario;
+  const indirectosConFormato = formato.format(indirectos); 
+  const financiamientos = (FinanciamientoPorcentaje/100)*pu.precioUnitario;
+  const financiamientosConFormato = formato.format(financiamientos);
+  const utilidad = (UtilidadPorcentaje/100)*pu.precioUnitario;
+  const utilidadConFormato = formato.format(utilidad);
+  const cargosAdicionales = (CargosAdicionalesPorcentaje/100)*pu.precioUnitario;
+  const cargosAdicionalesConFormato = formato.format(cargosAdicionales);
+  const cantidadIva = pu.precioUnitario * (reporte.proyecto.porcentajeIva / 100);  
+  const cantidadIvaConFormato = formato.format(cantidadIva); 
+  const subtotal = pu.precioUnitario + indirectos+utilidad+cargosAdicionales+financiamientos;
+  const subtotalConFormato = formato.format(subtotal); 
+  const total = subtotal + cantidadIva;
+  const totalConFormato = formato.format(total); 
+
   content.push({
     columns: [
       { width: '*', text: '' },
@@ -293,38 +344,45 @@ export function imprimirReporteAnalisisPU(reporte: Reporte) {
                 { text: pu.precioUnitarioConFormato, style: 'smallCantidadTotal'}
               ],
               [
-                { text: 'Indirectos', style: 'smallCantidadTotal'},
-                { text: pu.importeConFormato, style: 'smallCantidadTotal'}
+                { text: `Indirectos(${IndirectoPorcentajeConFormato})`, style: 'smallCantidadTotal'},
+                { text: `$${indirectosConFormato}`, style: 'smallCantidadTotal'}
               ],
               [
-                { text: 'Indirectos de campo', style: 'smallCantidadTotal'},
-                { text: pu.importeConFormato, style: 'smallCantidadTotal'}
+                { text: `Financiamiento(${FinanciamientoPorcentajeConFormato})`, style: 'smallCantidadTotal'},
+                { text: `$${financiamientosConFormato}`, style: 'smallCantidadTotal'}
               ],
               [
-                { text: 'Subtotal', style: 'smallCantidadTotal'},
-                { text: pu.importeConFormato, style: 'smallCantidadTotal'}
+                { text: `Utilidad(${UtilidadPorcentajeConFormato})`, style: 'smallCantidadTotal'},
+                { text: `$${utilidadConFormato}`, style: 'smallCantidadTotal'}
               ],
               [
-                { text: 'Financiamiento', style: 'smallCantidadTotal'},
-                { text: pu.importeConFormato, style: 'smallCantidadTotal'}
+                { text: `Cargos adicionales(${CargosAdicionalesPorcentajeConFormato})`, style: 'smallCantidadTotal'},
+                { text: `$${cargosAdicionalesConFormato}`, style: 'smallCantidadTotal'}
               ],
-              [
-                { text: 'Subtotal', style: 'smallCantidadTotal'},
-                { text: pu.importeConFormato, style: 'smallCantidadTotal'}
-              ],
-              [
-                { text: 'Utilidad', style: 'smallCantidadTotal'},
-                { text: pu.importeConFormato, style: 'smallCantidadTotal'}
-              ],
-              [
-                { text: 'Cargos adicionales', style: 'smallCantidadTotal'},
-                { text: pu.importeConFormato, style: 'smallCantidadTotal'}
-              ],
-
             [
               { text: 'Precio unitario', style: 'smallCantidadTotal' },
               {
-                text: `${pu.importeConFormato}`,
+                text: `${pu.precioUnitarioConFormato}`,
+                style: 'smallCantidadTotal',
+                alignment: 'right',
+              },
+            ],
+            [
+                { text: 'Subtotal', style: 'smallCantidadTotal'},
+                { text: `$${subtotalConFormato}`, style: 'smallCantidadTotal'}
+              ],
+            [
+              { text: `IVA(${reporte.proyecto.porcentajeIva})%`, style: 'smallCantidadTotal' },
+              {
+                text: `$${cantidadIvaConFormato}`,
+                style: 'smallCantidadTotal',
+                alignment: 'right',
+              },
+            ],
+            [
+              { text: 'Total', style: 'smallCantidadTotal' },
+              {
+                text: `$${totalConFormato}`,
                 style: 'smallCantidadTotal',
                 alignment: 'right',
               },
@@ -343,7 +401,7 @@ export function imprimirReporteAnalisisPU(reporte: Reporte) {
   });
 
   if (reporte.importeConLetra) {
-    totalEnLetras = numeroALetras(pu.importe);
+    totalEnLetras = numeroALetras(total);
 
     content.push({
       columns: [
@@ -381,207 +439,6 @@ export function imprimirReporteAnalisisPU(reporte: Reporte) {
 
   });
 
-  
-
-  // Header de la tabla
-  // const tableHeader = [
-  //   [
-  //     { text: 'Clave', style: 'subheader', alignment: 'center' },
-  //     { text: 'Descripción', style: 'subheader', alignment: 'center' },
-  //     { text: 'Unidad', style: 'subheader', alignment: 'center' },
-  //     { text: 'Cantidad', style: 'subheader', alignment: 'center' },
-  //     {
-  //       text: reporte.imprimirConCostoDirecto ? 'Costo Directo' : 'P.U.',
-  //       style: 'subheader',
-  //       alignment: 'center',
-  //     },
-  //     { text: 'Total', style: 'subheader', alignment: 'center' },
-  //   ],
-  // ];
-
-  // content.push({
-  //   margin: [0, 0, 0, 0],
-  //   layout: {
-  //     hLineColor: () => '#B9B9B9',
-  //     hLineWidth: () => 0.5, // todas las líneas horizontales
-  //     vLineColor: () => '#B9B9B9',
-  //     vLineWidth: () => 0.5, // todas las líneas verticales
-  //   },
-  //   table: {
-  //     headerRows: 1,
-  //     widths: [85, '*', 30, 60, 60, 60],
-  //     body: tableHeader,
-  //   },
-  // });
-
-  // const tableBodyProyecto: any = [];
-
-  // reporte.precioUnitario.forEach((proyecto, index) => {
-  //   const esPadreConHijos = proyecto.hijos?.length > 0;
-
-    // tableBodyProyecto.push([
-    //   {
-    //     text: '',
-    //   },
-    //   {
-    //     text: proyecto.codigo,
-    //     style: esPadreConHijos ? { fontSize: 8, bold: true } : { fontSize: 8 },
-    //   },
-    //   {
-    //     text: proyecto.descripcion,
-    //     style: esPadreConHijos ? { fontSize: 8, bold: true } : { fontSize: 8 },
-    //     alignment: 'justify',
-    //   },
-    //   { text: esPadreConHijos ? '' : proyecto.unidad || '', style: 'small' },
-    //   {
-    //     text: esPadreConHijos ? '' : proyecto.cantidadConFormato || '',
-    //     style: 'small',
-    //   },
-    //   {
-    //     text: esPadreConHijos ? '' : proyecto.precioUnitarioConFormato || '',
-    //     style: 'small',
-    //   },
-    //   {
-    //     text: esPadreConHijos ? '' : proyecto.importeConFormato || '',
-    //     style: 'small',
-    //   },
-    // ]);
-
-    // filas de hijos
-    
-    // if (proyecto.hijos?.length > 0) {
-    //   const filasHijos = mapHijos(proyecto.hijos, 0, '', reporte);
-    //   filasHijos.forEach((filaHijo) => tableBodyProyecto.push(filaHijo));
-    // }
-  // });
-
-  // content.push({
-  //   margin: [0, 0, 0, 0],
-  //   layout: {
-  //     hLineWidth: () => 0, // todas las líneas horizontales
-  //     vLineWidth: () => 0, // todas las líneas verticales
-  //   },
-  //   table: {
-  //     headerRows: 0,
-  //     widths: [20, 60, '*', 30, 60, 60, 60],
-  //     body: tableBodyProyecto,
-  //   },
-  // });
-
-  // content.push({
-  //   text: '\n',
-  // });
-
-  // reporte.precioUnitario.forEach((precio) => {
-  //   content.push({
-  //     columns: [
-  //       { width: '*', text: '' },
-  //       {
-  //         width: 'auto',
-  //         table: {
-  //           widths: ['auto', 'auto'],
-  //           body: [
-  //             [
-  //               {
-  //                 text: `Subtotal de ${precio.codigo}`,
-  //                 style: 'styleTotal',
-  //               },
-  //               {
-  //                 text: `$ ${precio.importeConFormato}`,
-  //                 style: 'styleTotal',
-  //                 alignment: 'right',
-  //               },
-  //             ],
-  //           ],
-  //         },
-  //         layout: {
-  //           hLineColor: () => '#B9B9B9',
-  //           vLineColor: () => '#B9B9B9',
-  //           hLineWidth: () => 0,
-  //           vLineWidth: () => 0,
-  //         },
-  //         margin: [0, 0, 0, 5],
-  //       },
-  //     ],
-  //   });
-  // });
-
-  // content.push({
-  //   columns: [
-  //     { width: '*', text: '' },
-  //     {
-  //       width: 'auto',
-  //       table: {
-  //         body: [
-  //           // booleano de iva opcional
-  //           ...(reporte.imprimirImpuesto
-  //             ? [
-  //                 [
-  //                   {
-  //                     text: 'IVA ' + reporte.proyecto.porcentajeIva + '%',
-  //                     style: 'smallCantidadTotal',
-  //                   },
-  //                   {
-  //                     text: ` ${reporte.totalIva}`,
-  //                     style: 'smallCantidadTotal',
-  //                     alignment: 'right',
-  //                   },
-  //                 ],
-  //               ]
-  //             : []),
-
-  //           [
-  //             { text: 'Total', style: 'smallCantidadTotal' },
-  //             {
-  //               text: `${reporte.totalConIVA}`,
-  //               style: 'smallCantidadTotal',
-  //               alignment: 'right',
-  //             },
-  //           ],
-  //         ],
-  //       },
-  //       layout: {
-  //         hLineColor: () => '#B9B9B9',
-  //         vLineColor: () => '#B9B9B9',
-  //         hLineWidth: () => 0.5,
-  //         vLineWidth: () => 0.5,
-  //       },
-  //       margin: [0, 0, 0, 0],
-  //     },
-  //   ],
-  // });
-
-  // if (reporte.importeConLetra) {
-  //   totalEnLetras = numeroALetras(reporte.totalSinFormato);
-
-  //   content.push({
-  //     columns: [
-  //       { width: '*', text: '' },
-  //       {
-  //         width: 'auto',
-  //         table: {
-  //           widths: ['auto'],
-  //           body: [
-  //             [
-  //               {
-  //                 text: `${totalEnLetras}`,
-  //                 style: 'smallBold',
-  //               },
-  //             ],
-  //           ],
-  //         },
-  //         layout: {
-  //           hLineColor: () => '#B9B9B9',
-  //           vLineColor: () => '#B9B9B9',
-  //           hLineWidth: () => 0.5,
-  //           vLineWidth: () => 0.5,
-  //         },
-  //         margin: [0, 0, 0, 5],
-  //       },
-  //     ],
-  //   });
-  // }
-
   const docDefinition: any = {
     content,
     styles,
@@ -595,7 +452,7 @@ export function imprimirReporteAnalisisPU(reporte: Reporte) {
 
   pdfMake
     .createPdf(docDefinition)
-    .download(`Análisis de precio unitario ${reporte.titulo}.pdf`);
+    .download(`Análisis de precio unitario${reporte.titulo}.pdf`);
 }
 
 export function imprimirReporte(reporte: Reporte) {

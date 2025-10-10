@@ -413,6 +413,19 @@ const routes: Routes = [
         (module) => module.CuentasPorCobrarModule,
       ),
   },
+  {path: 'imagenes',
+    loadChildren: () =>
+      import(`./seguridad/imagenes/imagenes.module`).then(
+        (module) => module.ImagenesModule
+      ),
+  },
+  {
+    path: 'almacentranspaso',
+    loadChildren: () =>
+      import(`./inventario/almacenTranspaso/almacen-transpaso.module`).then(
+        (module) => module.AlmacenTranspasoModule
+      ),
+  },
 
   { path: '**', redirectTo: '' },
 ];

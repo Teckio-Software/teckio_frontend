@@ -19,14 +19,14 @@
     <!-- --------------- -->
     <div class="flex gap-2 justify-center">
       <div class="contenedor-input">
-      <p class="place-holder h-14 sm:h-8 w-16 sm:w-32 text-clip overflow-hidden">Año de termino</p>
+      <p class="place-holder h-14 sm:h-8 w-16 sm:w-32 text-clip overflow-hidden">Año de término</p>
       <select class="form-select h-14 sm:h-8" [(ngModel)]="filtroRangoFecha.anioTermino"
         (ngModelChange)="cargarPorRangoFecha()">
         <option *ngFor="let anio of anios" [value]="anio.anio">{{anio.anio}}</option>
       </select>
     </div>
     <div class="contenedor-input"> 
-      <p class="place-holder h-14 sm:h-8 w-16 sm:w-32 text-clip overflow-hidden">Mes de termino</p>
+      <p class="place-holder h-14 sm:h-8 w-16 sm:w-32 text-clip overflow-hidden">Mes de término</p>
       <select class="form-select h-14 sm:h-8" [(ngModel)]="filtroRangoFecha.mesTermino"
         (ngModelChange)="cargarPorRangoFecha()">
         <option *ngFor="let mes of meses" [value]="mes.mes">{{mes.mes}}</option>
@@ -132,18 +132,18 @@
             </td>
             <td style="border-right: 1px solid #3f3e3e17; width: 22%; border-right: 1px solid #f2f2f217"
               class="cont-drill text-end">
-              ${{ balanza.saldoInicial|number:'1.4-4' }}
+              ${{ balanza.saldoInicial|number:'1.2-2' }}
             </td>
             <td style="border-right: 1px solid #3f3e3e17; width: 8.7%; border-right: 1px solid #f2f2f217"
               class="cont-drill text-end">
-              ${{ balanza.debe|number:'1.4-4' }}
+              ${{ balanza.debe|number:'1.2-2' }}
             </td>
             <td style="border-right: 1px solid #3f3e3e17; width: 8.7%; border-right: 1px solid #f2f2f217"
               class="cont-drill text-end">
-              ${{ balanza.haber|number:'1.4-4' }}
+              ${{ balanza.haber|number:'1.2-2' }}
             </td>
             <td class="cont-drill text-end w-[13.7%]" style="border-right: 1px solid #f2f2f217">
-              ${{ balanza.saldoFinal|number:'1.4-4' }}
+              ${{ balanza.saldoFinal|number:'1.2-2' }}
             </td>
           </tr>
         </tbody>
@@ -156,10 +156,10 @@
       <th class="px-1 py-[2px] w-[7%]">Totales: </th>
       <th class="px-1 py-[2px] w-[19%]"></th>
       <th class="px-1 py-[2px] w-[22%]"></th>
-      <th class="px-1 py-[2px] w-[22%] text-end">$0</th>
-      <th class="px-1 py-[2px] w-[8.7%] text-end">${{debe|number:'1.4-4'}}</th>
-      <th class="px-1 py-[2px] w-[8.7%] text-end">${{haber|number:'1.4-4'}}</th>
-      <th class="px-1 py-[2px] w-[13.7%] text-end">$0</th>
+      <th class="px-1 py-[2px] w-[22%] text-end">$0.00</th>
+      <th class="px-1 py-[2px] w-[8.7%] text-end">${{debe|number:'1.2-2'}}</th>
+      <th class="px-1 py-[2px] w-[8.7%] text-end">${{haber|number:'1.2-2'}}</th>
+      <th class="px-1 py-[2px] w-[13.7%] text-end">$0.00</th>
     </thead>
   </table>
 

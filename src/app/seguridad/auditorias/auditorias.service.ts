@@ -10,6 +10,11 @@ export class AuditoriaService {
     
     private apiUrl = environment.ssoApi + 'Logs';
 
+    /**
+     * Obtiene todos los logs de una empresa
+     * @param {number} idEmp - Identificador de la empresa
+     * @returns {Observable<Logs[]>} - Observables con los logs de la empresa
+     */
     public obtenerTodos(idEmp: number) {
         return this.HttpClient.get<Logs[]>(
           `${this.apiUrl}/ObtenerLogsEmpresa/${idEmp}`

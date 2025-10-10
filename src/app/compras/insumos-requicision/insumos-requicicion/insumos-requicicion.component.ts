@@ -166,6 +166,8 @@ export class InsumosRequicicionComponent implements OnInit {
 
   IdInsumo: number = 0;
 
+  selectedIndex: number = -1;
+
   ngOnInit() {
     this.IdUser = Number(this._SeguridadEmpresa.zfObtenerCampoJwt('idUsuario'));
     this.cargarRegistros();

@@ -1,3 +1,10 @@
+<app-alert
+        *ngIf="alertaTipo !== AlertaTipo.none"
+        [alertaTipo]="alertaTipo"
+        [alertaMessage]="alertaMessage"
+        (close)="cerrarAlerta()"
+      >
+      </app-alert>
 <section>
   <div class="flex justify-between">
     <button
@@ -58,6 +65,7 @@
       </div>
     </div>
   </div>
+  
 
   <div class="bg-white rounded-lg h-[45rem]">
     <!-- Pestañas -->
@@ -273,6 +281,7 @@
                       class="px-1 py-[2px]"
                     >
                       <button
+                        *ngIf="diasConsideradosFsiPagados.length > 2 || ParametrosFsrDTO.id == 0"
                         class="flex items-center justify-center"
                         placement="start"
                         ngbTooltip="Eliminar"
@@ -648,6 +657,7 @@
                   <th class="px-2 py-1 w-[250px]">Insumo</th>
                   <th class="px-2 py-1 w-[120px]">*Costo base</th>
                   <th class="px-2 py-1 w-[120px]">Costo unitario</th>
+                  <th class="px-2 py-1 w-[120px]">FSR</th>
                   <th class="px-2 py-1 w-[120px]">SBC</th>
                   <th class="px-2 py-1 w-[120px]">Riesgo trabajo</th>
                   <th class="px-2 py-1 w-[120px]">Cuota fija</th>
@@ -661,7 +671,6 @@
                   <th class="px-2 py-1 w-[120px]">Infonavit</th>
                   <th class="px-2 py-1 w-[150px]">Suma de prestaciones</th>
                   <th class="px-2 py-1 w-[120px]">SP/SBC</th>
-                  <th class="px-2 py-1 w-[120px]">FSR</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-300">
@@ -681,9 +690,9 @@
                   <td class="px-2 py-1">
                     <input
                       autocomplete="off"
-                      type="number"
-                      class="w-full border-none rounded bg-transparent"
-                      [(ngModel)]="insumo.costoBase"
+                      type="text"
+                      class="w-full border-none rounded bg-transparent text-end"
+                      [(ngModel)]="insumo.costoBaseConFormato"
                       [disabled]="dataFSR.esAutorizado"
                       (keydown.enter)="actualizarCostoBaseInsumo(insumo)"
                     />
@@ -691,138 +700,139 @@
                   <td class="px-2 py-1">
                     <input
                       autocomplete="off"
-                      type="number"
-                      class="w-full border-none rounded bg-transparent"
-                      [(ngModel)]="insumo.costoUnitario"
+                      type="text"
+                      class="w-full border-none rounded bg-transparent text-end"
+                      [(ngModel)]="insumo.costoUnitarioConFormato"
                       [disabled]="true"
                     />
                   </td>
                   <td class="px-2 py-1">
                     <input
                       autocomplete="off"
-                      type="number"
+                      type="text"
                       class="w-full border-none rounded bg-transparent"
-                      [(ngModel)]="insumo.salarioBaseCotizacion"
+                      [(ngModel)]="insumo.fsrConFormato"
                       [disabled]="true"
                     />
                   </td>
                   <td class="px-2 py-1">
                     <input
                       autocomplete="off"
-                      type="number"
-                      class="w-full border-none rounded bg-transparent"
-                      [(ngModel)]="insumo.riesgoTrabajo"
+                      type="text"
+                      class="w-full border-none rounded bg-transparent text-end"
+                      [(ngModel)]="insumo.sbcFormato"
                       [disabled]="true"
                     />
                   </td>
                   <td class="px-2 py-1">
                     <input
                       autocomplete="off"
-                      type="number"
-                      class="w-full border-none rounded bg-transparent"
-                      [(ngModel)]="insumo.cuotaFija"
+                      type="text"
+                      class="w-full border-none rounded bg-transparent text-end"
+                      [(ngModel)]="insumo.riesgoTrabajoConFormato"
                       [disabled]="true"
                     />
                   </td>
                   <td class="px-2 py-1">
                     <input
                       autocomplete="off"
-                      type="number"
-                      class="w-full border-none rounded bg-transparent"
-                      [(ngModel)]="insumo.aplicacionExcedente"
+                      type="text"
+                      class="w-full border-none rounded bg-transparent text-end"
+                      [(ngModel)]="insumo.cuotaFijaFormato"
                       [disabled]="true"
                     />
                   </td>
                   <td class="px-2 py-1">
                     <input
                       autocomplete="off"
-                      type="number"
-                      class="w-full border-none rounded bg-transparent"
-                      [(ngModel)]="insumo.prestacionDinero"
+                      type="text"
+                      class="w-full border-none rounded bg-transparent text-end"
+                      [(ngModel)]="insumo.aplicacionExcedenteConFormato"
                       [disabled]="true"
                     />
                   </td>
                   <td class="px-2 py-1">
                     <input
                       autocomplete="off"
-                      type="number"
-                      class="w-full border-none rounded bg-transparent"
-                      [(ngModel)]="insumo.gastoMedico"
+                      type="text"
+                      class="w-full border-none rounded bg-transparent text-end"
+                      [(ngModel)]="insumo.prestacionDineroConFormato"
                       [disabled]="true"
                     />
                   </td>
                   <td class="px-2 py-1">
                     <input
                       autocomplete="off"
-                      type="number"
-                      class="w-full border-none rounded bg-transparent"
-                      [(ngModel)]="insumo.invalidezVida"
+                      type="text"
+                      class="w-full border-none rounded bg-transparent text-end"
+                      [(ngModel)]="insumo.gastoMedicoConFormato"
                       [disabled]="true"
                     />
                   </td>
                   <td class="px-2 py-1">
                     <input
                       autocomplete="off"
-                      type="number"
-                      class="w-full border-none rounded bg-transparent"
-                      [(ngModel)]="insumo.retiro"
+                      type="text"
+                      class="w-full border-none rounded bg-transparent text-end"
+                      [(ngModel)]="insumo.invalidezVidaConFormato"
                       [disabled]="true"
                     />
                   </td>
                   <td class="px-2 py-1">
                     <input
                       autocomplete="off"
-                      type="number"
-                      class="w-full border-none rounded bg-transparent"
-                      [(ngModel)]="insumo.cesantiaEdad"
+                      type="text"
+                      class="w-full border-none rounded bg-transparent text-end"
+                      [(ngModel)]="insumo.retiroConFormato"
                       [disabled]="true"
                     />
                   </td>
                   <td class="px-2 py-1">
                     <input
                       autocomplete="off"
-                      type="number"
-                      class="w-full border-none rounded bg-transparent"
-                      [(ngModel)]="insumo.prestaconSocial"
+                      type="text"
+                      class="w-full border-none rounded bg-transparent text-end"
+                      [(ngModel)]="insumo.cesantiaConFormato"
                       [disabled]="true"
                     />
                   </td>
                   <td class="px-2 py-1">
                     <input
                       autocomplete="off"
-                      type="number"
-                      class="w-full border-none rounded bg-transparent"
-                      [(ngModel)]="insumo.infonavit"
+                      type="text"
+                      class="w-full border-none rounded bg-transparent text-end"
+                      [(ngModel)]="insumo.prestacionSocialConFormato"
                       [disabled]="true"
                     />
                   </td>
                   <td class="px-2 py-1">
                     <input
                       autocomplete="off"
-                      type="number"
-                      class="w-full border-none rounded bg-transparent"
-                      [(ngModel)]="insumo.sumaPrestaciones"
+                      type="text"
+                      class="w-full border-none rounded bg-transparent text-end"
+                      [(ngModel)]="insumo.infonavitConFormato"
                       [disabled]="true"
                     />
                   </td>
                   <td class="px-2 py-1">
                     <input
                       autocomplete="off"
-                      type="number"
-                      class="w-full border-none rounded bg-transparent"
-                      [(ngModel)]="insumo.sumaSOBRECostoBase"
+                      type="text"
+                      class="w-full border-none rounded bg-transparent text-end"
+                      [(ngModel)]="insumo.sumaDePrestacionesConFormato"
                       [disabled]="true"
                     />
                   </td>
                   <td class="px-2 py-1">
                     <input
                       autocomplete="off"
-                      type="number"
-                      class="w-full border-none rounded bg-transparent"
-                      [(ngModel)]="insumo.fsrInsumo"
+                      type="text"
+                      class="w-full border-none rounded bg-transparent text-end"
+                      [(ngModel)]="insumo.spsbcConFormato"
                       [disabled]="true"
                     />
                   </td>
+                  
                 </tr>
               </tbody>
             </table>

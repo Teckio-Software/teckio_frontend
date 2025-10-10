@@ -9,6 +9,9 @@ import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 import { Reporte } from './types/reporte';
 import { log } from 'console';
 import { PrecioUnitarioService } from '../../precio-unitario.service';
+import { ConjuntoIndirectosDTO } from 'src/app/proyectos/conjunto-indirectos/conjunto-indirectos';
+import { IndirectosServiceService } from 'src/app/proyectos/indirectos/indirectos-service.service';
+import { IndirectosDTO } from 'src/app/proyectos/indirectos/indirectos';
 
 /**
  * Modal para configurar y ejecutar la impresión de reportes
@@ -46,6 +49,7 @@ export class ImprimirModalComponent {
   @Input() totalSinFormatoIva!: number;
   @Input() totalSinFormatoSinIva!: number;
   @Output() close: EventEmitter<void> = new EventEmitter<void>();
+  indirectos: IndirectosDTO[] = [];
 
   tipoReporte: string = '';
   tipoImpresion: string = '';
@@ -57,6 +61,7 @@ export class ImprimirModalComponent {
 
   selectedParams?: ParametrosImpresionPu;
   selectedEmpresa: number = 0;
+  idProyecto: number = 0;
   selectedParamId: number = 0;
 
   isParamGuardado: boolean = false;
@@ -118,10 +123,12 @@ export class ImprimirModalComponent {
     private parametrosImpresion: ParametrosImprimirPuService,
     private seguridadService: SeguridadService,
     private precioUnitarioService: PrecioUnitarioService,
+    private indirectosService: IndirectosServiceService
   ) {
     const idEmpresa: number = Number(seguridadService.obtenIdEmpresaLocalStorage());
-
     this.selectedEmpresa = idEmpresa;
+    const IdProyecto: number = Number(seguridadService.obtenerIdProyectoLocalStorage());
+    this.idProyecto = IdProyecto;
   }
 
   /** Inicializa cargando los parámetros de impresión de la empresa actual. */
@@ -295,8 +302,6 @@ export class ImprimirModalComponent {
     if (this.tipoReporte === 'analisisPreciosUnitarios') {
       if (ObtenerPUPlanos(this.preciosUnitarios).length <= 0) {
         this.isError4 = true;
-        console.log(this.isError4);
-
         return;
       }
       this.currentStep = 2;
@@ -419,6 +424,7 @@ export class ImprimirModalComponent {
       imprimirConPrecioUnitario: this.isImprimirPU,
       imprimirConPrecioUnitarioIVA: this.isImprimirPUIVA,
       imprimirConPUMasIva: this.isImprimirPuMasIVA,
+      indirectos: this.indirectos
     };
 
     //si es marcado, se llena el arreglo de marcados en lugar del completo
@@ -445,6 +451,7 @@ export class ImprimirModalComponent {
       imprimirConPrecioUnitario: this.isImprimirPU,
       imprimirConPrecioUnitarioIVA: this.isImprimirPUIVA,
       imprimirConPUMasIva: this.isImprimirPuMasIVA,
+      indirectos: this.indirectos
     };
 
     // definir el tipo de reporte
@@ -487,27 +494,36 @@ export class ImprimirModalComponent {
         reporte.imprimirConCostoDirecto = true;
         // console.log('Estos son los ids',ids);
         reporte.precioUnitario = preciosUnitariosFiltrados;
-        this.precioUnitarioService
-          .ObtenerDetallesPorPUImpresion(this.selectedEmpresa, ids)
-          .subscribe((preciosUnitarios) => {
-            reporte.detallesPrecioUnitario = preciosUnitarios;
-            // reporte.precioUnitario = preciosUnitariosFiltrados;
-            // let detalleprecioUnitario = preciosUnitarios;
-            // for(let i = 0 ; i < reporte.precioUnitario.length; i++){
-            //   reporte.precioUnitario[i].hijos = detalleprecioUnitario.filter(p=>p.id == detalleprecioUnitario[i].idPrecioUnitario);
-            // }
-            // reporte.precioUnitario.forEach(element => {
-            //   let lista = detalleprecioUnitario.filter(p=>p.idPrecioUnitarioBase == element.idPrecioUnitarioBase);
-            //   element.hijos = lista;
-            // });
-            // reporte.precioUnitario = preciosUnitarios;
+        this.precioUnitarioService.ObtenerDetallesPorPUImpresion(this.selectedEmpresa,ids).subscribe((preciosUnitarios) => {
+          reporte.detallesPrecioUnitario = preciosUnitarios;
+          // reporte.precioUnitario = preciosUnitariosFiltrados;
+          // let detalleprecioUnitario = preciosUnitarios;
+          // for(let i = 0 ; i < reporte.precioUnitario.length; i++){
+          //   reporte.precioUnitario[i].hijos = detalleprecioUnitario.filter(p=>p.id == detalleprecioUnitario[i].idPrecioUnitario);
+          // }
+          // reporte.precioUnitario.forEach(element => {
+          //   let lista = detalleprecioUnitario.filter(p=>p.idPrecioUnitarioBase == element.idPrecioUnitarioBase);
+          //   element.hijos = lista;
+          // });
+          // reporte.precioUnitario = preciosUnitarios;
 
-            console.log(preciosUnitarios);
-            console.log('Se van a imprimir los análisis');
-            // reporte.precioUnitario = preciosUnitariosFiltrados;
-            console.log(reporte);
-            imprimirReporteAnalisisPU(reporte);
-          });
+          console.log(preciosUnitarios);
+          console.log('Se van a imprimir los análisis');
+        // reporte.precioUnitario = preciosUnitariosFiltrados;
+        this.indirectosService.ObtenerIndirectos(this.selectedEmpresa, this.idProyecto).subscribe((conjuntoIndirectos) => {
+          console.log(this.selectedEmpresa, this.idProyecto);
+
+          this.indirectos = conjuntoIndirectos;
+          reporte.indirectos = this.indirectos;
+          console.log(this.indirectos);
+          console.log(reporte);
+          imprimirReporteAnalisisPU(reporte);
+        })
+
+        })
+
+
+
 
         break;
 

@@ -177,6 +177,8 @@ import { ModalGlosarioComponent } from './documentacion/modal-glosario/modal-glo
 import { DocumentacionModule } from './documentacion/documentacion.module';
 import { ReportesSubcontratosComponent } from './proyectos/reportes-subcontratos/reportes-subcontratos/reportes-subcontratos.component';
 import { CuentasPorCobrarComponent } from './contabilidad/cuentas-por-cobrar/cuentas-por-cobrar.component';
+import { ImagenesComponent } from './seguridad/imagenes/imagenes.component';
+import { AlmacenTranspasoComponent } from './inventario/almacenTranspaso/almacen-transpaso.component';
 
 export function playerFactory() {
   return player;
@@ -337,6 +339,8 @@ export function playerFactory() {
     CountUpDirective,
     ProgressBarComponent,
     CuentasPorCobrarComponent,
+    ImagenesComponent,
+    AlmacenTranspasoComponent,
   ],
 
   imports: [

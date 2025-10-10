@@ -23,6 +23,8 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { proyectoDTO } from '../../proyecto/tsProyecto';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { ProyectoService } from '../../proyecto/proyecto.service';
+import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
+import { AlertaTipo } from 'src/app/utilidades/alert/alert.component';
 
 
 @Component({
@@ -97,6 +99,11 @@ export class DialogFSRComponent {
     };
 
   existeCesantiaVejez: boolean = false;
+
+  alertaSuccess: boolean = false;
+  alertaMessage: string = '';
+  alertaTipo: AlertaTipo = AlertaTipo.none;
+  AlertaTipo = AlertaTipo;
 
   @Output() cerrarFSR = new EventEmitter();
   constructor(
@@ -296,7 +303,7 @@ export class DialogFSRComponent {
       typeof dias.valor == undefined ||
       !dias.valor
     ) {
-      this._snackBar.open('capture todos los campos', 'X', { duration: 3000 });
+      this._snackBar.open('Capture todos los campos', 'X', { duration: 3000 });
       return;
     }
     this.existeEdicion = true;
@@ -326,7 +333,7 @@ export class DialogFSRComponent {
       typeof fsrDetalle.porcentajeFsrdetalle == undefined ||
       !fsrDetalle.porcentajeFsrdetalle
     ) {
-      this._snackBar.open('capture todos los campos', 'X', { duration: 3000 });
+      this._snackBar.open('Capture todos los campos', 'X', { duration: 3000 });
       return;
     }
     this.existeEdicion = true;
@@ -392,7 +399,8 @@ export class DialogFSRComponent {
          this.ParametrosFsrDTO.infonavit <= 0 ||
          this.ParametrosFsrDTO.uma <= 0){
           //Alerta por datos faltantes, provisionalmente un console.log y todos los datos son obligatorios
-          console.log('faltan datos');
+          this.alerta(AlertaTipo.error, 'Capture todos los campos.', 3000);
+          // console.log('faltan datos');
            return;
          }
     this.existeEdicion = true;
@@ -401,9 +409,10 @@ export class DialogFSRComponent {
         .subscribe({next:(datos) => {
           if(datos.estatus){
             this.ObtenerFS();
+            this.alerta(AlertaTipo.save, datos.descripcion, 8000);
           this.calcularDias();
           }else{
-            console.log(datos.descripcion);
+            this.alerta(AlertaTipo.error, datos.descripcion, 8000);
           }
         },error:()=>{
           //Mensaje de error
@@ -537,5 +546,26 @@ export class DialogFSRComponent {
 
   private _normalizeValue(value: string): string {
     return value.toLowerCase().replace(/\s/g, '');
+  }
+
+  alerta(tipo: AlertaTipo, mensaje: string = '', milisegundos: number) {
+    if (tipo === AlertaTipo.none) {
+      this.cerrarAlerta();
+      return;
+    }
+
+    this.alertaTipo = tipo;
+    this.alertaMessage = mensaje || 'Ocurrió un error';
+    this.alertaSuccess = true;
+
+    setTimeout(() => {
+      this.cerrarAlerta();
+    }, milisegundos);
+  }
+
+  cerrarAlerta() {
+    this.alertaSuccess = false;
+    this.alertaTipo = AlertaTipo.none;
+    this.alertaMessage = '';
   }
 }

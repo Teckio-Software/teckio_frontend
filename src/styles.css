@@ -10,6 +10,12 @@
 @import "primeng/resources/primeng.min.css";
 @import "primeng/resources/themes/saga-blue/theme.css";
 
+
+@import "flowbite/src/themes/default";
+@plugin "flowbite/plugin";
+@source "../node_modules/flowbite";
+
+
 body {
   margin: 0;
   font-family: "Roboto", sans-serif;

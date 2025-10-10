@@ -1,6 +1,8 @@
 import { proyectoDTO } from 'src/app/proyectos/proyecto/tsProyecto';
 import { precioUnitarioDTO } from '../../../tsPrecioUnitario';
 import { precioUnitarioDetalleDTO } from 'src/app/proyectos/precio-unitario-detalle/tsPrecioUnitarioDetalle';
+import { ConjuntoIndirectosDTO } from 'src/app/proyectos/conjunto-indirectos/conjunto-indirectos';
+import { IndirectosDTO } from 'src/app/proyectos/indirectos/indirectos';
 
 export interface Reporte {
   precioUnitario: precioUnitarioDTO[];
@@ -25,4 +27,5 @@ export interface Reporte {
   imprimirConPrecioUnitario: boolean;
   imprimirConPrecioUnitarioIVA: boolean;
   imprimirConPUMasIva: boolean;
+  indirectos: IndirectosDTO[];
 }
