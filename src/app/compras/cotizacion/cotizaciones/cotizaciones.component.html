@@ -104,8 +104,8 @@
 
       <thead class="bg-colorButton xs:h-5">
         <tr class="text-white xs:text-[10px]">
-          <th class="px-1 py-[1px] font-normal" scope="col">Cantidad*</th>
-          <th class="px-1 py-[1px] font-normal" scope="col">P. Unit.*</th>
+          <th class="px-1 py-[1px] font-normal" scope="col">*Cantidad</th>
+          <th class="px-1 py-[1px] font-normal" scope="col">*P. Unit.</th>
           <th class="px-1 py-[1px] font-normal" scope="col">Importe</th>
           <th class="px-1 py-[1px] text-center font-normal" scope="col">
             Acciones
@@ -121,7 +121,7 @@
             <input
               type="number"
               [(ngModel)]="ic.cantidad"
-              class="bg-transparent text-end"
+              class="bg-transparent text-end w-full"
               [ngClass]="{ estilo2: ic.estatus > 1 }"
               [disabled]="ic.estatus > 1"
               (keydown.enter)="ActualizarInsumoCotizado(ic)"
@@ -134,7 +134,7 @@
             <input
               type="number"
               [(ngModel)]="ic.precioUnitario"
-              class="bg-transparent text-end"
+              class="bg-transparent text-end w-full"
               [ngClass]="{ estilo2: ic.estatus > 1 }"
               [disabled]="ic.estatus > 1"
               (keydown.enter)="ActualizarInsumoCotizado(ic)"
@@ -250,7 +250,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let iic of impuestoInsumoCotizado" class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]">
+                  <tr *ngFor="let iic of impuestoInsumoCotizado; let i = index" class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]">
                     <td class="" scope="col">
                       <select
                         [(ngModel)]="iic.idImpuesto"
@@ -266,15 +266,18 @@
                         </option>
                       </select>
                     </td>
-                    <td class="" scope="col">
+                    <td class="" scope="col" *ngIf="selectedIndexImpuesto==i">
                       <input
                         autocomplete="off"
-                        class="form-contrtrol dropdown1 bg-transparent text-end"
+                        class="form-contrtrol dropdown1 bg-transparent text-end w-full"
                         type="number"
                         style="margin: 5px"
                         [(ngModel)]="iic.porcentaje"
                         (keydown.enter)="agregarNuevoImpuesto()"
                       />
+                    </td>
+                    <td *ngIf="selectedIndexImpuesto!=i" class="px-1 py-[4px] xs:py-[5px] text-end" scope="col" (click)="selectedIndexImpuesto=i" >
+                      {{ iic.porcentaje | number:'1.2-2' }}%
                     </td>
                     <td class="" scope="col">
                       <button

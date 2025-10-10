@@ -15,11 +15,15 @@ export class ImagenService {
   }
 
   public cargarImagen(idEmpresa: number, formData: FormData) {
-    return this.HttpClient.post<number>(`${this.apiUrl}/${idEmpresa}/CargarImagen`, formData);
+    return this.HttpClient.post<RespuestaDTO>(`${this.apiUrl}/${idEmpresa}/CargarImagen`, formData);
   }
 
   public seleccionarImagen(idEmpresa: number, id: number){
     return this.HttpClient.get<RespuestaDTO>(`${this.apiUrl}/${idEmpresa}/SeleccionarImagen/${id}`);
   }
+
+  // public obtenerImagenes(idEmpresa: number) {
+  //   return this.HttpClient.get<Imagen[]>(`${this.apiUrl}/${idEmpresa}/ObtenerImagenes`);
+  // }
 
 }

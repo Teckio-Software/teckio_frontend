@@ -42,7 +42,7 @@
     <table class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
       <thead>
         <tr>
-          <th colspan="5" class="style-encabezado-ac-act">Destajistas</th>
+          <th colspan="5" class="style-encabezado-ac-act">{{esDestajo ? 'Destajista' : 'Subcontratista'}}</th>
         </tr>
       </thead>
       <thead>
@@ -81,10 +81,10 @@
       </thead>
       <tbody>
         <tr *ngFor="let total of periodo.totales" [ngClass]="{'change-background-color' : total.idContratista == changeColor}">
-          <td>
+          <td class="text-end" >
             {{total.avanceConFormato}}
           </td>
-          <td>
+          <td class="text-end" >
             {{total.importeConFormato}}
           </td>
         </tr>
@@ -107,7 +107,7 @@
       <tbody>
         <tr *ngFor="let importe of objetoDestajoTotal.contratistas">
           <td scope="col" [ngClass]="{'change-background-color' : importe.id == changeColor}">
-            <input type="text" class="w-full bg-transparent" [ngModel]="importe.importeConFormato" disabled>
+            <input type="text" class="w-full bg-transparent text-end" [ngModel]="importe.importeConFormato" disabled>
           </td>
         </tr>
       </tbody>

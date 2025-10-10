@@ -1,0 +1,671 @@
+<div class="grid grid-cols-1 gap-4">
+  <app-alert
+        *ngIf="alertaTipo !== AlertaTipo.none"
+        [alertaTipo]="alertaTipo"
+        [alertaMessage]="alertaMessage"
+        (close)="cerrarAlerta()"
+      >
+      </app-alert>
+  <!-- Selector de almacén + filtros -->
+  <div class="flex flex-wrap items-end justify-between gap-4 w-full">
+    <!-- Selector de almacén -->
+    <!-- <div class="flex gap-1 items-center">
+      <label
+        class="rounded-l-md bg-colorButton text-gray100 px-1 py-1 xs:text-[10px]"
+        for="almacen"
+        >Almacén</label
+      >
+      <input
+        class="xs:text-[10px] xs:w-[130px]"
+        list="almacendata"
+        id="almacen"
+        name="almacen"
+        placeholder="Selecciona un almacén"
+        autocomplete="off"
+        (input)="SeleccionaAlmacen($event)"
+      />
+      <datalist id="almacendata">
+        <option *ngFor="let almacen of almacenes">
+          {{ almacen.almacenNombre }}
+        </option>
+      </datalist>
+    </div> -->
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div class="flex flex-wrap gap-2">
+
+    <button
+      (click)="abrirModalTranspaso()"
+      class="flex items-center rounded-md bg-colorButton transition-colors delay-75 hover:bg-colorButtonHover font-light text-white p-1 disabled:cursor-not-allowed disabled:bg-gray-400"
+      [disabled]="idAlmacen == 0"
+    >
+      <p
+        class="text-[#f2f2f2] titular bg-custom-bg w-56 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
+      >
+        Nuevo traspaso almacén
+      </p>
+      <img src="assets/add.svg" alt="" />
+    </button>
+  </div>
+
+    <div
+      class="flex-col items-end border-2 border-gray-400 rounded-lg text-left mt-3 bg-white w-[300px]"
+      #virtualScrollContainer
+    >
+      <input
+        type="text"
+        class="bg-transparent w-full p-1 text-left px-4 focus:outline-none"
+        (input)="FiltrarAlmacenes($event)"
+        [(ngModel)]="selectedAlmacen"
+        (click)="SlistaAlmacenesMain = !SlistaAlmacenesMain"
+        placeholder="Selecciona un almacén..."
+      />
+      <div *ngIf="SlistaAlmacenesMain">
+        <cdk-virtual-scroll-viewport
+          itemSize="50"
+          class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-[300px] h-36 overflow-auto shadow-lg"
+        >
+          <div
+            *cdkVirtualFor="let almacen of almacenesVS"
+            (click)="SeleccionaAlmacen(almacen.id, almacen.almacenNombre)"
+            class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+            style="height: 36px; box-sizing: border-box"
+          >
+            {{ almacen.almacenNombre }}
+          </div>
+        </cdk-virtual-scroll-viewport>
+      </div>
+    </div>
+    </div>
+    <!-- Botones -->
+  
+
+    <!-- Filtros -->
+    <div
+      class="flex gap-2 items-end"
+      style="
+        background-color: #b9dfe9;
+        padding: 5px;
+        font-size: 16px;
+        font-weight: 500;
+        border-radius: 7px 7px 0 0;
+      "
+    >
+      <select
+        class="border-none rounded-sm bg-[#ffffff] text-[#020202d3] font-medium p-1"
+        [(ngModel)]="tipoSalidaAlmacen"
+        (change)="fitrarTipoSA()"
+      >
+        <option [value]="0">Todas las salidas</option>
+        <option [value]="1">Orden de compra</option>
+        <option [value]="2">Bajas en almacén</option>
+        <option [value]="3">Salidas con préstamos</option>
+      </select>
+      <input
+        type="date"
+        min="1900-01-01"
+        max="9999-01-01"
+        [(ngModel)]="fechafiltro"
+        (change)="fitrarTipoSA()"
+      />
+    </div>
+  </div>
+
+</div>
+
+<p class="text-sm font-medium mb-2 mt-2 text-gray700 xs:text-[10px]">
+  Campos obligatorios marcados con <span class="font-bold">*</span>
+</p>
+
+<!-- Tabla de salidas de almacén -->
+<div class="overflow-x-auto shadow-md rounded-lg mt-2">
+  <table class="w-full text-sm xs:table-fixed">
+    <thead class="bg-primario text-white">
+      <tr>
+        <th scope="col" class="px-1 py-[2px] xs:w-[75px]">
+          *No. Salida almacén
+        </th>
+        <th scope="col" class="px-1 py-[2px] xs:w-[70px]">*Almacén</th>
+        <th scope="col" class="px-1 py-[2px]">*Fecha de registro</th>
+        <th scope="col" class="px-1 py-[2px]">Persona surtió</th>
+        <th scope="col" class="px-1 py-[2px]">Persona recibió</th>
+        <th scope="col" class="px-1 py-[2px]">Detalle</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray300">
+      <ng-container *ngIf="isLoading">
+        <tr>
+          <!-- No. Salida Almacén -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Almacén -->
+          <td scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Fecha de registro -->
+          <td scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Persona Surtió -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Persona Recibió -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Observaciones -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <!-- No. Salida Almacén -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Almacén -->
+          <td scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Fecha de registro -->
+          <td scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Persona Surtió -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Persona Recibió -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Observaciones -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <!-- No. Salida Almacén -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Almacén -->
+          <td scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Fecha de registro -->
+          <td scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-32 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Persona Surtió -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Persona Recibió -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+          <!-- Observaciones -->
+          <td class="px-1" scope="col">
+            <div role="status" class="max-w-sm animate-pulse">
+              <div
+                class="h-5 bg-gray300 rounded-full w-48 xs:w-14 xs:h-3 mt-1 mb-1"
+              ></div>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
+      <tr
+        *ngFor="let sa of paginatedAlmacenes"
+        [ngClass]="{ 'background-color': sa.id == changeColor }"
+        (click)="VerInsumosXSalidaAlmacen(sa)"
+        class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+      >
+        <td class="px-1 py-[2px]">{{ sa.codigoSalida }}</td>
+        <td class="px-1 py-[2px]">{{ sa.almacenNombre }}</td>
+        <td class="px-1 py-[2px]">
+          {{ sa.fechaRegistro | date : "dd-MM-yyyy" }}
+        </td>
+        <td class="px-1 py-[2px]">{{ sa.personaSurtio }}</td>
+        <td class="px-1 py-[2px]">
+          <ng-container *ngIf="sa.estatus == 2">
+            {{ sa.personaRecibio }}
+          </ng-container>
+          <ng-container *ngIf="sa.estatus == 1">
+            <input
+              class="w-full bg-transparent"
+              type="text"
+              [(ngModel)]="sa.personaRecibio"
+              (keydown.enter)="actualizarSalidaAlmacen(sa)"
+            />
+          </ng-container>
+        </td>
+        <td class="px-1 py-[2px]">
+          <input
+            class="w-full bg-transparent"
+            type="text"
+            [(ngModel)]="sa.observaciones"
+            (keydown.enter)="actualizarSalidaAlmacen(sa)"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="flex bg-[#ffffff] justify-end rounded-b-[3px]">
+        <div class="flex items-center">
+          {{ getPaginationInfo() }}
+        </div>
+        <nav class="p-2">
+          <ul class="flex">
+            <li class="flex items-center">
+              <a
+                class="mx-1 flex h-7 w-7 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-[#2d748d] cursor-pointer"
+                (click)="previousPage()"
+                aria-label="Previous"
+              >
+                <span class="material-icons text-sm">keyboard_arrow_left</span>
+              </a>
+            </li>
+            <li *ngFor="let page of visiblePages" class="flex items-center">
+              <a
+                class="mx-1 flex h-7 w-7 items-center justify-center rounded-full hover:bg-[#2d748d] cursor-pointer"
+                [ngClass]="{
+                  'bg-colorButton text-[#ffffff] shadow-md':
+                    currentPage === page,
+                  'border border-blue-gray-100 bg-transparent text-blue-gray-500 hover:bg-[#2d748d]':
+                    currentPage !== page
+                }"
+                [class.active]="page === currentPage"
+                (click)="goToPage(page)"
+              >
+                {{ page }}
+              </a>
+            </li>
+            <li class="flex items-center">
+              <a
+                class="mx-1 flex h-7 w-7 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300 cursor-pointer"
+                (click)="nextPage()"
+                aria-label="Next"
+              >
+                <span class="material-icons text-sm">keyboard_arrow_right</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+</div>
+
+<!-- Tabla de insumos -->
+<div
+  *ngIf="
+    insumosDisponibles.length > 0 && idAlmacen != 0 && idSalidaAlmacen != 0
+  "
+  class="overflow-x-auto shadow-md rounded-lg mt-10"
+>
+  <!-- <table class="w-full text-sm xs:table-fixed">
+    <thead class="bg-primario text-white">
+      <tr>
+        <th scope="col" class="px-1 py-[2px]">Insumo</th>
+        <th scope="col" class="px-1 py-[2px]">Unidad</th>
+        <th scope="col" class="px-1 py-[2px]">Cantidad Disponible</th>
+        <th scope="col" class="px-1 py-[2px]">Cantidad Por Salir*</th>
+        <th scope="col" class="px-1 py-[2px]" *ngIf="!esBaja">Es Préstamo</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray300">
+      <tr
+        class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+      >
+        <td class="px-1 py-[2px]">
+          <input
+            class="bg-transparent w-full"
+            list="insumodata"
+            id="insumo"
+            name="insumo"
+            placeholder="Buscar"
+            [(ngModel)]="insumoInformacion.descripcion"
+            autocomplete="off"
+            (input)="informacionInsumo($event)"
+          />
+          <datalist id="insumodata">
+            <option *ngFor="let insumo of insumosDisponibles">
+              {{ insumo.descripcion }}
+            </option>
+          </datalist>
+        </td>
+        <td class="px-1 py-[2px]">
+          {{ insumoInformacion.unidad }}
+        </td>
+        <td class="px-1 py-[2px]">
+          {{ insumoInformacion.cantidadDisponible | number: "1.4-4" }}
+        </td>
+        <td class="px-1 py-[2px]">
+          <input
+            class="bg-transparent w-full"
+            type="number"
+            [(ngModel)]="insumoInformacion.cantidadPorSalir"
+            (keydown.enter)="guardarSalidaInsumo()"
+          />
+        </td>
+        <td class="px-1 py-[2px]" *ngIf="!esBaja">
+          <input
+            type="checkbox"
+            [(ngModel)]="insumoInformacion.esPrestamo"
+
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table> -->
+</div>
+
+<!-- Componente de detalle de insumos -->
+<div *ngIf="idSalidaAlmacen != 0">
+  <div class="text-lg mt-4 text-center font-semibold">
+    <p>Insumos por traspaso</p>
+  </div>
+  <app-almacen-salida-insumos
+    *appRecarga="appRegarga"
+    [idEmpresaInput]="idEmpresaInput"
+    [idSalidaAlmacenInput]="idSalidaAlmacen"
+    [idProyectoInput]="idProyectoInput"
+  >
+  </app-almacen-salida-insumos>
+</div>
+
+<section>
+  <div
+    class="fixed inset-0 z-10 w-screen overflow-y-auto"
+    *ngIf="isOpenModalTranspaso"
+    (click)="cerrarModalTranspaso()"
+  >
+    <div
+      class="content-center sm:flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0"
+    >
+      <div
+        class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl"
+        (click)="detenerCierre($event)"
+      >
+        <!-- Cabecera -->
+        <div
+          class="bg-white px-4 pb-2 pt-2 sm:p-6 sm:pb-4 flex justify-between border-b-2"
+        >
+          <h2 class="font-semibold text-gray-800 tracking-wider text-lg mt-3">
+            Traspaso de insumos
+          </h2>
+          <button
+            type="button"
+            class="leading-none text-2xl px-3 py-1 text-gray-500 hover:text-gray-700"
+            (click)="cerrarModalTranspaso()"
+          >
+            &times;
+          </button>
+        </div>
+
+        <!-- contenido -->
+        <div class="bg-white px-4 pb-4 pt-2 sm:p-6 sm:pb-4">
+          <div>
+            <div class="mb-3">
+              <label
+                class="block text-sm font-medium text-gray-700 mb-1"
+                for="almacen"
+                >Selecciona un almacén de destino</label
+              >
+              <div class="relative w-full" #lista>
+                <input
+                  type="text"
+                  placeholder="Seleccionar..."
+                  autocomplete="off"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  (input)="filtrarAlmacen($event)"
+                  (click)="SlistaAlmacenes = !SlistaAlmacenes; SlistaInsumos = false;"
+                  [(ngModel)]="this.nombreAlmacen"
+                />
+                <div *ngIf="SlistaAlmacenes">
+                  <cdk-virtual-scroll-viewport
+                    itemSize="50"
+                    class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-[300px] h-36 overflow-auto shadow-lg"
+                  >
+                    <div
+                      *cdkVirtualFor="let almacen of listaAlmacenes"
+                      (click)="seleccionarAlmacen(almacen)"
+                      class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                      style="height: 36px; box-sizing: border-box"
+                    >
+                      {{ almacen.almacenNombre }}
+                    </div>
+                  </cdk-virtual-scroll-viewport>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="mensajeError.estatus" class="text-red-600 mb-3" >
+              *{{mensajeError.descripcion}}
+            </div>
+            <div class="mb-3">
+              <div class="overflow-x-auto shadow-md rounded-lg">
+                <table class="w-full text-sm xs:table-fixed">
+                  <thead class="bg-primario text-white">
+                    <tr class="xs:text-[10px]">
+                      <th scope="col" class="px-1 py-[2px] xs:w-[75px]">
+                        Insumo
+                      </th>
+                      <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">
+                        Cantidad
+                      </th>
+                      <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">
+                        Cantidad disponible
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px] w-3"
+                    >
+                      <td scope="col">
+                        <input
+                          type="text"
+                          class="bg-transparent w-full p-1"
+                          [(ngModel)]="selectedInsumo.nombreInsumo"
+                          (click)="SlistaInsumos = !SlistaInsumos; SlistaAlmacenes = false;"
+                          placeholder="Selecciona un insumo..."
+                        />
+                        <div *ngIf="SlistaInsumos">
+                          <cdk-virtual-scroll-viewport
+                            itemSize="50"
+                            class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-[300px] h-36 overflow-auto shadow-lg"
+                          >
+                            <div
+                              *cdkVirtualFor="let insumo of insumosExistentes"
+                              (click)="seleccionarInsumo(insumo)"
+                              class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                              style="height: 36px; box-sizing: border-box"
+                            >
+                              {{ insumo.descripcion }}
+                            </div>
+                          </cdk-virtual-scroll-viewport>
+                        </div>
+                      </td>
+                      <td scope="col">
+                        <input
+                          type="number"
+                          class="bg-transparent text-end w-full p-1"
+                          [(ngModel)]="selectedInsumo.cantidadExistencia"
+                          (click)="selectAll($event)" 
+                          (keydown.enter)="agregarFila()"
+                        />
+                      </td>
+                      <td class="bg-transparent text-end p-1">
+                        {{cantidadDisponible | number:'1.4-4'}}
+                      </td>
+                      <!-- <td scope="col">
+                        <input
+                          type="number"
+                          class="bg-transparent text-end w-full p-1"
+                          [(ngModel)]="cantidadDisponible"
+                          (keydown.enter)="agregarFila()"
+                          readonly
+                        />
+                      </td> -->
+                    </tr>
+                    
+                </table>
+                
+              </div>
+              <div class="overflow-x-auto mt-2 text-center font-semibold text-gray-700">
+                <p>Insumos a transpasar</p>
+              </div>
+              <div class="overflow-x-auto shadow-md rounded-lg mt-2">
+                <table class="w-full text-sm xs:table-fixed">
+                  <thead class="bg-primario text-white mt-3">
+                    <tr class="xs:text-[10px]">
+                      <th scope="col" class="px-1 py-[2px] xs:w-[75px]">
+                        Insumos
+                      </th>
+                      <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">
+                        Cantidad
+                      </th>
+                      <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">
+                        Acciones
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px] text-center" *ngIf="transpaso.insumos.length <= 0">
+                      <td scope="col" colspan="3">
+                        Selecciona insumos para transpasar
+                      </td>
+                    </tr>
+                    <tr
+                      class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+                      *ngFor="let insumo of transpaso.insumos; index as i"
+                    >
+                      <td scope="col">
+                        <input
+                          type="text"
+                          [(ngModel)]="insumo.nombreInsumo"
+                          class="bg-transparent w-full p-1"
+                        />
+                      </td>
+                      <td scope="col" *ngIf="selectedIndex == i">
+                        <input
+                          type="number"
+                          [(ngModel)]="insumo.cantidadExistencia"
+                          class="bg-transparent text-end w-full p-1"
+                          (click)="selectAll($event)" 
+                          (change)="comprobarExistencia(i, insumo)"
+                          (keydown.enter)="agregarFila()"
+                        />
+                      </td>
+                      <td (click)="selectedIndex = i;" *ngIf="selectedIndex != i" class="bg-transparent text-end p-1">
+                        {{insumo.cantidadExistencia | number:'1.4-4'}}
+                      </td>
+                      <td scope="col">
+                        <button
+                              ngbTooltip="Ver Impuestos"
+                              triggers="mouseenter:mouseleave"
+                              (click)="eliminarInsumo(insumo)"
+                            >
+                              <img
+                                ngbTooltip="Eliminar detalle"
+                                triggers="mouseenter:mouseleave"
+                                class="cursor-pointer mx-auto xs:w-4"
+                                src="assets/delete.svg"
+                                alt="ver insumos"
+                              />
+                            </button>
+                        <!-- Boton para eliminar el insumo de-->
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="px-4 py-3 flex justify-end gap-4">
+          <button
+            class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
+            (click)="transpasar()"
+          >
+            Aceptar
+          </button>
+          <button
+            class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
+            (click)="cerrarModalTranspaso()"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

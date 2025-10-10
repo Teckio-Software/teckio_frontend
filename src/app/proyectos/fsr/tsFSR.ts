@@ -132,6 +132,22 @@ export interface ParametrosFsrXInsumoDTO extends ParametrosFsrDTO {
   sumaPrestaciones: number;
   sumaSOBRECostoBase: number;
   fsrInsumo: number;
+  costoBaseConFormato: string;
+  costoUnitarioConFormato: string;
+  sbcFormato: string;
+  riesgoTrabajoConFormato: string;
+  cuotaFijaFormato: string;
+  aplicacionExcedenteConFormato: string;
+  prestacionDineroConFormato: string;
+  gastoMedicoConFormato: string;
+  invalidezVidaConFormato: string;
+  retiroConFormato: string;
+  cesantiaConFormato: string;
+  prestacionSocialConFormato: string;
+  infonavitConFormato: string;
+  sumaDePrestacionesConFormato: string;
+  spsbcConFormato: string;
+  fsrConFormato: string;
 }
 
 export interface DataFSR {

@@ -1,3 +1,4 @@
+import { ReportesRoutingModule } from './proyectos/reportes/reportes-routing.module';
 import { GlosarioRoutingModule } from './documentacion/glosario/glosario-routing.module';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -345,9 +346,16 @@ const routes: Routes = [
       import(`./proyectos/contratos/contratos.module`).then((module) => module.ContratosModule),
   },
   {
-    path: 'reportes',
+    path: 'destajos',
     loadChildren: () =>
       import(`./proyectos/reportes/reportes.module`).then((module) => module.ReportesModule),
+  },
+  {
+    path: 'subcontratos',
+    loadChildren: () =>
+      import(`./proyectos/reportes-subcontratos/reportes-subcontratos.module`).then(
+        (module) => module.ReportesSubcontratosModule
+      ),
   },
   {
     path: 'facturasTeckio',
@@ -376,8 +384,16 @@ const routes: Routes = [
   {
     path: 'productos-y-servicios',
     loadChildren: () =>
-      import(`./gestion-ventas/productos-servicios/productos-servicios.module`).then(
-        (module) => module.ProductosServiciosModule,
+      import(
+        `./gestion-ventas/productos-servicios/productos-servicios.module`
+      ).then((module) => module.ProductosServiciosModule),
+  },
+  {
+
+    path: 'auditorias',
+    loadChildren: () =>
+      import(`./seguridad/auditorias/auditorias.module`).then(
+        (module) => module.AuditoriasModule
       ),
   },
   {
@@ -395,6 +411,19 @@ const routes: Routes = [
     loadChildren: () =>
       import(`./contabilidad/cuentas-por-cobrar/cuentas-por-cobrar.module`).then(
         (module) => module.CuentasPorCobrarModule,
+      ),
+  },
+  {path: 'imagenes',
+    loadChildren: () =>
+      import(`./seguridad/imagenes/imagenes.module`).then(
+        (module) => module.ImagenesModule
+      ),
+  },
+  {
+    path: 'almacentranspaso',
+    loadChildren: () =>
+      import(`./inventario/almacenTranspaso/almacen-transpaso.module`).then(
+        (module) => module.AlmacenTranspasoModule
       ),
   },
 

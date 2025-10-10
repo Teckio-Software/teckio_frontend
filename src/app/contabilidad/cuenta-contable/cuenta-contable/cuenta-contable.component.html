@@ -94,7 +94,7 @@
 </mat-tree> -->
 
 <div class="overflow-x-auto shadow-md rounded-lg mt-3">
-  <table class="w-full text-sm">
+  <table class="w-full text-sm table table-striped table-hover table-arbol">
     <thead class="bg-primario text-white">
       <th style="width: 5%"></th>
       <th style="width: 17%" class="cabecera">Código</th>
@@ -144,7 +144,7 @@
                     class="button-accion"
                     (click)="expansionDominio(cuentaContable)"
                     style="color: #020202"
-                    *ngIf="cuentaContable.nivel <= 7"
+                    *ngIf="cuentaContable.nivel < 5"
                   >
                     {{ cuentaContable.expandido ? "-" : "+" }}
                   </button>
@@ -158,7 +158,7 @@
                     cuentaContable.tipoCuentaContable == 0
                   "
                 >
-                  <div *ngIf="cuentaContable.nivel < 7">
+                  <div *ngIf="cuentaContable.nivel < 5">
                     <button
                       class="button-accion"
                       (click)="crearCuentaContable(cuentaContable)"
@@ -179,7 +179,7 @@
                   </div>
                 </div>
                 <div *ngIf="cuentaContable.existePoliza == true">
-                  <div *ngIf="cuentaContable.nivel < 7">
+                  <div *ngIf="cuentaContable.nivel < 5">
                     <button class="button-accion"></button>
                   </div>
                 </div>
@@ -204,7 +204,8 @@
                 nivel7Margen: cuentaContable.nivel == 7
               }"
             >
-              {{ cuentaContable.codigo }}
+            <!-- {{cuentaContable.codigo}} -->
+              {{ cuentaContable.nivel<=1? cuentaContable.codigo : '...'+cuentaContable.codigo.substring((((cuentaContable.nivel-1)*5)), cuentaContable.codigo.length)}}
             </td>
             <td
               style="

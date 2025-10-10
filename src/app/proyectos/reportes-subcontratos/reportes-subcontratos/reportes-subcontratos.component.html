@@ -1,0 +1,23 @@
+<mat-tab-group class="first-custom-tab-group" animationDuration="0ms" (selectedTabChange)="yourFn($event)"
+  [selectedIndex]="selectedIndex">
+  <mat-tab class="text-labels" label="Subcontrato">
+      <div>
+          <app-destajo *appRecarga="appRecarga" (total)="actualizaTotal($event)" [esDestajo]="false"></app-destajo>
+      </div>
+  </mat-tab>
+  <mat-tab label="Total Subcontrato" >
+    <div *ngIf="selectedIndex === 1">
+        <app-total-destajo *appRecarga="appRecarga" (total)="actualizaTotal($event)" [esDestajo]="false"></app-total-destajo>
+    </div>
+  </mat-tab>
+  <!-- <mat-tab label="Resumen de estimaciones">
+      <div *ngIf="selectedIndex === 2">
+          <app-resumen-estimaciones *appRecarga="appRecarga" (total)="actualizaTotal($event)"></app-resumen-estimaciones>
+      </div>
+  </mat-tab>
+  <mat-tab label="Comparativa ">
+      <div *ngIf="selectedIndex === 3">
+          <app-reportes-bi *appRecarga="appRecarga"></app-reportes-bi>
+      </div>
+  </mat-tab> -->
+</mat-tab-group>
