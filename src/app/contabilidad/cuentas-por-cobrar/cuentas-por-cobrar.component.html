@@ -1,1 +1,250 @@
-<p>cuentas-por-cobrar works!</p>
+<section class="p-2">
+  <div class="bg-white rounded-md w-full" *ngIf="!crearCuenta">
+    <!-- header nuevo y fitro exportacion -->
+    <div>
+      <div class="px-3 py-3 flex justify-end gap-3">
+        <button
+          (click)="nuevaCuenta()"
+          class="flex gap-2 items-center bg-colorButton hover:bg-colorButtonHover rounded-md text-white transition-colors px-3 py-2"
+        >
+          <img src="./assets/plus-solid-full.svg" alt="" class="w-3" />
+          Nuevo
+        </button>
+        <select
+          id="countries"
+          class="bg-gris border border-[#929292] text-[#929292] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-3 py-2"
+        >
+          <option selected disabled>Exportar</option>
+          <option value="US">United States</option>
+          <option value="CA">Canada</option>
+          <option value="FR">France</option>
+          <option value="DE">Germany</option>
+        </select>
+      </div>
+    </div>
+    <!-- busqueda y filtros -->
+    <div class="flex gap-3 px-3">
+      <div class="relative">
+        <input
+          class="w-64 pl-8 pr-2 py-2 bg-gris border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black"
+          id="cuenta"
+          name="cuenta"
+          placeholder="Buscar"
+          autocomplete="off"
+        />
+        <img
+          src="./assets/search.svg"
+          alt="Buscar"
+          class="w-4 h-4 absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
+        />
+        <div class="hidden">
+          <cdk-virtual-scroll-viewport
+            itemSize="36"
+            class="absolute z-50 left-0 top-full mt-1 bg-white border border-gray-200 rounded-md w-72 h-48 overflow-auto shadow-lg"
+          >
+            <div
+              class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+              style="height: 36px; box-sizing: border-box"
+            >
+              prueba
+            </div>
+          </cdk-virtual-scroll-viewport>
+        </div>
+      </div>
+      <select
+        id="countries"
+        class="bg-gris border border-[#929292] text-[#929292] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-3 py-2"
+      >
+        <option selected disabled>Proveedor</option>
+        <option value="US">United States</option>
+        <option value="CA">Canada</option>
+        <option value="FR">France</option>
+        <option value="DE">Germany</option>
+      </select>
+      <select
+        id="countries"
+        class="bg-gris border border-[#929292] text-[#929292] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-3 py-2"
+      >
+        <option selected disabled>Saldo pendiente</option>
+        <option value="US">United States</option>
+        <option value="CA">Canada</option>
+        <option value="FR">France</option>
+        <option value="DE">Germany</option>
+      </select>
+      <select
+        id="countries"
+        class="bg-gris border border-[#929292] text-[#929292] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-3 py-2"
+      >
+        <option selected disabled>Fecha</option>
+        <option value="US">United States</option>
+        <option value="CA">Canada</option>
+        <option value="FR">France</option>
+        <option value="DE">Germany</option>
+      </select>
+      <select
+        id="countries"
+        class="bg-gris border border-[#929292] text-[#929292] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-3 py-2"
+      >
+        <option selected disabled>Estatus</option>
+        <option value="US">United States</option>
+        <option value="CA">Canada</option>
+        <option value="FR">France</option>
+        <option value="DE">Germany</option>
+      </select>
+    </div>
+
+    <table class="w-full mt-4 text-center">
+      <thead class="text-center bg-[#f9fafb]">
+        <th class="py-3 font-medium">ID solicitud</th>
+        <th class="py-3 font-medium">Proveedor</th>
+        <th class="py-3 font-medium">Monto total</th>
+        <th class="py-3 font-medium">Saldo pendiente</th>
+        <th class="py-3 font-medium">Fecha emisión</th>
+        <th class="py-3 font-medium">Fecha vencimiento</th>
+        <th class="py-3 font-medium">Estatus</th>
+        <th class="py-3 font-medium">Acciones</th>
+      </thead>
+      <tbody class="divide-y divide-gray300">
+        <tr class="font-medium text-gray700 hover:bg-gris animation duration-200 xs:text-[8px]">
+          <td class="py-4">975653HERS</td>
+          <td class="py-4">Grupo Teckio S.A. de C.V.</td>
+          <td class="py-4">$0,000.00</td>
+          <td class="py-4">$0,000.00</td>
+          <td class="py-4">18-09-2025</td>
+          <td class="py-4">18-09-2025</td>
+          <td class="py-4">
+            <div class="flex justify-center">
+              <div class="bg-blue-50 text-blue-500 font-medium rounded-lg px-2 py-1 w-36">
+                Capturada
+              </div>
+            </div>
+          </td>
+          <td class="py-4">
+            <div class="flex justify-center gap-3">
+              <button><img src="./assets/edit.svg" alt="Botón de editar" class="w-5" /></button>
+              <button>
+                <img src="./assets/arrow-right-solid-full.svg" alt="Botón de ver" class="w-5" />
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr class="font-medium text-gray700 hover:bg-gris animation duration-200 xs:text-[8px]">
+          <td class="py-4">975653HERS</td>
+          <td class="py-4">Grupo Teckio S.A. de C.V.</td>
+          <td class="py-4">$0,000.00</td>
+          <td class="py-4">$0,000.00</td>
+          <td class="py-4">18-09-2025</td>
+          <td class="py-4">18-09-2025</td>
+          <td class="py-4">
+            <div class="flex justify-center">
+              <div class="bg-blue-50 text-blue-500 font-medium rounded-lg px-2 py-1 w-36">
+                Capturada
+              </div>
+            </div>
+          </td>
+          <td class="py-4">
+            <div class="flex justify-center gap-3">
+              <button><img src="./assets/edit.svg" alt="Botón de editar" class="w-5" /></button>
+              <button>
+                <img src="./assets/arrow-right-solid-full.svg" alt="Botón de ver" class="w-5" />
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr class="font-medium text-gray700 hover:bg-gris animation duration-200 xs:text-[8px]">
+          <td class="py-4">975653HERS</td>
+          <td class="py-4">Grupo Teckio S.A. de C.V.</td>
+          <td class="py-4">$0,000.00</td>
+          <td class="py-4">$0,000.00</td>
+          <td class="py-4">18-09-2025</td>
+          <td class="py-4">18-09-2025</td>
+          <td class="py-4">
+            <div class="flex justify-center">
+              <div class="bg-blue-50 text-blue-500 font-medium rounded-lg px-2 py-1 w-36">
+                Capturada
+              </div>
+            </div>
+          </td>
+          <td class="py-4">
+            <div class="flex justify-center gap-3">
+              <button><img src="./assets/edit.svg" alt="Botón de editar" class="w-5" /></button>
+              <button>
+                <img src="./assets/arrow-right-solid-full.svg" alt="Botón de ver" class="w-5" />
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr class="font-medium text-gray700 hover:bg-gris animation duration-200 xs:text-[8px]">
+          <td class="py-4">975653HERS</td>
+          <td class="py-4">Grupo Teckio S.A. de C.V.</td>
+          <td class="py-4">$0,000.00</td>
+          <td class="py-4">$0,000.00</td>
+          <td class="py-4">18-09-2025</td>
+          <td class="py-4">18-09-2025</td>
+          <td class="py-4">
+            <div class="flex justify-center">
+              <div class="bg-blue-50 text-blue-500 font-medium rounded-lg px-2 py-1 w-36">
+                Capturada
+              </div>
+            </div>
+          </td>
+          <td class="py-4">
+            <div class="flex justify-center gap-3">
+              <button><img src="./assets/edit.svg" alt="Botón de editar" class="w-5" /></button>
+              <button>
+                <img src="./assets/arrow-right-solid-full.svg" alt="Botón de ver" class="w-5" />
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr class="font-medium text-gray700 hover:bg-gris animation duration-200 xs:text-[8px]">
+          <td class="py-4">975653HERS</td>
+          <td class="py-4">Grupo Teckio S.A. de C.V.</td>
+          <td class="py-4">$0,000.00</td>
+          <td class="py-4">$0,000.00</td>
+          <td class="py-4">18-09-2025</td>
+          <td class="py-4">18-09-2025</td>
+          <td class="py-4">
+            <div class="flex justify-center">
+              <div class="bg-blue-50 text-blue-500 font-medium rounded-lg px-2 py-1 w-36">
+                Capturada
+              </div>
+            </div>
+          </td>
+          <td class="py-4">
+            <div class="flex justify-center gap-3">
+              <button><img src="./assets/edit.svg" alt="Botón de editar" class="w-5" /></button>
+              <button>
+                <img src="./assets/arrow-right-solid-full.svg" alt="Botón de ver" class="w-5" />
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr class="font-medium text-gray700 hover:bg-gris animation duration-200 xs:text-[8px]">
+          <td class="py-4">975653HERS</td>
+          <td class="py-4">Grupo Teckio S.A. de C.V.</td>
+          <td class="py-4">$0,000.00</td>
+          <td class="py-4">$0,000.00</td>
+          <td class="py-4">18-09-2025</td>
+          <td class="py-4">18-09-2025</td>
+          <td class="py-4">
+            <div class="flex justify-center">
+              <div class="bg-blue-50 text-blue-500 font-medium rounded-lg px-2 py-1 w-36">
+                Capturada
+              </div>
+            </div>
+          </td>
+          <td class="py-4">
+            <div class="flex justify-center gap-3">
+              <button><img src="./assets/edit.svg" alt="Botón de editar" class="w-5" /></button>
+              <button>
+                <img src="./assets/arrow-right-solid-full.svg" alt="Botón de ver" class="w-5" />
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+<app-nueva-cuenta *ngIf="crearCuenta" (regresar)="crearCuenta = false"></app-nueva-cuenta>
