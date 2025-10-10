@@ -44,6 +44,7 @@
               maxlength="4"
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
+            <p [ngClass]="errorCo && nuevaCC.codigo.length==0?'text-red-500' : nuevaCC.codigo.length>0?'text-green-400':'text-gray-500'" class="w-full text-end text-xs mt-1">{{nuevaCC.codigo.length}}/4</p>
             <div *ngIf="errorCo" class="text-red-500 text-xs mt-2">
               *El campo 'Código' es requerido
             </div>
