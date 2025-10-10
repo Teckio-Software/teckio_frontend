@@ -15,9 +15,7 @@ const routes: Routes = [
   {
     path: 'empresas',
     loadChildren: () =>
-      import(`./catalogos/empresas/empresas.module`).then(
-        (module) => module.EmpresasModule,
-      ),
+      import(`./catalogos/empresas/empresas.module`).then((module) => module.EmpresasModule),
   },
   {
     path: 'familia',
@@ -36,9 +34,7 @@ const routes: Routes = [
   {
     path: 'insumo',
     loadChildren: () =>
-      import(`./catalogos/insumo/insumo.module`).then(
-        (module) => module.InsumoModule,
-      ),
+      import(`./catalogos/insumo/insumo.module`).then((module) => module.InsumoModule),
   },
   {
     path: 'especialidad',
@@ -57,16 +53,12 @@ const routes: Routes = [
   {
     path: 'cliente',
     loadChildren: () =>
-      import(`./catalogos/cliente/clientes.module`).then(
-        (module) => module.ClientesModule,
-      ),
+      import(`./catalogos/cliente/clientes.module`).then((module) => module.ClientesModule),
   },
   {
     path: 'rubro',
     loadChildren: () =>
-      import(`./contabilidad/rubro/rubro.module`).then(
-        (module) => module.RubroModule,
-      ),
+      import(`./contabilidad/rubro/rubro.module`).then((module) => module.RubroModule),
   },
   {
     path: 'cuentacontable',
@@ -78,9 +70,7 @@ const routes: Routes = [
   {
     path: 'concepto',
     loadChildren: () =>
-      import(`./catalogos/concepto/concepto.module`).then(
-        (module) => module.ConceptoModule,
-      ),
+      import(`./catalogos/concepto/concepto.module`).then((module) => module.ConceptoModule),
   },
   {
     path: 'tipopoliza',
@@ -92,16 +82,12 @@ const routes: Routes = [
   {
     path: 'almacen',
     loadChildren: () =>
-      import(`./inventario/almacen/almacen.module`).then(
-        (module) => module.AlmacenModule,
-      ),
+      import(`./inventario/almacen/almacen.module`).then((module) => module.AlmacenModule),
   },
   {
     path: 'proyecto',
     loadChildren: () =>
-      import(`./proyectos/proyecto/proyecto.module`).then(
-        (module) => module.ProyectoModule,
-      ),
+      import(`./proyectos/proyecto/proyecto.module`).then((module) => module.ProyectoModule),
   },
   {
     path: 'menu-empresa',
@@ -127,16 +113,16 @@ const routes: Routes = [
   {
     path: 'usuario-multiempresa-filtrado',
     loadChildren: () =>
-      import(
-        `./seguridad/usuario-multi-empresa-filtrado/module/module.module`
-      ).then((module) => module.ModuleModule),
+      import(`./seguridad/usuario-multi-empresa-filtrado/module/module.module`).then(
+        (module) => module.ModuleModule,
+      ),
   },
   {
     path: 'empleado',
     loadChildren: () =>
-      import(
-        `./seguridad/empleado/empleados-module/empleados-module.module`
-      ).then((module) => module.EmpleadosModuleModule),
+      import(`./seguridad/empleado/empleados-module/empleados-module.module`).then(
+        (module) => module.EmpleadosModuleModule,
+      ),
   },
   {
     path: 'explosioninsumos',
@@ -148,16 +134,14 @@ const routes: Routes = [
   {
     path: 'requisicion',
     loadChildren: () =>
-      import(`./compras/requisicion/requisicion.module`).then(
-        (module) => module.RequisicionModule,
-      ),
+      import(`./compras/requisicion/requisicion.module`).then((module) => module.RequisicionModule),
   },
   {
     path: 'resumenOrdenCompra',
     loadChildren: () =>
-      import(
-        `./compras/resumen-ordenes-compra/resumen-ordenes-compra.module`
-      ).then((module) => module.ResumenOrdenesCompraModule),
+      import(`./compras/resumen-ordenes-compra/resumen-ordenes-compra.module`).then(
+        (module) => module.ResumenOrdenesCompraModule,
+      ),
   },
   {
     path: 'ordencompra',
@@ -169,9 +153,7 @@ const routes: Routes = [
   {
     path: 'cotizacion',
     loadChildren: () =>
-      import(`./compras/cotizacion/cotizacion.module`).then(
-        (module) => module.CotizacionModule,
-      ),
+      import(`./compras/cotizacion/cotizacion.module`).then((module) => module.CotizacionModule),
   },
   {
     path: 'compradirecta',
@@ -190,9 +172,7 @@ const routes: Routes = [
   {
     path: 'existencia',
     loadChildren: () =>
-      import(`./inventario/existencia/existencia.module`).then(
-        (module) => module.ExistenciaModule,
-      ),
+      import(`./inventario/existencia/existencia.module`).then((module) => module.ExistenciaModule),
   },
   {
     path: 'almacensalida',
@@ -211,16 +191,12 @@ const routes: Routes = [
   {
     path: 'indirectos',
     loadChildren: () =>
-      import(`./proyectos/indirectos/indirectos.module`).then(
-        (module) => module.IndirectosModule,
-      ),
+      import(`./proyectos/indirectos/indirectos.module`).then((module) => module.IndirectosModule),
   },
   {
     path: 'cliente',
     loadChildren: () =>
-      import(`./contabilidad/cliente/cliente.module`).then(
-        (module) => module.ClienteModule,
-      ),
+      import(`./contabilidad/cliente/cliente.module`).then((module) => module.ClienteModule),
   },
   {
     path: 'facturas',
@@ -232,37 +208,31 @@ const routes: Routes = [
   {
     path: 'orden-compra-ws',
     loadChildren: () =>
-      import(
-        `./facturacion/orden-compra-ws/orden-compra-ws/orden-compra-ws.module`
-      ).then((module) => module.OrdenCompraWsModule),
+      import(`./facturacion/orden-compra-ws/orden-compra-ws/orden-compra-ws.module`).then(
+        (module) => module.OrdenCompraWsModule,
+      ),
   },
   {
     path: 'poliza',
     loadChildren: () =>
-      import(`./contabilidad/poliza/poliza.module`).then(
-        (module) => module.PolizaModule,
-      ),
+      import(`./contabilidad/poliza/poliza.module`).then((module) => module.PolizaModule),
   },
   {
     path: 'balanza',
     loadChildren: () =>
-      import(
-        `./contabilidad/balanza-comprobacion/balanza-comprobacion.module`
-      ).then((module) => module.BalanzaComprobacionModule),
+      import(`./contabilidad/balanza-comprobacion/balanza-comprobacion.module`).then(
+        (module) => module.BalanzaComprobacionModule,
+      ),
   },
   {
     path: 'division',
     loadChildren: () =>
-      import(`./gastos/division/division.module`).then(
-        (module) => module.DivisionModule,
-      ),
+      import(`./gastos/division/division.module`).then((module) => module.DivisionModule),
   },
   {
     path: 'plazas',
     loadChildren: () =>
-      import(`./gastos/plazas/plazas.module`).then(
-        (module) => module.PlazasModule,
-      ),
+      import(`./gastos/plazas/plazas.module`).then((module) => module.PlazasModule),
   },
   {
     path: 'cuenta-contable',
@@ -295,9 +265,7 @@ const routes: Routes = [
   {
     path: 'graficas',
     loadChildren: () =>
-      import(`./graficas/graficas/graficas.module`).then(
-        (module) => module.GraficasModule,
-      ),
+      import(`./graficas/graficas/graficas.module`).then((module) => module.GraficasModule),
   },
   {
     path: 'crear-arbol',
@@ -330,30 +298,25 @@ const routes: Routes = [
   {
     path: 'pagos',
     loadChildren: () =>
-      import(`./facturacion/pagos/pagos.module`).then(
-        (module) => module.PagosModule,
-      ),
+      import(`./facturacion/pagos/pagos.module`).then((module) => module.PagosModule),
   },
   {
     path: 'programacionestimada',
     loadChildren: () =>
-      import(
-        `./proyectos/programacion-estimada/programacion-estimada.module`
-      ).then((module) => module.ProgramacionEstimadaModule),
+      import(`./proyectos/programacion-estimada/programacion-estimada.module`).then(
+        (module) => module.ProgramacionEstimadaModule,
+      ),
   },
   {
     path: 'bancos',
-    loadChildren: () =>
-      import(`./bancos/banco/banco.module`).then(
-        (module) => module.BancoModule,
-      ),
+    loadChildren: () => import(`./bancos/banco/banco.module`).then((module) => module.BancoModule),
   },
   {
     path: 'cuentasbancarias',
     loadChildren: () =>
-      import(
-        `./bancos/cuentaBancariaEmpresa/cuenta-bancaria-empresa.module`
-      ).then((module) => module.CuentaBancariaEmpresaModule),
+      import(`./bancos/cuentaBancariaEmpresa/cuenta-bancaria-empresa.module`).then(
+        (module) => module.CuentaBancariaEmpresaModule,
+      ),
   },
   {
     path: 'cuentabancaria',
@@ -379,16 +342,12 @@ const routes: Routes = [
   {
     path: 'contratos',
     loadChildren: () =>
-      import(`./proyectos/contratos/contratos.module`).then(
-        (module) => module.ContratosModule,
-      ),
+      import(`./proyectos/contratos/contratos.module`).then((module) => module.ContratosModule),
   },
   {
     path: 'reportes',
     loadChildren: () =>
-      import(`./proyectos/reportes/reportes.module`).then(
-        (module) => module.ReportesModule,
-      ),
+      import(`./proyectos/reportes/reportes.module`).then((module) => module.ReportesModule),
   },
   {
     path: 'facturasTeckio',
@@ -400,9 +359,7 @@ const routes: Routes = [
   {
     path: 'ventas',
     loadChildren: () =>
-      import(`./gestion-ventas/ventas/ventas.module`).then(
-        (module) => module.VentasModule,
-      ),
+      import(`./gestion-ventas/ventas/ventas.module`).then((module) => module.VentasModule),
   },
   {
     path: 'productos',
@@ -414,30 +371,30 @@ const routes: Routes = [
   {
     path: 'ventas',
     loadChildren: () =>
-      import(`./gestion-ventas/ventas/ventas.module`).then(
-        (module) => module.VentasModule,
-      ),
+      import(`./gestion-ventas/ventas/ventas.module`).then((module) => module.VentasModule),
   },
   {
     path: 'productos-y-servicios',
     loadChildren: () =>
-      import(
-        `./gestion-ventas/productos-servicios/productos-servicios.module`
-      ).then((module) => module.ProductosServiciosModule),
-  },
-  {
-
-    path: 'auditorias',
-    loadChildren: () =>
-      import(`./seguridad/auditorias/auditorias.module`).then(
-        (module) => module.AuditoriasModule,
+      import(`./gestion-ventas/productos-servicios/productos-servicios.module`).then(
+        (module) => module.ProductosServiciosModule,
       ),
   },
   {
-     path: 'glosario',
+    path: 'auditorias',
     loadChildren: () =>
-      import(`./documentacion/glosario/glosario.module`).then(
-        (module) => module.GlosarioModule
+      import(`./seguridad/auditorias/auditorias.module`).then((module) => module.AuditoriasModule),
+  },
+  {
+    path: 'glosario',
+    loadChildren: () =>
+      import(`./documentacion/glosario/glosario.module`).then((module) => module.GlosarioModule),
+  },
+  {
+    path: 'cuentas-por-cobrar',
+    loadChildren: () =>
+      import(`./contabilidad/cuentas-por-cobrar/cuentas-por-cobrar.module`).then(
+        (module) => module.CuentasPorCobrarModule,
       ),
   },
 
