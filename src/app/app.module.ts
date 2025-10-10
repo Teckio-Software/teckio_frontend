@@ -168,6 +168,9 @@ import { UppercaseInputDirective } from './directiva/uppercase.directive';
 import { OnlyNumbersDirective } from './directiva/onlynumbers.directive';
 import { AuditoriaService } from './seguridad/auditorias/auditorias.service';
 import { AuditoriasComponent } from './seguridad/auditorias/auditorias.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { CountUpDirective } from './directiva/countup.directive';
+import { ProgressBarComponent } from './dashboard/components/progress-bar/progress-bar.component';
 
 import { GlosarioComponent } from './documentacion/glosario/glosario.component';
 import { ModalGlosarioComponent } from './documentacion/modal-glosario/modal-glosario.component';
