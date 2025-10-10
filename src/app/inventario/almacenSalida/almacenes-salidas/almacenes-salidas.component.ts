@@ -111,7 +111,7 @@ export class AlmacenesSalidasComponent {
 
   isLoading: boolean = true;
 
-  isOpenModalTranspaso: boolean = false;
+  // isOpenModalTranspaso: boolean = false;
 
   listaAlmacenes: almacenDTO[] = [];
   listaAlmacenesReset: almacenDTO[] = [];
@@ -122,27 +122,27 @@ export class AlmacenesSalidasComponent {
   SlistaInsumos: boolean = false;
   filtroEstatus: string = '';
 
-  transpaso: transpasoAlmacenDTO = {
-    idAlmacenOrigen: 0,
-    idAlmacenDestino: 0,
-    insumos: [],
-  };
+  // transpaso: transpasoAlmacenDTO = {
+  //   idAlmacenOrigen: 0,
+  //   idAlmacenDestino: 0,
+  //   insumos: [],
+  // };
 
-  selectedInsumo: transpasoAlmacenInsumoDTO = {
-    idInsumo: 0,
-    cantidadExistencia: 0,
-    nombreInsumo: '',
-  }
+  // selectedInsumo: transpasoAlmacenInsumoDTO = {
+  //   idInsumo: 0,
+  //   cantidadExistencia: 0,
+  //   nombreInsumo: '',
+  // }
 
     insumosExistentes !: existenciasInsumosDTO[];
     insumosExistentesReset !: existenciasInsumosDTO[];
 
     cantidadDisponible: number = 0;
 
-    mensajeError: RespuestaDTO = {
-      estatus: false,
-      descripcion: '',
-    };
+    // mensajeError: RespuestaDTO = {
+    //   estatus: false,
+    //   descripcion: '',
+    // };
 
     SlistaAlmacenesMain: boolean = false;
     selectedAlmacen: string = '';
@@ -190,35 +190,39 @@ export class AlmacenesSalidasComponent {
  * del registro de transpaso, así como la lista de insumos existentes
  * y la cantidad disponible para cada insumo.
  */
-  abrirModalTranspaso() {
-    this.insumosExistentes = this.insumosExistentesReset;
-    this.isOpenModalTranspaso = true;
-  }
+  // abrirModalTranspaso() {
+  //   this.insumosExistentes = this.insumosExistentesReset;
+  //   this.isOpenModalTranspaso = true;
+  // }
 
 /**
  * Cierra el modal de transpaso y resetea los valores de los campos
  * del registro de transpaso, así como la lista de insumos existentes
  * y la cantidad disponible para cada insumo.
  */
-  cerrarModalTranspaso() {
-    this.transpaso.idAlmacenDestino = 0;
-    this.selectedInsumo = {
-      idInsumo: 0,
-      nombreInsumo: '',
-      cantidadExistencia: 0
-    }
-    this.nombreAlmacen = '';
-    this.isOpenModalTranspaso = false;
-    this.SlistaAlmacenes = false;
-    this.SlistaInsumos = false;
-    this.cantidadDisponible = 0;
-    this.transpaso = {
-      idAlmacenOrigen: 0,
-      idAlmacenDestino: 0,
-      insumos: [],
-    }
-  }
+  // cerrarModalTranspaso() {
+  //   this.transpaso.idAlmacenDestino = 0;
+  //   this.selectedInsumo = {
+  //     idInsumo: 0,
+  //     nombreInsumo: '',
+  //     cantidadExistencia: 0
+  //   }
+  //   this.nombreAlmacen = '';
+  //   this.isOpenModalTranspaso = false;
+  //   this.SlistaAlmacenes = false;
+  //   this.SlistaInsumos = false;
+  //   this.cantidadDisponible = 0;
+  //   this.transpaso = {
+  //     idAlmacenOrigen: 0,
+  //     idAlmacenDestino: 0,
+  //     insumos: [],
+  //   }
+  // }
 
+/**
+ * Selecciona todo el contenido de un input
+ * @param event El evento que se lanzo cuando se selecciona todo el contenido de un input
+ */
   selectAll(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     inputElement.select();
@@ -229,12 +233,12 @@ export class AlmacenesSalidasComponent {
  * @param index El índice del insumo en el registro de transpaso
  * @param insumo El insumo que se va a comprobar
  */
-  comprobarExistencia(index: number, insumo: transpasoAlmacenInsumoDTO) {
-    var cantidadDisponible = this.insumosExistentesReset.find((i) => i.idInsumo == insumo.idInsumo)?.cantidadInsumos ?? 0;
-    if (this.transpaso.insumos[index].cantidadExistencia > cantidadDisponible) {
-      this.transpaso.insumos[index].cantidadExistencia = cantidadDisponible;
-    }
-  }
+  // comprobarExistencia(index: number, insumo: transpasoAlmacenInsumoDTO) {
+  //   var cantidadDisponible = this.insumosExistentesReset.find((i) => i.idInsumo == insumo.idInsumo)?.cantidadInsumos ?? 0;
+  //   if (this.transpaso.insumos[index].cantidadExistencia > cantidadDisponible) {
+  //     this.transpaso.insumos[index].cantidadExistencia = cantidadDisponible;
+  //   }
+  // }
 
 /**
  * Filtra la lista de almacenes
@@ -257,17 +261,17 @@ export class AlmacenesSalidasComponent {
    * Selecciona un almacen para la orden de venta
    * @param almacen El almacen seleccionado
    */
-  seleccionarAlmacen(almacen: almacenDTO) {
-    // Asigna el id del almacen seleccionado a la orden de venta
-    //
-    //* Lógica para guardar la información del almacen de destino para el transpaso
-    //
-    this.transpaso.idAlmacenDestino = almacen.id
-    this.nombreAlmacen = almacen.almacenNombre;
-    // Oculta la lista de almacenes
-    this.SlistaAlmacenes = false;
-    this.mensajeError.estatus = false;
-  }
+  // seleccionarAlmacen(almacen: almacenDTO) {
+  //   // Asigna el id del almacen seleccionado a la orden de venta
+  //   //
+  //   //* Lógica para guardar la información del almacen de destino para el transpaso
+  //   //
+  //   this.transpaso.idAlmacenDestino = almacen.id
+  //   this.nombreAlmacen = almacen.almacenNombre;
+  //   // Oculta la lista de almacenes
+  //   this.SlistaAlmacenes = false;
+  //   this.mensajeError.estatus = false;
+  // }
 
   // seleccionarAlmacenMain(id: number, nombreAlmacen: string) {
   //   this.idAlmacen = id;
@@ -279,62 +283,62 @@ export class AlmacenesSalidasComponent {
    * Selecciona un insumo para la orden de venta
    * @param insumo El insumo seleccionado
    */
-  seleccionarInsumo(insumo: existenciasInsumosDTO) {    
-    if(this.transpaso.insumos.filter(i=>i.idInsumo==insumo.idInsumo).length>0){
-      this.SlistaInsumos = false;
-      return;
-    }
-    this.selectedInsumo.nombreInsumo = insumo.descripcion;
-    this.selectedInsumo.idInsumo = insumo.idInsumo; 
-    this.cantidadDisponible = insumo.cantidadInsumos;
+  // seleccionarInsumo(insumo: existenciasInsumosDTO) {    
+  //   if(this.transpaso.insumos.filter(i=>i.idInsumo==insumo.idInsumo).length>0){
+  //     this.SlistaInsumos = false;
+  //     return;
+  //   }
+  //   this.selectedInsumo.nombreInsumo = insumo.descripcion;
+  //   this.selectedInsumo.idInsumo = insumo.idInsumo; 
+  //   this.cantidadDisponible = insumo.cantidadInsumos;
 
-    // Oculta la lista de almacenes
-    this.SlistaInsumos = false;
-  }
+  //   // Oculta la lista de almacenes
+  //   this.SlistaInsumos = false;
+  // }
 
   /**
    * Transpasa los insumos seleccionados del almacen seleccionado a otro almacen
    */
-  transpasar() {
-    /**
-     * Valida que se haya seleccionado un almacen de destino
-     */
-    if(this.transpaso.idAlmacenDestino==0){
-      this.mensajeError = {
-        estatus: true,
-        descripcion: 'Seleccione un almacen de destino',
-      }
-      return;
-    }
-    /**
-     * Valida que se haya seleccionado al menos un insumo
-     */
-    if(this.transpaso.insumos.length<=0){
-      this.mensajeError = {
-        estatus: true,
-        descripcion: 'Seleccione al menos un insumo',
-      }
-      return;
-    }
-    /**
-     * Realiza el transpaso
-     */
-    this.transpaso.idAlmacenOrigen = this.idAlmacen
-    this._almacenSalida.transpasar(this.idEmpresaInput,this.transpaso).subscribe({next:resp=>{
-      console.log(resp);
-      if(resp.estatus){
-        this.alerta(AlertaTipo.save, resp.descripcion);
-        this.cerrarModalTranspaso();
-        this.cargarRegistros();
-        this.cargarInsumos();
-        this.cargarInsumosDisponibles();
-      }else{
-        this.alerta(AlertaTipo.error, resp.descripcion);
-      }
-    }, error:()=>{
-      this.alerta(AlertaTipo.error, 'Error al realizar la transpaso');
-    }})
-  }
+  // transpasar() {
+  //   /**
+  //    * Valida que se haya seleccionado un almacen de destino
+  //    */
+  //   if(this.transpaso.idAlmacenDestino==0){
+  //     this.mensajeError = {
+  //       estatus: true,
+  //       descripcion: 'Seleccione un almacen de destino',
+  //     }
+  //     return;
+  //   }
+  //   /**
+  //    * Valida que se haya seleccionado al menos un insumo
+  //    */
+  //   if(this.transpaso.insumos.length<=0){
+  //     this.mensajeError = {
+  //       estatus: true,
+  //       descripcion: 'Seleccione al menos un insumo',
+  //     }
+  //     return;
+  //   }
+  //   /**
+  //    * Realiza el transpaso
+  //    */
+  //   this.transpaso.idAlmacenOrigen = this.idAlmacen
+  //   this._almacenSalida.transpasar(this.idEmpresaInput,this.transpaso).subscribe({next:resp=>{
+  //     console.log(resp);
+  //     if(resp.estatus){
+  //       this.alerta(AlertaTipo.save, resp.descripcion);
+  //       // this.cerrarModalTranspaso();
+  //       this.cargarRegistros();
+  //       this.cargarInsumos();
+  //       this.cargarInsumosDisponibles();
+  //     }else{
+  //       this.alerta(AlertaTipo.error, resp.descripcion);
+  //     }
+  //   }, error:()=>{
+  //     this.alerta(AlertaTipo.error, 'Error al realizar la transpaso');
+  //   }})
+  // }
 
   /**
    * Carga la lista de insumos existentes en el almacen seleccionado
@@ -355,47 +359,47 @@ export class AlmacenesSalidasComponent {
   /**
    * Agrega una fila al registro de transpaso
    */
-  agregarFila(){
-    // Verifica si el insumo seleccionado tiene un id mayor a cero
-    if(this.selectedInsumo.idInsumo>0){
-      // Verifica si la cantidad existente del insumo seleccionado es mayor a cero
-      if(this.selectedInsumo.cantidadExistencia<=0){
-        return;
-      }
-      // Verifica si la cantidad existente del insumo seleccionado es mayor a la cantidad disponible
-      if(this.selectedInsumo.cantidadExistencia>this.cantidadDisponible){
-        this.selectedInsumo.cantidadExistencia = this.cantidadDisponible;
-      }
-      // Oculta el mensaje de error
-      this.mensajeError.estatus = false;
-      // Agrega el insumo seleccionado al registro de transpaso
-      this.transpaso.insumos.push(this.selectedInsumo);
-      // Filtra la lista de insumos existentes para que solo se muestren los que no estan en el registro de transpaso
-      this.insumosExistentes = this.insumosExistentesReset.filter(i=>this.transpaso.insumos.filter(insumo=>insumo.idInsumo==i.idInsumo).length==0);
+  // agregarFila(){
+  //   // Verifica si el insumo seleccionado tiene un id mayor a cero
+  //   if(this.selectedInsumo.idInsumo>0){
+  //     // Verifica si la cantidad existente del insumo seleccionado es mayor a cero
+  //     if(this.selectedInsumo.cantidadExistencia<=0){
+  //       return;
+  //     }
+  //     // Verifica si la cantidad existente del insumo seleccionado es mayor a la cantidad disponible
+  //     if(this.selectedInsumo.cantidadExistencia>this.cantidadDisponible){
+  //       this.selectedInsumo.cantidadExistencia = this.cantidadDisponible;
+  //     }
+  //     // Oculta el mensaje de error
+  //     this.mensajeError.estatus = false;
+  //     // Agrega el insumo seleccionado al registro de transpaso
+  //     this.transpaso.insumos.push(this.selectedInsumo);
+  //     // Filtra la lista de insumos existentes para que solo se muestren los que no estan en el registro de transpaso
+  //     this.insumosExistentes = this.insumosExistentesReset.filter(i=>this.transpaso.insumos.filter(insumo=>insumo.idInsumo==i.idInsumo).length==0);
 
-      // Resetea el insumo seleccionado
-      this.cantidadDisponible = 0;
-      this.selectedInsumo = {
-        idInsumo:0,
-        cantidadExistencia:0,
-        nombreInsumo:''
-      }
+  //     // Resetea el insumo seleccionado
+  //     this.cantidadDisponible = 0;
+  //     this.selectedInsumo = {
+  //       idInsumo:0,
+  //       cantidadExistencia:0,
+  //       nombreInsumo:''
+  //     }
 
-      //Deselecciona el index
-      this.selectedIndex = -1;
-    }
-  }
+  //     //Deselecciona el index
+  //     this.selectedIndex = -1;
+  //   }
+  // }
 
   /**
    * Elimina un insumo del registro de transpaso
    * @param insumo Insumo a eliminar
    */
-  eliminarInsumo(insumo:transpasoAlmacenInsumoDTO){
-    // Elimina el insumo del registro de transpaso
-    this.transpaso.insumos = this.transpaso.insumos.filter(i=>i.idInsumo!=insumo.idInsumo);
-    // Filtra la lista de insumos existentes para que solo se muestren los que no estan en el registro de transpaso
-    this.insumosExistentes = this.insumosExistentesReset.filter(i=>this.transpaso.insumos.filter(insumo=>insumo.idInsumo==i.idInsumo).length==0);
-  }
+  // eliminarInsumo(insumo:transpasoAlmacenInsumoDTO){
+  //   // Elimina el insumo del registro de transpaso
+  //   this.transpaso.insumos = this.transpaso.insumos.filter(i=>i.idInsumo!=insumo.idInsumo);
+  //   // Filtra la lista de insumos existentes para que solo se muestren los que no estan en el registro de transpaso
+  //   this.insumosExistentes = this.insumosExistentesReset.filter(i=>this.transpaso.insumos.filter(insumo=>insumo.idInsumo==i.idInsumo).length==0);
+  // }
 
   detenerCierre(event: MouseEvent) {
     const clicDentro = this.listas.some((lista) =>

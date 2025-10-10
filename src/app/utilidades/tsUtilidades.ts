@@ -99,8 +99,15 @@ export const pages: Page[] = [
         //SeccionContrato
       },
       {
-        name: 'Reportes',
-        link: '/reportes',
+        name: 'Destajos',
+        link: '/destajos',
+        imageUrl: 'assets/facturas.svg',
+        permiso: [''],
+        //SeccionAvanceObra
+      },
+      {
+        name: 'Subcontratos',
+        link: '/subcontratos',
         imageUrl: 'assets/facturas.svg',
         permiso: [''],
         //SeccionAvanceObra
@@ -188,6 +195,11 @@ export const pages: Page[] = [
         link: '/almacensalida',
         imageUrl: 'assets/salida2.svg',
         permiso: ['SeccionSalidaAlmacen'],
+      },{
+        name: 'Traspaso almacén',
+        link: '/almacentranspaso',
+        imageUrl: 'assets/salida2.svg',
+        permiso: ['SeccionTranspasoAlmacen'],
       },
     ],
     expanded: false,
@@ -365,6 +377,12 @@ export const pages: Page[] = [
         imageUrl: 'assets/requisicion.svg',
         permiso: ['Administrador'],
       },
+      {
+        name: 'Imágenes',
+        link: '/imagenes',
+        imageUrl: 'assets/imagen.png',
+        permiso: ['Administrador'],
+      }
     ],
     expanded: false,
   },

@@ -292,7 +292,7 @@
 
             <tr
               class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
-              *ngFor="let ic of listaInsumosCotizacionCrear"
+              *ngFor="let ic of listaInsumosCotizacionCrear; let i = index"
             >
               <td class="px-1 py-[2px] min-w-2" scope="col">
                 <input
@@ -306,24 +306,27 @@
               <td class="px-1 py-[2px] min-w-2" scope="col">
                 {{ ic.unidad }}
               </td>
-              <td class="px-1 py-[2px] min-w-2" scope="col">
-                {{ ic.pCotizadoConFormato }}
+              <td class="px-1 py-[2px] min-w-2 text-end" scope="col">
+                ${{ ic.pCotizadoConFormato | number:'1.2-2' }}
               </td>
-              <td class="px-1 py-[3px] min-w-2" scope="col">
+              <td class="px-1 py-[3px] min-w-2" scope="col" *ngIf="selectedIndex==i">
                 <input
                   autocomplete="off"
                   type="number"
-                  class="dropdown1 w-full bg-transparent"
+                  class="dropdown1 w-full bg-transparent text-end"
                   [disabled]="ic.estatus > 1"
                   data-bs-toggle="dropdown"
                   [(ngModel)]="ic.cantidad"
                   (keydown.enter)="actualizarInsumoCotizado(ic)"
                 />
               </td>
-              <td class="px-1 py-[2px] min-w-2" scope="col">
+              <td class="px-1 py-[2px] min-w-2 text-end" scope="col" *ngIf="selectedIndex!=i" (click)="selectedIndex = i">
+                {{ ic.cantidad | number:'1.4-4' }}
+              </td>
+              <td class="px-1 py-[2px] min-w-2" scope="col" *ngIf="selectedIndex==i">
                 <input
                   autocomplete="off"
-                  class="dropdown1 w-full bg-transparent"
+                  class="dropdown1 w-full bg-transparent text-end"
                   type="number"
                   [disabled]="ic.estatus > 1"
                   data-bs-toggle="dropdown"
@@ -331,11 +334,14 @@
                   (keydown.enter)="actualizarInsumoCotizado(ic)"
                 />
               </td>
-              <td class="px-1 py-[2px] min-w-2" scope="col">
+              <td class="px-1 py-[2px] min-w-2 text-end" scope="col" *ngIf="selectedIndex!=i" (click)="selectedIndex = i">
+                ${{ ic.precioUnitarioConFormato }}
+              </td>
+              <td class="px-1 py-[2px] min-w-2" scope="col" *ngIf="selectedIndex==i">
                 <input
                   autocomplete="off"
                   autocomplete="off"
-                  class="dropdown1 w-full bg-transparent"
+                  class="dropdown1 w-full bg-transparent text-end"
                   type="number"
                   [disabled]="ic.estatus > 1"
                   data-bs-toggle="dropdown"
@@ -343,12 +349,15 @@
                   (keydown.enter)="actualizarInsumoCotizado(ic)"
                 />
               </td>
-              <td class="px-1 py-[2px] min-w-2" scope="col">
+              <td class="px-1 py-[2px] min-w-2 text-end" scope="col" *ngIf="selectedIndex!=i" (click)="selectedIndex = i">
+                ${{ ic.descuentoConFormato }}
+              </td>
+              <td class="px-1 py-[2px] min-w-2" scope="col" *ngIf="selectedIndex==i">
                 <input
                   *ngIf="ic.id != 0"
                   autocomplete="off"
                   autocomplete="off"
-                  class="dropdown1 w-full bg-transparent"
+                  class="dropdown1 w-full bg-transparent text-end"
                   type="number"
                   [disabled]="ic.estatus > 1"
                   data-bs-toggle="dropdown"
@@ -360,7 +369,7 @@
                   *ngIf="ic.id == 0"
                   autocomplete="off"
                   autocomplete="off"
-                  class="dropdown1 w-full bg-transparent"
+                  class="dropdown1 w-full bg-transparent text-end"
                   type="number"
                   [disabled]="ic.estatus > 1"
                   data-bs-toggle="dropdown"
@@ -369,8 +378,11 @@
                   (keydown.enter)="actualizarInsumoCotizado(ic)"
                 />
               </td>
-              <td class="px-1 py-[2px] min-w-2" scope="col">
-                {{ ic.importeTotalConFormato }}
+              <td class="px-1 py-[2px] min-w-2 text-end" scope="col" *ngIf="selectedIndex!=i" (click)="selectedIndex = i">
+                {{ ic.pIVA |number:'1.2-2' }}%
+              </td>
+              <td class="px-1 py-[2px] min-w-2 text-end" scope="col">
+                ${{ ic.importeTotalConFormato }}
               </td>
               <!-- <td style="justify-content: center; align-items: center;" scope="col">
                 <button (click)="EliminarListaInsumosXCotizacion(ic.descripcion, ic.unidad)" class="button-filt"
