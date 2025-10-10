@@ -1,154 +1,205 @@
-
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Component, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MovimientoBancarioService } from '../movimiento-bancario.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { movimientoBancarioCreacionDTO, movimientoBancarioDTO, MovimientoBancarioTeckioDTO } from '../tsMovimientoBancario';
-import { contratistaDTO } from 'src/app/catalogos/contratista/tsContratista';
-import { contratistaCuentaBancariaCreacionDTO, contratistaCuentaBancariaDTO, pedidoDTO } from '../../cuentasBancariasContratista/tsCuentaBancariaContratista';
-import { MatDialog } from '@angular/material/dialog';
-import { ContratistaService } from 'src/app/catalogos/contratista/contratista.service';
-import { Observable, map, startWith } from 'rxjs';
-import { proyectoDTO } from 'src/app/proyectos/proyecto/tsProyecto';
-import { ProyectoService } from 'src/app/proyectos/proyecto/proyecto.service';
-import { CuentasBancariasContratistaService } from '../../cuentasBancariasContratista/cuentas-bancarias-contratista.service';
-import { PageEvent } from '@angular/material/paginator';
-import { HttpResponse } from '@angular/common/http';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { CompraDirectaDTO } from 'src/app/compras/compras/tsComprasDirectas';
+import { MovimientoBancarioTeckioDTO } from '../tsMovimientoBancario';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
-import { Facturas } from 'src/app/facturacion/facturas/tsFacturas';
-import { EmpresaService } from 'src/app/catalogos/empresas/empresa.service';
-import { cuentaBancariaDTO } from 'src/app/catalogos/empresas/empresa';
-import { NuevoMovimientoBancarioComponent } from '../nuevo-movimiento-bancario/nuevo-movimiento-bancario.component';
 import { CuentaBancariaBaseDTO } from '../../cuentabancaria/cuentabancaria';
 import { CuentabancariaEmpresaService } from '../../cuentabancaria/cuentabancaria-empresa/cuentabancaria-empresa.service';
 import { formatDate } from '@angular/common';
-import { da } from 'date-fns/locale';
 import { PolizaService } from 'src/app/contabilidad/poliza/poliza.service';
-
 
 @Component({
   selector: 'app-movimiento-bancario',
   templateUrl: './movimiento-bancario.component.html',
-  styleUrls: ['./movimiento-bancario.component.css']
+  styleUrls: ['./movimiento-bancario.component.css'],
 })
 export class MovimientoBancarioComponent {
-
   selectedEmpresa = 0;
   cuentaBE: CuentaBancariaBaseDTO[] = [];
+  filteredCuentas: CuentaBancariaBaseDTO[] = [];
+
   idCuentaBancaria = 0;
   cuentaSeleccionada = false;
   moviminestosbancarios: MovimientoBancarioTeckioDTO[] = [];
+  mostrarFormularioNuevo = false;
+
+  @ViewChild('cuentaInput') cuentaInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('cuentaWrapper') cuentaWrapper?: ElementRef<HTMLElement>;
 
   range = new FormGroup({
-    start: new FormControl,
-    end: new FormControl,
+    start: new FormControl(),
+    end: new FormControl(),
   });
 
-  fechaInicio !: Date | string;
-  fechaFin !: Date | string;
+  fechaInicio!: Date | string;
+  fechaFin!: Date | string;
+  showLista = false;
 
   constructor(
     private _seguridadEmpresa: SeguridadService,
-    private dialog: MatDialog,
     private _CuentaBancariaEmpresa: CuentabancariaEmpresaService,
     private _MovimientoBancario: MovimientoBancarioService,
-    private _PolizaService : PolizaService
+    private _PolizaService: PolizaService,
   ) {
-    let idEmpresa = this._seguridadEmpresa.obtenIdEmpresaLocalStorage();
+    const idEmpresa = this._seguridadEmpresa.obtenIdEmpresaLocalStorage();
     this.selectedEmpresa = Number(idEmpresa);
   }
 
   ngOnInit(): void {
     this._CuentaBancariaEmpresa.ObtenerTodos(this.selectedEmpresa).subscribe((datos) => {
       this.cuentaBE = datos;
+      this.filteredCuentas = [...datos];
     });
   }
 
   CargarRegistros() {
-    this._MovimientoBancario.ObtenerXIdCuentaBancaria(this.selectedEmpresa, this.idCuentaBancaria).subscribe((datos) => {
-      this.moviminestosbancarios = datos;
-    });
+    this._MovimientoBancario
+      .ObtenerXIdCuentaBancaria(this.selectedEmpresa, this.idCuentaBancaria)
+      .subscribe((datos) => {
+        this.moviminestosbancarios = datos;
+      });
   }
 
-  SeleccionarCuenta(event: Event) {
-    const inputElement = event.target as HTMLInputElement;
-    const selectedValue = inputElement.value;
-    const idCuentaBE = this.cuentaBE.find(cuenta => cuenta.numeroCuenta === selectedValue)?.id || 0;
-    this.idCuentaBancaria = idCuentaBE;
-    this.cuentaSeleccionada = true;
-    if (this.idCuentaBancaria > 0) {
-      this.CargarRegistros();
+  /**
+   * Handler único:
+   * - Si viene de Event: filtra en vivo y, si el texto coincide EXACTO con una cuenta, la selecciona.
+   * - Si viene de objeto Cuenta: selecciona directamente.
+   */
+  SeleccionarCuenta(source: Event | CuentaBancariaBaseDTO) {
+    let cuentaSeleccionada: CuentaBancariaBaseDTO | undefined;
+
+    if (source instanceof Event) {
+      const inputEl = source.target as HTMLInputElement;
+      const value = (inputEl.value ?? '').trim();
+      const termino = value.toLowerCase();
+
+      // Filtrado en vivo
+      this.filteredCuentas = this.cuentaBE.filter((c) =>
+        [c.numeroCuenta, c.clabe, c.nombreBanco].some((campo) =>
+          (campo ?? '').toLowerCase().includes(termino),
+        ),
+      );
+
+      this.showLista = true;
+
+      // Si coincide exactamente con una cuenta, seleccionar
+      const match = this.cuentaBE.find((c) => c.numeroCuenta === value);
+      if (!value) {
+        // campo vacío: mostrar todo
+        this.filteredCuentas = [...this.cuentaBE];
+        return;
+      }
+      if (!match) return; // aún escribiendo, no seleccionar
+
+      cuentaSeleccionada = match;
+    } else {
+      cuentaSeleccionada = source;
+      // pintar valor en input
+      if (this.cuentaInput) {
+        this.cuentaInput.nativeElement.value = cuentaSeleccionada.numeroCuenta;
+      }
     }
+
+    // Selección final
+    if (!cuentaSeleccionada) return;
+
+    this.idCuentaBancaria = cuentaSeleccionada.id;
+    this.cuentaSeleccionada = true;
+    this.showLista = false;
+
+    // Al volver a enfocar, mostrar todas
+    this.filteredCuentas = [...this.cuentaBE];
+
+    this.CargarRegistros();
+  }
+
+  onInputFocus() {
+    // Al enfocar, abrir y mostrar todo
+    this.showLista = true;
+    this.filteredCuentas = [...this.cuentaBE];
   }
 
   abrirModalMovimientoBancario(): void {
-    const dialogRef = this.dialog.open(NuevoMovimientoBancarioComponent, {
-      data: {
-        idEmpresa: this.selectedEmpresa,
-        idCeuntaBancariaEmpresa: this.idCuentaBancaria,
-      }
-    });
-    dialogRef.afterClosed().subscribe((resultado: boolean) => {
-      this.limpiarFiltro();
-    });
+    if (this.idCuentaBancaria <= 0) return;
+    this.mostrarFormularioNuevo = true;
+  }
+
+  cerrarFormularioNuevoMovimiento(recargar = false) {
+    this.mostrarFormularioNuevo = false;
+    if (recargar) this.CargarRegistros();
   }
 
   autorizarMovimientoBancario(idMovimientoBancario: number) {
-    this._MovimientoBancario.AutorizarMovimientoBancario(this.selectedEmpresa, idMovimientoBancario).subscribe((datos) => {
-      if (datos.estatus) {
-        this.limpiarFiltro();
-      } else {
-        console.log(datos.descripcion);
-      }
-    });
+    this._MovimientoBancario
+      .AutorizarMovimientoBancario(this.selectedEmpresa, idMovimientoBancario)
+      .subscribe((datos) => {
+        if (datos.estatus) this.limpiarFiltro();
+        else console.log(datos.descripcion);
+      });
   }
 
   cancelarMovimientoBancario(idMovimientoBancario: number) {
-    this._MovimientoBancario.CancelarXIdMovimientoBancario(this.selectedEmpresa, idMovimientoBancario).subscribe((datos) => {
-      if (datos.estatus) {
-        this.limpiarFiltro();
-      } else {
-        console.log(datos.descripcion);
-      }
-    });
+    this._MovimientoBancario
+      .CancelarXIdMovimientoBancario(this.selectedEmpresa, idMovimientoBancario)
+      .subscribe((datos) => {
+        if (datos.estatus) this.limpiarFiltro();
+        else console.log(datos.descripcion);
+      });
   }
 
-  generarPoliza(idMovimientoBancario : number){
-    this._PolizaService.GenerarPolizaXIdMovimientoBancario(this.selectedEmpresa, idMovimientoBancario).subscribe((datos) => {
-      if(datos.estatus){
-        this.CargarRegistros();
-      }
-    });
+  generarPoliza(idMovimientoBancario: number) {
+    this._PolizaService
+      .GenerarPolizaXIdMovimientoBancario(this.selectedEmpresa, idMovimientoBancario)
+      .subscribe((datos) => {
+        if (datos.estatus) this.CargarRegistros();
+      });
   }
 
-  eliminarPoliza(idMovimientoBancario : number){
-    this._PolizaService.EliminarPolizaXIdMovimientoBancario(this.selectedEmpresa, idMovimientoBancario).subscribe((datos) => {
-      if(datos.estatus){
-        this.CargarRegistros();
-      }
-    });
+  eliminarPoliza(idMovimientoBancario: number) {
+    this._PolizaService
+      .EliminarPolizaXIdMovimientoBancario(this.selectedEmpresa, idMovimientoBancario)
+      .subscribe((datos) => {
+        if (datos.estatus) this.CargarRegistros();
+      });
   }
 
   clickButtonFiltro() {
-    if ((typeof this.range.get("start")?.value != 'undefined' && this.range.get("start")?.value != null) && (typeof this.range.get("end")?.value != 'undefined' && this.range.get("end")?.value != null)) {
-      this.fechaInicio = formatDate(this.range.get("start")?.value, 'yyyy-MM-dd', 'en_US');
-      this.fechaFin = formatDate(this.range.get("end")?.value, 'yyyy-MM-dd', 'en_US');
+    const fi = this.range.get('start')?.value;
+    const ff = this.range.get('end')?.value;
 
-      this._MovimientoBancario.ObtenerXIdCuentaBancariaYFiltro(this.selectedEmpresa, this.idCuentaBancaria, this.fechaInicio, this.fechaFin).subscribe((datos) => {
-        this.moviminestosbancarios = datos;
-        console.log("estos son los MB con Filtro", this.moviminestosbancarios);
-      });
-    }else{
+    if (fi && ff) {
+      this.fechaInicio = formatDate(fi, 'yyyy-MM-dd', 'en_US');
+      this.fechaFin = formatDate(ff, 'yyyy-MM-dd', 'en_US');
+
+      this._MovimientoBancario
+        .ObtenerXIdCuentaBancariaYFiltro(
+          this.selectedEmpresa,
+          this.idCuentaBancaria,
+          this.fechaInicio,
+          this.fechaFin,
+        )
+        .subscribe((datos) => (this.moviminestosbancarios = datos));
+    } else {
       this.CargarRegistros();
     }
   }
 
-  limpiarFiltro() { 
+  limpiarFiltro() {
     this.range.reset();
-    this.clickButtonFiltro();
+    this.CargarRegistros();
   }
 
+  ElegirCuenta(cuenta: CuentaBancariaBaseDTO) {
+    // Click en opción -> seleccionar y cerrar
+    this.SeleccionarCuenta(cuenta);
+    this.showLista = false;
+  }
 
+  // Cerrar lista si clic fuera del wrapper
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    const target = event.target as Node;
+    const dentro = !!this.cuentaWrapper?.nativeElement.contains(target);
+    if (!dentro) this.showLista = false;
+  }
 }

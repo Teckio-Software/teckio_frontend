@@ -2,12 +2,12 @@
   [selectedIndex]="selectedIndex">
   <mat-tab class="text-labels" label="Destajo">
       <div>
-          <app-destajo *appRecarga="appRecarga" (total)="actualizaTotal($event)"></app-destajo>
+          <app-destajo *appRecarga="appRecarga" (total)="actualizaTotal($event)" [esDestajo]="true"></app-destajo>
       </div>
   </mat-tab>
   <mat-tab label="Total destajo" >
     <div *ngIf="selectedIndex === 1">
-        <app-total-destajo *appRecarga="appRecarga" (total)="actualizaTotal($event)"></app-total-destajo>
+        <app-total-destajo *appRecarga="appRecarga" (total)="actualizaTotal($event)" [esDestajo]="true"></app-total-destajo>
     </div>
   </mat-tab>
   <mat-tab label="Resumen de estimaciones">

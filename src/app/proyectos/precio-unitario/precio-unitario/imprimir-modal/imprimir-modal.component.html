@@ -85,7 +85,10 @@
 
       <div *ngIf="currentStep === 1">
         <p class="text-red-600 text-base" *ngIf="isError2">
-          Selecciona una opción antes de continuar.
+          Selecciona el tipo de impresión antes de continuar.
+        </p>
+        <p class="text-red-600 text-base" *ngIf="isError5">
+          Selecciona un tipo de precio de conceptos antes de continuar.
         </p>
         
         <p class="text-red-600 text-base" *ngIf="isError3">
@@ -178,9 +181,7 @@
             </fieldset>
           </div>
         </div>
-        <div *ngIf="reporteManoDeObra" class="grid grid-cols-2 gap-1">
-          
-        </div>
+        <div *ngIf="reporteManoDeObra" class="grid grid-cols-2 gap-1"></div>
       </div>
 
       <div *ngIf="currentStep === 2">
@@ -250,9 +251,17 @@
           <!-- encabezado -->
           <div class="card flex justify-content-center col-span-2">
             <fieldset class="p-2">
-              <legend class="text-base font-medium text-gray-800 tracking-wider">
-                Encabezado (para cambiar de línea presiona Shift + Enter)
-              </legend>
+              <div class="flex gap-2 items-center relative group">
+                <legend class="text-base font-medium text-gray-800 tracking-wider w-auto m-0">
+                  Encabezado (para cambiar de línea presiona Shift + Enter)
+                </legend>
+                <img src="./assets/info.svg" alt="" class="w-5" />
+                <div
+                  class="absolute top-5 left-72 -translate-x-32 bg-gray-800 text-white text-sm px-3 py-1 rounded-lg shadow-lg whitespace-nowrap z-50 hidden group-hover:block"
+                >
+                  La ubicación del campo determina dónde se mostrará en el informe descargado.
+                </div>
+              </div>
               <div class="grid grid-cols-3 gap-2">
                 <div>
                   <label for="encabezadoSup">Izquierda</label>

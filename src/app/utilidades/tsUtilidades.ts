@@ -99,8 +99,15 @@ export const pages: Page[] = [
         //SeccionContrato
       },
       {
-        name: 'Reportes',
-        link: '/reportes',
+        name: 'Destajos',
+        link: '/destajos',
+        imageUrl: 'assets/facturas.svg',
+        permiso: [''],
+        //SeccionAvanceObra
+      },
+      {
+        name: 'Subcontratos',
+        link: '/subcontratos',
         imageUrl: 'assets/facturas.svg',
         permiso: [''],
         //SeccionAvanceObra
@@ -292,6 +299,12 @@ export const pages: Page[] = [
       {
         name: 'Cuenta bancaria',
         link: '/cuentabancaria',
+        imageUrl: 'assets/cuenta-bancaria.svg',
+        permiso: ['SeccionCuentaBancaria'],
+      },
+      {
+        name: 'Cuentas por cobrar',
+        link: '/cuentas-por-cobrar',
         imageUrl: 'assets/cuenta-bancaria.svg',
         permiso: ['SeccionCuentaBancaria'],
       },
