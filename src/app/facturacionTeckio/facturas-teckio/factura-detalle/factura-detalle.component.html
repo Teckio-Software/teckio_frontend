@@ -15,11 +15,11 @@
     <tbody>
       <tr class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]" *ngFor="let facturaDetalle of facturaDetalles">
         <td>{{ facturaDetalle.descripcion }}</td>
-        <td>{{ facturaDetalle.cantidad }}</td>
-        <td>{{ facturaDetalle.precioUnitario }}</td>
-        <td>{{ facturaDetalle.descuento }}</td>
-        <td>{{ facturaDetalle.importe }}</td>
-        <td>{{ facturaDetalle.unidadSat }}</td>
+        <td class="text-end" >{{ facturaDetalle.cantidad | number:'1.4-4' }}</td>
+        <td class="text-end" >${{ facturaDetalle.precioUnitario | number:'1.2-2' }}</td>
+        <td class="text-end" >${{ facturaDetalle.descuento | number:'1.2-2' }}</td>
+        <td class="text-end" >${{ facturaDetalle.importe | number:'1.2-2'}}</td>
+        <td class="text-center" >{{ facturaDetalle.unidadSat }}</td>
       </tr>
     </tbody>
   </table>
