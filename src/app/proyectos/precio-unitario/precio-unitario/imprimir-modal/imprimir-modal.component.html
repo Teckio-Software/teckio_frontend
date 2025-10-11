@@ -171,17 +171,27 @@
               </legend>
 
               <div class="flex gap-2">
-                <input type="checkbox" id="opcion2" [(ngModel)]="isImprimirImpuestos" />
+                <input type="checkbox" id="opcion2" class="w-4 h-4 text-blue-600 bg-gray-400 border-gray-300 rounded-sm focus:ring-blue-500" [(ngModel)]="isImprimirImpuestos" />
                 <label for="opcion2" class="text-gray-600 text-base">Imprimir impuesto</label>
               </div>
               <div class="flex gap-2">
-                <input type="checkbox" id="opcion3" [(ngModel)]="isImporteconLetra" />
+                <input type="checkbox" id="opcion3" class="w-4 h-4 text-blue-600 bg-gray-400 border-gray-300 rounded-sm focus:ring-blue-500" [(ngModel)]="isImporteconLetra" />
                 <label for="opcion3" class="text-gray-600 text-base">Importe con letra</label>
               </div>
             </fieldset>
           </div>
         </div>
-        <div *ngIf="reporteManoDeObra" class="grid grid-cols-2 gap-1"></div>
+        <div *ngIf="reporteManoDeObra" class="grid grid-cols-2 gap-1">
+          <fieldset class="p-2">
+              <legend class="text-base font-medium text-gray-800 tracking-wider">
+                Opciones
+              </legend>
+              <div class="flex gap-2">
+                <input type="checkbox" id="opcion3" class="w-4 h-4 text-blue-600 bg-gray-400 border-gray-300 rounded-sm focus:ring-blue-500" [(ngModel)]="isImporteconLetra" />
+                <label for="opcion3" class="text-gray-600 text-base">Importe con letra</label>
+              </div>
+            </fieldset>
+        </div>
       </div>
 
       <div *ngIf="currentStep === 2">

@@ -308,9 +308,9 @@ export class ImprimirModalComponent {
       }
       this.currentStep = 2;
     }
-    if(this.tipoReporte === 'presupuestoManoDeObra') {
-      this.currentStep = 2
-    }
+    // if(this.tipoReporte === 'presupuestoManoDeObra') {
+    //   this.currentStep = 2
+    // }
     this.isError = false;
     this.isError2 = false;
     this.isError3 = false;
@@ -323,8 +323,13 @@ export class ImprimirModalComponent {
       this.isError = false;
     }
 
+    //El reporte de presupuesto de mano de obra no requiere de selecciones por lo cuál va directo al paso 2
+    if (this.currentStep === 1 && this.tipoReporte === 'presupuestoManoDeObra') {
+      this.currentStep = 2;
+      return;
+    }
     //validar si hay rango de impresion seleccionado
-    if (this.currentStep === 1 && !this.tipoImpresion) {
+    if (this.currentStep === 1 && !this.tipoImpresion && this.tipoReporte != 'presupuestoManoDeObra') {
       this.isError2 = true;
       return;
     } else {
@@ -378,7 +383,7 @@ export class ImprimirModalComponent {
    */
   prevStep(): void {
     this.isError = false;
-    if(this.tipoReporte === 'analisisPreciosUnitarios' || this.tipoReporte === 'presupuestoManoDeObra') {
+    if(this.tipoReporte === 'analisisPreciosUnitarios') {
       this.currentStep = 0
     }
     if (this.currentStep > 0) {
@@ -430,7 +435,12 @@ export class ImprimirModalComponent {
       imprimirConPrecioUnitarioIVA: this.isImprimirPUIVA,
       imprimirConPUMasIva: this.isImprimirPuMasIVA,
       indirectos: this.indirectos,
-      base64: ''
+      base64: '',
+      preciosUnitariosManoObra: {
+        preciosUnitarios: [],
+        total: 0,
+        totalConFormato: ''
+      }
     };
 
     //si es marcado, se llena el arreglo de marcados en lugar del completo
@@ -458,7 +468,12 @@ export class ImprimirModalComponent {
       imprimirConPrecioUnitarioIVA: this.isImprimirPUIVA,
       imprimirConPUMasIva: this.isImprimirPuMasIVA,
       indirectos: this.indirectos,
-      base64: ''
+      base64: '',
+      preciosUnitariosManoObra: {
+        preciosUnitarios: [],
+        total: 0,
+        totalConFormato: ''
+      }
     };
     this.imagenService.obtenerImagen(this.selectedEmpresa).subscribe({next: (imagen) => {
       reporte.base64 = 'data:image/'+imagen.tipo.replace('.','')+';base64,' + imagen.base64;
@@ -518,13 +533,8 @@ export class ImprimirModalComponent {
           //   element.hijos = lista;
           // });
           // reporte.precioUnitario = preciosUnitarios;
-
-          console.log(preciosUnitarios);
-          console.log('Se van a imprimir los análisis');
         // reporte.precioUnitario = preciosUnitariosFiltrados;
         this.indirectosService.ObtenerIndirectos(this.selectedEmpresa, this.idProyecto).subscribe((conjuntoIndirectos) => {
-          console.log(this.selectedEmpresa, this.idProyecto);
-
           this.indirectos = conjuntoIndirectos;
           reporte.indirectos = this.indirectos;
           imprimirReporteAnalisisPU(reporte);
@@ -542,19 +552,10 @@ export class ImprimirModalComponent {
         let idsMO = preciosUnitariosFiltradosManoObra.map(pu => pu.id);
         reporte.imprimirConCostoDirecto = true;
         reporte.precioUnitario = preciosUnitariosFiltradosManoObra;
-        this.precioUnitarioService.ObtenerDetallesPorPUImpresion(this.selectedEmpresa,idsMO).subscribe((preciosUnitarios) => {
-          reporte.detallesPrecioUnitario = preciosUnitarios.filter(pu => pu.idTipoInsumo == 10008 || pu.idTipoInsumo == 10000);
-          if(reporte.detallesPrecioUnitario.length <= 0){
-            console.log('No hay precios unitarios seleccionados');
-            return;
-          }
-          console.log(reporte);
-          this.indirectosService.ObtenerIndirectos(this.selectedEmpresa, this.idProyecto).subscribe((conjuntoIndirectos) => {
-          this.indirectos = conjuntoIndirectos;
-          reporte.indirectos = this.indirectos;
+        this.precioUnitarioService.obtenerPrecioUnitarioImprimirManoDeObra(this.selectedEmpresa, this.idProyecto).subscribe((preciosUnitarios) => {
+          reporte.preciosUnitariosManoObra = preciosUnitarios;
           imprimirReporteManoObra(reporte);
-          });
-        });
+        })
         break;
         //si es impresion marcada, se asigna el reporte marcado como base y los totales se calculan de acuerdo a los marcados
         if (this.tipoImpresion === 'impresionMarcada') {

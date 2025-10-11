@@ -598,12 +598,12 @@ export function imprimirReporteManoObra(reporte: Reporte) {
 
   const tableHeader = [
     [
-      { text: 'C Clave', style: 'subheader', alignment: 'center' },
+      { text: 'Clave', style: 'subheader', alignment: 'center' },
       { text: 'Descripción', style: 'subheader', alignment: 'center' },
       { text: 'Unidad', style: 'subheader', alignment: 'center' },
       { text: 'Cantidad', style: 'subheader', alignment: 'center' },
       {
-        text: 'Costo unitario',
+        text: 'Precio unitario',
         style: 'subheader',
         alignment: 'center',
       },
@@ -625,34 +625,46 @@ export function imprimirReporteManoObra(reporte: Reporte) {
     },
   });
   let tableBodyProyecto: any = [];
-  reporte.precioUnitario.forEach((pu, index) => {
-    var detalles = reporte.detallesPrecioUnitario.filter((detalle) => detalle.idPrecioUnitario === pu.id)
-    if(detalles.length>0){
+  reporte.preciosUnitariosManoObra.preciosUnitarios.forEach((pu, index) => {
+  if(pu.detalles.length>0){
+    tableBodyProyecto.push([
+      {
+        text: pu.codigo,
+        style: 'small',
+      },
+      {
+        text: pu.descripcion,
+        style: 'smallColored',
+        alignment: 'justify',
+      },
+      { text:'', style: 'small'},
+      { text:'', style: 'small'},
+      { text:'', style: 'small'},
+      { text:'', style: 'small'},
+      ]);
+    // var detalles = reporte.preciosUnitariosManoObra.filter((detalle) => detalle.idPrecioUnitario === pu.id)
+    var detalles = pu.detalles;
       // content.push({
       //   text: pu.descripcion, style: 'subheader',
       // });
       detalles.forEach(detalle => {
       tableBodyProyecto.push([
       {
-        text: (detalle.esCompuesto ? '+ ' : '  '),
-        style: { fontSize: 8 },
-      },
-      {
         text: detalle.codigo,
-        style: detalle.esCompuesto ? { fontSize: 8, color: '#1c398e' } : { fontSize: 8 },
+        style: { fontSize: 8 },
       },
       {
         text: detalle.descripcion,
         style: { fontSize: 8 },
-        
+        alignment: 'justify',
       },
       { text: detalle.unidad || '', style: 'small' },
       {
         text: detalle.cantidadConFormato || '',
-        style: detalle.esCompuesto ? { fontSize: 8, color: '#1c398e', alignment: 'right' } : { fontSize: 8, alignment: 'right' },
+        style: { fontSize: 8, alignment: 'right' },
       },
       {
-        text: `$${detalle.costoBaseConFormato}` || '',
+        text: `${detalle.costoUnitarioConFormato}` || '',
         style: {fontSize: 8, color: '#1c398e', alignment: 'right'},
       },
       {
@@ -668,138 +680,24 @@ export function imprimirReporteManoObra(reporte: Reporte) {
         },
         table: {
           headerRows: 0,
-          widths: [10, 60, '*', 30, 60, 60, 60],
+          widths: [70, '*', 30, 60, 60, 60],
           body: tableBodyProyecto,
         },
       });
     tableBodyProyecto = [];
     });
     content.push({
-    text: 'Total de conceptos', style: 'subheader',
-    });
-
-      // Formatear con separadores de miles y dos decimales
-    const formato = new Intl.NumberFormat('es-ES', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-    });
-
-    let IndirectoPorcentaje = reporte.indirectos.find(i=>i.codigo === '001')?.porcentaje;
-    if(IndirectoPorcentaje == undefined){
-      IndirectoPorcentaje = 0
-    }
-    let IndirectoPorcentajeConFormato = reporte.indirectos.find(i=>i.codigo === '001')?.porcentajeConFormato;
-    if(IndirectoPorcentajeConFormato == undefined || IndirectoPorcentajeConFormato == null || IndirectoPorcentajeConFormato == ''){
-      IndirectoPorcentajeConFormato = '0.00%'
-    }
-    let FinanciamientoPorcentaje = reporte.indirectos.find(i=>i.codigo === '002')?.porcentaje;
-    if(FinanciamientoPorcentaje == undefined){
-      FinanciamientoPorcentaje = 0
-    }
-    let FinanciamientoPorcentajeConFormato = reporte.indirectos.find(i=>i.codigo === '002')?.porcentajeConFormato;
-    if(FinanciamientoPorcentajeConFormato == undefined || FinanciamientoPorcentajeConFormato == null || FinanciamientoPorcentajeConFormato == ''){
-      FinanciamientoPorcentajeConFormato = '0.00%'
-    }
-    let UtilidadPorcentajeConFormato = reporte.indirectos.find(i=>i.codigo === '003')?.porcentajeConFormato;
-    if(UtilidadPorcentajeConFormato == undefined || UtilidadPorcentajeConFormato == null || UtilidadPorcentajeConFormato == ''){
-      UtilidadPorcentajeConFormato = '0.00%'
-    }
-    let UtilidadPorcentaje = reporte.indirectos.find(i=>i.codigo === '003')?.porcentaje;
-    if(UtilidadPorcentaje == undefined){
-      UtilidadPorcentaje = 0
-    }
-    let CargosAdicionalesPorcentaje = reporte.indirectos.find(i=>i.codigo === '004')?.porcentaje;
-    if(CargosAdicionalesPorcentaje == undefined){
-      CargosAdicionalesPorcentaje = 0
-    }
-    let CargosAdicionalesPorcentajeConFormato = reporte.indirectos.find(i=>i.codigo === '004')?.porcentajeConFormato;
-    if(CargosAdicionalesPorcentajeConFormato == undefined || CargosAdicionalesPorcentajeConFormato == null || CargosAdicionalesPorcentajeConFormato == ''){
-      CargosAdicionalesPorcentajeConFormato = '0.00%'
-    }
-    const indirectos = (IndirectoPorcentaje/100)*pu.precioUnitario;
-    const indirectosConFormato = formato.format(indirectos); 
-    const financiamientos = (FinanciamientoPorcentaje/100)*pu.precioUnitario;
-    const financiamientosConFormato = formato.format(financiamientos);
-    const utilidad = (UtilidadPorcentaje/100)*pu.precioUnitario;
-    const utilidadConFormato = formato.format(utilidad);
-    const cargosAdicionales = (CargosAdicionalesPorcentaje/100)*pu.precioUnitario;
-    const cargosAdicionalesConFormato = formato.format(cargosAdicionales);
-    const cantidadIva = pu.precioUnitario * (reporte.proyecto.porcentajeIva / 100);  
-    const cantidadIvaConFormato = formato.format(cantidadIva); 
-    const subtotal = pu.precioUnitario + indirectos+utilidad+cargosAdicionales+financiamientos;
-    const subtotalConFormato = formato.format(subtotal); 
-    const total = subtotal + cantidadIva;
-    const totalConFormato = formato.format(total); 
-
-    content.push({
       columns: [
-        { width: '*', text: '' },
+        { width: '*', text: `Total de ${pu.descripcion}`, style: 'smallColored' },
         {
           width: 'auto',
           table: {
+            widths: ['auto'],
             body: [
-              // booleano de iva opcional
-              // ...(reporte.imprimirImpuesto
-              //   ? [
-              //       [
-              //         {
-              //           text: 'IVA ' + reporte.proyecto.porcentajeIva + '%',
-              //           style: 'smallCantidadTotal',
-              //         },
-              //         {
-              //           text: ` ${reporte.totalIva}`,
-              //           style: 'smallCantidadTotal',
-              //           alignment: 'right',
-              //         },
-              //       ],
-              //     ]
-              //   : []),
-                [
-                  { text: 'Costo directo', style: 'smallCantidadTotal'},
-                  { text: pu.precioUnitarioConFormato, style: 'smallCantidadTotal'}
-                ],
-                [
-                  { text: `Indirectos(${IndirectoPorcentajeConFormato})`, style: 'smallCantidadTotal'},
-                  { text: `$${indirectosConFormato}`, style: 'smallCantidadTotal'}
-                ],
-                [
-                  { text: `Financiamiento(${FinanciamientoPorcentajeConFormato})`, style: 'smallCantidadTotal'},
-                  { text: `$${financiamientosConFormato}`, style: 'smallCantidadTotal'}
-                ],
-                [
-                  { text: `Utilidad(${UtilidadPorcentajeConFormato})`, style: 'smallCantidadTotal'},
-                  { text: `$${utilidadConFormato}`, style: 'smallCantidadTotal'}
-                ],
-                [
-                  { text: `Cargos adicionales(${CargosAdicionalesPorcentajeConFormato})`, style: 'smallCantidadTotal'},
-                  { text: `$${cargosAdicionalesConFormato}`, style: 'smallCantidadTotal'}
-                ],
               [
-                { text: 'Precio unitario', style: 'smallCantidadTotal' },
                 {
-                  text: `${pu.precioUnitarioConFormato}`,
-                  style: 'smallCantidadTotal',
-                  alignment: 'right',
-                },
-              ],
-              [
-                  { text: 'Subtotal', style: 'smallCantidadTotal'},
-                  { text: `$${subtotalConFormato}`, style: 'smallCantidadTotal'}
-                ],
-              [
-                { text: `IVA(${reporte.proyecto.porcentajeIva})%`, style: 'smallCantidadTotal' },
-                {
-                  text: `$${cantidadIvaConFormato}`,
-                  style: 'smallCantidadTotal',
-                  alignment: 'right',
-                },
-              ],
-              [
-                { text: 'Total', style: 'smallCantidadTotal' },
-                {
-                  text: `$${totalConFormato}`,
-                  style: 'smallCantidadTotal',
-                  alignment: 'right',
+                  text: pu.totalConFormatoDePU,
+                  style: 'smallColored',
                 },
               ],
             ],
@@ -810,12 +708,46 @@ export function imprimirReporteManoObra(reporte: Reporte) {
             hLineWidth: () => 0,
             vLineWidth: () => 0,
           },
-          margin: [0, 0, 0, 0],
+          margin: [0, 0, 0, 5],
         },
       ],
     });
-    if (reporte.importeConLetra) {
-    totalEnLetras = numeroALetras(total);
+
+      // Formatear con separadores de miles y dos decimales
+    const formato = new Intl.NumberFormat('es-ES', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    });
+  }
+  });
+  content.push({
+      columns: [
+        { width: '*', text: 'Total de Presupuesto', style: 'smallBold' },
+        {
+          width: 'auto',
+          table: {
+            widths: ['auto'],
+            body: [
+              [
+                {
+                  text: reporte.preciosUnitariosManoObra.totalConFormato,
+                  style: 'smallBold',
+                },
+              ],
+            ],
+          },
+          layout: {
+            hLineColor: () => '#fff',
+            vLineColor: () => '#fff',
+            hLineWidth: () => 0,
+            vLineWidth: () => 0,
+          },
+          margin: [0, 0, 0, 5],
+        },
+      ],
+    });
+  if (reporte.importeConLetra) {
+    totalEnLetras = numeroALetras(reporte.preciosUnitariosManoObra.total);
 
     content.push({
       columns: [
@@ -844,8 +776,6 @@ export function imprimirReporteManoObra(reporte: Reporte) {
       ],
     });
   }
-  }
-  });
 
   const docDefinition: any = {
     content,
@@ -860,7 +790,7 @@ export function imprimirReporteManoObra(reporte: Reporte) {
 
   pdfMake
     .createPdf(docDefinition)
-    .download(`Análisis de precio unitario${reporte.titulo}.pdf`);
+    .download(`Presupuesto de mano de obra${reporte.titulo}.pdf`);
 }
 
 export function imprimirReporte(reporte: Reporte) {
