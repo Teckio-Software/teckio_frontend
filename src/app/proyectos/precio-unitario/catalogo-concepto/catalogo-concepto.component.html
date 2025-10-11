@@ -1,0 +1,99 @@
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg max-h-screen overflow-y-auto">
+<table class="w-full text-sm text-left rtl:text-right">
+  <thead class="bg-primario text-white">
+    <tr>
+      <th class="w-6" scope="col"></th>
+      <th class="text-left" scope="col">Codigo</th>
+      <th class="text-left" scope="col">Descripcion</th>
+      <th class="text-left" scope="col">Unidad</th>
+      <th class="text-right" scope="col">Cantidad</th>
+      <th class="text-right" scope="col">C.D.</th>
+      <th class="text-right" scope="col">P.U.</th>
+      <th class="text-right" scope="col">Importe</th>
+    </tr>
+  </thead>
+
+  <tbody class="divide-y divide-gray300">
+    <tree-view [treeData]="preciosUnitarios">
+      <ng-template let-precioUnitario>
+        <tr class="bg-white border-b">
+          <td class="pe-1 py-[2px] w-6 text-center">
+            <ng-container *ngIf="precioUnitario.hijos.length > 0; else emptySpace">
+              <mat-icon
+                class="icon-display cursor-pointer"
+                (click)="expansionDominio(precioUnitario)"
+              >
+                {{ precioUnitario.expandido ? 'expand_more' : 'chevron_right' }}
+              </mat-icon>
+            </ng-container>
+            <ng-template #emptySpace>
+              <span class="icon-placeholder"></span>
+            </ng-template>
+          </td>
+          <td class="pe-1 py-[2px] w-32">
+            <input
+              class="w-full"
+              type="text"
+              [(ngModel)]="precioUnitario.codigo"
+            />
+          </td>
+          <td class="pe-1 py-[2px] w-auto" scope="row">
+            <input
+              class="w-full"
+              type="text"
+              [(ngModel)]="precioUnitario.descripcion"
+            />
+          </td>
+          <td class="pe-1 py-[2px] w-4 text-right">
+            <input
+              class="w-full text-right"
+              type="text"
+              *ngIf="precioUnitario.tipoPrecioUnitario == 1"
+              [(ngModel)]="precioUnitario.unidad"
+            />
+          </td>
+          <td class="pe-1 py-[2px] w-28 text-right">
+            <input
+              class="w-full text-right"
+              type="text"
+              *ngIf="precioUnitario.tipoPrecioUnitario == 1"
+              [ngModel]="precioUnitario.cantidadEditado ? precioUnitario.cantidad : precioUnitario.cantidadConFormato"
+              (ngModelChange)="actualizarCantidad(precioUnitario, $event)"
+              (click)="exponerCantidad(precioUnitario)"
+            />
+          </td>
+          <td class="pe-1 py-[2px] w-40 text-right">
+            <input
+              class="w-full text-right focus:outline-none text-blue-700"
+              type="text" readonly
+              *ngIf="precioUnitario.tipoPrecioUnitario == 1"
+              [(ngModel)]="precioUnitario.costoUnitarioConFormato"
+            />
+          </td>
+          <td class="pe-1 py-[2px] w-40 text-right">
+            <input
+              class="w-full text-right focus:outline-none text-blue-700"
+              type="text" readonly
+              *ngIf="precioUnitario.tipoPrecioUnitario == 1"
+              [(ngModel)]="precioUnitario.precioUnitarioConFormato"
+              (click)="mostrarMatriz(precioUnitario)"
+            />
+          </td>
+          <td class="pe-1 py-[2px] w-40 text-right">
+            <input
+              class="w-full text-right focus:outline-none"
+              type="text" readonly
+              [(ngModel)]="precioUnitario.importeConFormato"
+              (click)="mostrarMatriz(precioUnitario)"
+            />
+          </td>
+        </tr>
+      </ng-template>
+    </tree-view>
+  </tbody>
+</table>
+</div>
+
+<app-matriz-precio-unitario [selectedPU]="selectedPU" *ngIf="matrizMostrada">
+
+</app-matriz-precio-unitario>

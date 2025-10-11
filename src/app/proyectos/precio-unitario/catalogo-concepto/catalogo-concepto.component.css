@@ -1,0 +1,11 @@
+.icon-display {
+  display: inline-flex;      /* permite centrar con flex */
+  align-items: center;
+  justify-content: center;
+  width: 12px;               /* material default */
+  height: 12px;
+  line-height: 24px;         /* evita que “suba” o “baje” */
+  font-size: 24px;
+  vertical-align: middle;    /* por si el <td> está en baseline */
+  cursor: pointer;
+}

@@ -1,4 +1,7 @@
-<app-alert
+<app-catalogo-concepto>
+
+</app-catalogo-concepto>
+<!-- <app-alert
         *ngIf="alertaTipo !== AlertaTipo.none"
         [alertaTipo]="alertaTipo"
         [alertaMessage]="alertaMessage"
@@ -6,65 +9,8 @@
       >
       </app-alert>
 <div [ngClass]="{ grid: isGrid, flex1: !isGrid }">
-  <!---Contenedor 1---->
   <div class="contenedor1" style="width: 100%" *ngIf="contenedorPresupuesto">
-    <!----boton versión 1-->
-    <!-- <div
-      class="cont-acciones"
-      style="display: flex; justify-content: center; align-items: center"
-      *ngIf="mostrarBotones"
-    >
-      <div class="">
-        <div class="flex justify-center gap-2">
-          <button
-            class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
-            (click)="openDialogFSR()"
-          >
-            FSR
-          </button>
-          <button
-            class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
-            (click)="openDialogExpInsumos()"
-          >
-            Explosión de insumos
-          </button>
-          <button
-            class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
-            (click)="openDialogCatalogoGeneral()"
-          >
-            Catalogo General
-          </button>
-          <button
-            class="bg-colorButton text-[#f2f2f2] rounded-md hover:bg-colorButtonHover transition-colors delay-75 px-6 py-1"
-            (click)="indirectos()"
-          >
-            Indirectos
-          </button>
-        </div>
-      </div>
-    </div> -->
-
-    <!-- <div
-      class="flex flex-col items-center justify-center gap-2 md:flex-row md:justify-between md:items-end w-[95%] ml-[2.4%]">
-      <div class="flex items-end w-full ">
-        <textarea #testInput [(ngModel)]="descripcionPrecioUnitario" (keydown.enter)="editarDesdeTextArea()"
-          style="width: 100%; display: none;" rows="2" class="resize-none p-1 text-md bg-white rounded-t-lg border"
-          placeholder="Descripcion.."></textarea>
-      </div>
-      <div class="flex flex-row bg-white shadow-md rounded-t-lg p-1 items-end">
-        <div class="flex items-center justify-center flex-shrink-0 h-10 w-10 rounded-xl bg-[#4eaac138] text-[#4eaac1]">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-            </path>
-          </svg>
-        </div>
-        <div class="flex flex-col flex-grow ml-4">
-          <div class="text-md text-[#6b7280]">Total</div>
-          <div class="font-bold text-base"><span>{{totalConFormato}}</span></div>
-        </div>
-      </div>
-    </div> -->
+    
 
     <div class="flex justify-between items-center gap-2 w-[95%] ml-[2.4%]">
       <div
@@ -295,7 +241,6 @@
             </div>
           </div>
 
-          <!-- tooltip -->
           <div
             class="absolute top-10 left-1 -translate-x-32 bg-gray-800 text-white text-sm px-3 py-1 rounded-lg shadow-lg whitespace-nowrap z-50 hidden group-hover:block"
           >
@@ -321,7 +266,6 @@
         </thead>
       </table>
     </div>
-    <!---------------------------Esquema de árbol tamaño 1---------------------------->
     <div
       style="
         overflow-y: auto;
@@ -542,48 +486,7 @@
                     </div>
                   </div>
                 </td>
-                <!-- <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 13%; padding-left: 0px;"
-                  class="cont-drill" (click)="seleccionar(precioUnitario)" *ngIf="precioUnitario.nivel < 2">
-                  <input autocomplete="off" type="text" class="bg-transparent" id="input-table" [(ngModel)]="precioUnitario.codigo"
-                    (keydown.enter)="crear(precioUnitario)" [readonly]="precioUnitario.esAvanceObra"
-                    style="border: .5px solid #ffffff4d; border-radius: 3px; width: 100%;">
-                </td>
-                <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 13%; padding-left: 4px;"
-                  class="cont-drill" (click)="seleccionar(precioUnitario)" *ngIf="precioUnitario.nivel == 2">
-                  <input autocomplete="off" type="text" class="bg-transparent" id="input-table" [(ngModel)]="precioUnitario.codigo"
-                    (keydown.enter)="crear(precioUnitario)" [readonly]="precioUnitario.esAvanceObra"
-                    style=" border: .5px solid #ffffff4d; border-radius: 3px; width: 100%;">
-                </td>
-                <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 13%; padding-left: 8px;"
-                  class="cont-drill" (click)="seleccionar(precioUnitario)" *ngIf="precioUnitario.nivel == 3">
-                  <input autocomplete="off" type="text" class="bg-transparent" id="input-table" [(ngModel)]="precioUnitario.codigo"
-                    (keydown.enter)="crear(precioUnitario)" [readonly]="precioUnitario.esAvanceObra"
-                    style="border: .5px solid #ffffff4d; border-radius: 3px; width: 100%;">
-                </td>
-                <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 13%; padding-left: 12px;"
-                  class="cont-drill" (click)="seleccionar(precioUnitario)" *ngIf="precioUnitario.nivel == 4">
-                  <input autocomplete="off" type="text" class="bg-transparent" id="input-table" [(ngModel)]="precioUnitario.codigo"
-                    (keydown.enter)="crear(precioUnitario)" [readonly]="precioUnitario.esAvanceObra"
-                    style=" border: .5px solid #ffffff4d; border-radius: 3px; width: 100%;">
-                </td>
-                <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 13%; padding-left: 16px;"
-                  class="cont-drill" (click)="seleccionar(precioUnitario)" *ngIf="precioUnitario.nivel == 5">
-                  <input autocomplete="off" type="text" class="bg-transparent" id="input-table" [(ngModel)]="precioUnitario.codigo"
-                    (keydown.enter)="crear(precioUnitario)" [readonly]="precioUnitario.esAvanceObra"
-                    style="border: .5px solid #ffffff4d; border-radius: 3px; width: 100%;">
-                </td>
-                <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 13%; padding-left: 20px;"
-                  class="cont-drill" (click)="seleccionar(precioUnitario)" *ngIf="precioUnitario.nivel == 6">
-                  <input autocomplete="off" type="text" class="bg-transparent" id="input-table" [(ngModel)]="precioUnitario.codigo"
-                    (keydown.enter)="crear(precioUnitario)" [readonly]="precioUnitario.esAvanceObra"
-                    style="border: .5px solid #ffffff4d; border-radius: 3px; width: 100%;">
-                </td>
-                <td style="border-right: 1px solid #3f3e3e17; border-right: 1px solid #f2f2f217; width: 13%; padding-left: 24px;"
-                  class="cont-drill" (click)="seleccionar(precioUnitario)" *ngIf="precioUnitario.nivel == 7">
-                  <input autocomplete="off" type="text" class="bg-transparent" id="input-table" [(ngModel)]="precioUnitario.codigo"
-                    (keydown.enter)="crear(precioUnitario)" [readonly]="precioUnitario.esAvanceObra"
-                    style="border: .5px solid #ffffff4d; border-radius: 3px; width: 100%;">
-                </td> -->
+                
                 <td
                   style="
                     border-right: 1px solid #3f3e3e17;
@@ -775,7 +678,6 @@
                     <option value="Millar">Millar</option>
                     <option value="Lote">Lote</option>
                     <option value="Her">%(mdo)</option>
-                    <!-- <option [ngValue]="U" *ngFor="let U of Unidades">{{U}}</option> -->
                   </select>
                 </td>
                 <td
@@ -1130,7 +1032,6 @@
             }"
             class="font-medium text-gray700"
           >
-            <!-- icono de opciones por concepto -->
             <td class="body-table" style="width: 2%">
               <div
                 *ngIf="
@@ -1177,7 +1078,6 @@
                 </ul>
               </div>
             </td>
-            <!-- código -->
             <td class="body-table" style="width: 15%">
               <input
                 autocomplete="off"
@@ -1220,7 +1120,6 @@
                 </li>
               </ul>
             </td>
-            <!-- descripción -->
             <td class="body-table" style="width: 30%">
               <input
                 autocomplete="off"
@@ -1241,7 +1140,6 @@
                 "
               />
             </td>
-            <!-- unidad -->
             <td class="body-table" style="width: 5%">
               <select
                 aria-label=".form-select-sm example"
@@ -1278,14 +1176,10 @@
                 <option value="Millar">Millar</option>
                 <option value="Lote">Lote</option>
                 <option value="Her">%(mdo)</option>
-                <!-- <option [ngValue]="U" *ngFor="let U of Unidades">{{U}}</option> -->
               </select>
 
-              <!-- <input autocomplete="off" width="100%" type="text" class="" id="input-table" [(ngModel)]="detalle.unidad"
-                            (keydown.enter)="crearDetalle(detalle)"
-                            style="background-color: rgba(0, 0, 0, 0.164); border: none; border-radius: 3px; width: 100%;"> -->
+             
             </td>
-            <!-- cantidad  -->
             <td class="body-table" style="width: 10%">
               <input
                 autocomplete="off"
@@ -1547,7 +1441,6 @@
                 </div>
               </ng-template>
             </td>
-            <!-- costo base -->
             <td
               class="body-table"
               style="width: 10%"
@@ -1573,7 +1466,6 @@
                 "
               />
             </td>
-            <!-- costo base con formato-->
             <td
               class="body-table"
               style="width: 10%"
@@ -1604,7 +1496,6 @@
                 "
               />
             </td>
-            <!-- costo unitario-->
             <td class="body-table" style="width: 10%">
               <input
                 autocomplete="off"
@@ -1621,7 +1512,6 @@
                 "
               />
             </td>
-            <!-- costo unitario con formato-->
             <td
               class="body-table"
               [ngClass]="{
@@ -1648,7 +1538,6 @@
                 "
               />
             </td>
-            <!-- -->
             <td
               class="body-table"
               style="width: 10%; color: blue"
@@ -1725,7 +1614,6 @@
                 "
               />
             </td>
-            <!-- tipo insumo -->
             <td class="body-table" style="width: 5%">
               <select
                 aria-label=".form-select-sm example"
@@ -1750,7 +1638,6 @@
                 </option>
               </select>
             </td>
-            <!-- familia insumo -->
             <td class="body-table">
               <select
                 aria-label=".form-select-sm example"
@@ -1775,14 +1662,7 @@
               </select>
             </td>
 
-            <!-- <td class="body-table" style="width: 10%; align-items: center;" *ngIf="detalle.id != 0">
-              <div class="flex">
-                <button type="button" class="button-importar" (click)="eliminarPUDetalle(detalle)">Eliminar</button>
-                <button type="button" class="button-importar" (click)="partirPUDetalle(detalle)">Partir</button>
-              </div>
-            </td>
-
-            <td class="body-table" style="width: 10%; align-items: center;" *ngIf="detalle.id == 0"></td> -->
+           
           </tr>
         </tbody>
       </table>
@@ -1796,7 +1676,6 @@
       </mat-paginator>
     </div>
 
-    <!--Tabla 4-->
     <div class="flex items-end w-[95%] ml-[2.4%]">
       <textarea
         #InputOperacionGenerador
@@ -2285,7 +2164,6 @@
     </div>
   </div>
 
-  <!--Contenedor Tabla Explosion de Insumos-->
   <div *ngIf="contenedorExplosionInsumo">
     <app-dialog-explosion-insumos
       *appRecarga="appRecarga"
@@ -2293,7 +2171,6 @@
       (recalcular)="recalcular($event)"
     ></app-dialog-explosion-insumos>
   </div>
-  <!--Contenedor Tabla FSR-->
   <div *ngIf="contenedorFSR">
     <app-dialog-fsr
       *appRecarga="appRecarga"
@@ -2302,11 +2179,7 @@
     >
     </app-dialog-fsr>
   </div>
-  <!---------------------------Tabla Muestra Detalle------------------------------>
 
-  <!--Tabla 3-->
-
-  <!---Contenedor 2---->
   <div class="contenedor2" *ngIf="contenedor2">
     <div *ngIf="seEstaCopiando">
       <div
@@ -2414,7 +2287,6 @@
                       style="width: 4.5%; border-right: 1px solid #f2f2f217"
                       class="cont-drill"
                     >
-                      <!-- concepto: precioUnitario.tipoPrecioUnitario ==1 -->
                       <div class="contenedores" style="display: flex">
                         <div *ngIf="precioUnitarioParaCopiar.hijos.length > 0">
                           <mat-icon
@@ -2429,10 +2301,7 @@
                             }}
                           </mat-icon>
 
-                          <!-- <button class="button-accion" (click)="expansionDominio(precioUnitarioParaCopiar)"
-                            *ngIf="precioUnitarioParaCopiar.nivel <= 7">
-                            {{ precioUnitarioParaCopiar.expandido ? "▼" : "►" }}
-                          </button> -->
+                          
                         </div>
                       </div>
                     </td>
@@ -2648,7 +2517,6 @@
         </div>
       </div>
 
-      <!---------------------------Tabla Muestra Detalle------------------------------>
       <div
         class="cont-tabla-center"
         style="margin-top: 5px"
@@ -2751,7 +2619,6 @@
         </table>
       </div>
 
-      <!--Tabla 3-->
       <div
         class="cont-tabla"
         style="margin-top: 10px"
@@ -3027,7 +2894,6 @@
           class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl"
           (click)="detenerCierre($event)"
         >
-          <!-- header -->
           <div class="flex justify-between items-center border-b px-4 py-3">
             <h2 class="font-semibold text-gray-800 tracking-wider text-lg">
               Importar archivo
@@ -3041,7 +2907,6 @@
             </button>
           </div>
 
-          <!-- input de archivos -->
           <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div class="mb-4">
               <div
@@ -3100,7 +2965,6 @@
             </div>
           </div>
 
-          <!-- botones -->
           <div class="bg-gray-50 px-4 py-3 flex justify-end gap-2">
             <button
               class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex items-center shadow-sm ring-1 ring-inset transition-all relative"
@@ -3184,7 +3048,6 @@
           class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all"
           (click)="detenerCierre($event)"
         >
-          <!-- header -->
           <div class="flex justify-between items-center border-b px-4 py-3">
             <h2 class="font-semibold text-gray-800 tracking-wider text-lg">
               Reemplazar del catálogo general
@@ -3198,7 +3061,6 @@
             </button>
           </div>
 
-          <!-- tabla del concepto a remplazar -->
           <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <p class="font-normal text-gray700 text-base mb-4">
               Ya existe un concepto con este código en el catálogo general. Haga
@@ -3299,7 +3161,6 @@
                           <option value="Millar">Millar</option>
                           <option value="Lote">Lote</option>
                           <option value="Her">%(mdo)</option>
-                          <!-- <option [ngValue]="U" *ngFor="let U of Unidades">{{U}}</option> -->
                         </select>
                       </td>
                       <td
@@ -3369,7 +3230,6 @@
             </div>
           </div>
 
-          <!-- botones -->
           <div class="bg-gray-50 px-4 py-3 flex justify-end gap-2">
             <button
               class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
@@ -3388,4 +3248,4 @@
       </div>
     </div>
   </section>
-</ng-template>
+</ng-template> -->

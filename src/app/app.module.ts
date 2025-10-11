@@ -171,6 +171,8 @@ import { AuditoriasComponent } from './seguridad/auditorias/auditorias.component
 import { GlosarioComponent } from './documentacion/glosario/glosario.component';
 import { ModalGlosarioComponent } from './documentacion/modal-glosario/modal-glosario.component';
 import { DocumentacionModule } from './documentacion/documentacion.module';
+import { CatalogoConceptoComponent } from './proyectos/precio-unitario/catalogo-concepto/catalogo-concepto.component';
+import { MatrizPrecioUnitarioComponent } from './proyectos/precio-unitario/matriz-precio-unitario/matriz-precio-unitario.component';
 
 export function playerFactory() {
   return player;
@@ -325,8 +327,9 @@ export function playerFactory() {
     ModalGlosarioComponent,
     UppercaseInputDirective,
     OnlyNumbersDirective,
-    AuditoriasComponent
-
+    AuditoriasComponent,
+    CatalogoConceptoComponent,
+    MatrizPrecioUnitarioComponent,
   ],
 
   imports: [

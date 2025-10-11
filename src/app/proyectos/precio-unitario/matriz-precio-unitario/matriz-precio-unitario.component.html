@@ -1,0 +1,84 @@
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+<table class="w-full text-sm text-left rtl:text-right">
+  <thead class="bg-primario text-white">
+    <tr>
+      <th class="w-6" scope="col"></th>
+      <th class="text-left" scope="col">Codigo</th>
+      <th class="text-left" scope="col">Descripcion</th>
+      <th class="text-left" scope="col">Unidad</th>
+      <th class="text-right" scope="col">Costo base</th>
+      <th class="text-right" scope="col">Costo Unitario</th>
+      <th class="text-right" scope="col">Importe</th>
+      <th class="text-right" scope="col">Tipo</th>
+      <th class="text-right" scope="col">Familia</th>
+    </tr>
+  </thead>
+
+  <tbody class="divide-y divide-gray300">
+    <tr class="bg-white border-b" *ngFor="let detalle of detalles">
+      <td class="pe-1 py-[2px] w-6 text-center">
+        <mat-icon
+                class="icon-display cursor-pointer">
+                expand_more
+              </mat-icon>
+      </td>
+      <td class="pe-1 py-[2px] w-32">
+        <input
+              class="w-full"
+              type="text"
+              [(ngModel)]="detalle.codigo"
+            />
+      </td>
+      <td class="pe-1 py-[2px] w-32">
+        <input
+              class="w-full"
+              type="text"
+              [(ngModel)]="detalle.descripcion"
+            />
+      </td>
+      <td class="pe-1 py-[2px] w-32">
+        <input
+              class="w-full"
+              type="text"
+              [(ngModel)]="detalle.unidad"
+            />
+      </td>
+      <td class="pe-1 py-[2px] w-32">
+        <input
+              class="w-full"
+              type="text"
+              [(ngModel)]="detalle.costoBaseConFormato"
+            />
+      </td>
+      <td class="pe-1 py-[2px] w-32">
+        <input
+              class="w-full"
+              type="text"
+              [(ngModel)]="detalle.costoUnitarioConFormato"
+            />
+      </td>
+      <td class="pe-1 py-[2px] w-32">
+        <input
+              class="w-full"
+              type="text"
+              [(ngModel)]="detalle.importeConFormato"
+            />
+      </td>
+      <td class="pe-1 py-[2px] w-32">
+        <input
+              class="w-full"
+              type="text"
+              [(ngModel)]="detalle.idTipoInsumo"
+            />
+      </td>
+      <td class="pe-1 py-[2px] w-32">
+        <input
+              class="w-full"
+              type="text"
+              [(ngModel)]="detalle.idFamiliaInsumo"
+            />
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>

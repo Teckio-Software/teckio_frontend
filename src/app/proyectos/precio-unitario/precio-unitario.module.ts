@@ -5,7 +5,9 @@ import { PrecioUnitarioRoutingModule } from './precio-unitario-routing.module';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+  
+  ],
   imports: [CommonModule, PrecioUnitarioRoutingModule, ScrollingModule],
 })
 export class PrecioUnitarioModule {}
