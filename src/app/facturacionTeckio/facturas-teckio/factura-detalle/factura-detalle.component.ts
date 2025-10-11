@@ -25,6 +25,7 @@ facturaDetallesReset : FacturaDetalleDTO[] = [];
   }
 
   ngOnInit(): void {
+    console.log("este es el id de la factura",this.IdFactura);
     this._fcaturasService.ObtenFacturaDetalleXIdFactura(this.selectedEmpresa, this.IdFactura).subscribe((datos) => {
       this.facturaDetalles = datos;
       this.facturaDetallesReset = datos;
