@@ -89,13 +89,14 @@
         cursor: pointer;
         max-height: 80vh;
       "
+      class="overflow-x-auto shadow-md rounded-lg"
     >
       <table
-        class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos"
+        class="w-full text-sm xs:table-fixed"
       >
-        <thead>
-          <tr>
-            <th class="cabecera" scope="col" style="width: 20%">
+        <thead class="bg-primario text-white" >
+          <tr class="xs:text-[10px]" >
+            <th class="px-[2px] py-[2px]" scope="col" style="width: 20%">
               <div class="flex">
                 <div>Codigo</div>
                 <div>
@@ -109,7 +110,7 @@
                 </div>
               </div>
             </th>
-            <th class="cabecera" scope="col" style="width: 22.5%">
+            <th class="px-[2px] py-[2px]" scope="col" style="width: 22.5%">
               <div class="flex">
                 <div>Descripcion</div>
                 <div>
@@ -123,7 +124,7 @@
                 </div>
               </div>
             </th>
-            <th class="cabecera" scope="col" style="width: 10%">
+            <th class="px-[2px] py-[2px]" scope="col" style="width: 10%">
               <div class="flex">
                 <div>Unidad</div>
                 <div>
@@ -137,7 +138,7 @@
                 </div>
               </div>
             </th>
-            <th class="cabecera" scope="col" style="width: 10%">
+            <th class="px-[2px] py-[2px]" scope="col" style="width: 10%">
               <div class="flex">
                 <div>Cantidad</div>
                 <div>
@@ -151,7 +152,7 @@
                 </div>
               </div>
             </th>
-            <th class="cabecera" scope="col" style="width: 12.5%">
+            <th class="px-[2px] py-[2px]" scope="col" style="width: 12.5%">
               <div class="flex">
                 <div>Costo Base</div>
                 <div>
@@ -165,7 +166,7 @@
                 </div>
               </div>
             </th>
-            <th class="cabecera" scope="col" style="width: 12.5%">
+            <th class="px-[2px] py-[2px]" scope="col" style="width: 12.5%">
               <div class="flex">
                 <div>Costo Unitario</div>
                 <div>
@@ -179,7 +180,7 @@
                 </div>
               </div>
             </th>
-            <th class="cabecera" scope="col" style="width: 12.5%">
+            <th class="px-[2px] py-[2px]" scope="col" style="width: 12.5%">
               <div class="flex">
                 <div>Importe</div>
                 <div>
@@ -195,14 +196,10 @@
             </th>
           </tr>
         </thead>
-        <tbody>
-          <tr
+        <tbody class="divide-y divide-gray300">
+          <tr class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
             *ngFor="let insumo of filteredExplosion | async"
-            [ngClass]="{'colorTipoInsumo-1' :insumo.idTipoInsumo == 10000, 
-                              'colorTipoInsumo-2' :insumo.idTipoInsumo == 10002,
-                              'colorTipoInsumo-3' :insumo.idTipoInsumo == 10003,
-                              'colorTipoInsumo-4' :insumo.idTipoInsumo == 10004, 
-                            }"
+            
           >
             <td class="body-table" style="width: 20%">
               <input
