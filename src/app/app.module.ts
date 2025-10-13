@@ -182,6 +182,7 @@ import { CuentaFormComponent } from './contabilidad/cuentas-por-cobrar/component
 import { CuentaDetailsComponent } from './contabilidad/cuentas-por-cobrar/components/cuenta-details/cuenta-details.component';
 import { ImagenesComponent } from './seguridad/imagenes/imagenes.component';
 import { AlmacenTranspasoComponent } from './inventario/almacenTranspaso/almacen-transpaso.component';
+import { VerCuentaComponent } from './contabilidad/cuentas-por-cobrar/components/ver-cuenta/ver-cuenta.component';
 
 export function playerFactory() {
   return player;
@@ -347,6 +348,7 @@ export function playerFactory() {
     CuentaDetailsComponent,
     ImagenesComponent,
     AlmacenTranspasoComponent,
+    VerCuentaComponent,
   ],
 
   imports: [
