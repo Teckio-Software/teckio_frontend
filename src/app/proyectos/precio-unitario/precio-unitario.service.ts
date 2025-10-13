@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment.development';
-import { DatosParaCopiarArmadoDTO, DatosParaImportarCatalogoGeneralDTO, datosParaCopiarDTO, precioUnitarioDTO, preciosParaEditarPosicionDTO } from './tsPrecioUnitario';
+import { DatosParaCopiarArmadoDTO, DatosParaImportarCatalogoGeneralDTO, PrecioUnitarioManoDeObraConjunto, PrecioUnitarioManoDeObraDetalle, datosParaCopiarDTO, precioUnitarioDTO, preciosParaEditarPosicionDTO } from './tsPrecioUnitario';
 import { Observable } from 'rxjs';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import { InsumoParaExplosionDTO } from 'src/app/catalogos/insumo/tsInsumo';
@@ -145,5 +145,9 @@ export class PrecioUnitarioService {
         formData.append('idProyecto', idProyecto.toString());
         console.log("Data", formData);
         return this.HttpClient.post<RespuestaDTO>(`${this.apiUrl}/${idEmpresa}/ImportarOpus`, formData)
+    }
+
+    obtenerPrecioUnitarioImprimirManoDeObra(idEmpresa: number, idProyecto: number) {
+      return this.HttpClient.get<PrecioUnitarioManoDeObraConjunto>(`${this.apiUrl}/${idEmpresa}/obtenerPrecioUnitarioImprimirManoDeObra/${idProyecto}`)
     }
 }

@@ -6,6 +6,7 @@ export enum AlertaTipo {
   delete = 'delete',
   error = 'error',
   none = 'none',
+  warn = 'warn',
 }
 
 @Component({

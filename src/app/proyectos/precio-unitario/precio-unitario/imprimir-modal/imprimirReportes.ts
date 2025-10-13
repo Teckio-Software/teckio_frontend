@@ -7,6 +7,7 @@ import { numeroALetras } from 'src/app/compras/orden-compra/NumeroALetras';
 import { proyectoDTO } from 'src/app/proyectos/proyecto/tsProyecto';
 import { Reporte } from './types/reporte';
 import { style } from '@angular/animations';
+import { de } from 'date-fns/locale';
 
 /**
  * Imprime un reporte de presupuesto en formato PDF.
@@ -81,7 +82,6 @@ export function imprimirReporteAnalisisPU(reporte: Reporte) {
       color: 'black',
     },
   };
-
   reporte.precioUnitario.forEach((pu, index) => {
     //imagen
   content.push({
@@ -89,7 +89,7 @@ export function imprimirReporteAnalisisPU(reporte: Reporte) {
       {
         stack: [
           {
-            image: image,
+            image: reporte.base64!=''? reporte.base64: image,
             width: 60,
             height: 60,
             alignment: 'right',
@@ -453,6 +453,344 @@ maximumFractionDigits: 2,
   pdfMake
     .createPdf(docDefinition)
     .download(`Análisis de precio unitario${reporte.titulo}.pdf`);
+}
+
+export function imprimirReporteManoObra(reporte: Reporte) {
+  (<any>pdfMake).addVirtualFileSystem(pdfFonts);
+  let totalEnLetras: string;
+  const content: any[] = [];
+  const styles = {
+    header: {
+      fontSize: 10,
+    },
+    subheader: {
+      fontSize: 8,
+      bold: true,
+    },
+    quote: {
+      italics: true,
+      fontSize: 8,
+    },
+    small: {
+      fontSize: 8,
+    },
+    smallCantidad: {
+      fontSize: 8,
+      alignment: 'right',
+    },
+    smallCantidadTotal: {
+      fontSize: 8,
+      alignment: 'right',
+      bold: true,
+    },
+    smallRight: {
+      fontSize: 8,
+      alignment: 'right',
+    },
+    smallCenter: {
+      fontSize: 8,
+      alignment: 'center',
+    },
+    smallBold: {
+      fontSize: 8,
+      textAlign: 'center',
+      bold: true,
+    },
+    smallColored: {
+      fontSize: 8,
+      textAlign: 'center',
+      bold: true,
+      color: '#1c398e',
+    },
+    styleTotal: {
+      fontSize: 8,
+      textAlign: 'center',
+      bold: true,
+    },
+    bold: {
+      bold: true,
+    },
+    rounded: {
+      rounded: 10,
+    },
+    tableHeader: {
+      bold: true,
+      fontSize: 12,
+      color: 'black',
+    },
+  };
+
+  //imagen
+  content.push({
+    columns: [
+      {
+        stack: [
+          {
+            image: reporte.base64!=''? reporte.base64: image,
+            width: 60,
+            height: 60,
+            alignment: 'right',
+          },
+        ],
+      },
+    ],
+  });
+  content.push({
+    text: '\n',
+  });
+  content.push({
+    columns: [
+      {
+        stack: [
+          {
+            text: [{ text: `${reporte.encabezadoIzq}`, bold: true }],
+            style: 'header',
+            alignment: 'left',
+          },
+        ],
+      },
+      {
+        stack: [
+          {
+            text: [{ text: `${reporte.encabezadoCentro}`, bold: true }],
+            style: 'header',
+            alignment: 'center',
+          },
+        ],
+      },
+      {
+        stack: [
+          {
+            text: [{ text: `${reporte.encabezadoDerecha}`, bold: true }],
+            style: 'header',
+            alignment: 'right',
+          },
+        ],
+      },
+    ],
+  });
+
+  content.push({
+    text: '\n',
+  });
+
+  //tabla de proyecto - header y contenido
+  const tableBodyProject = [
+    [{ text: 'Presupuesto de mano de obra', style: 'subheader' }],
+    [{ text: reporte.titulo, style: 'small' }],
+  ];
+
+  content.push({
+    margin: [0, 10, 0, 10],
+    layout: {
+      hLineColor: () => '#B9B9B9',
+      vLineColor: () => '#B9B9B9',
+      hLineWidth: () => 0.5,
+      vLineWidth: () => 0.5,
+    },
+    table: {
+      headerRows: 1,
+      widths: ['*'],
+      body: tableBodyProject,
+      style: 'tableHeader',
+    },
+  });
+
+  const tableHeader = [
+    [
+      { text: 'Clave', style: 'subheader', alignment: 'center' },
+      { text: 'Descripción', style: 'subheader', alignment: 'center' },
+      { text: 'Unidad', style: 'subheader', alignment: 'center' },
+      { text: 'Cantidad', style: 'subheader', alignment: 'center' },
+      {
+        text: 'Precio unitario',
+        style: 'subheader',
+        alignment: 'center',
+      },
+      { text: 'Total', style: 'subheader', alignment: 'center' },
+    ],
+  ];
+  content.push({
+    margin: [0, 0, 0, 0],
+    layout: {
+      hLineColor: () => '#B9B9B9',
+      hLineWidth: () => 0.5, // todas las líneas horizontales
+      vLineColor: () => '#B9B9B9',
+      vLineWidth: () => 0.5, // todas las líneas verticales
+    },
+    table: {
+      headerRows: 1,
+      widths: [70, '*', 30, 60, 60, 60],
+      body: tableHeader,
+    },
+  });
+  let tableBodyProyecto: any = [];
+  reporte.preciosUnitariosManoObra.preciosUnitarios.forEach((pu, index) => {
+  if(pu.detalles.length>0){
+    tableBodyProyecto.push([
+      {
+        text: pu.codigo,
+        style: 'small',
+      },
+      {
+        text: pu.descripcion,
+        style: 'smallColored',
+        alignment: 'justify',
+      },
+      { text:'', style: 'small'},
+      { text:'', style: 'small'},
+      { text:'', style: 'small'},
+      { text:'', style: 'small'},
+      ]);
+    // var detalles = reporte.preciosUnitariosManoObra.filter((detalle) => detalle.idPrecioUnitario === pu.id)
+    var detalles = pu.detalles;
+      // content.push({
+      //   text: pu.descripcion, style: 'subheader',
+      // });
+      detalles.forEach(detalle => {
+      tableBodyProyecto.push([
+      {
+        text: detalle.codigo,
+        style: { fontSize: 8 },
+      },
+      {
+        text: detalle.descripcion,
+        style: { fontSize: 8 },
+        alignment: 'justify',
+      },
+      { text: detalle.unidad || '', style: 'small' },
+      {
+        text: detalle.cantidadConFormato || '',
+        style: { fontSize: 8, alignment: 'right' },
+      },
+      {
+        text: `${detalle.costoUnitarioConFormato}` || '',
+        style: {fontSize: 8, color: '#1c398e', alignment: 'right'},
+      },
+      {
+        text: `${(detalle.importeConFormato)}` || '',
+        style: 'smallRight',
+      },
+      ]);
+      content.push({
+        margin: [0, 0, 0, 0],
+        layout: {
+          hLineWidth: () => 0, // todas las líneas horizontales
+          vLineWidth: () => 0, // todas las líneas verticales
+        },
+        table: {
+          headerRows: 0,
+          widths: [70, '*', 30, 60, 60, 60],
+          body: tableBodyProyecto,
+        },
+      });
+    tableBodyProyecto = [];
+    });
+    content.push({
+      columns: [
+        { width: '*', text: `Total de ${pu.descripcion}`, style: 'smallColored' },
+        {
+          width: 'auto',
+          table: {
+            widths: ['auto'],
+            body: [
+              [
+                {
+                  text: pu.totalConFormatoDePU,
+                  style: 'smallColored',
+                },
+              ],
+            ],
+          },
+          layout: {
+            hLineColor: () => '#fff',
+            vLineColor: () => '#fff',
+            hLineWidth: () => 0,
+            vLineWidth: () => 0,
+          },
+          margin: [0, 0, 0, 5],
+        },
+      ],
+    });
+
+      // Formatear con separadores de miles y dos decimales
+    const formato = new Intl.NumberFormat('es-ES', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    });
+  }
+  });
+  content.push({
+      columns: [
+        { width: '*', text: 'Total de Presupuesto', style: 'smallBold' },
+        {
+          width: 'auto',
+          table: {
+            widths: ['auto'],
+            body: [
+              [
+                {
+                  text: reporte.preciosUnitariosManoObra.totalConFormato,
+                  style: 'smallBold',
+                },
+              ],
+            ],
+          },
+          layout: {
+            hLineColor: () => '#fff',
+            vLineColor: () => '#fff',
+            hLineWidth: () => 0,
+            vLineWidth: () => 0,
+          },
+          margin: [0, 0, 0, 5],
+        },
+      ],
+    });
+  if (reporte.importeConLetra) {
+    totalEnLetras = numeroALetras(reporte.preciosUnitariosManoObra.total);
+
+    content.push({
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: ['auto'],
+            body: [
+              [
+                {
+                  text: `${totalEnLetras}`,
+                  style: 'smallBold',
+                },
+              ],
+            ],
+          },
+          layout: {
+            hLineColor: () => '#fff',
+            vLineColor: () => '#fff',
+            hLineWidth: () => 0,
+            vLineWidth: () => 0,
+          },
+          margin: [0, 0, 0, 5],
+        },
+      ],
+    });
+  }
+
+  const docDefinition: any = {
+    content,
+    styles,
+    pageMargins: [
+      reporte.margenIzquierdo,
+      reporte.margenSuperior,
+      reporte.margenDerecho,
+      reporte.margenInferior,
+    ],
+  };
+
+  pdfMake
+    .createPdf(docDefinition)
+    .download(`Presupuesto de mano de obra${reporte.titulo}.pdf`);
 }
 
 export function imprimirReporte(reporte: Reporte) {

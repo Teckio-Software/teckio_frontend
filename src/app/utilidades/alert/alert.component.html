@@ -7,10 +7,12 @@
     'alert-edit': alertaTipo === 'edit',
     'alert-delete': alertaTipo === 'delete',
     'alert-error': alertaTipo === 'error',
+    'alert-warn': alertaTipo === 'warn',
     'bg-bgTeal100  border-t-textAlertSucces  text-textAlertSucces': alertaTipo === 'save',
     'bg-blue100  border-t-blue500  text-blue500': alertaTipo === 'edit',
     'bg-red-100 border-t-red-500  text-red-500': alertaTipo === 'delete' || alertaTipo === 'error',
-    'animate-fadeIn': alertaTipo === 'save' || alertaTipo === 'edit' || alertaTipo === 'delete' || alertaTipo === 'error',
+    'bg-yellow-100  border-t-yellow-500  text-yellow-500': alertaTipo === 'warn',
+    'animate-fadeIn': alertaTipo === 'save' || alertaTipo === 'edit' || alertaTipo === 'delete' || alertaTipo === 'error' || alertaTipo === 'warn',
   }"
   [ngStyle]="{
     height: '56px',
