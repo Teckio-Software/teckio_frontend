@@ -197,7 +197,7 @@ export const pages: Page[] = [
         permiso: ['SeccionSalidaAlmacen'],
       },{
         name: 'Traspaso almacén',
-        link: '/almacentranspaso',
+        link: '/almacentraspaso',
         imageUrl: 'assets/exchange.png',
         permiso: ['SeccionTranspasoAlmacen'],
       },
