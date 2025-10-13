@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment.development';
-import { CancelarOrdenVentaDTO, DetalleOrdenVentaDTO, ImpuestoDetalleOrdenVentaDTO, OrdenVentaDTO } from './ordenVenta';
+import { CancelarOrdenVentaDTO, DetalleOrdenVentaDTO, FacturaXOrdenVentaDTO, ImpuestoDetalleOrdenVentaDTO, OrdenVentaDTO } from './ordenVenta';
 import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 
 @Injectable({
@@ -69,5 +69,13 @@ export class VentasService {
 
   public autorizarOrdenVenta(ordenVenta: OrdenVentaDTO, idEmp : number){
     return this.HttpClient.put<RespuestaDTO>(`${this.apiUrl}/${idEmp}/autorizar`, ordenVenta);
+  }
+
+  public ObtenerXIdClienteSinPagar(idEmp: number, IdCliente: number) {
+          return this.HttpClient.get<OrdenVentaDTO[]>(`${this.apiUrl}/${idEmp}/ObtenerXIdClienteSinPagar/${IdCliente}`)
+  }
+
+  public ObtenerFacturasXIdClienteSinPagar(idEmp: number, IdCliente: number) {
+          return this.HttpClient.get<FacturaXOrdenVentaDTO[]>(`${this.apiUrl}/${idEmp}/ObtenerFacturasXIdClienteSinPagar/${IdCliente}`)
   }
 }
