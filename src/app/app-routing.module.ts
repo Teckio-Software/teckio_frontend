@@ -404,7 +404,7 @@ const routes: Routes = [
       import(`./documentacion/glosario/glosario.module`).then((module) => module.GlosarioModule),
   },
   {
-    path: 'cuentas-por-pagar',
+    path: 'cuentas-por-cobrar',
     loadChildren: () =>
       import(`./contabilidad/cuentas-por-cobrar/cuentas-por-cobrar.module`).then(
         (module) => module.CuentasPorCobrarModule,
