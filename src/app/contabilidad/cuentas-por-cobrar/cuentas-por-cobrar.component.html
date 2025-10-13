@@ -1,11 +1,11 @@
 <section class="p-2">
-  <div class="bg-white rounded-md w-full" *ngIf="!crearCuenta">
+  <div class="bg-white rounded-md w-full" *ngIf="!crearCuenta && !verCuenta">
     <!-- header nuevo y fitro exportacion -->
     <div>
       <div class="px-3 py-3 flex justify-end gap-3">
         <button
           (click)="nuevaCuenta()"
-          class="flex gap-2 items-center bg-colorButton hover:bg-colorButtonHover rounded-md text-white transition-colors px-3 py-2"
+          class="flex gap-2 items-center bg-primario hover:bg-primario rounded-md text-white transition-colors px-3 py-2"
         >
           <img src="./assets/plus-solid-full.svg" alt="" class="w-3" />
           Nuevo
@@ -109,7 +109,7 @@
           <td class="py-4">
             <div class="flex justify-center gap-3">
               <button><img src="./assets/edit.svg" alt="Botón de editar" class="w-5" /></button>
-              <button>
+              <button (click)="verCuentas()">
                 <img src="./assets/arrow-right-solid-full.svg" alt="Botón de ver" class="w-5" />
               </button>
             </div>
@@ -235,3 +235,4 @@
   </div>
 </section>
 <app-nueva-cuenta *ngIf="crearCuenta" (regresar)="crearCuenta = false"></app-nueva-cuenta>
+<app-ver-cuenta *ngIf="verCuenta" (regresar)="verCuenta = false"></app-ver-cuenta>

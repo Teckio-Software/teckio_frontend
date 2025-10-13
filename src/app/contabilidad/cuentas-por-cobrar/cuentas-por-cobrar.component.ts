@@ -7,9 +7,15 @@ import { Component } from '@angular/core';
 })
 export class CuentasPorCobrarComponent {
   crearCuenta: boolean = false;
+  verCuenta: boolean = false;
   cerrar: boolean = false;
 
   nuevaCuenta() {
     this.crearCuenta = true;
+  }
+
+  verCuentas() {
+    console.log('click');
+    this.verCuenta = true;
   }
 }
