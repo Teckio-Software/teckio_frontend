@@ -1,7 +1,7 @@
 <!-- Alert -->
 <div
   *ngIf="alertaTipo !== 'none'"
-  class="position-fixed z-50 right-3 px-3 py-3 border-t-4 rounded-b shadow-md h-14 w-96"
+  class="position-fixed z-50 right-3 px-3 pt-3 border-t-4 rounded-b shadow-md w-96"
   [ngClass]="{
     'alert-save': alertaTipo === 'save',
     'alert-edit': alertaTipo === 'edit',
@@ -13,9 +13,6 @@
     'bg-red-100 border-t-red-500  text-red-500': alertaTipo === 'delete' || alertaTipo === 'error',
     'bg-yellow-100  border-t-yellow-500  text-yellow-500': alertaTipo === 'warn',
     'animate-fadeIn': alertaTipo === 'save' || alertaTipo === 'edit' || alertaTipo === 'delete' || alertaTipo === 'error' || alertaTipo === 'warn',
-  }"
-  [ngStyle]="{
-    height: '56px',
   }"
 >
   <p class="font-medium">
