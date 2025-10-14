@@ -226,6 +226,7 @@ export class CuentasPorCobrarComponent {
       );
     }
     if (this.clienteRazonSocial != '') {
+      console.log("con la razon social", this.clienteRazonSocial);
       this.ordenesVentasPorCobrar = this.ordenesVentasPorCobrar.filter((z) =>
         z.razonSocialCliente
           .toLocaleLowerCase()
@@ -235,6 +236,8 @@ export class CuentasPorCobrarComponent {
 
     const start = this.parseISOToLocal(this.fechaInicio);
     const end = this.parseISOToLocal(this.fechaFin);
+
+    console.log(start, end);
 
     if (start) start.setHours(0, 0, 0, 0);
     if (end) end.setHours(23, 59, 59, 999);
@@ -271,6 +274,14 @@ export class CuentasPorCobrarComponent {
   seleccionarCliente(cliente: string) {
     this.clienteRazonSocial = cliente;
     this.mostrarListaCliente = false;
+    this.filtrarTablaOrdenesVentaPorCobrar();
+  }
+
+  limpiarFiltros() {
+    this.clienteRazonSocial = '';
+    this.filtroEstatus = '';
+    this.fechaInicio = '';
+    this.fechaFin = '';
     this.filtrarTablaOrdenesVentaPorCobrar();
   }
 }

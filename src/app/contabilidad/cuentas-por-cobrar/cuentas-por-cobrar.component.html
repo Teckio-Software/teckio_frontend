@@ -41,18 +41,20 @@
           [(ngModel)]="clienteRazonSocial"
         />
           <div *ngIf="mostrarListaCliente">
-            <ul
-              *ngFor="let cliente of listaClientes"
-              class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-auto max-h-48 overflow-y-auto shadow-lg"
-            >
-              <li
-                class="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                (click)="seleccionarCliente(cliente)"
-              >
-                {{ cliente }}
-              </li>
-            </ul>
-          </div>
+                    <cdk-virtual-scroll-viewport
+                      itemSize="36"
+                      class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-[300px] h-36 overflow-auto shadow-lg"
+                    >
+                      <div
+                        *cdkVirtualFor="let cliente of listaClientes"
+                        (click)="seleccionarCliente(cliente)"
+                        class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                        style="height: 36px; box-sizing: border-box"
+                      >
+                        {{ cliente }}
+                      </div>
+                    </cdk-virtual-scroll-viewport>
+                  </div>
       </div>
 
       <!-- <select
@@ -88,6 +90,12 @@
           (change)="filtrarTablaOrdenesVentaPorCobrar()"
           class="bg-gris border border-[#929292] text-[#929292] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 px-3 py-2 w-40 min-w-fit"
         />
+
+        <div class="flex items-center">
+          <button (click)="limpiarFiltros()" class="w-7 h-7">
+            <img src="assets/delete filter.svg" alt="botón agregar" />
+          </button>
+        </div>
 
       <!-- <select
         class="bg-gris border border-[#929292] text-[#929292] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 px-3 py-2 w-auto min-w-fit"
@@ -125,9 +133,9 @@
         <tr class="font-medium text-gray700 hover:bg-gris animation duration-200 xs:text-[8px]" *ngFor="let ov of ordenesVentasPorCobrar">
           <td class="py-4">{{ov.numeroOrdenVenta}}</td>
           <td class="py-4">{{ov.idCliente}}</td>
-          <td class="py-4">{{ov.importeTotal}}</td>
-          <td class="py-4">{{ ov.importeTotal - ov.saldo }}</td>
-          <td class="py-4">{{ov.saldo}}</td>
+          <td class="py-4">{{ov.importeTotal | currency}}</td>
+          <td class="py-4">{{ (ov.importeTotal - ov.saldo) | currency }}</td>
+          <td class="py-4">{{ov.saldo | currency}}</td>
           <td class="py-4">{{ov.fechaRegistro | date : "dd/MM/yyyy"}}</td>
           <td class="py-4">
             <div class="flex justify-center">
