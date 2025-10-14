@@ -15,7 +15,7 @@ import {
 } from 'rxjs';
 import { permisos } from './seguridad/autorizado/tsAutorizado';
 import { SidenavService } from './utilidades/drawer/service/sidenav.service';
-import { onMainContentChange } from './utilidades/drawer/animations/animations';
+import { onButtonClose, onMainContentChange } from './utilidades/drawer/animations/animations';
 import { TituloService } from './utilidades/drawer/left-menu/left-menu.component';
 import { proyectoDTO } from './proyectos/proyecto/tsProyecto';
 import { ProyectoService } from './proyectos/proyecto/proyecto.service';
@@ -33,7 +33,7 @@ import { AuthEventService } from './utilidades/event-auth-service/auth-event.ser
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  animations: [onMainContentChange],
+  animations: [onMainContentChange, onButtonClose],
 })
 export class AppComponent implements OnInit {
   proyectoControl = new FormControl('');
@@ -63,6 +63,18 @@ export class AppComponent implements OnInit {
     idEmpresa: 0,
     idUsuario: 0,
   };
+  @Input() hoverMenu: 'open' | 'close' = 'close';
+
+  onMouseEnter(): void {
+    // Cambia el estado a 'open' para que el margen se mueva a 200px
+    this.hoverMenu = 'open'; 
+  }
+
+  // 2. Método para manejar cuando el ratón SALE (unhover)
+  onMouseLeave(): void {
+    // Regresa el estado a 'close' para que el margen vuelva a 62px
+    this.hoverMenu = 'close';
+  }
  
   isOpen: boolean = false;
   isLoading: boolean = false;
