@@ -27,6 +27,7 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { initFlowbite } from 'flowbite';
 
 import { set } from 'date-fns';
+import { AuthEventService } from './utilidades/event-auth-service/auth-event.service';
  
 @Component({
   selector: 'app-root',
@@ -75,6 +76,8 @@ export class AppComponent implements OnInit {
  
   @ViewChild('textoDataList') textoDataList!: any;
  
+  private loginSubscription: Subscription;
+
   constructor(
     public zvSeguridadService: SeguridadService,
     public _UsuarioEmpresaService: SeguridadMultiEmpresaService,
@@ -83,14 +86,16 @@ export class AppComponent implements OnInit {
     private tituloService: TituloService,
     private proyectoService: ProyectoService,
     private _UsuarioXIdUsuario: UsuarioUltimaSeccionService,
-    private proyectoStateService: ProyectoStateService
+    private proyectoStateService: ProyectoStateService,
+    private authEventService: AuthEventService
   ) {
-    let idEmpresa = this.zvSeguridadService.obtenIdEmpresaLocalStorage();
-    this.selectedEmpresa = Number(idEmpresa);
-    this.idUsuario = Number(
-      this.zvSeguridadService.zfObtenerCampoJwt('idUsuario')
-    );
-    this.esLogueado = this.zvSeguridadService.zfEstaLogueadoBoolean();
+    // let idEmpresa = this.zvSeguridadService.obtenIdEmpresaLocalStorage();
+    // this.selectedEmpresa = Number(idEmpresa);
+    // this.idUsuario = Number(
+    //   this.zvSeguridadService.zfObtenerCampoJwt('idUsuario')
+    // );
+    
+    // this.esLogueado = this.zvSeguridadService.zfEstaLogueadoBoolean();
     this._sidenavService.sideNavState$.subscribe((res) => {
       this.onSideNavChange = res;
     });
@@ -98,6 +103,36 @@ export class AppComponent implements OnInit {
     this._sidenavService.sideNavState$.subscribe((res) => {
       this.onSideNavChange = res;
     });
+    this.loginSubscription = this.authEventService.loginSuccess$.subscribe(() => {
+      this.handleLoginSuccess(); // Llama a la nueva lógica
+    });
+  }
+
+  handleLoginSuccess(): void {
+    this.initializeAppData(); 
+    let idEmpresa = this.zvSeguridadService.obtenIdEmpresaLocalStorage();
+    if(idEmpresa == null || idEmpresa == undefined || idEmpresa == ''){
+      idEmpresa = '1';
+    }
+    this.selectedEmpresa = Number(idEmpresa);
+    this.zvSeguridadService.guardaIdEmpresaLocalStorage(this.selectedEmpresa);
+    // this.obtenerUltimaSeccionEmpresaYProyecto(); 
+  }
+
+  private initializeAppData(): void {
+    let idEmpresa = this.zvSeguridadService.obtenIdEmpresaLocalStorage();
+    this.selectedEmpresa = Number(idEmpresa);
+    this.idUsuario = Number(
+      this.zvSeguridadService.zfObtenerCampoJwt('idUsuario')
+      
+    );
+    this.esLogueado = this.zvSeguridadService.zfEstaLogueadoBoolean();
+    if (this.esLogueado) {
+      this.obtenerUltimaSeccionEmpresaYProyectoSinCrear();
+    }
+    this.idProyecto = Number(
+      this.zvSeguridadService.obtenerIdProyectoLocalStorage()
+    );
   }
  
   private _filter(value: string): proyectoDTO[] {
@@ -117,14 +152,15 @@ export class AppComponent implements OnInit {
     const idProyectoLocal = Number(
       this.zvSeguridadService.obtenerIdProyectoLocalStorage()
     );
-    if (this.proyectos.length > 0 && idProyectoLocal === 0) {
-      this.zvSeguridadService.guardarIdProyectoLocalStorage(
-        this.proyectos[0].id
-      );
-    }
+    // if (this.proyectos.length > 0 && idProyectoLocal === 0) {
+    //   this.zvSeguridadService.guardarIdProyectoLocalStorage(
+    //     this.proyectos[0].id
+    //   );
+    // }
     const idProyecto = Number(
       this.zvSeguridadService.obtenerIdProyectoLocalStorage()
     );
+    this.idProyecto = idProyecto 
     let proyecto = this.proyectos.find((x) => x.id === idProyecto);
     if (proyecto) {
       this.proyectoControl.setValue(proyecto.nombre);
@@ -143,21 +179,19 @@ export class AppComponent implements OnInit {
   }
  
   ngOnInit(): void {
+    this.initializeAppData();
     initFlowbite();
-    if (this.zvSeguridadService.zfEstaLogueadoBoolean()) {
-      this.obtenerUltimaSeccionEmpresaYProyecto();
-    }
- 
+    // if (this.zvSeguridadService.zfEstaLogueadoBoolean()) {
+    //   this.obtenerUltimaSeccionEmpresaYProyecto();
+    // }
     this.permisosUsuario.push({
       permiso: 'VisorCorporativo',
       valor: 'Codigo-J05tg8!',
     });
- 
     this.permisosAdmin.push({
       permiso: 'role',
       valor: 'Administrador',
     });
- 
     this.subscription = this._UsuarioEmpresaService.refresh$.subscribe(() => {
       this.obtenerUltimaSeccionEmpresaYProyecto();
     });
@@ -178,6 +212,7 @@ export class AppComponent implements OnInit {
     this.selectedEmpresa = idEmpresa;
     this.zvSeguridadService.guardaIdEmpresaLocalStorage(idEmpresa);
     this.zvSeguridadService.guardarIdProyectoLocalStorage(0);
+    this.idProyecto = 0;
  
     this._UsuarioXIdUsuario
       .obtenerUltimaSeccionUsuarioXIUsuario(this.idUsuario)
@@ -415,6 +450,31 @@ export class AppComponent implements OnInit {
         }
       });
   }
+
+  obtenerUltimaSeccionEmpresaYProyectoSinCrear() {
+    let hayToken = this.zvSeguridadService.zfObtenerToken();
+    if (typeof hayToken === 'undefined' || !hayToken?.length) {
+      return;
+    }
+    this.esLogueado = this.zvSeguridadService.zfEstaLogueadoBoolean();
+    this._UsuarioXIdUsuario
+      .obtenerUltimaSeccionUsuarioXIUsuario(this.idUsuario)
+      .subscribe((datos) => {
+        if (datos.id > 0) {
+          // Guardar en localstorage Empresa y Proyecto
+          this.zvSeguridadService.guardaIdEmpresaLocalStorage(datos.idEmpresa);
+          this.zvSeguridadService.guardarIdProyectoLocalStorage(
+            datos.idProyecto
+          );
+          this.cargarEmpresasXUsuario();
+        } else {
+          this.zvSeguridadService.guardaIdEmpresaLocalStorage(0);
+          this.zvSeguridadService.guardarIdProyectoLocalStorage(0);
+          // Obtenemos Empresa y Proyecto
+          this.cargarEmpresasXUsuario();
+        }
+      });
+  }
  
   cargarEmpresasXUsuario() {
     this._UsuarioEmpresa.obtenEmpresasPorUsuario().subscribe((empresas) => {
@@ -444,6 +504,7 @@ export class AppComponent implements OnInit {
   selectionChangeContratista(event: MatAutocompleteSelectedEvent) {
     const selectedProyecto = event.option.value;
     this.isLoading = true;
+    this.idProyecto = selectedProyecto.id;
  
     this.proyectoControl.setValue(selectedProyecto.nombre);
     const exixteProyecto = this.proyectos.filter(

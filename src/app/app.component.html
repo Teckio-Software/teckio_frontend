@@ -85,6 +85,12 @@
                   >
                 </mat-autocomplete>
               </div>
+              <div class="font-medium h-full text-sm" *ngIf="idProyecto<=0">
+                <div class="bg-blue-100 text-blue-600 h-[95%] text-center px-2 py-1 rounded-lg flex flex-row justify-center select-none border-2 border-blue-600 gap-2">
+                <img src="assets/info.svg" alt="" class="w-5">
+                Selecciona un proyecto.
+                </div>
+              </div>
               <!-- Input de proyecto end -->
             </ng-container>
           </div>
