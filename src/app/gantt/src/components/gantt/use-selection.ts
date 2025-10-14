@@ -106,14 +106,12 @@ export const useSelection = (
     const minIndex = Math.min(lastSelectedIndex, currentSelectedIndex);
     const maxIndex = Math.max(lastSelectedIndex, currentSelectedIndex);
 
-    setSelectedIdsMirror((prevValue) => {
-      const nextValue = {
-        ...prevValue,
-      };
+    setSelectedIdsMirror(() => {
+      const nextValue: Record<string, true> = {};
 
       for (let i = minIndex; i <= maxIndex; ++i) {
         const task = tasksAtLevel.get(i);
-  
+
         if (task) {
           nextValue[task.id] = true;
         }

@@ -859,14 +859,15 @@ export const Gantt: React.FC<GanttProps> = ({
   );
 
   const tableWidth = useMemo(() => {
+    const maxTableWidth = Math.max(taskListWidth, 50);
+
     if (tableResizeEvent) {
-      return Math.min(
-        Math.max(tableWidthState + tableResizeEvent.endX - tableResizeEvent.startX, 50),
-        taskListWidth,
-      );
+      const resizedWidth = tableWidthState + tableResizeEvent.endX - tableResizeEvent.startX;
+
+      return Math.min(Math.max(resizedWidth, 50), maxTableWidth);
     }
 
-    return tableWidthState;
+    return Math.min(tableWidthState, maxTableWidth);
   }, [tableResizeEvent, tableWidthState, taskListWidth]);
 
   const getMetadata = useCallback(
