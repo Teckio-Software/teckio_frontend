@@ -88,7 +88,7 @@ export class CuentabancariaEmpresaComponent {
       }
       if (this.cuentaBancaria.numeroCuenta.trim().length<10){
         this.errorNumCuenta.estatus = true;
-        this.errorNumCuenta.descripcion = "El campo 'Número de cuenta' debe tener 10 caracteres";
+        this.errorNumCuenta.descripcion = "El campo 'Número de cuenta' debe tener mínimo 10 caracteres";
         c = false;
       }
       if (this.cuentaBancaria.numeroCuenta.trim() == "" || this.cuentaBancaria.numeroCuenta == undefined){
@@ -98,7 +98,7 @@ export class CuentabancariaEmpresaComponent {
       }
       if (this.cuentaBancaria.numeroSucursal.trim().length<3){
         this.errorNumSucursal.estatus = true;
-        this.errorNumSucursal.descripcion = "El campo 'Número de sucursal' debe tener 3 caracteres";
+        this.errorNumSucursal.descripcion = "El campo 'Número de sucursal' debe tener mínimo 3 caracteres";
         c = false;
       }
       if (this.cuentaBancaria.numeroSucursal.trim() == "" || this.cuentaBancaria.numeroSucursal == undefined){
@@ -108,7 +108,7 @@ export class CuentabancariaEmpresaComponent {
       }
       if (this.cuentaBancaria.clabe.trim().length<18){
         this.errorClabe.estatus = true;
-        this.errorClabe.descripcion = "El campo 'Clabe' debe tener 18 caracteres";
+        this.errorClabe.descripcion = "El campo 'Número de clabe' debe tener 18 mínimo caracteres";
         c = false;
       }
       if (this.cuentaBancaria.clabe.trim() == "" || this.cuentaBancaria.clabe == undefined){
