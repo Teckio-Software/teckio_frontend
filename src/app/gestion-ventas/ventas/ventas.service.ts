@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment.development';
-import { CancelarOrdenVentaDTO, DetalleOrdenVentaDTO, FacturaXOrdenVentaDTO, ImpuestoDetalleOrdenVentaDTO, OrdenVentaDTO } from './ordenVenta';
+import { CancelarOrdenVentaDTO, DetalleOrdenVentaDTO, FacturaXOrdenVentaDTO, ImpuestoDetalleOrdenVentaDTO, OrdenVentaDTO, OrdenVentaFacturasDTO } from './ordenVenta';
 import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -75,7 +76,34 @@ export class VentasService {
           return this.HttpClient.get<OrdenVentaDTO[]>(`${this.apiUrl}/${idEmp}/ObtenerXIdClienteSinPagar/${IdCliente}`)
   }
 
+  public ObtenerTodasSinPagar(idEmp: number) {
+          return this.HttpClient.get<OrdenVentaDTO[]>(`${this.apiUrl}/${idEmp}/ObtenerTodasSinPagar`)
+  }
+
   public ObtenerFacturasXIdClienteSinPagar(idEmp: number, IdCliente: number) {
           return this.HttpClient.get<FacturaXOrdenVentaDTO[]>(`${this.apiUrl}/${idEmp}/ObtenerFacturasXIdClienteSinPagar/${IdCliente}`)
   }
+
+  public ObtenerFacturasXOrdenVenta(idEmp: number, IdOrdenVenta: number) {
+          return this.HttpClient.get<OrdenVentaFacturasDTO>(`${this.apiUrl}/${idEmp}/obtenerFacturasXOrdenVenta/${IdOrdenVenta}`)
+      }
+
+      cargarFacturasXOrdenVenta(files: FileList, idEmpresa: number, IdOrdenVenta: number): Observable<RespuestaDTO> {
+              // Crea un objeto FormData y agrega los archivos a él
+              const formData = new FormData();
+              for (let i = 0; i < files.length; i++) {
+                  formData.append('files', files[i]);
+              }
+              formData.append('IdOrdenVenta', IdOrdenVenta.toString());
+              // No es necesario especificar el Content-Type, FormData se encargará de ello
+              return this.HttpClient.post<RespuestaDTO>(`${this.apiUrl}/${idEmpresa}/cargarFacturasXOrdenVenta`, formData);
+          }
+
+          public AutorizarFacturaXOrdenVenta(idEmp: number, facturaXOV: FacturaXOrdenVentaDTO) {
+                  return this.HttpClient.post<RespuestaDTO>(`${this.apiUrl}/${idEmp}/AutorizarFacturaXOrdenVenta`, facturaXOV)
+              }
+
+              public CancelarFacturaXOrdenVenta(idEmp: number, facturaXOV: FacturaXOrdenVentaDTO) {
+                  return this.HttpClient.post<RespuestaDTO>(`${this.apiUrl}/${idEmp}/CancelarFacturaXOrdenVenta`, facturaXOV)
+              }
 }

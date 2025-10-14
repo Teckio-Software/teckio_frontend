@@ -71,3 +71,12 @@ esSeleccionado : boolean;
 detalleFactura: FacturaDetalleDTO[];
 
 }
+
+export interface OrdenVentaFacturasDTO
+{
+    idOrdenVenta : number;
+    montoTotalOrdenVenta : number;
+    montoTotalFactura : number;
+    estatusSaldado : number;
+    facturasXOrdenVenta : FacturaXOrdenVentaDTO[];
+}
