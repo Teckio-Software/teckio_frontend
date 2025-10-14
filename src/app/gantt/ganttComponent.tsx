@@ -1,8 +1,8 @@
-import React, { act, useCallback, useEffect, useState } from "react";
+import React, { act, useCallback, useEffect, useState } from 'react';
 
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // import {
 //   initTasks,
@@ -23,10 +23,10 @@ import {
   TaskOrEmpty,
   TitleColumn,
   ViewMode,
-} from "./src";
-import { ViewSwitcher } from "./components/view-switcher";
-import { CodigoColumn } from "./src/components/task-list/columns/codigo-column";
-import { DescripcionColumn } from "./src/components/task-list/columns/descripcion-column";
+} from './src';
+import { ViewSwitcher } from './components/view-switcher';
+import { CodigoColumn } from './src/components/task-list/columns/codigo-column';
+import { DescripcionColumn } from './src/components/task-list/columns/descripcion-column';
 import {
   asignarComando,
   asignarDuracionGantt,
@@ -39,18 +39,18 @@ import {
   GenerarDependenciaXNumerador,
   GenerarDesfase,
   ImporteSemanalGanttData,
-} from "./service/api/ganttService";
-import { ImporteColumn } from "./src/components/task-list/columns/importe-column";
-import { TableBelow } from "./src/components/table-below/table-below";
-import { faFolder, faFolderOpen } from "@fortawesome/free-regular-svg-icons";
+} from './service/api/ganttService';
+import { ImporteColumn } from './src/components/task-list/columns/importe-column';
+import { TableBelow } from './src/components/table-below/table-below';
+import { faFolder, faFolderOpen } from '@fortawesome/free-regular-svg-icons';
 import {
   faChevronDown,
   faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
+  faMagnifyingGlass,
+} from '@fortawesome/free-solid-svg-icons';
 
 const ProgressColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
-  if (task.type !== "empty") {
-    console.log("Estas son las tareas", task.idProyecto);
+  if (task.type !== 'empty') {
   }
 
   const [progress, setProgress] = useState(`${task.progress}`);
@@ -59,10 +59,8 @@ const ProgressColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
     setProgress(`${task.progress}`);
   }, [task.progress]);
 
-  const handleKeyDown = async (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (event.key === "Enter") {
+  const handleKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
       const newProgress = Number(progress);
       if (!isNaN(newProgress)) {
         const updatedTask = {
@@ -85,13 +83,13 @@ const ProgressColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
     setProgress(event.target.value);
   };
 
-  if (task.type === "task") {
+  if (task.type === 'task') {
     return (
       <input
         type="number"
         className="bg-transparent w-full outline-none"
         style={{
-          color: "#0055ff",
+          color: '#0055ff',
         }}
         value={progress}
         onChange={handleChange}
@@ -101,14 +99,9 @@ const ProgressColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
         }}
       />
     );
-  } else if (task.type === "project") {
+  } else if (task.type === 'project') {
     return (
-      <input
-        type="text"
-        disabled
-        className="bg-transparent w-full outline-none"
-        value={progress}
-      />
+      <input type="text" disabled className="bg-transparent w-full outline-none" value={progress} />
     );
   }
 
@@ -116,22 +109,17 @@ const ProgressColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
 };
 
 const DesfaseComandoColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
-  if (task.type !== "empty") {
-    console.log("Estas son las tareas", task.idProyecto);
+  if (task.type !== 'empty') {
   }
 
-  const [desfaseComando, setDesfaseComando] = useState(
-    `${task.desfaseComando}`
-  );
+  const [desfaseComando, setDesfaseComando] = useState(`${task.desfaseComando}`);
 
   useEffect(() => {
     setDesfaseComando(`${task.desfaseComando}`);
   }, [task.desfaseComando]);
 
-  const handleKeyDown = async (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (event.key === "Enter") {
+  const handleKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
       const newdesfaseComando = Number(desfaseComando);
       if (!isNaN(newdesfaseComando)) {
         const updatedTask = {
@@ -154,13 +142,13 @@ const DesfaseComandoColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
     setDesfaseComando(event.target.value);
   };
 
-  if (task.type === "task") {
+  if (task.type === 'task') {
     return (
       <input
         type="number"
         className="bg-transparent w-full outline-none"
         style={{
-          color: "#0055ff",
+          color: '#0055ff',
         }}
         value={desfaseComando}
         onChange={handleChange}
@@ -170,23 +158,15 @@ const DesfaseComandoColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
         }}
       />
     );
-  } else if (task.type === "project") {
-    return (
-      <input
-        type="text"
-        disabled
-        className="bg-transparent w-full outline-none"
-      />
-    );
+  } else if (task.type === 'project') {
+    return <input type="text" disabled className="bg-transparent w-full outline-none" />;
   }
 
   return null;
 };
 
 const NumeradorColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
-  if (task.type !== "empty") {
-    console.log("Estas son las tareas", task.idProyecto);
-    console.log("Sewe", task);
+  if (task.type !== 'empty') {
   }
 
   const [numerador, setNumerador] = useState(`${task.numerador}`);
@@ -195,10 +175,8 @@ const NumeradorColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
     setNumerador(`${task.numerador}`);
   }, [task.numerador]);
 
-  const handleKeyDown = async (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (event.key === "Enter") {
+  const handleKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
       const newNumerador = Number(numerador);
       if (!isNaN(newNumerador)) {
         const updatedTask = {
@@ -227,7 +205,7 @@ const NumeradorColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
       className="bg-transparent w-full outline-none"
       disabled
       style={{
-        color: "#000000",
+        color: '#000000',
       }}
       value={numerador}
       onChange={handleChange}
@@ -240,9 +218,7 @@ const NumeradorColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
 };
 
 const DuracionColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
-  if (task.type !== "empty") {
-    console.log("Estas son las tareas", task.idProyecto);
-    console.log("Sewe", task);
+  if (task.type !== 'empty') {
   }
 
   const [duracion, setDuracion] = useState(`${task.duracion}`);
@@ -251,10 +227,8 @@ const DuracionColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
     setDuracion(`${task.duracion}`);
   }, [task.duracion]);
 
-  const handleKeyDown = async (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (event.key === "Enter") {
+  const handleKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
       const newDuracion = Number(duracion);
       if (!isNaN(newDuracion)) {
         const updatedTask = {
@@ -276,15 +250,14 @@ const DuracionColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDuracion(event.target.value);
   };
-  console.log("que es", task.parent);
 
-  if (task.type === "task") {
+  if (task.type === 'task') {
     return (
       <input
         type="number"
         className="bg-transparent w-full outline-none"
         style={{
-          color: "#0055ff",
+          color: '#0055ff',
         }}
         value={duracion}
         onChange={handleChange}
@@ -294,14 +267,9 @@ const DuracionColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
         }}
       />
     );
-  } else if (task.type === "project") {
+  } else if (task.type === 'project') {
     return (
-      <input
-        type="text"
-        disabled
-        className="bg-transparent w-full outline-none"
-        value={duracion}
-      />
+      <input type="text" disabled className="bg-transparent w-full outline-none" value={duracion} />
     );
   }
 
@@ -309,7 +277,7 @@ const DuracionColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
 };
 
 const PredecesorColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
-  if (task.type !== "empty") {
+  if (task.type !== 'empty') {
   }
 
   const [predecesor, setPredecesor] = useState(`${task.predecesor}`);
@@ -318,13 +286,9 @@ const PredecesorColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
     setPredecesor(`${task.predecesor}`);
   }, [task.numerador]);
 
-  const handleKeyDown = async (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (event.key === "Enter") {
-      console.log("ejecutando");
+  const handleKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
       const newPredecesor = Number(predecesor);
-      console.log("Predecesora : ", newPredecesor);
       if (!isNaN(newPredecesor)) {
         const updatedTask = {
           ...task,
@@ -332,7 +296,7 @@ const PredecesorColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
         };
 
         // Actualizar Gantt con la nueva tarea (simulación de la actualización)
-        console.log("Seref", updatedTask);
+
         GenerarDependenciaXNumerador(updatedTask, task.selectedEmpresa);
 
         setTimeout(() => {
@@ -352,7 +316,7 @@ const PredecesorColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
       type="text"
       className="bg-transparent w-full outline-none"
       style={{
-        color: "#000000",
+        color: '#000000',
       }}
       value={predecesor}
       onChange={handleChange}
@@ -365,8 +329,7 @@ const PredecesorColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
 };
 
 const ComandoColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
-  if (task.type !== "empty") {
-    console.log("Estas son las tareas", task.idProyecto);
+  if (task.type !== 'empty') {
   }
 
   const [comando, setComando] = useState(`${task.comando}`);
@@ -397,7 +360,7 @@ const ComandoColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
     setComando(event.target.value);
   };
 
-  if (task.type === "task") {
+  if (task.type === 'task') {
     return (
       <select
         defaultValue={comando}
@@ -413,22 +376,15 @@ const ComandoColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
         <option value="4">FF</option>
       </select>
     );
-  } else if (task.type === "project") {
-    return (
-      <input
-        type="text"
-        className="bg-transparent w-full outline-none"
-        disabled
-      />
-    );
+  } else if (task.type === 'project') {
+    return <input type="text" className="bg-transparent w-full outline-none" disabled />;
   }
 
   return null;
 };
 
 const CantidadColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
-  if (task.type !== "empty") {
-    console.log("Estas son las tareas", task.idProyecto);
+  if (task.type !== 'empty') {
   }
 
   const [cantidad, setCantidad] = useState(`${task.cantidad}`);
@@ -437,10 +393,8 @@ const CantidadColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
     setCantidad(`${task.cantidad}`);
   }, [task.cantidad]);
 
-  const handleKeyDown = async (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (event.key === "Enter") {
+  const handleKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
       const newCantidad = Number(cantidad);
       if (!isNaN(newCantidad)) {
         const updatedTask = {
@@ -463,14 +417,14 @@ const CantidadColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
     setCantidad(event.target.value);
   };
 
-  if (task.type === "task") {
+  if (task.type === 'task') {
     return (
       <input
         type="text"
         disabled
         className="bg-transparent w-full outline-none"
         style={{
-          color: "#000000",
+          color: '#000000',
         }}
         value={cantidad}
         onChange={handleChange}
@@ -481,33 +435,22 @@ const CantidadColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
       />
     );
   } else {
-    return (
-      <input
-        type="text"
-        disabled
-        className="bg-transparent w-full outline-none"
-      />
-    );
+    return <input type="text" disabled className="bg-transparent w-full outline-none" />;
   }
 };
 
 const DependenciasColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
-  if (task.type !== "empty") {
-    console.log("Estas son las tareas", task.idProyecto);
+  if (task.type !== 'empty') {
   }
 
-  const [cadenaDependencias, setCadenaDependencias] = useState(
-    `${task.cadenaDependencias}`
-  );
+  const [cadenaDependencias, setCadenaDependencias] = useState(`${task.cadenaDependencias}`);
 
   useEffect(() => {
     setCadenaDependencias(`${task.cadenaDependencias}`);
   }, [task.cadenaDependencias]);
 
-  const handleKeyDown = async (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (event.key === "Enter") {
+  const handleKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
       const newCadenaDependencias = Number(cadenaDependencias);
       if (!isNaN(newCadenaDependencias)) {
         const updatedTask = {
@@ -530,26 +473,20 @@ const DependenciasColumn: React.FC<ColumnProps> = ({ data: { task } }) => {
     setCadenaDependencias(event.target.value);
   };
 
-  if (task.type === "task") {
+  if (task.type === 'task') {
     return (
       <input
         type="text"
         disabled
         className="bg-transparent w-full outline-none"
         style={{
-          color: "#000000",
+          color: '#000000',
         }}
         value={cadenaDependencias}
       />
     );
   } else {
-    return (
-      <input
-        type="text"
-        disabled
-        className="bg-transparent w-full outline-none"
-      />
-    );
+    return <input type="text" disabled className="bg-transparent w-full outline-none" />;
   }
 };
 
@@ -558,11 +495,7 @@ const icons: Icons = {
   renderClosedIcon: () => (
     <>
       <div className="flex items-center">
-        <FontAwesomeIcon
-          icon={faChevronRight}
-          style={{ color: "#000000" }}
-          size="2xs"
-        />
+        <FontAwesomeIcon icon={faChevronRight} style={{ color: '#000000' }} size="2xs" />
       </div>
     </>
   ),
@@ -572,11 +505,7 @@ const icons: Icons = {
   renderOpenedIcon: () => (
     <>
       <div className="flex items-center">
-        <FontAwesomeIcon
-          icon={faChevronDown}
-          style={{ color: "#000000" }}
-          size="2xs"
-        />
+        <FontAwesomeIcon icon={faChevronDown} style={{ color: '#000000' }} size="2xs" />
       </div>
     </>
   ),
@@ -586,64 +515,64 @@ const columns: Column[] = [
   {
     component: NumeradorColumn,
     width: 41,
-    title: "#",
+    title: '#',
   },
   {
     component: CodigoColumn,
     width: 150,
-    title: "Código",
+    title: 'Código',
   },
   {
     component: CantidadColumn,
     width: 50,
-    title: "Cant.",
+    title: 'Cant.',
   },
   {
     component: ImporteColumn,
     width: 80,
-    title: "Importe",
+    title: 'Importe',
   },
   {
     component: DateStartColumn,
     width: 95,
-    title: "Inicio",
+    title: 'Inicio',
     canResize: true,
   },
   {
     component: DateEndColumn,
     width: 95,
-    title: "Fin",
+    title: 'Fin',
     canResize: true,
   },
   {
     component: DuracionColumn,
     width: 41,
-    title: "Dur",
+    title: 'Dur',
   },
   {
     component: ProgressColumn,
     width: 41,
-    title: "Pro%",
+    title: 'Pro%',
   },
   {
     component: ComandoColumn,
     width: 41,
-    title: "TR",
+    title: 'TR',
   },
   {
     component: DesfaseComandoColumn,
     width: 41,
-    title: "DD",
+    title: 'DD',
   },
   {
     component: PredecesorColumn,
     width: 41,
-    title: "Predecesor",
+    title: 'Predecesor',
   },
   {
     component: DependenciasColumn,
     width: 60,
-    title: "Depencencias",
+    title: 'Depencencias',
   },
 ];
 
@@ -657,12 +586,10 @@ type AppProps = {
 export const GanttComponent: React.FC<AppProps> = (props) => {
   const [actividades, setActividades] = useState<Task[]>([]);
 
-  console.log("Estas son la seleccion de empresa", props.selectedEmpresa);
   const getProgramaciones = async () => {
     GanttData(props.selectedEmpresa, props.selectedProyecto)
       .then((response) => {
         setActividades(response);
-        console.log("Estas son las actividades", response);
       })
       .catch((error) => {
         console.log(error);
@@ -671,28 +598,31 @@ export const GanttComponent: React.FC<AppProps> = (props) => {
 
   const [semanas, setSemanas] = useState<ImporteSemanalDTO[]>([]);
   const [semanasMDO, setSemanasMDO] = useState<ImporteSemanalDTO[]>([]);
-  const [semanasMaterial, setSemanasMaterial] = useState<ImporteSemanalDTO[]>(
-    []
-  );
+  const [semanasMaterial, setSemanasMaterial] = useState<ImporteSemanalDTO[]>([]);
   const [semanasEquipo, setSemanasEquipo] = useState<ImporteSemanalDTO[]>([]);
-  const [semanasHerramienta, setSemanasHerramienta] = useState<
-    ImporteSemanalDTO[]
-  >([]);
+  const [semanasHerramienta, setSemanasHerramienta] = useState<ImporteSemanalDTO[]>([]);
   const getImporteSemanal = async () => {
-    ImporteSemanalGanttData(props.selectedEmpresa, props.selectedProyecto)
-      .then((response) => {
-        setSemanas(response.semanas);
-        setSemanasMDO(response.semanasMDO);
-        setSemanasMaterial(response.semanasMaterial);
-        setSemanasEquipo(response.semanasEquipo);
-        setSemanasHerramienta(response.semanasHerramienta);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    console.log('getImporteSemanal()', props.selectedEmpresa, props.selectedProyecto);
+
+    try {
+      const response = await ImporteSemanalGanttData(props.selectedEmpresa, props.selectedProyecto);
+      console.log('ImporteSemanal data', response);
+      setSemanas(response?.semanas ?? []);
+      setSemanasMDO(response?.semanasMDO ?? []);
+      setSemanasMaterial(response?.semanasMaterial ?? []);
+      setSemanasEquipo(response?.semanasEquipo ?? []);
+      setSemanasHerramienta(response?.semanasHerramienta ?? []);
+    } catch (error) {
+      console.error('getImporteSemanal error', error);
+      setSemanas([]);
+      setSemanasMDO([]);
+      setSemanasMaterial([]);
+      setSemanasEquipo([]);
+      setSemanasHerramienta([]);
+    }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     getProgramaciones();
     getImporteSemanal();
   }, []);
@@ -715,8 +645,8 @@ export const GanttComponent: React.FC<AppProps> = (props) => {
       dependencies:
         actividad.dependencies?.map((dep) => ({
           sourceId: dep.sourceId,
-          sourceTarget: "endOfTask" as "endOfTask",
-          ownTarget: "startOfTask" as "startOfTask",
+          sourceTarget: 'endOfTask' as 'endOfTask',
+          ownTarget: 'startOfTask' as 'startOfTask',
           id: dep.id,
         })) || [],
       parent: actividad.parent,
@@ -731,116 +661,106 @@ export const GanttComponent: React.FC<AppProps> = (props) => {
     };
   });
 
-  const onChangeTasks = useCallback<OnChangeTasks>(
-    async (nextTasks, action) => {
-      console.log("Accion turbo", action);
-      console.log("cmabiando la tarea");
-      switch (action.type) {
-        case "delete_relation":
-          setActividades(
-            nextTasks.filter((task): task is Task => task.type !== "empty")
+  const onChangeTasks = useCallback<OnChangeTasks>(async (nextTasks, action) => {
+    switch (action.type) {
+      case 'delete_relation':
+        setActividades(nextTasks.filter((task): task is Task => task.type !== 'empty'));
+        if (action.payload.taskFrom.dependencies && action.payload.taskTo.dependencies) {
+          EliminarGantt(
+            action.payload.taskTo.dependencies,
+            action.payload.taskFrom.dependencies,
+            props.selectedEmpresa,
           );
-          if (
-            action.payload.taskFrom.dependencies &&
-            action.payload.taskTo.dependencies
-          ) {
-            EliminarGantt(
-              action.payload.taskTo.dependencies,
-              action.payload.taskFrom.dependencies,
-              props.selectedEmpresa
-            );
-          }
-          break;
+        }
+        break;
 
-        case "delete_task":
-          if (window.confirm("Are you sure?")) {
-            setActividades(
-              nextTasks.filter((task): task is Task => task.type !== "empty")
-            );
-          }
-          break;
-        case "progress_change":
-          setActividades(
-            nextTasks.filter((task): task is Task => task.type !== "empty")
-          );
+      case 'delete_task':
+        if (window.confirm('Are you sure?')) {
+          setActividades(nextTasks.filter((task): task is Task => task.type !== 'empty'));
+        }
+        break;
+      case 'progress_change':
+        setActividades(nextTasks.filter((task): task is Task => task.type !== 'empty'));
 
-          setTimeout(() => {
-            getImporteSemanal();
-            getProgramaciones();
-          }, 600);
-          break;
-        case "duration_change":
-          setActividades(
-            nextTasks.filter((task): task is Task => task.type !== "empty")
-          );
+        setTimeout(() => {
+          getImporteSemanal();
+          getProgramaciones();
+        }, 600);
+        break;
+      case 'duration_change':
+        setActividades(nextTasks.filter((task): task is Task => task.type !== 'empty'));
 
-          setTimeout(() => {
-            getImporteSemanal();
-            getProgramaciones();
-          }, 600);
-          break;
-        case "date_change":
-          setActividades(
-            nextTasks.filter((task): task is Task => task.type !== "empty")
-          );
-          setTimeout(() => {
-            getImporteSemanal();
-            getProgramaciones();
-          }, 600);
+        setTimeout(() => {
+          getImporteSemanal();
+          getProgramaciones();
+        }, 600);
+        break;
+      case 'date_change':
+        setActividades(nextTasks.filter((task): task is Task => task.type !== 'empty'));
+        setTimeout(() => {
+          getImporteSemanal();
+          getProgramaciones();
+        }, 600);
 
-          break;
+        break;
 
-        default:
-          nextTasks.forEach((task) => {
-            if (task.type !== "empty") {
-              if ((task.dependencies?.length ?? 0) > 0) {
-                task.dependencies?.forEach((dependencia) => {
-                  if (dependencia.id == null) {
-                    let registro: dependenciaProgramacionEstimadaDTO = {
-                      sourceId: dependencia.sourceId,
-                      sourceTarget: dependencia.sourceTarget,
-                      ownTarget: dependencia.ownTarget,
-                      id: "0",
-                      idProyecto: props.selectedProyecto,
-                      idProgramacionEstimadaGantt: Number(task.id),
-                    };
-                    GenerarDependencia(registro, props.selectedEmpresa);
-                  }
-                });
-              }
+      default:
+        nextTasks.forEach((task) => {
+          if (task.type !== 'empty') {
+            if ((task.dependencies?.length ?? 0) > 0) {
+              task.dependencies?.forEach((dependencia) => {
+                if (dependencia.id == null) {
+                  let registro: dependenciaProgramacionEstimadaDTO = {
+                    sourceId: dependencia.sourceId,
+                    sourceTarget: dependencia.sourceTarget,
+                    ownTarget: dependencia.ownTarget,
+                    id: '0',
+                    idProyecto: props.selectedProyecto,
+                    idProgramacionEstimadaGantt: Number(task.id),
+                  };
+                  GenerarDependencia(registro, props.selectedEmpresa);
+                }
+              });
             }
-          });
-          setActividades(
-            nextTasks.filter((task): task is Task => task.type !== "empty")
-          );
-          setTimeout(() => {
-            getProgramaciones();
-            getImporteSemanal();
-          }, 600);
-          break;
-      }
-    },
-    []
-  );
-
-  const handleDblClick = useCallback((task: Task) => {
-    alert("On Double Click event Id:" + task.id);
-  }, []);
-
-  const handleClick = useCallback((task: Task) => {
-    console.log("On Click event Id:" + task.id);
+          }
+        });
+        setActividades(nextTasks.filter((task): task is Task => task.type !== 'empty'));
+        setTimeout(() => {
+          getProgramaciones();
+          getImporteSemanal();
+        }, 600);
+        break;
+    }
   }, []);
 
   const [view, setView] = React.useState<ViewMode>(ViewMode.Day);
-  // console.log("Estas son las semanas", view);
+
   const [isChecked, setIsChecked] = React.useState(true);
   const [hiddenTable, setHiddenTable] = React.useState(false);
+  const [searchTerm, setSearchTerm] = React.useState('');
 
-  const onProgressChange = (
-    task: Task,
-    dependentTasks: readonly Task[],
-    taskIndex: number
-  ) => {
+  const filterChips = React.useMemo(
+    () => [
+      { id: 'progress', label: 'Progreso', placeholder: 'Todos' },
+      { id: 'date', label: 'Fecha', placeholder: 'Recientes' },
+      { id: 'priority', label: 'Prioridad', placeholder: 'Todas' },
+      { id: 'status', label: 'Estatus', placeholder: 'Todos' },
+    ],
+    [],
+  );
+
+  const periodLabelByView: Record<ViewMode, string> = {
+    [ViewMode.Hour]: 'Hora',
+    [ViewMode.QuarterDay]: 'Hoy',
+    [ViewMode.HalfDay]: 'Hoy',
+    [ViewMode.Day]: 'Hoy',
+    [ViewMode.Week]: 'Semana',
+    [ViewMode.Month]: 'Mes',
+    [ViewMode.Year]: 'Trimestre',
+  };
+  const periodLabel = periodLabelByView[view] ?? 'Hoy';
+
+  const onProgressChange = (task: Task, dependentTasks: readonly Task[], taskIndex: number) => {
     asignarProgresoGantt(task, props.selectedEmpresa);
   };
 
@@ -849,48 +769,80 @@ export const GanttComponent: React.FC<AppProps> = (props) => {
   };
 
   return (
-    <>
-      <DndProvider backend={HTML5Backend}>
-        <ViewSwitcher
-          onViewModeChange={(viewMode) => setView(viewMode)}
-          onViewListChange={setIsChecked}
-          isChecked={isChecked}
-          setHiddenTable={setHiddenTable}
-        />
+    <div className="gantt-page">
+      <div className="gantt-card">
+        <header className="gantt-card__header">
+          <div className="gantt-card__top">
+            <div className="gantt-card__top-switcher">
+              <ViewSwitcher
+                activeView={view}
+                onViewModeChange={(viewMode: ViewMode) => setView(viewMode)}
+                onViewListChange={setIsChecked}
+                isChecked={isChecked}
+                setHiddenTable={setHiddenTable}
+              />
+            </div>
+          </div>
+        </header>
 
-        <Gantt
-          onDateChange={onDateChange}
-          onProgressChange={onProgressChange}
-          // onEditTaskClick={onEditTask}
-          isShowCriticalPath
-          isRecountParentsOnChange={false}
-          isShowChildOutOfParentWarnings
-          {...props}
-          // onEditTask={onEditTask}
-          // onAddTask={onAddTask}
-          onChangeTasks={onChangeTasks}
-          // onDoubleClick={handleDblClick}
-          // onClick={handleClick}
-          icons={icons}
-          viewMode={view}
-          tasks={TasckDataMap}
-          columns={columns}
-          isChecked={isChecked}
-          isDeleteDependencyOnDoubleClick={true}
-        />
-        {view === ViewMode.Week && !hiddenTable && (
-          <TableBelow
-            importeSemanal={semanas}
-            semanasMDO={semanasMDO}
-            semanasMaterial={semanasMaterial}
-            semanasEquipo={semanasEquipo}
-            semanasHerramienta={semanasHerramienta}
-            onViewModeChange={(viewMode) => setView(viewMode)}
-            onViewListChange={setIsChecked}
-            isChecked={isChecked}
-          />
-        )}
-      </DndProvider>
-    </>
+        <div className="gantt-card__body">
+          <div className="gantt-card__toolbar gantt-card__toolbar--bottom">
+            <div className="gantt-search">
+              <FontAwesomeIcon icon={faMagnifyingGlass} />
+              <input
+                type="text"
+                placeholder="Buscar"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+              />
+            </div>
+            <div className="gantt-filters">
+              {filterChips.map((chip) => (
+                <button key={chip.id} type="button" className="gantt-filter-chip">
+                  <span className="gantt-filter-chip__label">{chip.label}</span>
+                  <span className="gantt-filter-chip__value">{chip.placeholder}</span>
+                  <FontAwesomeIcon icon={faChevronDown} className="gantt-filter-chip__icon" />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <DndProvider backend={HTML5Backend}>
+            <Gantt
+              onDateChange={onDateChange}
+              onProgressChange={onProgressChange}
+              // onEditTaskClick={onEditTask}
+              isShowCriticalPath
+              isRecountParentsOnChange={false}
+              isShowChildOutOfParentWarnings
+              {...props}
+              // onEditTask={onEditTask}
+              // onAddTask={onAddTask}
+              onChangeTasks={onChangeTasks}
+              // onDoubleClick={handleDblClick}
+              // onClick={handleClick}
+              icons={icons}
+              viewMode={view}
+              tasks={TasckDataMap}
+              columns={columns}
+              isChecked={isChecked}
+              isDeleteDependencyOnDoubleClick={true}
+            />
+            {view === ViewMode.Week && !hiddenTable && (
+              <TableBelow
+                importeSemanal={semanas}
+                semanasMDO={semanasMDO}
+                semanasMaterial={semanasMaterial}
+                semanasEquipo={semanasEquipo}
+                semanasHerramienta={semanasHerramienta}
+                onViewModeChange={(viewMode) => setView(viewMode)}
+                onViewListChange={setIsChecked}
+                isChecked={isChecked}
+              />
+            )}
+          </DndProvider>
+        </div>
+      </div>
+    </div>
   );
 };

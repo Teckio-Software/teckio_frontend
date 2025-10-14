@@ -290,6 +290,8 @@ const EditarColumnwhitInput: React.FC<{ data: ColumnData }> = ({ data }) => {
       onMouseDown={onRootMouseDown}
       style={{
         height: fullRowHeight,
+        width: '100%',
+        flexShrink: 0,
         backgroundColor: isSelected
           ? colors.selectedTaskBackgroundColor
           : isEven
@@ -315,6 +317,7 @@ const EditarColumnwhitInput: React.FC<{ data: ColumnData }> = ({ data }) => {
             style={{
               minWidth: columnWidth,
               maxWidth: columnWidth,
+              flexBasis: columnWidth,
             }}
             key={index}
           >
