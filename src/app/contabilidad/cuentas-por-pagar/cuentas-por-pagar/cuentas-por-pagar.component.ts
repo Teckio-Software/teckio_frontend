@@ -1,20 +1,18 @@
-import { id } from 'date-fns/locale';
 import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { VentasService } from 'src/app/gestion-ventas/ventas/ventas.service';
-import { SeguridadService } from 'src/app/seguridad/seguridad.service';
-import { FacturaXOrdenVentaDTO, OrdenVentaDTO, OrdenVentaFacturasDTO } from 'src/app/gestion-ventas/ventas/ordenVenta';
-import { OrdenCompraFacturasDTO } from 'src/app/compras/orden-compra/tsOrdenCompra';
 import { MatDialog } from '@angular/material/dialog';
-import { AlertaTipo } from 'src/app/utilidades/alert/alert.component';
+import { OrdenCompraService } from 'src/app/compras/orden-compra/orden-compra.service';
+import { FacturaXOrdenCompraDTO, ordenCompraDTO, OrdenCompraFacturasDTO } from 'src/app/compras/orden-compra/tsOrdenCompra';
 import { FacturaDetalleDTO } from 'src/app/facturacionTeckio/facturas';
+import { SeguridadService } from 'src/app/seguridad/seguridad.service';
+import { AlertaTipo } from 'src/app/utilidades/alert/alert.component';
 
 @Component({
-  selector: 'app-cuentas-por-cobrar',
-  templateUrl: './cuentas-por-cobrar.component.html',
-  styleUrls: ['./cuentas-por-cobrar.component.css'],
+  selector: 'app-cuentas-por-pagar',
+  templateUrl: './cuentas-por-pagar.component.html',
+  styleUrls: ['./cuentas-por-pagar.component.css']
 })
-export class CuentasPorCobrarComponent {
-  @ViewChild('dialogNuevaFactura', { static: true })
+export class CuentasPorPagarComponent {
+@ViewChild('dialogNuevaFactura', { static: true })
     dialogCargaFactura!: TemplateRef<any>;
 
   selectedEmpresa : number = 0;
@@ -22,22 +20,20 @@ export class CuentasPorCobrarComponent {
   crearCuenta: boolean = false;
   verCuenta: boolean = false;
   cerrar: boolean = false;
-  IdCliente : number = 0;
-  IdOrdenVentaSeleccionada : number = 0;
 
-  ordenesVentasPorCobrar : OrdenVentaDTO[] = [];
-  ordenesVentasPorCobrarReset : OrdenVentaDTO[] = [];
+  ordenesCompraPorPagar : ordenCompraDTO[] = [];
+  ordenesCompraPorPagarReset : ordenCompraDTO[] = [];
 
-  ordenVentaFacturas : OrdenVentaFacturasDTO = {
-    idOrdenVenta: 0,
-    montoTotalOrdenVenta: 0,
+  ordenCompraFacturas : OrdenCompraFacturasDTO = {
+    idOrdenCompra: 0,
+    montoTotalOrdenCompra: 0,
     montoTotalFactura: 0,
     estatusSaldado: 0,
-    facturasXOrdenVenta: []
+    facturasXOrdenCompra: []
   }
   archivosCargarFacturas: FileList | null = null;
-  idOrdenVenta: number = 0;
-    detalleFacturaXOV: FacturaDetalleDTO[] = [];
+  IdOrdenCompra: number = 0;
+  detalleFacturaXOC: FacturaDetalleDTO[] = [];
 
 
   alertaSuccess: boolean = false;
@@ -48,17 +44,20 @@ export class CuentasPorCobrarComponent {
     fechaInicio: string = '';
   fechaFin: string = '';
   filtroEstatus: string = '';
-  clienteRazonSocial: string = '';
+  proveedorRazonSocial: string = '';
 
-  listaClientes: string[] = [];
-  listaClientesReset: string[] = [];
-  mostrarListaCliente : boolean = false;
+  listaProveedores: string[] = [];
+  listaProveedoresReset: string[] = [];
+  mostrarListaProveedor : boolean = false;
 
   mostrarFormularioMovimientoBancario : boolean = false;
+  IdProveedor : number = 0;
+  IdOrdenCompraSeleccionada : number = 0;
+
 
   constructor(
     private _seguridadService: SeguridadService,
-    private _OrdenVentaService : VentasService,
+    private _OrdenCompraService : OrdenCompraService,
         private dialog: MatDialog
   ) {
     let idEmpresa = _seguridadService.obtenIdEmpresaLocalStorage();
@@ -72,14 +71,14 @@ export class CuentasPorCobrarComponent {
   }
 
   cargarOrdenesXCobrar(){
-    this._OrdenVentaService.ObtenerTodasSinPagar(this.selectedEmpresa).subscribe((datos) => {
-      this.ordenesVentasPorCobrar = datos;
-      this.ordenesVentasPorCobrarReset = datos;
-      this.listaClientes = [
-          ...new Set(this.ordenesVentasPorCobrar.map((z) => z.razonSocialCliente)),
+    this._OrdenCompraService.ObtenerTodasSinPagar(this.selectedEmpresa).subscribe((datos) => {
+      this.ordenesCompraPorPagar = datos;
+      this.ordenesCompraPorPagarReset = datos;
+      this.listaProveedores = [
+          ...new Set(this.ordenesCompraPorPagar.map((z) => z.razonSocial)),
         ];
-        this.listaClientesReset = [
-          ...new Set(this.ordenesVentasPorCobrar.map((z) => z.razonSocialCliente)),
+        this.listaProveedoresReset = [
+          ...new Set(this.ordenesCompraPorPagar.map((z) => z.razonSocial)),
         ];
     });
   }
@@ -93,10 +92,10 @@ export class CuentasPorCobrarComponent {
     this.verCuenta = true;
   }
 
-  nuevaFacturaOrdenVenta(IdOrdenVenta: number) {
-    this.idOrdenVenta = IdOrdenVenta;
-    this._OrdenVentaService.ObtenerFacturasXOrdenVenta(this.selectedEmpresa, IdOrdenVenta).subscribe((datos) => {
-      this.ordenVentaFacturas = datos;
+  nuevaFacturaOrdenCompra(IdOrdenCompra: number) {
+    this.IdOrdenCompra = IdOrdenCompra;
+    this._OrdenCompraService.ObtenerFacturasXOrdenCompra(this.selectedEmpresa, IdOrdenCompra).subscribe((datos) => {
+      this.ordenCompraFacturas = datos;
       });
 
     this.dialog.open(this.dialogCargaFactura, {
@@ -107,22 +106,22 @@ export class CuentasPorCobrarComponent {
 
   cargarFactura() {
       if (this.archivosCargarFacturas) {
-        this._OrdenVentaService
-          .cargarFacturasXOrdenVenta(
+        this._OrdenCompraService
+          .cargarFacturasXOrdenCompra(
             this.archivosCargarFacturas,
             this.selectedEmpresa,
-            this.idOrdenVenta
+            this.IdOrdenCompra
           )
           .subscribe((datos) => {
             if (datos.estatus) {
               this.alerta(AlertaTipo.save, datos.descripcion);
-              this._OrdenVentaService
-                .ObtenerFacturasXOrdenVenta(
+              this._OrdenCompraService
+                .ObtenerFacturasXOrdenCompra(
                   this.selectedEmpresa,
-                  this.idOrdenVenta
+                  this.IdOrdenCompra
                 )
                 .subscribe((datos) => {
-                  this.ordenVentaFacturas = datos;
+                  this.ordenCompraFacturas = datos;
                 });
             } else {
               this.alerta(AlertaTipo.error, datos.descripcion);
@@ -168,47 +167,47 @@ export class CuentasPorCobrarComponent {
     this.alertaMessage = '';
   }
 
-  autorizarFactura(facturaOV: FacturaXOrdenVentaDTO) {
-      this._OrdenVentaService
-        .AutorizarFacturaXOrdenVenta(this.selectedEmpresa, facturaOV)
+  autorizarFactura(facturaOC: FacturaXOrdenCompraDTO) {
+      this._OrdenCompraService
+        .AutorizarFacturaXOrdenCompra(this.selectedEmpresa, facturaOC)
         .subscribe((datos) => {
           if (datos.estatus) {
-            this._OrdenVentaService
-              .ObtenerFacturasXOrdenVenta(
+            this._OrdenCompraService
+              .ObtenerFacturasXOrdenCompra(
                 this.selectedEmpresa,
-                this.idOrdenVenta
+                this.IdOrdenCompra
               )
               .subscribe((datos) => {
-                this.ordenVentaFacturas = datos;
+                this.ordenCompraFacturas = datos;
               });
           }
         });
     }
 
-    cancelarFactura(facturaOV: FacturaXOrdenVentaDTO) {
-      this._OrdenVentaService
-        .CancelarFacturaXOrdenVenta(this.selectedEmpresa, facturaOV)
+    cancelarFactura(facturaOC: FacturaXOrdenCompraDTO) {
+      this._OrdenCompraService
+        .CancelarFacturaXOrdenCompra(this.selectedEmpresa, facturaOC)
         .subscribe((datos) => {
           if (datos.estatus) {
-            this._OrdenVentaService
-              .ObtenerFacturasXOrdenVenta(
+            this._OrdenCompraService
+              .ObtenerFacturasXOrdenCompra(
                 this.selectedEmpresa,
-                this.idOrdenVenta
+                this.IdOrdenCompra
               )
               .subscribe((datos) => {
-                this.ordenVentaFacturas = datos;
+                this.ordenCompraFacturas = datos;
               });
           }
         });
     }
 
-    facturaDetalleSelected(factura: FacturaXOrdenVentaDTO) {
+    facturaDetalleSelected(factura: FacturaXOrdenCompraDTO) {
         // Si ya está seleccionado, lo deseleccionamos (cerramos la tabla)
-        if (this.detalleFacturaXOV === factura.detalleFactura) {
-          this.detalleFacturaXOV = [];
+        if (this.detalleFacturaXOC === factura.detalleFactura) {
+          this.detalleFacturaXOC = [];
         } else {
           // Si es otro o aún no hay ninguno seleccionado, lo mostramos
-          this.detalleFacturaXOV = factura.detalleFactura;
+          this.detalleFacturaXOC = factura.detalleFactura;
         }
       }
 
@@ -219,22 +218,22 @@ export class CuentasPorCobrarComponent {
   }
 
   filtrarTablaOrdenesVentaPorCobrar() {
-    this.ordenesVentasPorCobrar = this.ordenesVentasPorCobrarReset;
+    this.ordenesCompraPorPagar = this.ordenesCompraPorPagarReset;
     if (
       this.filtroEstatus != undefined &&
       this.filtroEstatus != null &&
       this.filtroEstatus != ''
     ) {
-      this.ordenesVentasPorCobrar = this.ordenesVentasPorCobrar.filter(
+      this.ordenesCompraPorPagar = this.ordenesCompraPorPagar.filter(
         (z) => z.estatusSaldado == Number(this.filtroEstatus)
       );
     }
-    if (this.clienteRazonSocial != '') {
-      console.log("con la razon social", this.clienteRazonSocial);
-      this.ordenesVentasPorCobrar = this.ordenesVentasPorCobrar.filter((z) =>
-        z.razonSocialCliente
+    if (this.proveedorRazonSocial != '') {
+      console.log("con la razon social", this.proveedorRazonSocial);
+      this.ordenesCompraPorPagar = this.ordenesCompraPorPagar.filter((z) =>
+        z.razonSocial
           .toLocaleLowerCase()
-          .includes(this.clienteRazonSocial.toLocaleLowerCase())
+          .includes(this.proveedorRazonSocial.toLocaleLowerCase())
       );
     }
 
@@ -246,7 +245,7 @@ export class CuentasPorCobrarComponent {
     if (start) start.setHours(0, 0, 0, 0);
     if (end) end.setHours(23, 59, 59, 999);
 
-    this.ordenesVentasPorCobrar = this.ordenesVentasPorCobrar.filter((z) => {
+    this.ordenesCompraPorPagar = this.ordenesCompraPorPagar.filter((z) => {
       const d = this.toDate(z.fechaRegistro);
       if (!d) return false;
       return (!start || d >= start) && (!end || d <= end);
@@ -264,40 +263,40 @@ export class CuentasPorCobrarComponent {
     return new Date(y, m - 1, d); // ← local, sin saltos por zona
   }
 
-  filtrarCliente(event: Event) {
+  filtrarProveedor(event: Event) {
     const filterValue = (
       event.target as HTMLInputElement
     ).value.toLocaleLowerCase();
-    this.clienteRazonSocial = filterValue;
-    this.listaClientes = this.listaClientesReset.filter((z) =>
+    this.proveedorRazonSocial = filterValue;
+    this.listaProveedores = this.listaProveedoresReset.filter((z) =>
       z.toLocaleLowerCase().includes(filterValue)
     );
     this.filtrarTablaOrdenesVentaPorCobrar();
   }
 
-  seleccionarCliente(cliente: string) {
-    this.clienteRazonSocial = cliente;
-    this.mostrarListaCliente = false;
+  seleccionarProveedor(Proveedor: string) {
+    this.proveedorRazonSocial = Proveedor;
+    this.mostrarListaProveedor = false;
     this.filtrarTablaOrdenesVentaPorCobrar();
   }
 
   limpiarFiltros() {
-    this.clienteRazonSocial = '';
+    this.proveedorRazonSocial = '';
     this.filtroEstatus = '';
     this.fechaInicio = '';
     this.fechaFin = '';
     this.filtrarTablaOrdenesVentaPorCobrar();
   }
 
-  abrirModalMovimientoBancario(orden : OrdenVentaDTO): void {
-    this.IdOrdenVentaSeleccionada  = orden.id;
-    this.IdCliente = orden.idCliente;
-    this.mostrarFormularioMovimientoBancario = true;
-  }
+  abrirModalMovimientoBancario(orden : ordenCompraDTO): void {
+      this.IdOrdenCompraSeleccionada  = orden.id;
+      this.IdProveedor = orden.idContratista;
+      this.mostrarFormularioMovimientoBancario = true;
+    }
 
-  cerrarFormularioNuevoMovimiento(recargar = false) {
-    this.cargarOrdenesXCobrar();
-    this.mostrarFormularioMovimientoBancario = false;
+    cerrarFormularioNuevoMovimiento(recargar = false) {
+      this.cargarOrdenesXCobrar();
+      this.mostrarFormularioMovimientoBancario = false;
 
-  }
+    }
 }

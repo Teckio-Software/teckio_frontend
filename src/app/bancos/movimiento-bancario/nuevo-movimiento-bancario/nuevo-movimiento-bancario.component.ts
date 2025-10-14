@@ -1,4 +1,4 @@
-import { es } from 'date-fns/locale';
+import { es, th } from 'date-fns/locale';
 import {
   Component,
   EventEmitter,
@@ -33,6 +33,12 @@ import { FacturaXOrdenVentaDTO, OrdenVentaDTO } from 'src/app/gestion-ventas/ven
 export class NuevoMovimientoBancarioComponent implements OnInit, OnChanges {
   @Input() empresaId?: number;
   @Input() cuentaBancariaEmpresaId?: number;
+  @Input() idCliente: number = 0;
+  @Input() idOrdenVenta: number = 0;
+  @Input() idProveedor: number = 0;
+  @Input() idOrdenCompra: number = 0;
+
+
   @Output() closed = new EventEmitter<boolean>();
 
   movimientoBancario: MovimientoBancarioTeckioDTO = this.crearMovimientoInicial();
@@ -47,6 +53,7 @@ export class NuevoMovimientoBancarioComponent implements OnInit, OnChanges {
   private modalData?: { idEmpresa: number; idCeuntaBancariaEmpresa: number };
   private empresaContextoId = 0;
   private cuentaBancariaEmpresaContextoId = 0;
+  cuentaBE: CuentaBancariaBaseDTO[] = [];
 
   constructor(
     @Optional() private dialogRef: MatDialogRef<NuevoMovimientoBancarioComponent>,
@@ -69,13 +76,78 @@ export class NuevoMovimientoBancarioComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.dialogRef?.updateSize('80%');
+    console.log("esto es lo que se rcibe", this.cuentaBancariaEmpresaId);
     this.establecerContexto();
+    if(this.idCliente != 0 || this.idProveedor != 0){
+      this._CuentaBancariaEmpresa.ObtenerTodos(this.empresaContextoId).subscribe((datos) => {
+        this.cuentaBE = datos;
+    });
+    }
+    if(this.idCliente != 0){
+      this.tipoBeneficiario = 2;
+      this._ClientesService.obtenerTodos(this.empresaContextoId).subscribe((datos) => {
+          this.beneficiario = datos;
+        });
+      this.movimientoBancario.idBeneficiario = this.idCliente;
+      this.movimientoBancario.tipoBeneficiario = 2;
+      this._CuentasBancariasCleintes
+          .ObtenerXIdCliente(this.empresaContextoId, this.idCliente)
+          .subscribe((datos) => {
+            this.cuentaB = datos;
+          });
+
+          this._OrdenVentaService.ObtenerXIdClienteSinPagar(this.empresaContextoId, this.idCliente).subscribe((datos) => {
+            console.log("esta son las ordenes de venta", datos);
+          this.OrdenesVentaPorPagar = datos;
+          this.OrdenesVentaPorPagar = this.OrdenesVentaPorPagar.filter((z) => z.id == this.idOrdenVenta);
+          this.movimientoBancario.ordenVentas = this.OrdenesVentaPorPagar;
+          console.log("estas son las ordenes de venta", this.OrdenesVentaPorPagar);
+        });
+        this._OrdenVentaService.ObtenerFacturasXIdClienteSinPagar(this.empresaContextoId, this.idCliente).subscribe((datos) => {
+
+          this.FacturaXOrdenVentaPorPagar = datos;
+          this.FacturaXOrdenVentaPorPagar = this.FacturaXOrdenVentaPorPagar.filter((z) => z.idOrdenVenta == this.idOrdenVenta);
+          this.movimientoBancario.facturasXOrdenVenta = this.FacturaXOrdenVentaPorPagar;
+        })
+    }
+    if(this.idProveedor != 0){
+      console.log("entro al proveedor", this.idProveedor);
+      this.tipoBeneficiario = 1;
+      this._ProveedoresService.obtenerTodos(this.empresaContextoId).subscribe((datos) => {
+          this.beneficiario = datos;
+        });
+        this.movimientoBancario.idBeneficiario = this.idProveedor;
+      this.movimientoBancario.tipoBeneficiario = 1;
+      this._CuentasBancariasProveedores
+          .ObtenerXIdContratista(this.empresaContextoId, this.idProveedor)
+          .subscribe((datos) => {
+            this.cuentaB = datos;
+          });
+        this._OrdenCompraService
+          .ObtenerXIdContratistaSinPagar(this.empresaContextoId, this.idProveedor)
+          .subscribe((datos) => {
+            this.OrdenesCompraPorPagar = datos;
+            this.OrdenesCompraPorPagar = this.OrdenesCompraPorPagar.filter((z) => z.id == this.idOrdenCompra);
+            this.movimientoBancario.ordenCompras = this.OrdenesCompraPorPagar;
+            console.log("esta son las facturas de ordenes de venta", this.OrdenesCompraPorPagar);
+
+          });
+        this._OrdenCompraService
+          .ObtenerFacturasXIdContratistaSinPagar(this.empresaContextoId, this.idProveedor)
+          .subscribe((datos) => {
+            this.FacturaXOrdenCompraPorPagar = datos;
+            this.FacturaXOrdenCompraPorPagar = this.FacturaXOrdenCompraPorPagar.filter((z) => z.idOrdenCompra == this.idOrdenCompra);
+            this.movimientoBancario.facturasXOrdenCompra = this.FacturaXOrdenCompraPorPagar;
+          });
+    }
   }
 
   private establecerContexto() {
     this.empresaContextoId = this.empresaId ?? this.modalData?.idEmpresa ?? 0;
     this.cuentaBancariaEmpresaContextoId =
       this.cuentaBancariaEmpresaId ?? this.modalData?.idCeuntaBancariaEmpresa ?? 0;
+
+      this.movimientoBancario.idCuentaBancariaEmpresa = this.cuentaBancariaEmpresaContextoId;
   }
 
   private crearMovimientoInicial(): MovimientoBancarioTeckioDTO {
@@ -214,6 +286,7 @@ export class NuevoMovimientoBancarioComponent implements OnInit, OnChanges {
           .subscribe((datos) => {
             this.OrdenesCompraPorPagar = datos;
             this.movimientoBancario.ordenCompras = datos;
+            console.log("esta son las facturas de ordenes de venta", this.OrdenesCompraPorPagar);
           });
         this._OrdenCompraService
           .ObtenerFacturasXIdContratistaSinPagar(this.empresaContextoId, valorSeleccion)
@@ -253,7 +326,7 @@ export class NuevoMovimientoBancarioComponent implements OnInit, OnChanges {
   }
 
   guardarMovimientoBancario() {
-    if (!this.empresaContextoId || !this.cuentaBancariaEmpresaContextoId) {
+    if (!this.movimientoBancario.idCuentaBancariaEmpresa) {
       Swal.fire({
         title: 'Error',
         text: 'Selecciona una cuenta bancaria de empresa antes de guardar.',
@@ -262,7 +335,6 @@ export class NuevoMovimientoBancarioComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.movimientoBancario.idCuentaBancariaEmpresa = this.cuentaBancariaEmpresaContextoId;
     this.movimientoBancario.beneficiario = '';
     this.movimientoBancario.descripcionEstatus = '';
     this.movimientoBancario.descripcionModalidad = '';

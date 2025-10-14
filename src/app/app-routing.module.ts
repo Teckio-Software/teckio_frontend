@@ -411,6 +411,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'cuentas-por-pagar',
+    loadChildren: () =>
+      import(`./contabilidad/cuentas-por-pagar/cuentas-por-pagar/cuentas-por-pagar.module`).then(
+        (module) => module.CuentasPorPagarModule,
+      ),
+  },
+  {
     path: 'imagenes',
     loadChildren: () =>
       import(`./seguridad/imagenes/imagenes.module`).then((module) => module.ImagenesModule),

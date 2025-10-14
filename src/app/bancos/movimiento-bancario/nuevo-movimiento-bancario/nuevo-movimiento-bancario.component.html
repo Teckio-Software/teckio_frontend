@@ -8,6 +8,20 @@
     Regresar
   </button>
   <div class="bg-white rounded-lg shadow-sm p-4">
+    <div class="mb-3" *ngIf="idCliente != 0 || idProveedor != 0">
+      <label class="block text-sm font-medium text-gray-700" for="almacen">Cuenta bancaria empresa</label>
+      <select
+        class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        [(ngModel)]="movimientoBancario.idCuentaBancariaEmpresa"
+      >
+        <option class="text-gray-700" [ngValue]="0" disabled hidden>
+          Selecciona una cuenta bancaria de empresa..
+        </option>
+        <option [ngValue]="cbe.id" *ngFor="let cbe of cuentaBE">
+          {{ cbe.numeroCuenta + '(' + cbe.nombreBanco + ')' }}
+        </option>
+      </select>
+    </div>
     <div class="mb-3">
       <label class="block text-sm font-medium text-gray-700" for="almacen"
         >Tipo de beneficiario</label
@@ -16,6 +30,7 @@
         class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         [(ngModel)]="movimientoBancario.tipoBeneficiario"
         (ngModelChange)="onTipoBeneficiarioChange($event)"
+        [disabled]="idCliente != 0 || idProveedor != 0"
       >
         <option [ngValue]="0" class="text-gray-700" disabled hidden>Selecciona un tipo..</option>
         <option [ngValue]="1">Proveedor</option>
@@ -30,6 +45,7 @@
         class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         [(ngModel)]="movimientoBancario.idBeneficiario"
         (ngModelChange)="onBeneficiarioChange($event)"
+        [disabled]="idCliente != 0 || idProveedor != 0"
       >
         <option class="text-gray-700" [ngValue]="0" disabled hidden>
           Selecciona un beneficiario..

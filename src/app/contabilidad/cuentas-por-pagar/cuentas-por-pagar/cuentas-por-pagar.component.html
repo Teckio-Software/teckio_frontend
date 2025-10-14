@@ -1,5 +1,5 @@
 <ng-container *ngIf="!mostrarFormularioMovimientoBancario; else nuevoMovimiento">
-<section class="p-2">
+  <section class="p-2">
   <div class="bg-white rounded-md w-full" *ngIf="!crearCuenta && !verCuenta">
     <div class="flex items-center gap-3 px-3 py-2 ">
       <div class="relative">
@@ -12,24 +12,24 @@
           class="w-64 pl-8 pr-2 py-2 bg-gris border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black"
           id="cuenta"
           name="cuenta"
-          placeholder="Seleccione un cliente"
+          placeholder="Seleccione un Proveedor"
           autocomplete="off"
-          (input)="filtrarCliente($event)"
-          (click)="mostrarListaCliente = !mostrarListaCliente"
-          [(ngModel)]="clienteRazonSocial"
+          (input)="filtrarProveedor($event)"
+          (click)="mostrarListaProveedor = !mostrarListaProveedor"
+          [(ngModel)]="proveedorRazonSocial"
         />
-          <div *ngIf="mostrarListaCliente">
+          <div *ngIf="mostrarListaProveedor">
                     <cdk-virtual-scroll-viewport
                       itemSize="36"
                       class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-[300px] h-36 overflow-auto shadow-lg"
                     >
                       <div
-                        *cdkVirtualFor="let cliente of listaClientes"
-                        (click)="seleccionarCliente(cliente)"
+                        *cdkVirtualFor="let proveedor of listaProveedores"
+                        (click)="seleccionarProveedor(proveedor)"
                         class="px-4 py-2 cursor-pointer hover:bg-gray-100"
                         style="height: 36px; box-sizing: border-box"
                       >
-                        {{ cliente }}
+                        {{ proveedor }}
                       </div>
                     </cdk-virtual-scroll-viewport>
                   </div>
@@ -67,8 +67,8 @@
 
     <table class="w-full mt-4 text-center">
       <thead class="text-center bg-[#f9fafb]">
-        <th class="py-3 font-medium">No. Orden de venta</th>
-        <th class="py-3 font-medium">Cliente</th>
+        <th class="py-3 font-medium">No. Orden de compra</th>
+        <th class="py-3 font-medium">Proveedor</th>
         <th class="py-3 font-medium">Monto total</th>
         <th class="py-3 font-medium">Monto pagado</th>
         <th class="py-3 font-medium">Saldo pendiente</th>
@@ -77,25 +77,25 @@
         <th class="py-3 font-medium">Acciones</th>
       </thead>
       <tbody class="divide-y divide-gray300">
-        <tr class="font-medium text-gray700 hover:bg-gris animation duration-200 xs:text-[8px]" *ngFor="let ov of ordenesVentasPorCobrar">
-          <td class="py-4">{{ov.numeroOrdenVenta}}</td>
-          <td class="py-4">{{ov.razonSocialCliente}}</td>
-          <td class="py-4">{{ov.importeTotal | currency}}</td>
-          <td class="py-4">{{ (ov.importeTotal - ov.saldo) | currency }}</td>
-          <td class="py-4">{{ov.saldo | currency}}</td>
-          <td class="py-4">{{ov.fechaRegistro | date : "dd/MM/yyyy"}}</td>
+        <tr class="font-medium text-gray700 hover:bg-gris animation duration-200 xs:text-[8px]" *ngFor="let oc of ordenesCompraPorPagar">
+          <td class="py-4">{{oc.noOrdenCompra}}</td>
+          <td class="py-4">{{oc.razonSocial}}</td>
+          <td class="py-4">{{oc.importeTotal| currency}}</td>
+          <td class="py-4">{{ (oc.importeTotal - oc.saldo) | currency }}</td>
+          <td class="py-4">{{oc.saldo | currency}}</td>
+          <td class="py-4">{{oc.fechaRegistro | date : "dd/MM/yyyy"}}</td>
           <td class="py-4">
             <div class="flex justify-center">
               <div
                     class="bg-amber50 rounded-lg w-28 h-5"
-                    *ngIf="ov.estatusSaldado === 1"
+                    *ngIf="oc.estatusSaldado === 1"
                   >
                     <p class="text-amber500 text-center">Pendiente</p>
                   </div>
                   <div
                     class="bg-blue100 rounded-lg w-48 h-5"
                     *ngIf="
-                      ov.estatusSaldado === 2
+                      oc.estatusSaldado === 2
                     "
                   >
                     <p class="text-blue600 text-center">Saldado parcialmente</p>
@@ -103,7 +103,7 @@
                   <div
                     class="bg-green100 rounded-lg w-48 h-5"
                     *ngIf="
-                      ov.estatusSaldado === 3
+                      oc.estatusSaldado === 3
                     "
                   >
                     <p class="text-green600 text-center">Saldado totalmente</p>
@@ -119,10 +119,10 @@
                       class="cursor-pointer mx-auto xs:w-4"
                       src="./assets/upload_file.svg"
                       alt="Cargar facturas"
-                      (click)="nuevaFacturaOrdenVenta(ov.id)"
+                      (click)="nuevaFacturaOrdenCompra(oc.id)"
                     />
                   </div>
-                  <button (click)="abrirModalMovimientoBancario(ov)">
+                  <button (click)="abrirModalMovimientoBancario(oc)">
                 <img src="./assets/arrow-right-solid-full.svg" alt="Botón de ver" class="w-5" />
               </button>
             </div>
@@ -207,17 +207,17 @@
                             class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
                           >
                             <td class="px-1 py-[2px]" scope="col">
-                              {{ ordenVentaFacturas.montoTotalOrdenVenta }}
+                              {{ ordenCompraFacturas.montoTotalOrdenCompra }}
                             </td>
                             <td class="px-1 py-[2px]" scope="col">
-                              {{ ordenVentaFacturas.montoTotalFactura }}
+                              {{ ordenCompraFacturas.montoTotalFactura }}
                             </td>
                             <td class="px-1 py-[2px]" scope="col">
                               <div class="flex justify-center h-full">
                                 <div
                                   class="bg-blue100 rounded-lg w-28 h-5"
                                   *ngIf="
-                                    ordenVentaFacturas.estatusSaldado === 1
+                                    ordenCompraFacturas.estatusSaldado === 1
                                   "
                                 >
                                   <p class="text-blue600 text-center">
@@ -227,7 +227,7 @@
                                 <div
                                   class="bg-blue100 rounded-lg w-28 h-5"
                                   *ngIf="
-                                    ordenVentaFacturas.estatusSaldado === 1
+                                    ordenCompraFacturas.estatusSaldado === 1
                                   "
                                 >
                                   <p class="text-blue600 text-center">
@@ -237,7 +237,7 @@
                                 <div
                                   class="bg-green100 rounded-lg w-28 h-5"
                                   *ngIf="
-                                    ordenVentaFacturas.estatusSaldado === 2
+                                    ordenCompraFacturas.estatusSaldado === 2
                                   "
                                 >
                                   <p class="text-green600 text-center">
@@ -247,7 +247,7 @@
                                 <div
                                   class="bg-green100 rounded-lg w-28 h-5"
                                   *ngIf="
-                                    ordenVentaFacturas.estatusSaldado === 3
+                                    ordenCompraFacturas.estatusSaldado === 3
                                   "
                                 >
                                   <p class="text-green600 text-center">
@@ -285,7 +285,7 @@
                         <tbody class="divide-y divide-gray300">
                           <ng-container
                             *ngFor="
-                              let fxov of ordenVentaFacturas.facturasXOrdenVenta
+                              let fxoc of ordenCompraFacturas.facturasXOrdenCompra
                             "
                           >
                             <tr
@@ -294,22 +294,22 @@
                               <td
                                 class="px-1 py-[2px]"
                                 scope="col"
-                                (click)="facturaDetalleSelected(fxov)"
+                                (click)="facturaDetalleSelected(fxoc)"
                               >
-                                {{ fxov.uuid }}
+                                {{ fxoc.uuid }}
                               </td>
                               <td class="px-1 py-[2px]" scope="col">
-                                {{ fxov.fechaEmision }}
+                                {{ fxoc.fechaEmision }}
                               </td>
                               <td class="px-1 py-[2px]" scope="col">
-                                {{ fxov.total }}
+                                {{ fxoc.total }}
                               </td>
                               <td class="px-1 py-[2px]" scope="col">
                                 <!-- {{ fxoc.estatus }} -->
                                 <div class="flex justify-center h-full">
                                   <div
                                     class="bg-blue100 rounded-lg w-28 h-5"
-                                    *ngIf="fxov.estatus === 1"
+                                    *ngIf="fxoc.estatus === 1"
                                   >
                                     <p class="text-blue600 text-center">
                                       Capturada
@@ -317,7 +317,7 @@
                                   </div>
                                   <div
                                     class="bg-green100 rounded-lg w-28 h-5"
-                                    *ngIf="fxov.estatus === 2"
+                                    *ngIf="fxoc.estatus === 2"
                                   >
                                     <p class="text-green600 text-center">
                                       Autorizada
@@ -325,7 +325,7 @@
                                   </div>
                                   <div
                                     class="bg-green100 rounded-lg w-28 h-5"
-                                    *ngIf="fxov.estatus === 3"
+                                    *ngIf="fxoc.estatus === 3"
                                   >
                                     <p class="text-green600 text-center">
                                       Pagada parcialmente
@@ -333,7 +333,7 @@
                                   </div>
                                   <div
                                     class="bg-green100 rounded-lg w-28 h-5"
-                                    *ngIf="fxov.estatus === 4"
+                                    *ngIf="fxoc.estatus === 4"
                                   >
                                     <p class="text-green600 text-center">
                                       Pagada totalmente
@@ -341,7 +341,7 @@
                                   </div>
                                   <div
                                     class="bg-green100 rounded-lg w-28 h-5"
-                                    *ngIf="fxov.estatus === 5"
+                                    *ngIf="fxoc.estatus === 5"
                                   >
                                     <p class="text-green600 text-center">
                                       Cancelada
@@ -352,8 +352,8 @@
                               <td class="px-1 py-[2px]" scope="col">
                                 <div class="flex">
                                   <img
-                                    (click)="autorizarFactura(fxov)"
-                                    *ngIf="fxov.estatus == 1"
+                                    (click)="autorizarFactura(fxoc)"
+                                    *ngIf="fxoc.estatus == 1"
                                     src="./assets/authorize_facture.svg"
                                     alt=""
                                     class="cursor-pointer mx-auto"
@@ -361,8 +361,8 @@
                                     triggers="mouseenter:mouseleave"
                                   />
                                   <img
-                                    (click)="cancelarFactura(fxov)"
-                                    *ngIf="fxov.estatus == 1"
+                                    (click)="cancelarFactura(fxoc)"
+                                    *ngIf="fxoc.estatus == 1"
                                     src="./assets/authorize_facture.svg"
                                     alt=""
                                     class="cursor-pointer mx-auto"
@@ -378,7 +378,7 @@
                     </div>
                   </div>
                 </div>
-                <div *ngIf="detalleFacturaXOV.length > 0">
+                <div *ngIf="detalleFacturaXOC.length > 0">
                   <div class="rounded-lg shadow-md overflow-hidden mt-4">
                     <div class="overflow-x-auto">
                       <table class="w-full text-sm xs:table-fixed">
@@ -398,7 +398,7 @@
                         </thead>
                         <tbody class="divide-y divide-gray300">
                           <ng-container
-                            *ngFor="let detFactura of detalleFacturaXOV"
+                            *ngFor="let detFactura of detalleFacturaXOC"
                           >
                             <tr
                               class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
@@ -450,8 +450,8 @@
   <div class="space-y-4">
     <app-nuevo-movimiento-bancario
       [empresaId]="selectedEmpresa"
-      [idCliente]="IdCliente"
-      [idOrdenVenta]="IdOrdenVentaSeleccionada"
+      [idProveedor]="IdProveedor"
+      [idOrdenCompra]="IdOrdenCompraSeleccionada"
       (closed)="cerrarFormularioNuevoMovimiento($event)"
     ></app-nuevo-movimiento-bancario>
   </div>

@@ -310,6 +310,12 @@ export const pages: Page[] = [
         permiso: ['SeccionCuentaBancaria'],
       },
       {
+        name: 'Cuentas por pagar',
+        link: '/cuentas-por-pagar',
+        imageUrl: 'assets/cuenta-bancaria.svg',
+        permiso: ['SeccionCuentaBancaria'],
+      },
+      {
         name: 'Movimiento bancario',
         link: '/movimientobancario',
         imageUrl: 'assets/movimiento-bancario.png',
