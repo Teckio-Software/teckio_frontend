@@ -222,30 +222,29 @@
             style="height: 0px"
           >
             <thead class="text-white text-center" >
-              <tr>
+              <tr class="divide-x-2 divide-gray-200">
                 <th colspan="6" class="bg-colorButton">Presupuesto</th>
                 <th colspan="3" class="bg-colorButton">Anterior</th>
                 <th colspan="3" class="bg-colorButton" s>Actual</th>
                 <th colspan="3" class="bg-colorButton">Acumulado</th>
               </tr>
             </thead>
-
-            <thead class="text-white" >
-              <th class="bg-primario" style="width: 2%">-</th>
-              <th class="bg-primario" style="width: 8%">Código</th>
-              <th class="bg-primario" style="width: 18%">Descripción</th>
-              <th class="bg-primario" style="width: 6%">Unidad</th>
-              <th class="bg-primario" style="width: 6%">Cantidad</th>
-              <th class="bg-primario" style="width: 6%">Importe</th>
-              <th class="bg-primario" style="width: 6%">Avance</th>
-              <th class="bg-primario" style="width: 6%">%</th>
-              <th class="bg-primario" style="width: 6%">Importe</th>
-              <th class="bg-primario" style="width: 6%">Avance</th>
-              <th class="bg-primario" style="width: 6%">%</th>
-              <th class="bg-primario" style="width: 6%">Importe</th>
-              <th class="bg-primario" style="width: 6%">Avance</th>
-              <th class="bg-primario" style="width: 6%">%</th>
-              <th class="bg-primario" style="width: 6%">Importe</th>
+            <thead class="text-white divide-x-2 divide-gray-400" >
+              <th class="bg-primario text-center" style="width: 2%">-</th>
+              <th class="bg-primario text-center" style="width: 8%">Código</th>
+              <th class="bg-primario text-center" style="width: 18%">Descripción</th>
+              <th class="bg-primario text-center" style="width: 6%">Unidad</th>
+              <th class="bg-primario text-center" style="width: 6%">Cantidad</th>
+              <th class="bg-primario text-center" style="width: 6%">Importe</th>
+              <th class="bg-primario text-center" style="width: 6%">Avance</th>
+              <th class="bg-primario text-center" style="width: 6%">%</th>
+              <th class="bg-primario text-center" style="width: 6%">Importe</th>
+              <th class="bg-primario text-center" style="width: 6%">Avance</th>
+              <th class="bg-primario text-center" style="width: 6%">%</th>
+              <th class="bg-primario text-center" style="width: 6%">Importe</th>
+              <th class="bg-primario text-center" style="width: 6%">Avance</th>
+              <th class="bg-primario text-center" style="width: 6%">%</th>
+              <th class="bg-primario text-center" style="width: 6%">Importe</th>
             </thead>
           </table>
           <div
@@ -1347,15 +1346,15 @@
                 Opciones
               </legend>
               <div style="display: flex; gap: 0.5rem;">
-                <input type="checkbox" id="opcion1" [(ngModel)]="isReporteIVA" />
+                <input type="checkbox" id="opcion1" class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500" [(ngModel)]="isReporteIVA" />
                 <label for="opcion1" class="text-gray-600 text-base">Imprimir con IVA</label>
               </div>
               <div style="display: flex; gap: 0.5rem;">
-                <input type="checkbox" id="opcion2" [(ngModel)]="isReporteAnticipo" />
+                <input type="checkbox" id="opcion2" class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500" [(ngModel)]="isReporteAnticipo" />
                 <label for="opcion2" class="text-gray-600 text-base">Imprimir con anticipo</label>
               </div>
               <div style="display: flex; gap: 0.5rem;">
-                <input type="checkbox" id="opcion3" [(ngModel)]="isReporteConLetras" />
+                <input type="checkbox" id="opcion3" class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500" [(ngModel)]="isReporteConLetras" />
                 <label for="opcion3" class="text-gray-600 text-base">Importe con letra</label>
               </div>
             </fieldset>

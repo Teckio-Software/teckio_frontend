@@ -423,7 +423,7 @@ const routes: Routes = [
       import(`./seguridad/imagenes/imagenes.module`).then((module) => module.ImagenesModule),
   },
   {
-    path: 'almacentranspaso',
+    path: 'almacentraspaso',
     loadChildren: () =>
       import(`./inventario/almacenTranspaso/almacen-transpaso.module`).then(
         (module) => module.AlmacenTranspasoModule,

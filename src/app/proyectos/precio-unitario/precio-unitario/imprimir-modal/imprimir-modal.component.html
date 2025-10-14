@@ -39,6 +39,7 @@
             name="tipoPresupuesto"
             [(ngModel)]="tipoReporte"
             value="presupuesto"
+            class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500"
           />
           <label for="presupuesto" class="text-gray-600 text-base">Presupuesto</label>
         </div>
@@ -50,6 +51,7 @@
             name="tipoPresupuesto"
             [(ngModel)]="tipoReporte"
             value="presupuestoManoDeObra"
+            class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500"
           />
           <label for="presupuestoManoDeObra" class="text-gray-600 text-base"
             >Presupuesto de mano de obra</label
@@ -63,6 +65,7 @@
             name="tipoPresupuesto"
             [(ngModel)]="tipoReporte"
             value="analisisPreciosUnitarios"
+            class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500"
           />
           <label for="analisisPreciosUnitarios" class="text-gray-600 text-base"
             >Análisis de precios unitarios</label
@@ -76,6 +79,7 @@
             name="tipoPresupuesto"
             [(ngModel)]="tipoReporte"
             value="explosionPreciosUnitarios"
+            class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500"
           />
           <label for="explosionPreciosUnitarios" class="text-gray-600 text-base"
             >Explosión de precios unitarios</label
@@ -108,6 +112,7 @@
                   name="tipoImpresion"
                   [(ngModel)]="tipoImpresion"
                   value="impresionCompleta"
+                  class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500"
                 />
                 <label for="impresionCompleta" class="text-gray-600 text-base">Completo</label>
               </div>
@@ -118,6 +123,7 @@
                   name="tipoImpresion"
                   [(ngModel)]="tipoImpresion"
                   value="impresionMarcada"
+                  class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500"
                 />
                 <label for="impresionMarcada" class="text-gray-600 text-base">Marcado</label>
               </div>
@@ -136,6 +142,7 @@
                   name="costoDirecto"
                   [(ngModel)]="tipoPrecio"
                   value="costoDirecto"
+                  class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500"
                 />
                 <label for="costoDirecto" class="text-gray-600 text-base">Costo directo</label>
               </div>
@@ -146,6 +153,7 @@
                   name="tipoPrecio"
                   [(ngModel)]="tipoPrecio"
                   value="precioUnitario"
+                  class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500"
                 />
                 <label for="precioUnitario" class="text-gray-600 text-base">Precio unitario</label>
               </div>
@@ -156,6 +164,7 @@
                   name="tipoPrecio"
                   [(ngModel)]="tipoPrecio"
                   value="precioUnitarioIVA"
+                  class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500"
                 />
                 <label for="precioUnitarioIVA" class="text-gray-600 text-base"
                   >Precio unitario + impuestos</label
@@ -171,17 +180,27 @@
               </legend>
 
               <div class="flex gap-2">
-                <input type="checkbox" id="opcion2" [(ngModel)]="isImprimirImpuestos" />
+                <input type="checkbox" id="opcion2" class="w-4 h-4 text-blue-600 bg-gray-400 border-gray-300 rounded-sm focus:ring-blue-500" [(ngModel)]="isImprimirImpuestos" />
                 <label for="opcion2" class="text-gray-600 text-base">Imprimir impuesto</label>
               </div>
               <div class="flex gap-2">
-                <input type="checkbox" id="opcion3" [(ngModel)]="isImporteconLetra" />
+                <input type="checkbox" id="opcion3" class="w-4 h-4 text-blue-600 bg-gray-400 border-gray-300 rounded-sm focus:ring-blue-500" [(ngModel)]="isImporteconLetra" />
                 <label for="opcion3" class="text-gray-600 text-base">Importe con letra</label>
               </div>
             </fieldset>
           </div>
         </div>
-        <div *ngIf="reporteManoDeObra" class="grid grid-cols-2 gap-1"></div>
+        <div *ngIf="reporteManoDeObra" class="grid grid-cols-2 gap-1">
+          <fieldset class="p-2">
+              <legend class="text-base font-medium text-gray-800 tracking-wider">
+                Opciones
+              </legend>
+              <div class="flex gap-2">
+                <input type="checkbox" id="opcion3" class="w-4 h-4 text-blue-600 bg-gray-400 border-gray-300 rounded-sm focus:ring-blue-500" [(ngModel)]="isImporteconLetra" />
+                <label for="opcion3" class="text-gray-600 text-base">Importe con letra</label>
+              </div>
+            </fieldset>
+        </div>
       </div>
 
       <div *ngIf="currentStep === 2">

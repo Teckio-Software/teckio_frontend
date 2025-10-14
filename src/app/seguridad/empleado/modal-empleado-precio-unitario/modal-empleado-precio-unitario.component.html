@@ -20,7 +20,7 @@
                     <tbody class="divide-y divide-gray300">
                         <tr *ngFor="let PU of empleadoPrecioUnitario" class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]" 
                             [ngClass]="">
-                            <td scope="col"><input type="checkbox" id="vehicle3" name="vehicle3" value="Boat"
+                            <td scope="col" class="flex justify-center" ><input type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500" id="vehicle3" name="vehicle3" value="Boat"
                               [(ngModel)]="PU.seleccionado"></td>
                             <td scope="col">{{PU.descripcion}}</td>
                             <td scope="col">{{PU.unidad}}</td>

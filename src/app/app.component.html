@@ -7,28 +7,66 @@
     <ng-container *ngIf="esLogueado; else loginContent">
       <div
         *ngIf="esLogueado"
-        class="bg-primario flex justify-between items-center h-10 xs:flex"
+        class="bg-white flex justify-between items-center h-16 xs:flex border-b border-gray-300"
       >
-        <div class="flex items-center">
+        <div class="flex items-center h-full" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+          <div class="flex items-center h-full group">
+            <div *ngIf="sideNavState">
+            <span [@animateText]="linkText ? 'show' : 'hide'">
+              <a href="">
+                <img
+                  class="object-contain h-9 p-[0.3rem]"
+                  src="assets/Recurso 7.png"
+                  alt=""
+                />
+              </a>
+            </span>
+            <div
+              class="xs:text-center xs:mt-2 xs:text-xs sm:hidden md:hidden lg:hidden"
+            >
+              <p class="xs:font-bold text-gray700">Bienvenido</p>
+              <p class="text-gray700">
+                {{ zvSeguridadService.zfObtenerCampoJwt("email") }}
+              </p>
+            </div>
+          </div>
+          <div class="flex justify-center items-center" *ngIf="!sideNavState">
+            <a href="">
+              <button
+                class="transition transform ease-in-out duration-500 p-[10px] rounded-full"
+              >
+                <img
+                  style="width: 25px; height: 25px"
+                  src="assets/teckio.svg"
+                  alt=""
+                />
+              </button>
+            </a>
+          </div>
           <!-- Icono menú hamburguesa -->
-          <div *ngIf="!isOpen">
+           <div class="" [@onButtonClose]="hoverMenu" >
+            <div *ngIf="!isOpen">
             <button (click)="onSinenavToggle()" class="mx-[20px]">
-              <img class="w-6 h-6" src="./assets/menu.svg" alt="Abrir menú" />
+              <img class="w-6 h-6" src="./assets/right_panel_open.svg" alt="Abrir menú" />
             </button>
           </div>
           <div *ngIf="isOpen">
             <button class="mx-[20px]" (click)="onSinenavToggle()">
-              <img class="w-6 h-6" src="./assets/close.svg" alt="Cerrar menú" />
+              <img class="w-6 h-6" src="./assets/left_panel_close.svg" alt="Cerrar menú" />
             </button>
           </div>
           <!-- Icono menú hamburguesa end-->
+           </div>
+          </div>
+          
+          
 
           <div class="flex gap-2 items-center justify-center xs:ml-3">
             <ng-container zvAutorizado>
               <!-- Input de coporativo -->
               <div class="flex justify-center h-7 items-center gap-1 xs:px-1">
                 <p
-                  class="text-white lg:text-2xl md:text-2xl sm:text-xl lg:ml-10 font-bold mt-2 xs:hidden"
+                  class="text-gray-950 lg:text-2xl md:text-2xl sm:text-xl lg:ml-10 font-bold mt-2 xs:hidden"
                 >
                   {{ tituloComponente }}
                 </p>
@@ -36,12 +74,12 @@
                 <div>
                   <img
                     class="w-8 xs:w-8"
-                    src="assets/corporativo.svg"
-                    alt="coporativo"
+                    src="assets/apartment.svg"
+                    alt="apartment"
                   />
                 </div>
                 <select
-                  class="border-none rounded-lg bg-gray300 text-gray700 font-medium p-1 lg:w-52 md:w-36 xms:w-28 xs:w-24 xs:text-xs"
+                  class="rounded-lg bg-white text-gray-700 border-gray-500 border font-medium p-1 lg:w-52 md:w-36 xms:w-28 xs:w-24 xs:text-xs"
                   aria-label="Corporativo"
                   [(ngModel)]="selectedEmpresa"
                   (ngModelChange)="actualizar($event)"
@@ -58,13 +96,13 @@
 
               <!-- Input de proyecto -->
               <div class="flex justify-center h-7 item gap-1 xs:px-1">
-                <img class="w-9 xs:w-8" src="assets/project.svg" alt="" />
+                <img class="w-9 xs:w-8" src="assets/resize.svg" alt="" />
                 <input
                   type="text"
                   placeholder="Selecciona un proyecto"
                   [formControl]="proyectoControl"
                   [matAutocomplete]="auto"
-                  class="border-none rounded-lg bg-gray300 text-gray700 font-medium p-1 lg:w-52 md:w-36 xms:w-28 xs:w-24 xs:text-xs"
+                  class="rounded-lg bg-white text-gray-700 border-gray-500 border font-medium p-1 lg:w-52 md:w-36 xms:w-28 xs:w-24 xs:text-xs"
                   #textoDataList
                   (click)="reiniciarFiltro()"
                 />
@@ -85,19 +123,33 @@
                   >
                 </mat-autocomplete>
               </div>
+              <div class="font-medium h-full text-sm" *ngIf="idProyecto<=0">
+                <div class="bg-blue-100 text-blue-600 h-[95%] text-center px-2 py-1 rounded-lg flex flex-row justify-center select-none border-2 border-blue-600 gap-2">
+                <img src="assets/info.svg" alt="" class="w-5">
+                Selecciona un proyecto.
+                </div>
+              </div>
               <!-- Input de proyecto end -->
             </ng-container>
           </div>
         </div>
-        <div class="flex gap-2 justify-end p-1">
-          <div class="text-white xs:hidden">
-            {{ zvSeguridadService.zfObtenerCampoJwt("email") }}
-          </div>
+        <div class="flex gap-2 justify-end">
+          
           <button
             class="flex gap-2 flex-row items-center text-white"
             [matMenuTriggerFor]="menu"
           >
-            <svg
+          <div class="flex-col justify-end align-baseline">
+            <div class="xs:hidden text-gray-700 font-medium">
+            {{ zvSeguridadService.zfObtenerCampoJwt("email") }}
+          </div>
+          <div class="text-right text-gray-500" >
+            {{ zvSeguridadService.zfObtenerCampoJwt("role") }}
+          </div>
+          </div>
+          
+          <img src="assets/logout.png" alt="" class="w-8">
+            <!-- <svg
               width="20"
               height="20"
               fill="#f2f2f2"
@@ -116,7 +168,7 @@
                   d="M12,1A11,11,0,1,0,23,12,11.013,11.013,0,0,0,12,1Zm0,20a9.641,9.641,0,0,1-5.209-1.674,7,7,0,0,1,10.418,0A9.167,9.167,0,0,1,12,21Zm6.694-3.006a8.98,8.98,0,0,0-13.388,0,9,9,0,1,1,13.388,0ZM12,6a4,4,0,1,0,4,4A4,4,0,0,0,12,6Zm0,6a2,2,0,1,1,2-2A2,2,0,0,1,12,12Z"
                 ></path>
               </g>
-            </svg>
+            </svg> -->
           </button>
           <mat-menu #menu="matMenu">
             <button mat-menu-item (click)="logout()">Cerrar sesión</button>

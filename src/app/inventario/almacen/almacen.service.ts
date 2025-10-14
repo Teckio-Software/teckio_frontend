@@ -26,6 +26,10 @@ export class AlmacenService{
         return this.HttpClient.get<almacenDTO[]>(`${this.zvApiUrl}almacen/${idEmpresa}/ObtenTodos`);
     }
 
+    public obtenerConNombreDelProyecto(idEmpresa: number){
+        return this.HttpClient.get<almacenDTO[]>(`${this.zvApiUrl}almacen/${idEmpresa}/ObtenTodosConProyecto`);
+    }
+
     public obtenerCentrales(idEmpresa: number){
         return this.HttpClient.get<almacenDTO[]>(`${this.zvApiUrl}almacen/${idEmpresa}/ObtenCentrales`);
     }

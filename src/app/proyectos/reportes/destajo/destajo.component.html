@@ -1,10 +1,11 @@
   <br>
   <div>
-    <div class="flex flex-col md:flex-row justify-center gap-2 md:justify-normal   ">
+    <div class="flex flex-col md:flex-row justify-center gap-2 md:justify-normal mb-2 ">
       
       <div class="flex justify-center" >
         <select [(ngModel)]="selectedPeriodo" (ngModelChange)="filtrarDestajo()"
-        style="background-color: #4eaac138; border: none; border-radius: 5px; padding: 1.4px; opacity: 2; height: -webkit-fill-available; ">
+        class="w-[260px] p-[1.4px] font-medium"
+        style="background-color: #4eaac138; border: none; border-radius: 5px; opacity: 2; height: -webkit-fill-available; ">
             <option value="0">Selecciona un periodo</option>
             <option *ngFor="let periodo of periodos" [value]="periodo.id">
                 {{ periodo.descripcionPeriodo }}
@@ -28,9 +29,9 @@
         </div>
       </div>
       <div  class="flex justify-center" >
-        <select class="select-destajo w-[260px] rounded-[7px] bg-[#4eaac138]" style="height: -webkit-fill-available;" (change)="onSelectionChangeSelect($event)" name="select" [(ngModel)]="selectedContrato">
+        <select class="select-destajo w-[260px] font-medium p-[1.4px] rounded-[7px] bg-[#4eaac138]" style="height: -webkit-fill-available;" (change)="onSelectionChangeSelect($event)" name="select" [(ngModel)]="selectedContrato">
           <option [ngValue]="0"></option>
-          <option [ngValue]="contrato.id" *ngFor="let contrato of contratos">{{contrato.numeroDestajo}}</option>
+          <option [ngValue]="contrato.id" *ngFor="let contrato of contratos">{{contrato.numeroDestajoDescripcion}}</option>
         </select>
       </div>
     </div>

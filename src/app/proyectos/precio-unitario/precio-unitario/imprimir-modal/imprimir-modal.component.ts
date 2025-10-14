@@ -1,6 +1,6 @@
 import { proyectoDTO } from './../../../proyecto/tsProyecto';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { imprimirReporte, imprimirReporteAnalisisPU } from './imprimirReportes';
+import { imprimirReporte, imprimirReporteAnalisisPU, imprimirReporteManoObra } from './imprimirReportes';
 import { precioUnitarioDTO } from '../../tsPrecioUnitario';
 import { ParametrosImprimirPuService } from './services/parametros-imprimir-pu.service';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
@@ -12,6 +12,7 @@ import { PrecioUnitarioService } from '../../precio-unitario.service';
 import { ConjuntoIndirectosDTO } from 'src/app/proyectos/conjunto-indirectos/conjunto-indirectos';
 import { IndirectosServiceService } from 'src/app/proyectos/indirectos/indirectos-service.service';
 import { IndirectosDTO } from 'src/app/proyectos/indirectos/indirectos';
+import { ImagenService } from 'src/app/utilidades/imagen.service';
 
 /**
  * Modal para configurar y ejecutar la impresión de reportes
@@ -123,7 +124,8 @@ export class ImprimirModalComponent {
     private parametrosImpresion: ParametrosImprimirPuService,
     private seguridadService: SeguridadService,
     private precioUnitarioService: PrecioUnitarioService,
-    private indirectosService: IndirectosServiceService
+    private indirectosService: IndirectosServiceService,
+    private imagenService: ImagenService
   ) {
     const idEmpresa: number = Number(seguridadService.obtenIdEmpresaLocalStorage());
     this.selectedEmpresa = idEmpresa;
@@ -306,6 +308,9 @@ export class ImprimirModalComponent {
       }
       this.currentStep = 2;
     }
+    // if(this.tipoReporte === 'presupuestoManoDeObra') {
+    //   this.currentStep = 2
+    // }
     this.isError = false;
     this.isError2 = false;
     this.isError3 = false;
@@ -318,8 +323,13 @@ export class ImprimirModalComponent {
       this.isError = false;
     }
 
+    //El reporte de presupuesto de mano de obra no requiere de selecciones por lo cuál va directo al paso 2
+    if (this.currentStep === 1 && this.tipoReporte === 'presupuestoManoDeObra') {
+      this.currentStep = 2;
+      return;
+    }
     //validar si hay rango de impresion seleccionado
-    if (this.currentStep === 1 && !this.tipoImpresion) {
+    if (this.currentStep === 1 && !this.tipoImpresion && this.tipoReporte != 'presupuestoManoDeObra') {
       this.isError2 = true;
       return;
     } else {
@@ -373,8 +383,8 @@ export class ImprimirModalComponent {
    */
   prevStep(): void {
     this.isError = false;
-    if (this.tipoReporte === 'analisisPreciosUnitarios') {
-      this.currentStep = 0;
+    if(this.tipoReporte === 'analisisPreciosUnitarios') {
+      this.currentStep = 0
     }
     if (this.currentStep > 0) {
       this.currentStep--;
@@ -424,7 +434,13 @@ export class ImprimirModalComponent {
       imprimirConPrecioUnitario: this.isImprimirPU,
       imprimirConPrecioUnitarioIVA: this.isImprimirPUIVA,
       imprimirConPUMasIva: this.isImprimirPuMasIVA,
-      indirectos: this.indirectos
+      indirectos: this.indirectos,
+      base64: '',
+      preciosUnitariosManoObra: {
+        preciosUnitarios: [],
+        total: 0,
+        totalConFormato: ''
+      }
     };
 
     //si es marcado, se llena el arreglo de marcados en lugar del completo
@@ -451,14 +467,26 @@ export class ImprimirModalComponent {
       imprimirConPrecioUnitario: this.isImprimirPU,
       imprimirConPrecioUnitarioIVA: this.isImprimirPUIVA,
       imprimirConPUMasIva: this.isImprimirPuMasIVA,
-      indirectos: this.indirectos
+      indirectos: this.indirectos,
+      base64: '',
+      preciosUnitariosManoObra: {
+        preciosUnitarios: [],
+        total: 0,
+        totalConFormato: ''
+      }
     };
-
-    // definir el tipo de reporte
+    this.imagenService.obtenerImagen(this.selectedEmpresa).subscribe({next: (imagen) => {
+      reporte.base64 = 'data:image/'+imagen.tipo.replace('.','')+';base64,' + imagen.base64;
+      reporteMarcado.base64 = 'data:image/'+imagen.tipo.replace('.','')+';base64,' + imagen.base64;
+    }, error: (err) => {
+      reporte.base64 = '';
+      reporteMarcado.base64 = '';
+    },
+    complete: () => {
+      // definir el tipo de reporte
     switch (this.tipoReporte) {
       case 'presupuesto':
         this.reportePresupuesto = true;
-
         let reporteBase: Reporte = reporte;
         if (this.tipoImpresion === 'impresionCompleta') {
           if (this.tipoPrecio === 'costoDirecto') {
@@ -492,7 +520,6 @@ export class ImprimirModalComponent {
 
         // console.log(preciosUnitariosFiltrados);
         reporte.imprimirConCostoDirecto = true;
-        // console.log('Estos son los ids',ids);
         reporte.precioUnitario = preciosUnitariosFiltrados;
         this.precioUnitarioService.ObtenerDetallesPorPUImpresion(this.selectedEmpresa,ids).subscribe((preciosUnitarios) => {
           reporte.detallesPrecioUnitario = preciosUnitarios;
@@ -506,17 +533,10 @@ export class ImprimirModalComponent {
           //   element.hijos = lista;
           // });
           // reporte.precioUnitario = preciosUnitarios;
-
-          console.log(preciosUnitarios);
-          console.log('Se van a imprimir los análisis');
         // reporte.precioUnitario = preciosUnitariosFiltrados;
         this.indirectosService.ObtenerIndirectos(this.selectedEmpresa, this.idProyecto).subscribe((conjuntoIndirectos) => {
-          console.log(this.selectedEmpresa, this.idProyecto);
-
           this.indirectos = conjuntoIndirectos;
           reporte.indirectos = this.indirectos;
-          console.log(this.indirectos);
-          console.log(reporte);
           imprimirReporteAnalisisPU(reporte);
         })
 
@@ -526,7 +546,17 @@ export class ImprimirModalComponent {
 
 
         break;
-
+      case 'presupuestoManoDeObra':
+        this.reporteManoDeObra = true;
+        let preciosUnitariosFiltradosManoObra = ObtenerTodosPUPlanos(this.preciosUnitarios);
+        let idsMO = preciosUnitariosFiltradosManoObra.map(pu => pu.id);
+        reporte.imprimirConCostoDirecto = true;
+        reporte.precioUnitario = preciosUnitariosFiltradosManoObra;
+        this.precioUnitarioService.obtenerPrecioUnitarioImprimirManoDeObra(this.selectedEmpresa, this.idProyecto).subscribe((preciosUnitarios) => {
+          reporte.preciosUnitariosManoObra = preciosUnitarios;
+          imprimirReporteManoObra(reporte);
+        })
+        break;
         //si es impresion marcada, se asigna el reporte marcado como base y los totales se calculan de acuerdo a los marcados
         if (this.tipoImpresion === 'impresionMarcada') {
           for (let i = 0; i < reporte.precioUnitario.length; i++) {
@@ -546,6 +576,9 @@ export class ImprimirModalComponent {
       default:
         console.log(`No hay lógica implementada para el tipo de reporte: ${this.tipoReporte}`);
     }
+    }
+  });
+    
   }
 }
 
@@ -592,22 +625,36 @@ function setFlagsPorTipoPrecio(reporte: Reporte, tipoPrecio: string): void {
   }
 }
 
-/* Función que itera un array de nodos de precio unitario y devuelve un
- * array con los nodos de manera plana que están
- * seleccionados.
- * @param {precioUnitarioDTO[]} nodos - Array de nodos de precio unitario
- * @returns {precioUnitarioDTO[]} - Array con los nodos de tipo "Planos" y
- * seleccionados
- */
-function ObtenerPUPlanos(nodos: precioUnitarioDTO[]): precioUnitarioDTO[] {
-  const puPlanos: precioUnitarioDTO[] = [];
-  for (const nodo of nodos) {
-    if (nodo.tipoPrecioUnitario != 0 && nodo.esSeleccionado) {
-      puPlanos.push(nodo);
+
+  /* Función que itera un array de nodos de precio unitario y devuelve un
+  * array con los nodos de manera plana que están
+  * seleccionados.
+  * @param {precioUnitarioDTO[]} nodos - Array de nodos de precio unitario
+  * @returns {precioUnitarioDTO[]} - Array con los nodos de tipo "Planos" y
+  * seleccionados
+  */
+  function ObtenerPUPlanos(nodos: precioUnitarioDTO[]): precioUnitarioDTO[] {
+    const puPlanos: precioUnitarioDTO[] = [];
+    for (const nodo of nodos) {
+      if(nodo.tipoPrecioUnitario!=0 && nodo.esSeleccionado){
+        puPlanos.push(nodo);
+      }
+      if (nodo.hijos && nodo.hijos.length > 0) {
+        puPlanos.push(...ObtenerPUPlanos(nodo.hijos));
+      }
     }
-    if (nodo.hijos && nodo.hijos.length > 0) {
-      puPlanos.push(...ObtenerPUPlanos(nodo.hijos));
-    }
+    return puPlanos;
   }
-  return puPlanos;
-}
+
+  function ObtenerTodosPUPlanos(nodos: precioUnitarioDTO[]): precioUnitarioDTO[] {
+    const puPlanos: precioUnitarioDTO[] = [];
+    for (const nodo of nodos) {
+      if(nodo.hijos.length == 0 && nodo.tipoPrecioUnitario!=0){
+        puPlanos.push(nodo);
+      }
+      if (nodo.hijos && nodo.hijos.length > 0) {
+        puPlanos.push(...ObtenerTodosPUPlanos(nodo.hijos));
+      }
+    }
+    return puPlanos;
+  }

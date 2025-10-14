@@ -323,12 +323,13 @@
           {{ empleado.fechaTerminoRelacionLaboral | date : "dd-MM-yyyy" }}
         </td>
         <td scope="col">{{ empleado.salarioDiario }}</td>
-        <td scope="col">
+        <td scope="col" class="flex justify-center" >
           <input
             type="checkbox"
             id="vehicle3"
             name="vehicle3"
             value="Boat"
+            class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500"
             [(ngModel)]="empleado.estatus"
             (change)="ActualizaEstatus(empleado)"
           />

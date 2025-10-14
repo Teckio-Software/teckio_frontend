@@ -106,6 +106,44 @@ export interface CostoHorarioVariable extends precioUnitarioDetalleAbstractaDTO{
   rendimiento: number; // 1: combustible x hora/ 2: vida util en horas/ 3: tiempo uso
 }
 
+export interface PrecioUnitarioManoDeObra{
+      codigo: string,
+      id: number,
+      descripcion: string,
+      totalDePU: number,
+      totalConFormatoDePU: string,
+      detalles: PrecioUnitarioManoDeObraDetalle[]
+    }
+
+export interface PrecioUnitarioManoDeObraDetalle{
+    id: number,
+    descripcion: string,
+    unidad: string,
+    codigo: string,
+    idTipoInsumo: number,
+    idFamiliaInsumo: number,
+    descripcionTipoInsumo: string,
+    descripcionFamiliaInsumo: string,
+    costoUnitario: number,
+    costoBase: number,
+    esFsrGlobal: boolean,
+    esAutorizado: boolean,
+    idProyecto: number,
+    cantidad: number,
+    importe: number,
+    costoUnitarioConFormato: string,
+    costoBaseConFormato: string,
+    seEstaEditandoCostoBase: true,
+    cantidadConFormato: string,
+    importeConFormato: string
+}
+
+export interface PrecioUnitarioManoDeObraConjunto{
+  preciosUnitarios: PrecioUnitarioManoDeObra[],
+  total: number,
+  totalConFormato: string
+}
+
 export interface parametrosImportarExcel{
 
 }

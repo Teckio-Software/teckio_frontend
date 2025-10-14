@@ -141,9 +141,8 @@ export class DestajoComponent {
       })
     }
 
-
     filtrarDestajo(){
-      console.log("este es el peridod", this.selectedEmpresa, this.selectedProyecto, this.selectedPeriodo);
+      // console.log("este es el peridod", this.selectedEmpresa, this.selectedProyecto, this.selectedPeriodo);
       this.parametroDestajos.idPeriodoEstimacion = this.selectedPeriodo;
       this.parametroDestajos.idContratista = this.selectedContratista;
       this.parametroDestajos.idContrato = this.selectedContrato;

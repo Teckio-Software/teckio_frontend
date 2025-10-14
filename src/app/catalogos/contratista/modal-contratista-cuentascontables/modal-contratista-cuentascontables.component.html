@@ -52,7 +52,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let cc of filteredCuentas | async" [ngClass]="">
-                <td scope="col"><input type="radio" name="seleccionado" (change)="Seleccionar(cc)"></td>
+                <td scope="col"><input type="radio" name="seleccionado" class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500" (change)="Seleccionar(cc)"></td>
                 <td scope="col">{{cc.codigo}}</td>
                 <td scope="col">{{cc.descripcion}}</td>
               </tr>
