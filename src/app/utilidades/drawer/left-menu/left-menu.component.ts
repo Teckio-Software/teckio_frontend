@@ -29,6 +29,7 @@ import { Page, pages } from '../../tsUtilidades';
 })
 export class LeftMenuComponent implements OnInit {
   @Output() onSinenavToggle = new EventEmitter<void>();
+  @Output() onSinenavToggleOpen = new EventEmitter<void>();
   @Input() sideNavState: boolean = false;
   @Input() linkText: boolean = false;
   @Input() isLoading!: boolean;
@@ -166,6 +167,7 @@ export class LeftMenuComponent implements OnInit {
     }
   }
 
+  
   toggleSinenav() {
     this.onSinenavToggle.emit();
     this.sideNavState = !this.sideNavState;

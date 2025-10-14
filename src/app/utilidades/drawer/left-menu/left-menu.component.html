@@ -57,7 +57,7 @@
             <button
               [disabled]="isLoading"
               mat-list-item
-              (click)="toggleNestedPages(page)"
+              (click)="toggleNestedPages(page); onSinenavToggleOpen.emit(); sideNavState = true; linkText = true;"
             >
               <div class="flex justify-between items-center">
                 <ng-container *ngIf="page.imageUrl; else iconTemplate">
@@ -89,16 +89,17 @@
               </div>
             </button>
             <!-- Lista anidada -->
-            <ng-container *ngIf="page.nestedPages && page.expanded">
-              <button
+            <ng-container *ngIf="page.nestedPages && page.expanded && sideNavState">
+              <div class="mt-2 mb-2 ml-4 border-l-2 border-gray-400">
+                 <button
                 [disabled]="isLoading"
                 (click)="title(nestedPage)"
                 mat-list-item
                 *ngFor="let nestedPage of page.nestedPages"
                 [routerLink]="nestedPage.link"
-              >
+                >
                 <div class="flex items-center">
-                  <ng-container
+                  <!-- <ng-container
                     *ngIf="nestedPage.imageUrl; else nestedIconTemplate"
                   >
                     <img
@@ -120,14 +121,16 @@
                       placement="end"
                       >{{ nestedPage?.icon }}</mat-icon
                     >
-                  </ng-template>
+                  </ng-template> -->
                   <span
-                    class="text-gray400 text-xs pl-[5px]"
+                    class="text-gray400 text-xs "
                     [@animateText]="linkText ? 'show' : 'hide'"
                     >{{ nestedPage.name }}</span
                   >
                 </div>
               </button>
+              </div>
+             
             </ng-container>
             <!-- Lista anidada end -->
           </ng-container>

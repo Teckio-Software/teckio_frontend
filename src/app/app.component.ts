@@ -363,6 +363,14 @@ export class AppComponent implements OnInit {
  
     this._sidenavService.sideNavState$.next(this.sideNavState);
   }
+
+  onSinenavToggleOpen() {
+    this.sideNavState = true;
+    this.isOpen = true;
+    this.linkText = true;
+ 
+    this._sidenavService.sideNavState$.next(this.sideNavState);
+  }
  
   toggleSidenav(sidenav: any) {
     sidenav.toggle();

@@ -10,15 +10,18 @@
         class="bg-white flex justify-between items-center h-16 xs:flex border-b border-gray-300"
       >
         <div class="flex items-center h-full" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
-          <div class="flex items-center h-full group">
+          <div class="flex items-center h-full font-bold text-blue-950 text-2xl" [ngClass]="sideNavState?'w-56':'w-28'">
             <div *ngIf="sideNavState">
             <span [@animateText]="linkText ? 'show' : 'hide'">
-              <a href="">
+              <a href="" class="flex items-center">
                 <img
-                  class="object-contain h-9 p-[0.3rem]"
-                  src="assets/Recurso 7.png"
+                  class="object-contain h-12 p-[0.3rem]"
+                  src="assets/teckio.svg"
                   alt=""
                 />
+                <div class="sm:block hidden">
+                Teckio ERP
+                </div>
               </a>
             </span>
             <div
@@ -36,7 +39,7 @@
                 class="transition transform ease-in-out duration-500 p-[10px] rounded-full"
               >
                 <img
-                  style="width: 25px; height: 25px"
+                  class="object-contain h-12 p-[0.3rem]"
                   src="assets/teckio.svg"
                   alt=""
                 />
@@ -44,23 +47,20 @@
             </a>
           </div>
           <!-- Icono menú hamburguesa -->
-           <div class="" [@onButtonClose]="hoverMenu" >
+           <div class="flex justify-center items-center h-full mt-2" [@onButtonClose]="hoverMenu" >
             <div *ngIf="!isOpen">
-            <button (click)="onSinenavToggle()" class="mx-[20px]">
-              <img class="w-6 h-6" src="./assets/right_panel_open.svg" alt="Abrir menú" />
+              <button (click)="onSinenavToggle()">
+              <img class="w-6" src="./assets/right_panel_open.svg" alt="Abrir menú" />
             </button>
-          </div>
-          <div *ngIf="isOpen">
-            <button class="mx-[20px]" (click)="onSinenavToggle()">
-              <img class="w-6 h-6" src="./assets/left_panel_close.svg" alt="Cerrar menú" />
+            </div>
+            <div *ngIf="isOpen">
+              <button (click)="onSinenavToggle()">
+              <img class="w-6" src="./assets/left_panel_close.svg" alt="Cerrar menú" />
             </button>
           </div>
           <!-- Icono menú hamburguesa end-->
            </div>
           </div>
-          
-          
-
           <div class="flex gap-2 items-center justify-center xs:ml-3">
             <ng-container zvAutorizado>
               <!-- Input de coporativo -->
@@ -133,7 +133,7 @@
             </ng-container>
           </div>
         </div>
-        <div class="flex gap-2 justify-end">
+        <div class="flex gap-2 justify-end mr-2">
           
           <button
             class="flex gap-2 flex-row items-center text-white"
@@ -188,6 +188,7 @@
             (onSinenavToggle)="onSinenavToggle()"
             [sideNavState]="sideNavState"
             [linkText]="linkText"
+            (onSinenavToggleOpen)="onSinenavToggleOpen()"
           >
           </app-left-menu>
         </mat-sidenav>
