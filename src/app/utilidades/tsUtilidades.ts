@@ -69,7 +69,7 @@ export const pages: Page[] = [
   {
     name: 'Presupuestos',
     link: '',
-    imageUrl: 'assets/ordencompra.svg',
+    imageUrl: 'assets/business_center.svg',
     nestedPages: [
       {
         name: 'Proyectos',
@@ -125,7 +125,7 @@ export const pages: Page[] = [
   {
     name: 'Gestión de ventas',
     link: '',
-    imageUrl: 'assets/carsetting.png',
+    imageUrl: 'assets/shopping_cart.svg',
     nestedPages: [
       {
         name: 'Ventas',
@@ -151,7 +151,7 @@ export const pages: Page[] = [
   {
     name: 'Gestión de compras',
     link: '',
-    imageUrl: 'assets/compras.svg',
+    imageUrl: 'assets/sync_saved.svg',
     nestedPages: [
       {
         name: 'Compras',
@@ -170,7 +170,7 @@ export const pages: Page[] = [
   {
     name: 'Inventario',
     link: '',
-    imageUrl: 'assets/conceptos.svg',
+    imageUrl: 'assets/warehouse_icon.svg',
     nestedPages: [
       {
         name: 'Almacén',
@@ -207,7 +207,7 @@ export const pages: Page[] = [
   {
     name: 'Catálogos',
     link: '',
-    imageUrl: 'assets/polizas.svg',
+    imageUrl: 'assets/folder_copy.svg',
     nestedPages: [
       {
         name: 'Familia',
@@ -251,7 +251,7 @@ export const pages: Page[] = [
   {
     name: 'Contabilidad',
     link: '',
-    imageUrl: 'assets/cuentaContable.svg',
+    imageUrl: 'assets/calculate.svg',
     nestedPages: [
       {
         name: 'Rubro',
@@ -326,7 +326,7 @@ export const pages: Page[] = [
   {
     name: 'Administración',
     link: '',
-    imageUrl: 'assets/users-s.svg',
+    imageUrl: 'assets/important_devices.svg',
 
     nestedPages: [
       {
@@ -389,7 +389,7 @@ export const pages: Page[] = [
   {
     name: 'Documentación',
     link: '',
-    imageUrl: 'assets/documentacion.svg',
+    imageUrl: 'assets/developer_guide.svg',
     expanded: false,
     nestedPages: [
       {
