@@ -1,0 +1,38 @@
+<section>
+  <div class="bg-white w-full px-4 py-4 rounded-md">
+    <div class="flex justify-between items-center">
+      <button
+        (click)="close()"
+        class="text-left text-sm hover:bg-gray-200 rounded-md transition-all delay-75 flex gap-2 items-center font-medium text-gray-700 px-2"
+      >
+        <img class="w-8" src="assets/go_back.svg" alt="Regresar" />
+        Regresar
+      </button>
+
+      <div class="flex justify-end gap-3 items-center">
+        <button
+          (click)="close()"
+          class="flex gap-2 items-center bg-white hover:bg-gray-100 rounded-md text-gray-700 transition-colors px-3 py-2 font-medium border border-gray-300"
+        >
+          <img src="./assets/xmark-solid-full.svg" alt="" class="w-4" />
+          Cancelar
+        </button>
+        <button
+          class="flex gap-2 items-center bg-primario rounded-md text-white transition-colors px-3 py-2"
+        >
+          <img src="./assets/floppy-disk-solid-full.svg" alt="" class="w-4" />
+          Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-3 mt-3">
+    <div class="bg-white p-3 rounded-lg">
+      <app-cuenta-form></app-cuenta-form>
+    </div>
+    <div class="rounded-lg bg-[#f1f1f1]">
+      <app-cuenta-details></app-cuenta-details>
+    </div>
+  </div>
+</section>

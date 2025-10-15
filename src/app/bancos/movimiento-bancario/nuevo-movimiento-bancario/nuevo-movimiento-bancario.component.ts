@@ -1,3 +1,4 @@
+import { es, th } from 'date-fns/locale';
 import {
   Component,
   EventEmitter,
@@ -21,6 +22,8 @@ import Swal from 'sweetalert2';
 import { MovimientoBancarioService } from '../movimiento-bancario.service';
 import { OrdenCompraService } from 'src/app/compras/orden-compra/orden-compra.service';
 import { FacturaXOrdenCompraDTO, ordenCompraDTO } from 'src/app/compras/orden-compra/tsOrdenCompra';
+import { VentasService } from 'src/app/gestion-ventas/ventas/ventas.service';
+import { FacturaXOrdenVentaDTO, OrdenVentaDTO } from 'src/app/gestion-ventas/ventas/ordenVenta';
 
 @Component({
   selector: 'app-nuevo-movimiento-bancario',
@@ -30,6 +33,12 @@ import { FacturaXOrdenCompraDTO, ordenCompraDTO } from 'src/app/compras/orden-co
 export class NuevoMovimientoBancarioComponent implements OnInit, OnChanges {
   @Input() empresaId?: number;
   @Input() cuentaBancariaEmpresaId?: number;
+  @Input() idCliente: number = 0;
+  @Input() idOrdenVenta: number = 0;
+  @Input() idProveedor: number = 0;
+  @Input() idOrdenCompra: number = 0;
+
+
   @Output() closed = new EventEmitter<boolean>();
 
   movimientoBancario: MovimientoBancarioTeckioDTO = this.crearMovimientoInicial();
@@ -39,9 +48,12 @@ export class NuevoMovimientoBancarioComponent implements OnInit, OnChanges {
   tipoBeneficiario = 0;
   OrdenesCompraPorPagar: ordenCompraDTO[] = [];
   FacturaXOrdenCompraPorPagar: FacturaXOrdenCompraDTO[] = [];
+  OrdenesVentaPorPagar: OrdenVentaDTO[] = [];
+  FacturaXOrdenVentaPorPagar: FacturaXOrdenVentaDTO[] = [];
   private modalData?: { idEmpresa: number; idCeuntaBancariaEmpresa: number };
   private empresaContextoId = 0;
   private cuentaBancariaEmpresaContextoId = 0;
+  cuentaBE: CuentaBancariaBaseDTO[] = [];
 
   constructor(
     @Optional() private dialogRef: MatDialogRef<NuevoMovimientoBancarioComponent>,
@@ -53,6 +65,7 @@ export class NuevoMovimientoBancarioComponent implements OnInit, OnChanges {
     private _CuentaBancariaEmpresa: CuentabancariaEmpresaService,
     private _MovimientoBancario: MovimientoBancarioService,
     private _OrdenCompraService: OrdenCompraService,
+    private _OrdenVentaService: VentasService
   ) {
     this.modalData = data;
   }
@@ -63,13 +76,78 @@ export class NuevoMovimientoBancarioComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.dialogRef?.updateSize('80%');
+    console.log("esto es lo que se rcibe", this.cuentaBancariaEmpresaId);
     this.establecerContexto();
+    if(this.idCliente != 0 || this.idProveedor != 0){
+      this._CuentaBancariaEmpresa.ObtenerTodos(this.empresaContextoId).subscribe((datos) => {
+        this.cuentaBE = datos;
+    });
+    }
+    if(this.idCliente != 0){
+      this.tipoBeneficiario = 2;
+      this._ClientesService.obtenerTodos(this.empresaContextoId).subscribe((datos) => {
+          this.beneficiario = datos;
+        });
+      this.movimientoBancario.idBeneficiario = this.idCliente;
+      this.movimientoBancario.tipoBeneficiario = 2;
+      this._CuentasBancariasCleintes
+          .ObtenerXIdCliente(this.empresaContextoId, this.idCliente)
+          .subscribe((datos) => {
+            this.cuentaB = datos;
+          });
+
+          this._OrdenVentaService.ObtenerXIdClienteSinPagar(this.empresaContextoId, this.idCliente).subscribe((datos) => {
+            console.log("esta son las ordenes de venta", datos);
+          this.OrdenesVentaPorPagar = datos;
+          this.OrdenesVentaPorPagar = this.OrdenesVentaPorPagar.filter((z) => z.id == this.idOrdenVenta);
+          this.movimientoBancario.ordenVentas = this.OrdenesVentaPorPagar;
+          console.log("estas son las ordenes de venta", this.OrdenesVentaPorPagar);
+        });
+        this._OrdenVentaService.ObtenerFacturasXIdClienteSinPagar(this.empresaContextoId, this.idCliente).subscribe((datos) => {
+
+          this.FacturaXOrdenVentaPorPagar = datos;
+          this.FacturaXOrdenVentaPorPagar = this.FacturaXOrdenVentaPorPagar.filter((z) => z.idOrdenVenta == this.idOrdenVenta);
+          this.movimientoBancario.facturasXOrdenVenta = this.FacturaXOrdenVentaPorPagar;
+        })
+    }
+    if(this.idProveedor != 0){
+      console.log("entro al proveedor", this.idProveedor);
+      this.tipoBeneficiario = 1;
+      this._ProveedoresService.obtenerTodos(this.empresaContextoId).subscribe((datos) => {
+          this.beneficiario = datos;
+        });
+        this.movimientoBancario.idBeneficiario = this.idProveedor;
+      this.movimientoBancario.tipoBeneficiario = 1;
+      this._CuentasBancariasProveedores
+          .ObtenerXIdContratista(this.empresaContextoId, this.idProveedor)
+          .subscribe((datos) => {
+            this.cuentaB = datos;
+          });
+        this._OrdenCompraService
+          .ObtenerXIdContratistaSinPagar(this.empresaContextoId, this.idProveedor)
+          .subscribe((datos) => {
+            this.OrdenesCompraPorPagar = datos;
+            this.OrdenesCompraPorPagar = this.OrdenesCompraPorPagar.filter((z) => z.id == this.idOrdenCompra);
+            this.movimientoBancario.ordenCompras = this.OrdenesCompraPorPagar;
+            console.log("esta son las facturas de ordenes de venta", this.OrdenesCompraPorPagar);
+
+          });
+        this._OrdenCompraService
+          .ObtenerFacturasXIdContratistaSinPagar(this.empresaContextoId, this.idProveedor)
+          .subscribe((datos) => {
+            this.FacturaXOrdenCompraPorPagar = datos;
+            this.FacturaXOrdenCompraPorPagar = this.FacturaXOrdenCompraPorPagar.filter((z) => z.idOrdenCompra == this.idOrdenCompra);
+            this.movimientoBancario.facturasXOrdenCompra = this.FacturaXOrdenCompraPorPagar;
+          });
+    }
   }
 
   private establecerContexto() {
     this.empresaContextoId = this.empresaId ?? this.modalData?.idEmpresa ?? 0;
     this.cuentaBancariaEmpresaContextoId =
       this.cuentaBancariaEmpresaId ?? this.modalData?.idCeuntaBancariaEmpresa ?? 0;
+
+      this.movimientoBancario.idCuentaBancariaEmpresa = this.cuentaBancariaEmpresaContextoId;
   }
 
   private crearMovimientoInicial(): MovimientoBancarioTeckioDTO {
@@ -103,6 +181,10 @@ export class NuevoMovimientoBancarioComponent implements OnInit, OnChanges {
       esOrdenCompra: false,
       facturasXOrdenCompra: [],
       ordenCompras: [],
+      esFacturaOrdenVenta: false,
+      esOrdenVenta: false,
+      ordenVentas: [],
+      facturasXOrdenVenta: []
     };
   }
 
@@ -204,6 +286,7 @@ export class NuevoMovimientoBancarioComponent implements OnInit, OnChanges {
           .subscribe((datos) => {
             this.OrdenesCompraPorPagar = datos;
             this.movimientoBancario.ordenCompras = datos;
+            console.log("esta son las facturas de ordenes de venta", this.OrdenesCompraPorPagar);
           });
         this._OrdenCompraService
           .ObtenerFacturasXIdContratistaSinPagar(this.empresaContextoId, valorSeleccion)
@@ -218,6 +301,14 @@ export class NuevoMovimientoBancarioComponent implements OnInit, OnChanges {
           .subscribe((datos) => {
             this.cuentaB = datos;
           });
+        this._OrdenVentaService.ObtenerXIdClienteSinPagar(this.empresaContextoId, valorSeleccion).subscribe((datos) => {
+          this.OrdenesVentaPorPagar = datos;
+          this.movimientoBancario.ordenVentas = datos;
+        });
+        this._OrdenVentaService.ObtenerFacturasXIdClienteSinPagar(this.empresaContextoId, valorSeleccion).subscribe((datos) => {
+          this.FacturaXOrdenVentaPorPagar = datos;
+          this.movimientoBancario.facturasXOrdenVenta = datos;
+        })
         break;
     }
   }
@@ -235,7 +326,7 @@ export class NuevoMovimientoBancarioComponent implements OnInit, OnChanges {
   }
 
   guardarMovimientoBancario() {
-    if (!this.empresaContextoId || !this.cuentaBancariaEmpresaContextoId) {
+    if (!this.movimientoBancario.idCuentaBancariaEmpresa) {
       Swal.fire({
         title: 'Error',
         text: 'Selecciona una cuenta bancaria de empresa antes de guardar.',
@@ -244,7 +335,6 @@ export class NuevoMovimientoBancarioComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.movimientoBancario.idCuentaBancariaEmpresa = this.cuentaBancariaEmpresaContextoId;
     this.movimientoBancario.beneficiario = '';
     this.movimientoBancario.descripcionEstatus = '';
     this.movimientoBancario.descripcionModalidad = '';
@@ -315,13 +405,40 @@ export class NuevoMovimientoBancarioComponent implements OnInit, OnChanges {
     if (this.movimientoBancario.esFactura) {
       this.movimientoBancario.esFactura = true;
       this.movimientoBancario.esOrdenCompra = false;
+      this.movimientoBancario.esFacturaOrdenVenta = false;
+      this.movimientoBancario.esOrdenVenta = false;
+
       this.movimientoBancario.montoTotal = 0;
       this.recalculaTotalFacturas();
     } else {
       this.movimientoBancario.esFactura = false;
       if (
         this.movimientoBancario.esFactura == false &&
-        this.movimientoBancario.esOrdenCompra == false
+        this.movimientoBancario.esOrdenCompra == false &&
+        this.movimientoBancario.esFacturaOrdenVenta == false &&
+        this.movimientoBancario.esOrdenVenta == false
+      ) {
+        this.movimientoBancario.montoTotal = 0;
+      }
+    }
+  }
+
+  esFacturaXOrdenVenta() {
+    if (this.movimientoBancario.esFacturaOrdenVenta) {
+      this.movimientoBancario.esFactura = false;
+      this.movimientoBancario.esOrdenCompra = false;
+      this.movimientoBancario.esFacturaOrdenVenta = true;
+      this.movimientoBancario.esOrdenVenta = false;
+
+      this.movimientoBancario.montoTotal = 0;
+      this.recalculaTotalFacturasXOrdenVenta();
+    } else {
+      this.movimientoBancario.esFacturaOrdenVenta = false;
+      if (
+        this.movimientoBancario.esFactura == false &&
+        this.movimientoBancario.esOrdenCompra == false &&
+        this.movimientoBancario.esFacturaOrdenVenta == false &&
+        this.movimientoBancario.esOrdenVenta == false
       ) {
         this.movimientoBancario.montoTotal = 0;
       }
@@ -330,15 +447,42 @@ export class NuevoMovimientoBancarioComponent implements OnInit, OnChanges {
 
   esOrdenCompra() {
     if (this.movimientoBancario.esOrdenCompra) {
-      this.movimientoBancario.esOrdenCompra = true;
       this.movimientoBancario.esFactura = false;
+      this.movimientoBancario.esOrdenCompra = true;
+      this.movimientoBancario.esFacturaOrdenVenta = false;
+      this.movimientoBancario.esOrdenVenta = false;
+
       this.movimientoBancario.montoTotal = 0;
       this.recalculaTotalOrdenCompras();
     } else {
       this.movimientoBancario.esOrdenCompra = false;
       if (
         this.movimientoBancario.esFactura == false &&
-        this.movimientoBancario.esOrdenCompra == false
+        this.movimientoBancario.esOrdenCompra == false &&
+        this.movimientoBancario.esFacturaOrdenVenta == false &&
+        this.movimientoBancario.esOrdenVenta == false
+      ) {
+        this.movimientoBancario.montoTotal = 0;
+      }
+    }
+  }
+
+  esOrdenVenta() {
+    if (this.movimientoBancario.esOrdenVenta) {
+      this.movimientoBancario.esFactura = false;
+      this.movimientoBancario.esOrdenCompra = false;
+      this.movimientoBancario.esFacturaOrdenVenta = false;
+      this.movimientoBancario.esOrdenVenta = true;
+
+      this.movimientoBancario.montoTotal = 0;
+      this.recalculaTotalOrdenVentas();
+    } else {
+      this.movimientoBancario.esOrdenVenta = false;
+      if (
+        this.movimientoBancario.esFactura == false &&
+        this.movimientoBancario.esOrdenCompra == false &&
+        this.movimientoBancario.esFacturaOrdenVenta == false &&
+        this.movimientoBancario.esOrdenVenta == false
       ) {
         this.movimientoBancario.montoTotal = 0;
       }
@@ -357,6 +501,24 @@ export class NuevoMovimientoBancarioComponent implements OnInit, OnChanges {
   recalculaTotalOrdenCompras() {
     this.movimientoBancario.montoTotal = 0;
     this.movimientoBancario.ordenCompras.forEach((element) => {
+      if (element.esSeleccionado) {
+        this.movimientoBancario.montoTotal += element.montoAPagar;
+      }
+    });
+  }
+
+  recalculaTotalFacturasXOrdenVenta() {
+    this.movimientoBancario.montoTotal = 0;
+    this.movimientoBancario.facturasXOrdenVenta.forEach((element) => {
+      if (element.esSeleccionado) {
+        this.movimientoBancario.montoTotal += element.montoAPagar;
+      }
+    });
+  }
+
+  recalculaTotalOrdenVentas() {
+    this.movimientoBancario.montoTotal = 0;
+    this.movimientoBancario.ordenVentas.forEach((element) => {
       if (element.esSeleccionado) {
         this.movimientoBancario.montoTotal += element.montoAPagar;
       }

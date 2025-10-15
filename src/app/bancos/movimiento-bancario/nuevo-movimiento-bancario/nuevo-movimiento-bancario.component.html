@@ -8,6 +8,20 @@
     Regresar
   </button>
   <div class="bg-white rounded-lg shadow-sm p-4">
+    <div class="mb-3" *ngIf="idCliente != 0 || idProveedor != 0">
+      <label class="block text-sm font-medium text-gray-700" for="almacen">Cuenta bancaria empresa</label>
+      <select
+        class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        [(ngModel)]="movimientoBancario.idCuentaBancariaEmpresa"
+      >
+        <option class="text-gray-700" [ngValue]="0" disabled hidden>
+          Selecciona una cuenta bancaria de empresa..
+        </option>
+        <option [ngValue]="cbe.id" *ngFor="let cbe of cuentaBE">
+          {{ cbe.numeroCuenta + '(' + cbe.nombreBanco + ')' }}
+        </option>
+      </select>
+    </div>
     <div class="mb-3">
       <label class="block text-sm font-medium text-gray-700" for="almacen"
         >Tipo de beneficiario</label
@@ -16,6 +30,7 @@
         class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         [(ngModel)]="movimientoBancario.tipoBeneficiario"
         (ngModelChange)="onTipoBeneficiarioChange($event)"
+        [disabled]="idCliente != 0 || idProveedor != 0"
       >
         <option [ngValue]="0" class="text-gray-700" disabled hidden>Selecciona un tipo..</option>
         <option [ngValue]="1">Proveedor</option>
@@ -30,6 +45,7 @@
         class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         [(ngModel)]="movimientoBancario.idBeneficiario"
         (ngModelChange)="onBeneficiarioChange($event)"
+        [disabled]="idCliente != 0 || idProveedor != 0"
       >
         <option class="text-gray-700" [ngValue]="0" disabled hidden>
           Selecciona un beneficiario..
@@ -51,26 +67,53 @@
         </option>
       </select>
     </div>
-    <div class="flex gap-3">
-      <div class="mb-3 flex gap-1" *ngIf="tipoBeneficiario == 1">
+    <div class="flex gap-3" *ngIf="tipoBeneficiario == 1">
+      <div class="mb-3 flex gap-1">
         <input
           type="checkbox"
           name=""
           id=""
           [(ngModel)]="movimientoBancario.esFactura"
           (change)="esFactura()"
+          class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500"
         />
         <label class="block text-sm font-medium text-gray-700" for="almacen">Factura</label>
       </div>
-      <div class="mb-3 flex gap-1" *ngIf="tipoBeneficiario == 1">
+      <div class="mb-3 flex gap-1">
         <input
           type="checkbox"
           name=""
           id=""
           [(ngModel)]="movimientoBancario.esOrdenCompra"
           (change)="esOrdenCompra()"
+          class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500"
         />
         <label class="block text-sm font-medium text-gray-700" for="almacen">Pedido</label>
+      </div>
+    </div>
+
+    <div class="flex gap-3" *ngIf="tipoBeneficiario == 2">
+      <div class="mb-3 flex gap-1">
+        <input
+          type="checkbox"
+          name=""
+          id=""
+          [(ngModel)]="movimientoBancario.esFacturaOrdenVenta"
+          (change)="esFacturaXOrdenVenta()"
+          class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500"
+        />
+        <label class="block text-sm font-medium text-gray-700" for="almacen">Factura</label>
+      </div>
+      <div class="mb-3 flex gap-1">
+        <input
+          type="checkbox"
+          name=""
+          id=""
+          [(ngModel)]="movimientoBancario.esOrdenVenta"
+          (change)="esOrdenVenta()"
+          class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500"
+        />
+        <label class="block text-sm font-medium text-gray-700" for="almacen">Orden venta</label>
       </div>
     </div>
 
@@ -98,6 +141,7 @@
                   id=""
                   [(ngModel)]="oc.esSeleccionado"
                   (change)="recalculaTotalOrdenCompras()"
+                  class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500"
                 />
               </th>
               <td class="td-0" scope="col">{{ oc.noOrdenCompra }}</td>
@@ -140,6 +184,7 @@
                   id=""
                   [(ngModel)]="fxoc.esSeleccionado"
                   (change)="recalculaTotalFacturas()"
+                  class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500"
                 />
               </th>
               <td class="td-0" scope="col">{{ fxoc.uuid }}</td>
@@ -153,6 +198,92 @@
                 />
               </td>
               <td class="td-0" scope="col">{{ fxoc.saldo }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="mb-3" *ngIf="movimientoBancario.esOrdenVenta">
+      <div
+        style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px"
+      >
+        <table
+          class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos"
+        >
+          <thead>
+            <tr>
+              <th class="cabecera1" scope="col"></th>
+              <th class="cabecera1" scope="col">No. OV</th>
+              <th class="cabecera1" scope="col">Monto a pagar</th>
+              <th class="cabecera1" scope="col">Saldo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ov of movimientoBancario.ordenVentas">
+              <th class="td-0" scope="col">
+                <input
+                  type="checkbox"
+                  name=""
+                  id=""
+                  [(ngModel)]="ov.esSeleccionado"
+                  (change)="recalculaTotalOrdenVentas()"
+                  class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500"
+                />
+              </th>
+              <td class="td-0" scope="col">{{ ov.numeroOrdenVenta }}</td>
+              <td class="td-0" scope="col">
+                <input
+                  type="number"
+                  name=""
+                  id=""
+                  [(ngModel)]="ov.montoAPagar"
+                  (keydown.enter)="recalculaTotalOrdenVentas()"
+                />
+              </td>
+              <td class="td-0" scope="col">{{ ov.saldo }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="mb-3" *ngIf="movimientoBancario.esFacturaOrdenVenta">
+      <div
+        style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px"
+      >
+        <table
+          class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos"
+        >
+          <thead>
+            <tr>
+              <th class="cabecera1" scope="col"></th>
+              <th class="cabecera1" scope="col">Uuid</th>
+              <th class="cabecera1" scope="col">Monto a pagar</th>
+              <th class="cabecera1" scope="col">Saldo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let fxov of movimientoBancario.facturasXOrdenVenta">
+              <th class="td-0" scope="col">
+                <input
+                  type="checkbox"
+                  name=""
+                  id=""
+                  [(ngModel)]="fxov.esSeleccionado"
+                  (change)="recalculaTotalFacturasXOrdenVenta()"
+                  class="w-4 h-4 text-blue-600 bg-gray-300 border-gray-300 focus:ring-blue-500"
+                />
+              </th>
+              <td class="td-0" scope="col">{{ fxov.uuid }}</td>
+              <td class="td-0" scope="col">
+                <input
+                  type="number"
+                  name=""
+                  id=""
+                  [(ngModel)]="fxov.montoAPagar"
+                  (keydown.enter)="recalculaTotalFacturasXOrdenVenta()"
+                />
+              </td>
+              <td class="td-0" scope="col">{{ fxov.saldo }}</td>
             </tr>
           </tbody>
         </table>

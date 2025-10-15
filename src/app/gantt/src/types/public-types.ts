@@ -168,6 +168,19 @@ export interface ImporteSemanalDTO{
   totalConFormato : string;
 }
 
+export interface TimelineMetrics {
+  columnWidth: number;
+  additionalLeftSpace: number;
+  additionalRightSpace: number;
+  startColumnIndex: number;
+  endColumnIndex: number;
+  fullSvgWidth: number;
+  viewMode: ViewMode;
+  taskListWidth: number;
+  splitterWidth: number;
+  timelineViewportWidth: number;
+}
+
 
 
 export interface Task {
@@ -604,6 +617,9 @@ export interface GanttProps extends EventOption, DisplayOption, StylingOption   
   selectedEmpresa: number;
   selectedProyecto: number;
   isChecked?  : boolean;
+  onTimelineMetricsChange?: (metrics: TimelineMetrics) => void;
+  onHorizontalScroll?: (scrollLeft: number) => void;
+  externalHorizontalScroll?: number;
   
   
 }

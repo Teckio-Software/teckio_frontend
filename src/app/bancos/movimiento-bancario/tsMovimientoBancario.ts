@@ -1,4 +1,5 @@
 import { FacturaXOrdenCompraDTO, ordenCompraDTO } from "src/app/compras/orden-compra/tsOrdenCompra";
+import { FacturaXOrdenVentaDTO, OrdenVentaDTO } from "src/app/gestion-ventas/ventas/ordenVenta";
 
 export interface MovimientoBancarioTeckioDTO extends MBancarioBeneficiarioDTO {
   id : number;
@@ -27,6 +28,10 @@ export interface MovimientoBancarioTeckioDTO extends MBancarioBeneficiarioDTO {
   esOrdenCompra : boolean;
   facturasXOrdenCompra : FacturaXOrdenCompraDTO[];
   ordenCompras : ordenCompraDTO[];
+  esFacturaOrdenVenta : boolean;
+  esOrdenVenta : boolean;
+  facturasXOrdenVenta : FacturaXOrdenVentaDTO[];
+  ordenVentas : OrdenVentaDTO[];
 }
 
 export interface MBancarioBeneficiarioDTO {

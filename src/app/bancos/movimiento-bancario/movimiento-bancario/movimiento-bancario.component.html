@@ -1,3 +1,10 @@
+<app-alert
+        *ngIf="alertaTipo !== AlertaTipo.none"
+        [alertaTipo]="alertaTipo"
+        [alertaMessage]="alertaMessage"
+        (close)="cerrarAlerta()"
+      >
+      </app-alert>
 <ng-container *ngIf="!mostrarFormularioNuevo; else nuevoMovimiento">
   <div #cuentaWrapper class="w-full flex items-center gap-4 mb-4 flex-wrap">
     <div class="relative">

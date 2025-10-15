@@ -55,6 +55,10 @@ export class OrdenCompraService {
         return this.HttpClient.get<ordenCompraDTO[]>(`${this.apiUrl}/${idEmp}/ObtenerXIdContratistaSinPagar/${idContratista}`)
     }
 
+    public ObtenerTodasSinPagar(idEmp: number) {
+              return this.HttpClient.get<ordenCompraDTO[]>(`${this.apiUrl}/${idEmp}/ObtenerTodasSinPagar`)
+      }
+
     public ObtenerFacturasXIdContratistaSinPagar(idEmp: number, idContratista: number) {
         return this.HttpClient.get<FacturaXOrdenCompraDTO[]>(`${this.apiUrl}/${idEmp}/ObtenerFacturasXIdContratistaSinPagar/${idContratista}`)
     }

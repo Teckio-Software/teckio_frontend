@@ -684,6 +684,8 @@
   </div>
 </div>
 
+
+
 <ng-template #dialogNuevaFactura>
   <div
     class="fixed inset-0 z-10 w-screen overflow-y-auto"
@@ -773,3 +775,23 @@
     </div>
   </div>
 </ng-template>
+
+
+<div [style.display]="displayCarga" class="contenedor-ventana z-50">
+  <div class="ventana-bloque"></div>
+  <div class="contenedor-spinner">
+    <div class="spinner-border spinner" role="status" style="color: #4eaac1"></div>
+    <p
+      style="
+        position: fixed;
+        margin-top: 60px;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        color: #4eaac1;
+      "
+    >
+      Cargando...
+    </p>
+  </div>
+</div>
