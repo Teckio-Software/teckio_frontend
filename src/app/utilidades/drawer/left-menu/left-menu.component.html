@@ -74,7 +74,7 @@
                 <ng-container *ngIf="page.imageUrl; else iconTemplate">
                   <img
                     class="w-8 h-8"
-                    [src]="page.imageUrl"
+                    [src]="page.expanded?page.imageUrlExpanded:page.imageUrl"
                     alt="{{ page.name }}"
                     [ngbTooltip]="sideNavState ? '' : 'Menu ' + page?.name"
                     triggers="mouseenter:mouseleave"
@@ -92,7 +92,7 @@
                     {{ page.name }}
                   </div>
                   <div [@animateText]="linkText ? 'show' : 'hide'">
-                    <mat-icon>
+                    <mat-icon [ngClass]="page.expanded?'text-blue-600':''">
                       {{ page.expanded ? "expand_less" : "expand_more" }}
                     </mat-icon>
                   </div>
@@ -101,7 +101,7 @@
             </button>
             <!-- Lista anidada -->
             <ng-container *ngIf="page.nestedPages && page.expanded && sideNavState">
-              <div class="mt-2 mb-2 ml-4 border-l-2 border-gray-400">
+              <div class="mt-2 mb-2 ml-6 border-l-2 border-gray-400">
                  <button
                 [disabled]="isLoading"
                 (click)="title(nestedPage)"
