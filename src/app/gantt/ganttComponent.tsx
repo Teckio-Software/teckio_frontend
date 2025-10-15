@@ -1,4 +1,4 @@
-import React, { act, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -22,6 +22,7 @@ import {
   Task,
   TaskOrEmpty,
   TitleColumn,
+  TimelineMetrics,
   ViewMode,
 } from './src';
 import { ViewSwitcher } from './components/view-switcher';
@@ -601,6 +602,11 @@ export const GanttComponent: React.FC<AppProps> = (props) => {
   const [semanasMaterial, setSemanasMaterial] = useState<ImporteSemanalDTO[]>([]);
   const [semanasEquipo, setSemanasEquipo] = useState<ImporteSemanalDTO[]>([]);
   const [semanasHerramienta, setSemanasHerramienta] = useState<ImporteSemanalDTO[]>([]);
+  const [timelineMetrics, setTimelineMetrics] = useState<TimelineMetrics | null>(null);
+  const tableScrollContainerRef = useRef<HTMLDivElement>(null);
+  const [externalScrollLeft, setExternalScrollLeft] = useState<number | undefined>(undefined);
+  const scrollSyncOriginRef = useRef<'gantt' | 'table' | null>(null);
+  const lastSyncedScrollRef = useRef<number>(0);
   const getImporteSemanal = async () => {
     console.log('getImporteSemanal()', props.selectedEmpresa, props.selectedProyecto);
 
@@ -625,6 +631,63 @@ export const GanttComponent: React.FC<AppProps> = (props) => {
   useEffect(() => {
     getProgramaciones();
     getImporteSemanal();
+  }, []);
+
+  const handleTimelineMetricsChange = useCallback((metrics: TimelineMetrics) => {
+    setTimelineMetrics((prev) => {
+      if (
+        prev &&
+        prev.columnWidth === metrics.columnWidth &&
+        prev.additionalLeftSpace === metrics.additionalLeftSpace &&
+        prev.additionalRightSpace === metrics.additionalRightSpace &&
+        prev.startColumnIndex === metrics.startColumnIndex &&
+        prev.endColumnIndex === metrics.endColumnIndex &&
+        prev.fullSvgWidth === metrics.fullSvgWidth &&
+        prev.viewMode === metrics.viewMode
+      ) {
+        return prev;
+      }
+
+      return metrics;
+    });
+  }, []);
+
+  const handleGanttHorizontalScroll = useCallback((scrollLeft: number) => {
+    lastSyncedScrollRef.current = scrollLeft;
+
+    if (scrollSyncOriginRef.current === 'table') {
+      return;
+    }
+
+    scrollSyncOriginRef.current = 'gantt';
+
+    if (tableScrollContainerRef.current) {
+      tableScrollContainerRef.current.scrollLeft = scrollLeft;
+    }
+
+    requestAnimationFrame(() => {
+      if (scrollSyncOriginRef.current === 'gantt') {
+        scrollSyncOriginRef.current = null;
+      }
+    });
+  }, []);
+
+  const handleTableScroll = useCallback((scrollLeft: number) => {
+    lastSyncedScrollRef.current = scrollLeft;
+
+    if (scrollSyncOriginRef.current === 'gantt') {
+      return;
+    }
+
+    scrollSyncOriginRef.current = 'table';
+
+    setExternalScrollLeft((prev) => (prev === scrollLeft ? prev : scrollLeft));
+
+    requestAnimationFrame(() => {
+      if (scrollSyncOriginRef.current === 'table') {
+        scrollSyncOriginRef.current = null;
+      }
+    });
   }, []);
 
   let TasckDataMap = actividades.map((actividad) => {
@@ -827,8 +890,11 @@ export const GanttComponent: React.FC<AppProps> = (props) => {
               columns={columns}
               isChecked={isChecked}
               isDeleteDependencyOnDoubleClick={true}
+              onTimelineMetricsChange={handleTimelineMetricsChange}
+              onHorizontalScroll={handleGanttHorizontalScroll}
+              externalHorizontalScroll={externalScrollLeft}
             />
-            {view === ViewMode.Week && !hiddenTable && (
+            {view === ViewMode.Week && !hiddenTable && timelineMetrics && (
               <TableBelow
                 importeSemanal={semanas}
                 semanasMDO={semanasMDO}
@@ -838,6 +904,15 @@ export const GanttComponent: React.FC<AppProps> = (props) => {
                 onViewModeChange={(viewMode) => setView(viewMode)}
                 onViewListChange={setIsChecked}
                 isChecked={isChecked}
+                columnWidth={timelineMetrics.columnWidth}
+                additionalLeftSpace={timelineMetrics.additionalLeftSpace}
+                additionalRightSpace={timelineMetrics.additionalRightSpace}
+                fullWidth={timelineMetrics.fullSvgWidth}
+                taskListWidth={timelineMetrics.taskListWidth}
+                splitterWidth={timelineMetrics.splitterWidth}
+                viewMode={timelineMetrics.viewMode}
+                scrollContainerRef={tableScrollContainerRef}
+                onScroll={handleTableScroll}
               />
             )}
           </DndProvider>

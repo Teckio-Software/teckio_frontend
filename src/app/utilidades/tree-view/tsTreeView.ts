@@ -3,3 +3,6 @@ export interface TreeView {
     expanded?: boolean;
   }
   
+  export interface encabezado{
+    encabezado?: string[];
+  }

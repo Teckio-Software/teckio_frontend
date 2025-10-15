@@ -230,10 +230,14 @@ export const Gantt: React.FC<GanttProps> = ({
   selectedEmpresa,
   selectedProyecto,
   isChecked,
+  onTimelineMetricsChange,
+  onHorizontalScroll,
+  externalHorizontalScroll,
 }) => {
   const ganttSVGRef = useRef<SVGSVGElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const taskListRef = useRef<HTMLDivElement>(null);
+  const splitterRef = useRef<HTMLDivElement>(null);
 
   const { contextMenu, handleCloseContextMenu, handleOpenContextMenu } = useContextMenu(wrapperRef);
 
@@ -258,6 +262,29 @@ export const Gantt: React.FC<GanttProps> = ({
   ] = useHorizontalScrollbars();
 
   const scrollXRef = useLatest(scrollX);
+
+  useEffect(() => {
+    if (externalHorizontalScroll == null) {
+      return;
+    }
+
+    if (Math.abs(externalHorizontalScroll - scrollX) < 1) {
+      return;
+    }
+
+    setScrollXProgrammatically(externalHorizontalScroll);
+  }, [externalHorizontalScroll, scrollX, setScrollXProgrammatically]);
+
+  const handleHorizontalScroll = useCallback(
+    (event: React.SyntheticEvent<HTMLDivElement>) => {
+      onVerticalScrollbarScrollX(event);
+
+      if (onHorizontalScroll) {
+        onHorizontalScroll(event.currentTarget.scrollLeft);
+      }
+    },
+    [onHorizontalScroll, onVerticalScrollbarScrollX],
+  );
 
   // const roundEndDate = useCallback(
   //   (date: Date) => roundEndDateProp(date, viewMode),
@@ -1871,6 +1898,52 @@ export const Gantt: React.FC<GanttProps> = ({
     ],
   );
 
+  const baseTimelineMetrics = useMemo(
+    () => ({
+      columnWidth: distances.columnWidth,
+      additionalLeftSpace,
+      additionalRightSpace,
+      startColumnIndex,
+      endColumnIndex,
+      fullSvgWidth,
+      viewMode,
+    }),
+    [
+      additionalLeftSpace,
+      additionalRightSpace,
+      distances.columnWidth,
+      endColumnIndex,
+      fullSvgWidth,
+      startColumnIndex,
+      viewMode,
+    ],
+  );
+
+  useEffect(() => {
+    if (!onTimelineMetricsChange) {
+      return;
+    }
+
+    const splitterWidth = isChecked ? splitterRef.current?.offsetWidth ?? 0 : 0;
+    const taskListWidthValue = isChecked ? tableWidth : 0;
+    const timelineViewportWidth = verticalGanttContainerRef.current?.clientWidth ?? fullSvgWidth;
+
+    onTimelineMetricsChange({
+      ...baseTimelineMetrics,
+      splitterWidth,
+      taskListWidth: taskListWidthValue,
+      timelineViewportWidth,
+    });
+  }, [
+    baseTimelineMetrics,
+    fullSvgWidth,
+    isChecked,
+    onTimelineMetricsChange,
+    splitterRef,
+    tableWidth,
+    verticalGanttContainerRef,
+  ]);
+
   const tableProps: TaskListProps = {
     TaskListHeader,
     TaskListTable,
@@ -1922,6 +1995,7 @@ export const Gantt: React.FC<GanttProps> = ({
           <TaskList {...tableProps} />
           <div
             className="gantt-splitter"
+            ref={splitterRef}
             role="separator"
             aria-orientation="vertical"
             aria-label="Ajustar ancho de la tabla y el cronograma"
@@ -1943,7 +2017,7 @@ export const Gantt: React.FC<GanttProps> = ({
         ganttSVGRef={ganttSVGRef}
         gridProps={gridProps}
         horizontalContainerRef={horizontalContainerRef}
-        onVerticalScrollbarScrollX={onVerticalScrollbarScrollX}
+        onVerticalScrollbarScrollX={handleHorizontalScroll}
         verticalGanttContainerRef={verticalGanttContainerRef}
       />
 

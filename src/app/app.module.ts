@@ -1,6 +1,7 @@
-import { ChartModule } from 'primeng/chart';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { ChartModule } from 'primeng/chart';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -175,6 +176,8 @@ import { ProgressBarComponent } from './dashboard/components/progress-bar/progre
 import { GlosarioComponent } from './documentacion/glosario/glosario.component';
 import { ModalGlosarioComponent } from './documentacion/modal-glosario/modal-glosario.component';
 import { DocumentacionModule } from './documentacion/documentacion.module';
+import { CatalogoConceptoComponent } from './proyectos/precio-unitario/catalogo-concepto/catalogo-concepto.component';
+import { MatrizPrecioUnitarioComponent } from './proyectos/precio-unitario/matriz-precio-unitario/matriz-precio-unitario.component';
 import { ReportesSubcontratosComponent } from './proyectos/reportes-subcontratos/reportes-subcontratos/reportes-subcontratos.component';
 import { CuentasPorCobrarComponent } from './contabilidad/cuentas-por-cobrar/cuentas-por-cobrar.component';
 import { NuevaCuentaComponent } from './contabilidad/cuentas-por-cobrar/components/nueva-cuenta/nueva-cuenta.component';
@@ -182,6 +185,8 @@ import { CuentaFormComponent } from './contabilidad/cuentas-por-cobrar/component
 import { CuentaDetailsComponent } from './contabilidad/cuentas-por-cobrar/components/cuenta-details/cuenta-details.component';
 import { ImagenesComponent } from './seguridad/imagenes/imagenes.component';
 import { AlmacenTranspasoComponent } from './inventario/almacenTranspaso/almacen-transpaso.component';
+import { ImportarProyectoComponent } from './proyectos/precio-unitario/importar-proyecto/importar-proyecto.component';
+import { MatrizPrecioUnitarioCopiaComponent } from './proyectos/precio-unitario/matriz-precio-unitario-copia/matriz-precio-unitario-copia.component';
 import { VerCuentaComponent } from './contabilidad/cuentas-por-cobrar/components/ver-cuenta/ver-cuenta.component';
 import { CuentasPorPagarComponent } from './contabilidad/cuentas-por-pagar/cuentas-por-pagar/cuentas-por-pagar.component';
 
@@ -339,6 +344,8 @@ export function playerFactory() {
     UppercaseInputDirective,
     OnlyNumbersDirective,
     AuditoriasComponent,
+    CatalogoConceptoComponent,
+    MatrizPrecioUnitarioComponent,
     ReportesSubcontratosComponent,
     DashboardComponent,
     CountUpDirective,
@@ -349,8 +356,12 @@ export function playerFactory() {
     CuentaDetailsComponent,
     ImagenesComponent,
     AlmacenTranspasoComponent,
+    ImportarProyectoComponent,
+    MatrizPrecioUnitarioCopiaComponent,
     VerCuentaComponent,
     CuentasPorPagarComponent,
+    CatalogoConceptoComponent,
+    MatrizPrecioUnitarioComponent
   ],
 
   imports: [
@@ -374,6 +385,7 @@ export function playerFactory() {
     ScrollingModule,
     FieldsetModule,
     A11yModule,
+    OverlayModule,
     ChartModule,
   ],
   exports: [LeftMenuComponent],

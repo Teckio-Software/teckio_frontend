@@ -1,0 +1,41 @@
+.icon-display {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 10px;
+  height: 10px;
+  line-height: 24px;
+  font-size: 24px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.tabla-virtual {
+  height: 90vh;
+  display: block;
+  overflow-y: auto;
+}
+
+.tabla-virtual .cdk-virtual-scroll-content-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.menu-trigger {
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-opciones {
+  opacity: 0;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.menu-trigger:hover .btn-opciones,
+.btn-opciones:focus-visible {
+  opacity: 1;
+}

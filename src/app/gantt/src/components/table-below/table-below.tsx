@@ -1,319 +1,249 @@
-import React, { useState, useCallback, ReactNode } from 'react';
-import { TopPartOfCalendar } from '../calendar/top-part-of-calendar';
-import { defaultRenderBottomHeader } from '../calendar/default-render-bottom-header';
-import { defaultRenderTopHeader } from '../calendar/default-render-top-header';
-import { DateSetup, Distances, ImporteSemanalDTO, RenderBottomHeader, RenderTopHeader, ViewMode } from '../../types/public-types';
-import { vi } from 'date-fns/locale';
+import React, { useCallback, useMemo, useRef } from 'react';
 
+import { ImporteSemanalDTO, ViewMode } from '../../types/public-types';
 
-
-export type importeProps = {
-  importeSemanal : ImporteSemanalDTO[];
-  semanasMDO : ImporteSemanalDTO[];
-  semanasMaterial : ImporteSemanalDTO[];
-  semanasEquipo : ImporteSemanalDTO[];
-  semanasHerramienta : ImporteSemanalDTO[];
+type TableBelowProps = {
+  importeSemanal: ImporteSemanalDTO[];
+  semanasMDO: ImporteSemanalDTO[];
+  semanasMaterial: ImporteSemanalDTO[];
+  semanasEquipo: ImporteSemanalDTO[];
+  semanasHerramienta: ImporteSemanalDTO[];
   isChecked: boolean;
   onViewListChange: (isChecked: boolean) => void;
   onViewModeChange: (viewMode: ViewMode) => void;
-  // dateSetup: DateSetup;
-  // distances: Distances;
-  // endColumnIndex: number;
-  // startColumnIndex: number;
-  // fontFamily: string;
-  // fontSize: string;
-  // fullSvgWidth: number;
-  // additionalLeftSpace: number;
-  // getDate: (index: number) => Date;
-  // isUnknownDates: boolean;
-  // renderBottomHeader?: RenderBottomHeader;
-  // renderTopHeader?: RenderTopHeader;
-  // rtl: boolean;
+  columnWidth?: number;
+  additionalLeftSpace?: number;
+  additionalRightSpace?: number;
+  fullWidth?: number;
+  viewMode?: ViewMode;
+  scrollContainerRef?: React.RefObject<HTMLDivElement>;
+  onScroll?: (scrollLeft: number) => void;
+  taskListWidth?: number;
+  splitterWidth?: number;
+};
 
+const DEFAULT_COLUMN_WIDTH = 240;
+const STICKY_COLUMN_WIDTH = 220;
+const DATE_OPTIONS: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit' };
 
+const getWeekKey = (semana: ImporteSemanalDTO) => `${semana.anio}-${semana.numeroSemana}`;
 
+const createWeekMap = (items: ImporteSemanalDTO[]) => {
+  const map = new Map<string, ImporteSemanalDTO>();
 
-  // numeroSemana : number;
-  // fechaInicio : Date;
-  // fechaFin : Date;
-  // anio : number;
-  // total : number;
-  
+  items.forEach((item) => {
+    map.set(getWeekKey(item), item);
+  });
+
+  return map;
+};
+
+const formatCurrency = (value?: string) => value ?? '$0.00';
+
+const formatRange = (start: Date | string, end: Date | string) => {
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+
+  if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
+    return '--';
   }
 
+  return `${startDate.toLocaleDateString('es-MX', DATE_OPTIONS)} - ${endDate.toLocaleDateString('es-MX', DATE_OPTIONS)}`;
+};
 
-export const TableBelow: React.FC<importeProps> = ({
-  onViewModeChange,
-  onViewListChange,
-  isChecked,
-  // dateSetup,
+export const TableBelow: React.FC<TableBelowProps> = ({
   importeSemanal,
   semanasMDO,
   semanasMaterial,
   semanasEquipo,
   semanasHerramienta,
-  // distances: {
-  //   columnWidth,
-  //   headerHeight,
-  // },
-  // endColumnIndex,
-  // startColumnIndex,
-  // fontFamily,
-  // fontSize,
-  // additionalLeftSpace,
-  // fullSvgWidth,
-  // getDate,
-  // isUnknownDates,
-  // renderBottomHeader = defaultRenderBottomHeader,
-  // renderTopHeader = defaultRenderTopHeader,
-  // rtl,
+  isChecked: _isChecked,
+  onViewListChange: _onViewListChange,
+  onViewModeChange: _onViewModeChange,
+  columnWidth,
+  additionalLeftSpace,
+  additionalRightSpace,
+  fullWidth,
+  viewMode = ViewMode.Week,
+  scrollContainerRef,
+  onScroll,
+  taskListWidth,
+  splitterWidth,
 }) => {
-  console.log("importe", importeSemanal)
+  const internalScrollRef = useRef<HTMLDivElement>(null);
+  const containerRef = scrollContainerRef ?? internalScrollRef;
 
-  // const [tooltip, setTooltip] = useState<{ visible: boolean, content: string, x: number, y: number }>({
-  //   visible: false,
-  //   content: '',
-  //   x: 0,
-  //   y: 0,
-  // });
+  const weeks = useMemo(() => {
+    const map = new Map<string, ImporteSemanalDTO>();
 
-  // // Maneja el evento de mouse sobre el texto (hover)
-  // const handleMouseEnter = (event: React.MouseEvent, value: string) => {
-  //   console.log("value", value);
-  //   const rect = event.currentTarget.getBoundingClientRect();
-  //   setTooltip({
-  //     visible: true,
-  //     content: value,
-  //     // Usar el rect del contenedor actual para posicionar el tooltip
-  //     x: rect.left + rect.width / 2 - 100,  // Centrar el tooltip dentro del elemento
-  //     y: rect.top + rect.height + 10,  // Justo debajo del elemento (ajustar si es necesario)
-  //   });
-  // };
-  
-  // // Maneja el evento de mouse al salir
-  // const handleMouseLeave = () => {
-  //   setTooltip(prevTooltip => ({
-  //     ...prevTooltip,
-  //     visible: false,  // Ocultar el tooltip
-  //   }));
-  // };
+    importeSemanal.forEach((item) => {
+      map.set(getWeekKey(item), item);
+    });
 
-  //   const renderTopHeaderByDate = useCallback(
-  //   (date: Date) => renderTopHeader(date, dateSetup.viewMode, dateSetup),
-  //   [renderTopHeader, dateSetup],
-  // );
+    [semanasMDO, semanasMaterial, semanasEquipo, semanasHerramienta].forEach((list) => {
+      list.forEach((item) => {
+        const key = getWeekKey(item);
 
-  // const renderBottomHeaderByDate = useCallback(
-  //   (date: Date, index: number) => renderBottomHeader(
-  //     date,
-  //     dateSetup.viewMode,
-  //     dateSetup,
-  //     index,
-  //     isUnknownDates,
-  //   ),
-  //   [renderBottomHeader, dateSetup, isUnknownDates],
-  // );
+        if (!map.has(key)) {
+          map.set(key, item);
+        }
+      });
+    });
 
-  // // Maneja el evento de click sobre el texto
-  // const handleClick = (event: React.MouseEvent, value: string) => {
-  //   console.log("value", value);
-  //   const rect = event.currentTarget.getBoundingClientRect();
-  //   setTooltip(prevTooltip => ({
-  //     visible: !prevTooltip.visible,  // Alternar la visibilidad
-  //     content: value,
-  //     // Calcular las coordenadas para centrar el tooltip en la ventana
-  //     x: window.innerWidth / 2 - 100,  // Centrar en el medio de la ventana (ajustar 100px según el tamaño del rect)
-  //     y: window.innerHeight / 2 - 25,  // Centrar verticalmente en la ventana (ajustar 25px según el tamaño del rect)
-  //   }));
-  // };
+    const ordered = Array.from(map.values());
 
-  // const topValues: ReactNode[] = [];
-  // const bottomValues: ReactNode[] = [];
-  // let weeksCount: number = 1;
-  // const topDefaultHeight = headerHeight * 0.5;
+    ordered.sort((a, b) => {
+      const aTime = new Date(a.fechaInicio).getTime();
+      const bTime = new Date(b.fechaInicio).getTime();
 
-  // for (let i = endColumnIndex; i >= startColumnIndex; i--) {
-  //   const date = getDate(i);
-  //   const month = date.getMonth();
-  //   const fullYear = date.getFullYear();
+      if (aTime === bTime) {
+        return a.numeroSemana - b.numeroSemana;
+      }
 
-  //   // Buscar el valor correspondiente en importeSemanal
-  //   const matchedImporte = importeSemanal.find((importe: any) => {
-  //     const fechaInicio = new Date(importe.fechaInicio);
-  //     const fechaFin = new Date(importe.fechaFin);
-  //     return date >= fechaInicio && date <= fechaFin;
-  //   });
+      return aTime - bTime;
+    });
 
-  //   let topValue: ReactNode = "";
-  //   if (!isUnknownDates && (i === startColumnIndex || month !== getDate(i - 1).getMonth())) {
-  //     topValue = renderTopHeaderByDate(date);
-  //   }
+    return ordered;
+  }, [importeSemanal, semanasEquipo, semanasHerramienta, semanasMaterial, semanasMDO]);
 
-  //   const bottomValue = renderBottomHeaderByDate(date, i);
+  const weekMaps = useMemo(() => ({
+    total: createWeekMap(importeSemanal),
+    mdo: createWeekMap(semanasMDO),
+    material: createWeekMap(semanasMaterial),
+    equipo: createWeekMap(semanasEquipo),
+    herramienta: createWeekMap(semanasHerramienta),
+  }), [importeSemanal, semanasEquipo, semanasHerramienta, semanasMaterial, semanasMDO]);
 
-  //   bottomValues.push(
-  //     <text
-  //       key={date.getTime()}
-  //       y={headerHeight * 0.8}
-  //       x={additionalLeftSpace + columnWidth * (i + +rtl)}
-  //       className="calendarBottomTextTest"
-  //       onMouseEnter={(e) => handleMouseEnter(e, bottomValue as string)}  // Mostrar tooltip en hover
-  //       onMouseLeave={handleMouseLeave}  // Ocultar tooltip
-  //       onClick={(e) => handleClick(e, bottomValue as string)}  // Alternar tooltip con click
-  //       style={{ pointerEvents: 'all' }}  // Asegurarse de que los eventos se reciban
-  //     >
-  //       {bottomValue}
-  //     </text>
-  //   );
+  const effectiveColumnWidth = Math.max(80, columnWidth ?? DEFAULT_COLUMN_WIDTH);
+  const leftSpacer = Math.max(0, additionalLeftSpace ?? 0);
+  const rightSpacer = Math.max(0, additionalRightSpace ?? 0);
+  const fixedSectionWidth = Math.max(taskListWidth ?? 0, STICKY_COLUMN_WIDTH);
+  const splitterSpacer = Math.max(0, splitterWidth ?? 0);
 
-  //   if (topValue) {
-  //     topValues.push(
-  //       <TopPartOfCalendar
-  //         key={`${month}_${fullYear}`}
-  //         value={topValue}
-  //         x1Line={additionalLeftSpace + columnWidth * i + weeksCount * columnWidth}
-  //         y1Line={0}
-  //         y2Line={topDefaultHeight}
-  //         xText={additionalLeftSpace + columnWidth * i + columnWidth * weeksCount * 0.5}
-  //         yText={topDefaultHeight * 0.9}
-  //       />
-  //     );
-  //     weeksCount = 0;
-  //   }
+  const columnsCount = weeks.length;
+  const timelineWidth = leftSpacer + columnsCount * effectiveColumnWidth + rightSpacer;
+  const timelineContentWidth = Math.max(fullWidth ?? 0, timelineWidth);
+  const contentWidth = fixedSectionWidth + splitterSpacer + timelineContentWidth;
 
-  //   if (matchedImporte && matchedImporte.fechaInicio instanceof Date) {
-  //     const matchedDay = matchedImporte.fechaInicio.getDate();
-  //     bottomValues.push(
-  //       <text
-  //         key={matchedImporte.numeroSemana}
-  //         x={additionalLeftSpace + columnWidth * i + +rtl}
-  //         y={headerHeight * 1.2}
-  //         className="calendarBottomTextTest"
-  //       >
-  //         {matchedDay}
-  //       </text>
-  //     );
-  //   }
+  const stickyCellStyle: React.CSSProperties = {
+    position: 'sticky',
+    left: 0,
+    background: '#fff',
+    zIndex: 2,
+    minWidth: fixedSectionWidth,
+    width: fixedSectionWidth,
+  };
 
-  //   weeksCount++;
-    // }
+  const spacerStyle = (width: number): React.CSSProperties => ({
+    minWidth: width,
+    width: width,
+    padding: 0,
+    border: 'none',
+  });
 
-    return (
-      <div className='flex'>
-        <div className="table-wrapper" style={{ display: 'flex', overflowX: 'auto', width: '100%' }}>
-          <table style={{ width: "max-content", borderCollapse: 'collapse' }}>
+  const columnStyle: React.CSSProperties = {
+    minWidth: effectiveColumnWidth,
+    width: effectiveColumnWidth,
+  };
+
+  const wrapperStyle: React.CSSProperties = {
+    display: 'flex',
+    overflowX: 'auto',
+    width: '100%',
+    maxWidth: '100%',
+  };
+
+  const renderSpacerCell = (key: string, width: number) =>
+    width > 0 ? <th key={key} aria-hidden="true" style={spacerStyle(width)} /> : null;
+
+  const renderSplitterCell = (key: string) =>
+    splitterSpacer > 0 ? (
+      <th key={key} aria-hidden="true" style={spacerStyle(splitterSpacer)} />
+    ) : null;
+
+  const handleScroll = useCallback((event: React.UIEvent<HTMLDivElement>) => {
+    if (onScroll) {
+      onScroll(event.currentTarget.scrollLeft);
+    }
+  }, [onScroll]);
+
+  if (weeks.length === 0) {
+    return null;
+  }
+
+  const renderHeaderRow = (
+    label: string,
+    formatter: (week: ImporteSemanalDTO) => React.ReactNode,
+    keyPrefix: string,
+  ) => (
+    <tr key={`${keyPrefix}-row`}>
+      <th className="th01" style={stickyCellStyle}>
+        <div className="titulo-total">
+          <div>{label}</div>
+        </div>
+      </th>
+      {renderSplitterCell(`${keyPrefix}-splitter`)}
+      {renderSpacerCell(`${keyPrefix}-left-spacer`, leftSpacer)}
+      {weeks.map((week) => (
+        <th className="th01" style={columnStyle} key={`${keyPrefix}-${getWeekKey(week)}`}>
+          <div>{formatter(week)}</div>
+        </th>
+      ))}
+      {renderSpacerCell(`${keyPrefix}-right-spacer`, rightSpacer)}
+    </tr>
+  );
+
+  const renderDataRow = (label: string, dataMap: Map<string, ImporteSemanalDTO>) => (
+    <tr key={label}>
+      <th className="th01" style={stickyCellStyle}>
+        <div className="titulo-total">
+          <div>{label}</div>
+        </div>
+      </th>
+      {renderSplitterCell(`${label}-splitter`)}
+      {renderSpacerCell(`${label}-left-spacer`, leftSpacer)}
+      {weeks.map((week) => {
+        const key = getWeekKey(week);
+        const value = formatCurrency(dataMap.get(key)?.totalConFormato);
+
+        return (
+          <th className="th0" style={columnStyle} key={`${label}-${key}`}>
+            <div>{value}</div>
+          </th>
+        );
+      })}
+      {renderSpacerCell(`${label}-right-spacer`, rightSpacer)}
+    </tr>
+  );
+
+  return (
+    <div className="flex">
+      <div
+        ref={containerRef}
+        className="table-wrapper"
+        style={wrapperStyle}
+        onScroll={handleScroll}
+      >
+        <div style={{ minWidth: contentWidth }}>
+          <table style={{ width: contentWidth, borderCollapse: 'collapse' }}>
             <thead>
-            <tr>
-                <th className="th01" style={{ position: 'sticky', left: 0, background: '#fff', zIndex: 1 }}>
-                  <div className="titulo-total">
-                    <div style={{width: "440px"}}>{"Semana"}</div>
-                  </div>
-                </th>
-                {importeSemanal.map((importe, index) => (
-                  <th className="th01" key={index}>
-                    <div>
-                      <div>{"Periodo-" + importe.numeroSemana }</div>
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            
-    
-              <tr>
-                <th className="th01" style={{ position: 'sticky', left: 0, background: '#fff', zIndex: 1 }}>
-                  <div className="titulo-total">
-                    <div>{"Total mano de obra"}</div>
-                  </div>
-                </th>
-                {semanasMDO.map((importe, index) => (
-                  <th className="th0" key={index}>
-                    <div>
-                      <div >{importe.totalConFormato}</div>
-                    </div>
-                  </th>
-                ))}
-              </tr>
-                
-              <tr>
-                <th className="th01" style={{ position: 'sticky', left: 0, background: '#fff', zIndex: 1 }}>
-                  <div className="titulo-total">
-                    <div>{"Total material"}</div>
-                  </div>
-                </th>
-                {semanasMaterial.map((importe, index) => (
-                  <th className="th0" key={index}>
-                    <div>
-                      <div >{importe.totalConFormato}</div>
-                    </div>
-                  </th>
-                ))}
-              </tr>
-              <tr>
-                <th className="th01" style={{ position: 'sticky', left: 0, background: '#fff', zIndex: 1 }}>
-                  <div className="titulo-total">
-                    <div>{"Equipo"}</div>
-                  </div>
-                </th>
-                {semanasEquipo.map((importe, index) => (
-                  <th className="th0" key={index}>
-                    <div>
-                      <div >{importe.totalConFormato}</div>
-                    </div>
-                  </th>
-                ))}
-              </tr>
-              <tr>
-                <th className="th01" style={{ position: 'sticky', left: 0, background: '#fff', zIndex: 1 }}>
-                  <div className="titulo-total">
-                    <div>{"Herramienta"}</div>
-                  </div>
-                </th>
-                {semanasHerramienta.map((importe, index) => (
-                  <th className="th0" key={index}>
-                    <div>
-                      <div >{importe.totalConFormato}</div>
-                    </div>
-                  </th>
-                ))}
-              </tr>
-              <tr>
-                <th className="th01" style={{ position: 'sticky', left: 0, background: '#fff', zIndex: 1 }}>
-                  <div className="titulo-total">
-                    <div>{"Total ($)"}</div>
-                  </div>
-                </th>
-                {importeSemanal.map((importe, index) => (
-                  <th className="th0" key={index}>
-                    <div>
-                      <div >
-                        
-                        {importe.totalConFormato}</div>
-          
-                        
-                    </div>
-                  </th>
-                ))}
-              </tr>
-                {/* <tr>
-                  <th className="th01" style={{ position: 'sticky', left: 0, background: '#fff', zIndex: 1 }}>
-                    <div className="titulo-total">
-                      <div>{"Fecha"}</div>
-                    </div>
-                  </th>
-                  {importeSemanal.map((importe, index) => (
-                    <th className="th0" key={index}>
-                      <div style={{ width: "max-content"}}  >
-                        <div>{`${new Date(importe.fechaInicio).toLocaleDateString()} - ${new Date(importe.fechaFin).toLocaleDateString()}`}</div>
-                      </div>
-                    </th>
-                  ))}
-                </tr> */}
+              {renderHeaderRow('Semana', (week) => `Periodo-${week.numeroSemana}`, 'weeks')}
+              {renderHeaderRow(
+                viewMode === ViewMode.Week ? 'Fechas' : 'Periodo',
+                (week) => formatRange(week.fechaInicio, week.fechaFin),
+                'dates',
+              )}
             </thead>
             <tbody>
-              {/* Aquí va el contenido de las filas si lo tienes */}
+              {renderDataRow('Total mano de obra', weekMaps.mdo)}
+              {renderDataRow('Total material', weekMaps.material)}
+              {renderDataRow('Equipo', weekMaps.equipo)}
+              {renderDataRow('Herramienta', weekMaps.herramienta)}
+              {renderDataRow('Total ($)', weekMaps.total)}
             </tbody>
           </table>
         </div>
       </div>
-    );
-  };
+    </div>
+  );
+};

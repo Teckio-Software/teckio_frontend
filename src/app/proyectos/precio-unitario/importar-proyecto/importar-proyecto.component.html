@@ -1,0 +1,266 @@
+
+<div class="p-4">
+  <div>
+    <button (click)="importarDatos()">Importar</button>
+  </div>
+  <div class="relative w-full" #lista>
+    <input
+      type="text"
+      placeholder="Seleccionar..."
+      autocomplete="off"
+      class="form-contrtrol w-full"
+      (input)="filtrarProyecto($event)"
+      [(ngModel)]="nombreProyecto"
+      (click)="
+        virtualScrollMostrado = !virtualScrollMostrado
+      "
+    />
+      <cdk-virtual-scroll-viewport *ngIf="virtualScrollMostrado"
+        itemSize="36"
+        class="fixed z-50 bg-white border border-gray-200 rounded-md mt-1 w-[300px] h-32 overflow-auto shadow-lg"
+      >
+        <div
+          *cdkVirtualFor="
+            let proyecto of proyectos
+          "
+          (click)="seleccionarProducto(proyecto)"
+          class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+          style="height: 36px; box-sizing: border-box"
+        >
+          {{ proyecto.nombre }}
+        </div>
+      </cdk-virtual-scroll-viewport>
+  </div>
+
+  <div class="relative overflow-x-auto" >
+      <table class="w-full text-sm rtl:text-right text-center">
+        <thead class="text-center bg-[#f9fafb]">
+          <th class="w-6" scope="col"></th>
+          <th class="font-medium py-3 text-left w-36" scope="col">Código</th>
+          <th class="font-medium py-3 text-left w-auto" scope="col">Descripción</th>
+          <th class="font-medium py-3 text-left w-12" scope="col">Unidad</th>
+          <th class="font-medium py-3 text-right w-28" scope="col">Cantidad</th>
+          <th class="font-medium py-3 text-right w-40" scope="col">C.D.</th>
+          <th class="font-medium py-3 text-right w-40" scope="col">P.U.</th>
+          <th class="font-medium py-3 text-right pr-4 w-40" scope="col">Importe</th>
+        </thead>
+      </table>
+
+      <cdk-virtual-scroll-viewport
+        [ngClass]="{
+          'tabla-virtual-plegada': matrizMostrada,
+          'tabla-virtual': !matrizMostrada,
+        }"
+        [itemSize]="25"
+      >
+        <table class="w-full text-sm text-left rtl:text-right">
+          <tbody class="divide-y divide-gray300">
+            <tr
+              *cdkVirtualFor="let precioUnitario of preciosUnitarios; trackBy: trackByPrecioUnitario"
+              class="bg-white border-b h-8"
+            >
+              <td
+                class="w-1 border-l-4"
+                [ngClass]="{
+                  'border-blue-200': precioUnitario.nivel == 1,
+                  'border-green-200': precioUnitario.nivel == 2,
+                  'border-rose-200': precioUnitario.nivel == 3,
+                  'border-fuchsia-200': precioUnitario.nivel == 4,
+                  'border-orange-200': precioUnitario.nivel == 5,
+                  'border-yellow-200': precioUnitario.nivel == 6,
+                }"
+              >
+                <div class="relative menu-trigger ml-1">
+                  <input *ngIf="precioUnitarioMenu.tipoPrecioUnitario == 0"
+                    class="w-4 h-4 text-blue-600 border border-slate-600 rounded-sm focus:ring-blue-500"
+                    type="checkbox"
+                    [(ngModel)]="precioUnitario.seleccionado"
+                    [checked]="precioUnitario.seleccionado"
+                    (change)="seleccionarHijosPresupuesto(precioUnitario)"
+                  />
+                </div>
+              </td>
+              <td class="pe-1 py-[2px] w-36">
+                <div class="flex items-center justify-end">
+                  <ng-container *ngIf="precioUnitario.hijos.length > 0; else emptySpace">
+                    <mat-icon
+                    (click)="expansionDominio(precioUnitario)"
+                      class="icon-display cursor-pointer"
+                    >
+                      {{ precioUnitario.expandido ? 'expand_more' : 'chevron_right' }}
+                    </mat-icon>
+                  </ng-container>
+                  <ng-template #emptySpace>
+                    <span class="icon-placeholder"></span>
+                  </ng-template>
+                  <input
+                    class="font-medium"
+                    type="text"
+                    [ngClass]="{
+                      'w-28': precioUnitario.nivel === 1,
+                      'w-24': precioUnitario.nivel === 2,
+                      'w-20': precioUnitario.nivel === 3,
+                      'w-16': precioUnitario.nivel === 4,
+                      'w-12': precioUnitario.nivel === 5,
+                      'w-8': precioUnitario.nivel === 6,
+                    }"
+                    [(ngModel)]="precioUnitario.codigo"
+                  />
+                </div>
+              </td>
+              <td class="pe-1 py-[2px] w-auto" scope="row">
+                <input
+                  class="w-full"
+                  type="text"
+                  [(ngModel)]="precioUnitario.descripcion"
+                />
+              </td>
+              <td class="pe-1 py-[2px] w-12 text-right">
+                <input
+                  class="w-full text-right"
+                  type="text"
+                  *ngIf="precioUnitario.tipoPrecioUnitario == 1"
+                  [(ngModel)]="precioUnitario.unidad"
+                />
+              </td>
+              <td class="pe-1 py-[2px] w-28 text-right">
+                <input
+                  class="w-full text-right"
+                  type="text"
+                  *ngIf="precioUnitario.tipoPrecioUnitario == 1"
+                  [ngModel]="
+                    precioUnitario.cantidadEditado
+                      ? precioUnitario.cantidad
+                      : precioUnitario.cantidadConFormato
+                  "
+                />
+              </td>
+              <td class="pe-1 py-[2px] w-40 text-right">
+                <input
+                  class="w-full text-right focus:outline-none text-blue-700"
+                  type="text"
+                  readonly
+                  *ngIf="precioUnitario.tipoPrecioUnitario == 1"
+                  [(ngModel)]="precioUnitario.costoUnitarioConFormato"
+                  (click)="obtenerDetallesCopia(precioUnitario)"
+                />
+              </td>
+              <td class="pe-1 py-[2px] w-40 text-right">
+                <input
+                  class="w-full text-right focus:outline-none"
+                  type="text"
+                  readonly
+                  *ngIf="precioUnitario.tipoPrecioUnitario == 1"
+                  [(ngModel)]="precioUnitario.precioUnitarioConFormato"
+                />
+              </td>
+              <td class="pe-1 py-[2px] w-40 text-right">
+                <input
+                  class="w-full text-right pr-1 focus:outline-none"
+                  type="text"
+                  readonly
+                  [(ngModel)]="precioUnitario.importeConFormato"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </cdk-virtual-scroll-viewport>
+    </div>
+
+    <div *ngIf="matrizMostrada">
+      <div class="relative overflow-x-auto">
+  <table class="w-full text-sm rtl:text-right text-center">
+      <thead class="text-center bg-[#f9fafb]">
+        <th class="w-6" scope="col"></th>
+        <th class="text-left" scope="col">Codigo</th>
+        <th class="text-left" scope="col">Descripcion</th>
+        <th class="text-right" scope="col">Unidad</th>
+        <th class="text-right" scope="col">cantidad</th>
+        <th class="text-right" scope="col">Costo base</th>
+        <th class="text-right" scope="col">Importe</th>
+        <th class="text-left pl-4" scope="col">Tipo</th>
+    </thead>
+
+    <tbody class="divide-y divide-gray300">
+
+      <tr class="bg-white border-b" *ngFor="let detalle of preciosUnitariosDetalles">
+        <td class="pe-1 py-[2px] w-6 text-center">
+          <div class="relative menu-trigger ml-1">
+                  <input
+                    class="w-4 h-4 text-blue-600 border border-slate-600 rounded-sm focus:ring-blue-500"
+                    type="checkbox"
+                    [(ngModel)]="detalle.seleccionado"
+                    [checked]="detalle.seleccionado"
+                  />
+                </div>
+        </td>
+        <td class="pe-1 py-[2px] w-32 flex items-center">
+          <input
+                class="w-full pl-4"
+                type="text"
+                [(ngModel)]="detalle.codigo"
+              />
+        </td>
+        <td class="pe-1 py-[2px] w-auto">
+          <input
+                class="w-full"
+                type="text"
+                [(ngModel)]="detalle.descripcion"
+              />
+        </td>
+        <td class="pe-1 py-[2px] w-32">
+          <input
+                class="w-full text-right"
+                type="text"
+                [(ngModel)]="detalle.unidad"
+              />
+        </td>
+        <td class="pe-1 py-[2px] w-32">
+          <input
+                class="w-full text-right focus:outline-none"
+                type="text"
+                [ngModel]="detalle.cantidadEditado ? detalle.cantidad : detalle.cantidadConFormato"
+              />
+        </td>
+        <td class="pe-1 py-[2px] w-32">
+          <input
+                class="w-full text-right focus:outline-none"
+                type="text"
+                [ngClass]="{
+                  'text-blue-700': detalle.esCompuesto,
+                  'text-green-600': detalle.idTipoInsumo == 10001,
+                  'text-black': !detalle.esCompuesto
+                }"
+                [(ngModel)]="detalle.costoBaseConFormato"
+                [ngModel]="detalle.costoUnitarioEditado ? detalle.costoBase : detalle.costoBaseConFormato"
+                [readOnly]="detalle.esCompuesto"
+              />
+        </td>
+        <td class="pe-1 py-[2px] w-32">
+          <input
+
+                class="w-full text-right focus:outline-none"
+                type="text"
+                [(ngModel)]="detalle.importeConFormato"
+              />
+        </td>
+        <td class="pe-1 pl-2 py-[2px] w-32">
+          <select name="" id="" class="block w-full focus:ring-blue-500 focus:border-blue-500
+          font-small"
+          [(ngModel)]="detalle.idTipoInsumo">
+            <option value="0"></option>
+                  <option *ngFor="let tipo of tipoInsumo" [value]="tipo.id">
+                    {{ tipo.descripcion }}
+                  </option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+    </div>
+
+</div>

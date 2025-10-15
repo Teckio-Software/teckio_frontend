@@ -5,7 +5,7 @@ export interface precioUnitarioDetalleAbstractaDTO {
     costoUnitario: number;
     costoUnitarioConFormato: string;
     costoUnitarioEditado: boolean;
-    cantidad: number;
+    cantidad: number|null;
     cantidadConFormato: string;
     cantidadEditado: boolean;
     cantidadExcedente: number;
@@ -17,7 +17,7 @@ export interface precioUnitarioDetalleAbstractaDTO {
     idFamiliaInsumo: number;
     importe: number;
     importeConFormato: string;
-    costoBase: number;
+    costoBase: number|null;
     costoBaseConFormato: string;
 }
 
