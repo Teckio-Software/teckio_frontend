@@ -35,14 +35,16 @@ export const onMainContentChange = trigger('onMainContentChange', [
 export const onButtonClose = trigger('onButtonClose', [
   state('close',
     style({
-      'margin-left': '20px',
+      'margin-left': '10px',
       'opacity': 0,
+      'display': 'none'
     })
   ),
   state('open',
     style({
       'margin-left': '0px',
       'opacity': 100,
+      'display': 'flex'
     })
   ),
   transition('close => open', animate('100ms ease-in')),

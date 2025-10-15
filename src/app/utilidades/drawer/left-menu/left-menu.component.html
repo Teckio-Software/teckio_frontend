@@ -5,6 +5,17 @@
 >
   <div fxLayout="column" fxLayoutGap="10px" style="height: 100%">
     <div class="user_menu">
+
+      <div
+              class="xs:text-center font-medium xs:mt-2 xs:text-xs sm:hidden md:hidden lg:hidden"
+            >
+              <p class="xs:font-bold text-gray700">Bienvenido</p>
+              <p class="text-gray500">
+                {{ zvSeguridadService.zfObtenerCampoJwt("email") }}
+              </p>
+            <mat-divider></mat-divider>
+
+            </div>
       <!-- <mat-nav-list class="test">
         <div
           class="flex justify-center"

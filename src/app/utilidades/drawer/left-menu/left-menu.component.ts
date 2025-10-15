@@ -185,6 +185,10 @@ export class LeftMenuComponent implements OnInit {
           pages[i].expanded = false;
         }
       }
+      let otherPages = this.pagesFiltradas.filter((p) => p !== page);
+      otherPages.forEach(page => {
+        page.expanded = false
+      });
       page.expanded = !page.expanded;
     }
   }
