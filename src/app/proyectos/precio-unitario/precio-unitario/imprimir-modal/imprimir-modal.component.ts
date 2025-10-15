@@ -9,6 +9,9 @@ import { RespuestaDTO } from 'src/app/utilidades/tsUtilidades';
 import { Reporte } from './types/reporte';
 import { log } from 'console';
 import { PrecioUnitarioService } from '../../precio-unitario.service';
+import { ConjuntoIndirectosDTO } from 'src/app/proyectos/conjunto-indirectos/conjunto-indirectos';
+import { IndirectosServiceService } from 'src/app/proyectos/indirectos/indirectos-service.service';
+import { IndirectosDTO } from 'src/app/proyectos/indirectos/indirectos';
 
 /**
  * Modal para configurar y ejecutar la impresión de reportes
@@ -46,6 +49,7 @@ export class ImprimirModalComponent {
   @Input() totalSinFormatoIva!: number;
   @Input() totalSinFormatoSinIva!: number;
   @Output() close: EventEmitter<void> = new EventEmitter<void>();
+  indirectos: IndirectosDTO[] = [];
 
   tipoReporte: string = '';
   tipoImpresion: string = '';
@@ -57,6 +61,7 @@ export class ImprimirModalComponent {
 
   selectedParams?: ParametrosImpresionPu;
   selectedEmpresa: number = 0;
+  idProyecto: number = 0;
   selectedParamId: number = 0;
 
   isParamGuardado: boolean = false;
@@ -75,6 +80,7 @@ export class ImprimirModalComponent {
   isError2: boolean = false;
   isError3: boolean = false;
   isError4: boolean = false;
+  isError5: boolean = false;
 
   currentStep: number = 0;
   /** Títulos visibles del wizard de pasos del modal. */
@@ -116,11 +122,13 @@ export class ImprimirModalComponent {
   constructor(
     private parametrosImpresion: ParametrosImprimirPuService,
     private seguridadService: SeguridadService,
-    private precioUnitarioService: PrecioUnitarioService
+    private precioUnitarioService: PrecioUnitarioService,
+    private indirectosService: IndirectosServiceService
   ) {
     const idEmpresa: number = Number(seguridadService.obtenIdEmpresaLocalStorage());
-
     this.selectedEmpresa = idEmpresa;
+    const IdProyecto: number = Number(seguridadService.obtenerIdProyectoLocalStorage());
+    this.idProyecto = IdProyecto;
   }
 
   /** Inicializa cargando los parámetros de impresión de la empresa actual. */
@@ -291,14 +299,12 @@ export class ImprimirModalComponent {
    * para ese reporte.
    */
   nextStep() {
-    if(this.tipoReporte === 'analisisPreciosUnitarios') {
-      if(ObtenerPUPlanos(this.preciosUnitarios).length <= 0){        
+    if (this.tipoReporte === 'analisisPreciosUnitarios') {
+      if (ObtenerPUPlanos(this.preciosUnitarios).length <= 0) {
         this.isError4 = true;
-        console.log(this.isError4);
-
         return;
       }
-      this.currentStep = 2
+      this.currentStep = 2;
     }
     this.isError = false;
     this.isError2 = false;
@@ -318,6 +324,14 @@ export class ImprimirModalComponent {
       return;
     } else {
       this.isError2 = false;
+    }
+
+    //validar si hay tipo de precio de concepto seleccionado
+    if (this.currentStep === 1 && !this.tipoPrecio) {
+      this.isError5 = true;
+      return;
+    } else {
+      this.isError5 = false;
     }
 
     //validar si es impresion marcada y si hay marcados
@@ -344,7 +358,6 @@ export class ImprimirModalComponent {
 
         case 'presupuestoManoDeObra':
           this.reporteManoDeObra = true;
-          console.warn(`No hay lógica implementada para: ${this.tipoReporte}`);
 
           break;
 
@@ -360,8 +373,8 @@ export class ImprimirModalComponent {
    */
   prevStep(): void {
     this.isError = false;
-    if(this.tipoReporte === 'analisisPreciosUnitarios') {
-      this.currentStep = 0
+    if (this.tipoReporte === 'analisisPreciosUnitarios') {
+      this.currentStep = 0;
     }
     if (this.currentStep > 0) {
       this.currentStep--;
@@ -410,7 +423,8 @@ export class ImprimirModalComponent {
       imprimirConCostoDirecto: this.isImprimirConCostoDirecto,
       imprimirConPrecioUnitario: this.isImprimirPU,
       imprimirConPrecioUnitarioIVA: this.isImprimirPUIVA,
-      imprimirConPUMasIva: this.isImprimirPuMasIVA
+      imprimirConPUMasIva: this.isImprimirPuMasIVA,
+      indirectos: this.indirectos
     };
 
     //si es marcado, se llena el arreglo de marcados en lugar del completo
@@ -436,7 +450,8 @@ export class ImprimirModalComponent {
       imprimirConCostoDirecto: this.isImprimirConCostoDirecto,
       imprimirConPrecioUnitario: this.isImprimirPU,
       imprimirConPrecioUnitarioIVA: this.isImprimirPUIVA,
-      imprimirConPUMasIva: this.isImprimirPuMasIVA
+      imprimirConPUMasIva: this.isImprimirPuMasIVA,
+      indirectos: this.indirectos
     };
 
     // definir el tipo de reporte
@@ -466,14 +481,14 @@ export class ImprimirModalComponent {
       case 'analisisPreciosUnitarios':
         this.reporteAnalisisPrecioUnitario = true;
         let preciosUnitariosFiltrados = ObtenerPUPlanos(this.preciosUnitarios);
-        
+
         // let preciosUnitariosFiltrados = filtrarListaRecursivo(this.preciosUnitarios)
-        if(preciosUnitariosFiltrados.length <= 0){
+        if (preciosUnitariosFiltrados.length <= 0) {
           console.log('No hay precios unitarios seleccionados');
           return;
         }
         // let ids = ObtenerIds(preciosUnitariosFiltrados);
-        let ids = preciosUnitariosFiltrados.map(pu => pu.id);
+        let ids = preciosUnitariosFiltrados.map((pu) => pu.id);
 
         // console.log(preciosUnitariosFiltrados);
         reporte.imprimirConCostoDirecto = true;
@@ -491,17 +506,25 @@ export class ImprimirModalComponent {
           //   element.hijos = lista;
           // });
           // reporte.precioUnitario = preciosUnitarios;
-          
+
           console.log(preciosUnitarios);
           console.log('Se van a imprimir los análisis');
         // reporte.precioUnitario = preciosUnitariosFiltrados;
-        console.log(reporte);
-        imprimirReporteAnalisisPU(reporte);
+        this.indirectosService.ObtenerIndirectos(this.selectedEmpresa, this.idProyecto).subscribe((conjuntoIndirectos) => {
+          console.log(this.selectedEmpresa, this.idProyecto);
+
+          this.indirectos = conjuntoIndirectos;
+          reporte.indirectos = this.indirectos;
+          console.log(this.indirectos);
+          console.log(reporte);
+          imprimirReporteAnalisisPU(reporte);
         })
-        
-        
-        
-        
+
+        })
+
+
+
+
         break;
 
         //si es impresion marcada, se asigna el reporte marcado como base y los totales se calculan de acuerdo a los marcados
@@ -552,39 +575,39 @@ function flagsPreciosUnitarios(reporte: Reporte): void {
  *     precio. Si el tipo de precio no es reconocido,
  *     se mostrará un mensaje de error en la consola.
  */
-  function setFlagsPorTipoPrecio(reporte: Reporte, tipoPrecio: string): void {
-    switch (tipoPrecio) {
-      case 'costoDirecto':
-        reporte.imprimirConCostoDirecto = true;
-        break;
-      case 'precioUnitario':
-        reporte.imprimirConPrecioUnitario = true;
-        break;
-      case 'precioUnitarioIVA':
-        reporte.imprimirConPrecioUnitarioIVA = true;
-        break;
+function setFlagsPorTipoPrecio(reporte: Reporte, tipoPrecio: string): void {
+  switch (tipoPrecio) {
+    case 'costoDirecto':
+      reporte.imprimirConCostoDirecto = true;
+      break;
+    case 'precioUnitario':
+      reporte.imprimirConPrecioUnitario = true;
+      break;
+    case 'precioUnitarioIVA':
+      reporte.imprimirConPrecioUnitarioIVA = true;
+      break;
 
-      default:
-        console.log('Tipo de precio no reconocido', tipoPrecio);
+    default:
+      console.log('Tipo de precio no reconocido', tipoPrecio);
+  }
+}
+
+/* Función que itera un array de nodos de precio unitario y devuelve un
+ * array con los nodos de manera plana que están
+ * seleccionados.
+ * @param {precioUnitarioDTO[]} nodos - Array de nodos de precio unitario
+ * @returns {precioUnitarioDTO[]} - Array con los nodos de tipo "Planos" y
+ * seleccionados
+ */
+function ObtenerPUPlanos(nodos: precioUnitarioDTO[]): precioUnitarioDTO[] {
+  const puPlanos: precioUnitarioDTO[] = [];
+  for (const nodo of nodos) {
+    if (nodo.tipoPrecioUnitario != 0 && nodo.esSeleccionado) {
+      puPlanos.push(nodo);
+    }
+    if (nodo.hijos && nodo.hijos.length > 0) {
+      puPlanos.push(...ObtenerPUPlanos(nodo.hijos));
     }
   }
-
-  /* Función que itera un array de nodos de precio unitario y devuelve un
-  * array con los nodos de manera plana que están
-  * seleccionados.
-  * @param {precioUnitarioDTO[]} nodos - Array de nodos de precio unitario
-  * @returns {precioUnitarioDTO[]} - Array con los nodos de tipo "Planos" y
-  * seleccionados
-  */
-  function ObtenerPUPlanos(nodos: precioUnitarioDTO[]): precioUnitarioDTO[] {
-    const puPlanos: precioUnitarioDTO[] = [];
-    for (const nodo of nodos) {
-      if(nodo.tipoPrecioUnitario!=0 && nodo.esSeleccionado){
-        puPlanos.push(nodo);
-      }
-      if (nodo.hijos && nodo.hijos.length > 0) {
-        puPlanos.push(...ObtenerPUPlanos(nodo.hijos));
-      }
-    }
-    return puPlanos;
-  }
+  return puPlanos;
+}

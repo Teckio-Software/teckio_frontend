@@ -16,7 +16,7 @@ import { ObjetoDestajoacumuladoDTO } from '../reportesDestajo';
   selector: 'app-acumulado',
   templateUrl: './acumulado.component.html',
   styleUrls: ['./acumulado.component.css']
-  
+
 })
 
 
@@ -64,37 +64,43 @@ export class AcumuladoComponent {
   }
 
   ngOnInit(): void {
-    this.cargarcontratistas();
+    // this.cargarcontratistas();
     this.filtrarDestajo();
     this.cargarContratos();
   }
   cargarContratos(){
     this.contratosService.obtenerDestajos(this.parametros, this.selectedEmpresa)
         .subscribe((contratos) => {
-          this.contratos = contratos
+          this.contratos = contratos;
+          console.log("parametros", this.parametros);
+          if(this.parametros.tipoContrato){
+            this.contratos = this.contratos.filter(x => x.tipoContrato == true);
+          }else{
+            this.contratos = this.contratos.filter(x => x.tipoContrato == false);
+          }
         })
   }
 
-  cargarcontratistas(){
-    this.contratistaService.obtenerTodos(this.selectedEmpresa)
-    .subscribe((contratistas) => {
-      this.contratistas = contratistas;
-      const contratista = this.contratistas.filter(z => z.id == this.parametros.idContratista);
+  // cargarcontratistas(){
+  //   this.contratistaService.obtenerTodos(this.selectedEmpresa)
+  //   .subscribe((contratistas) => {
+  //     this.contratistas = contratistas;
+  //     const contratista = this.contratistas.filter(z => z.id == this.parametros.idContratista);
 
-    if(contratista[0].esProveedorMaterial == true && contratista[0].esProveedorServicio == true){
-      this.esDestajoOContrato = false;
-    }else if(contratista[0].esProveedorServicio = true){
-      this.esDestajoOContrato = true;
-    }
-    this.parametros.tipoContrato = this.esDestajoOContrato;
-    })
-  }
+  //   if(contratista[0].esProveedorMaterial == true && contratista[0].esProveedorServicio == true){
+  //     this.esDestajoOContrato = false;
+  //   }else if(contratista[0].esProveedorServicio = true){
+  //     this.esDestajoOContrato = true;
+  //   }
+  //   this.parametros.tipoContrato = this.esDestajoOContrato;
+  //   })
+  // }
 
   private _filter(value: string): contratistaDTO[] {
     const filterValue = this._normalizeValue(String(value));
 
 
-    return this.contratistas.filter(contratista => 
+    return this.contratistas.filter(contratista =>
       this._normalizeValue(contratista.razonSocial).includes(filterValue)
     );
   }
@@ -107,15 +113,15 @@ export class AcumuladoComponent {
     const selectedContratista = event.option.value;
     this.contratistaControl.setValue(selectedContratista.razonSocial)
     if (selectedContratista) {
-      if(selectedContratista.esProveedorMaterial == true && selectedContratista.esProveedorServicio == true){
-        this.esDestajoOContrato = false;
-      }else if(selectedContratista.esProveedorServicio = true){
-        this.esDestajoOContrato = true;
-      }
+      // if(selectedContratista.esProveedorMaterial == true && selectedContratista.esProveedorServicio == true){
+      //   this.esDestajoOContrato = false;
+      // }else if(selectedContratista.esProveedorServicio = true){
+      //   this.esDestajoOContrato = true;
+      // }
       this.selectedContratista = selectedContratista.id;
       let parametros: parametrosParaBuscarContratos = {
         idProyecto: this.selectedProyecto,
-        tipoContrato: this.esDestajoOContrato,
+        tipoContrato: this.parametros.tipoContrato,
         idContratista: this.selectedContratista,
         idContrato: 0,
         fechaInicio: null,
@@ -124,6 +130,11 @@ export class AcumuladoComponent {
       this.contratosService.obtenerDestajos(parametros, this.selectedEmpresa)
         .subscribe((contratos) => {
           this.contratos = contratos
+          if(this.parametros.tipoContrato){
+            this.contratos = this.contratos.filter(x => x.tipoContrato == true);
+          }else{
+            this.contratos = this.contratos.filter(x => x.tipoContrato == false);
+          }
         })
     this.filtrarDestajo();
 

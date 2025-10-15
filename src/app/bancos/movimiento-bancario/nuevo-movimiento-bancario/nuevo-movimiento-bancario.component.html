@@ -1,234 +1,295 @@
-<div class="fixed inset-0 z-10 w-screen overflow-y-auto" (click)="cerrar()">
-    <div class="content-center sm:flex min-h-full items-cen justify-center p-4 text-center sm:items-center sm:p-0">
-        <!-- Evita que el clic se propague al contenedor padre (overlay) -->
-
-        <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-7xl"
-            (click)="detenerCierre($event)">
-            <!-- detenerCierre(event: MouseEvent): Método que detiene la propagación del evento de clic cuando se hace clic dentro del contenido del modal, asegurando que el modal no se cierre inadvertidamente. -->
-            <div class="m-2 flex justify-between">
-                <h2 class="font-normal tracking-[2px] leading-8  text-base">Nuevo Movimiento Bancario</h2>
-                <button type="button" class=" leading-none absolute top-0 right-0 px-4 py-3 text-2xl"
-                    (click)="cerrar()">&times;</button>
-
-            </div>
-            <div class="bg-white px-4 pb-4 sm:p-2 sm:pb-4">
-                <div>
-                    <div>
-                        <div class="mb-3">
-                            <label class="block text-sm font-medium text-gray-700" for="almacen">Tipo de beneficiario</label>
-                            <select class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500
-                         focus:border-indigo-500 sm:text-sm" [(ngModel)]="movimientoBancario.tipoBeneficiario"
-                                (change)="TraerBeneficiarios($event)">
-                                <option value=0 class="text-gray-700" disabled selected hidden>Selecciona un tipo..
-                                </option>
-                                <option value=1>Proveedor</option>
-                                <option value=2>Cliente</option>
-                                <option value=3>Empresa</option>
-                                <option value=4>Persona externa</option>
-                            </select>
-                        </div>
-                        <div class="mb-3" *ngIf="!seleccionaOtros">
-                            <label class="block text-sm font-medium text-gray-700" for="almacen">Beneficiario</label>
-                            <select class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500
-                         focus:border-indigo-500 sm:text-sm" [(ngModel)]="movimientoBancario.idBeneficiario"
-                                (change)="TraerCuentasBancarias($event)">
-                                <option class="text-gray-700" [ngValue]="0" disabled selected hidden>Selecciona un
-                                    beneficiario..
-                                </option>
-                                <option [ngValue]="b.id" *ngFor="let b of beneficiario">{{b.razonSocial}}</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="block text-sm font-medium text-gray-700" for="almacen">Cuenta
-                                bancaria</label>
-                            <select class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500
-                         focus:border-indigo-500 sm:text-sm" [(ngModel)]="movimientoBancario.idCuentaBancaria">
-                                <option class="text-gray-700" value="" disabled selected hidden>Selecciona una
-                                    cuenta bancaria..
-                                </option>
-                                <option [ngValue]="cb.id" *ngFor="let cb of cuentaB">{{cb.numeroCuenta +
-                                    "("+cb.nombreBanco+")"}}</option>
-                            </select>
-                        </div>
-                        <div class="flex gap-3">
-                            <div class="mb-3 flex gap-1" *ngIf="tipoBeneficiario == 1">
-                                <input type="checkbox" name="" id="" [(ngModel)]="movimientoBancario.esFactura"
-                                    (change)="esFactura()">
-                            <label class="block text-sm font-medium text-gray-700" for="almacen">Factura</label>
-
-                            </div>
-                        <div class="mb-3 flex gap-1" *ngIf="tipoBeneficiario == 1">
-                            <input type="checkbox" name="" id="" [(ngModel)]="movimientoBancario.esOrdenCompra"
-                                (change)="esOrdenCompra()">
-                            <label class="block text-sm font-medium text-gray-700" for="almacen">Pedido</label>
-
-                        </div>
-                        </div>
-                        
-                        <div class="mb-3" *ngIf="movimientoBancario.esOrdenCompra">
-                            <div
-                                style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px;">
-                                <table
-                                    class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
-                                    <thead>
-                                        <tr>
-                                            <th class="cabecera1" scope="col"></th>
-                                            <th class="cabecera1" scope="col">No. OC</th>
-                                            <th class="cabecera1" scope="col">Monto a pagar</th>
-                                            <th class="cabecera1" scope="col">Saldo</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let oc of movimientoBancario.ordenCompras">
-                                            <th class="td-0" scope="col">
-                                                <input type="checkbox" name="" id=""
-                                                    [(ngModel)]="oc.esSeleccionado"
-                                                    (change)="recalculaTotalOrdenCompras()">
-                                            </th>
-                                            <td class="td-0" scope="col">{{oc.noOrdenCompra}}</td>
-                                            <td class="td-0" scope="col">
-                                                <input type="number" name="" id="" [(ngModel)]="oc.montoAPagar"
-                                                    (keydown.enter)="recalculaTotalOrdenCompras()">
-                                            </td>
-                                            <td class="td-0" scope="col">{{oc.saldo}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="mb-3" *ngIf="movimientoBancario.esFactura">
-                            <div
-                                style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px;">
-                                <table
-                                    class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos">
-                                    <thead>
-                                        <tr>
-                                            <th class="cabecera1" scope="col"></th>
-                                            <th class="cabecera1" scope="col">Uuid</th>
-                                            <th class="cabecera1" scope="col">Monto a pagar</th>
-                                            <th class="cabecera1" scope="col">Saldo</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let fxoc of movimientoBancario.facturasXOrdenCompra">
-                                            <th class="td-0" scope="col">
-                                                <input type="checkbox" name="" id=""
-                                                    [(ngModel)]="fxoc.esSeleccionado"
-                                                    (change)="recalculaTotalFacturas()">
-                                            </th>
-                                            <td class="td-0" scope="col">{{fxoc.uuid}}</td>
-                                            <td class="td-0" scope="col"><input type="number" name="" id=""
-                                                    [(ngModel)]="fxoc.montoAPagar"
-                                                    (keydown.enter)="recalculaTotalFacturas()"></td>
-                                            <td class="td-0" scope="col">{{fxoc.saldo}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-row gap-2">
-                        <div class="w-full">
-                            <div class="mb-3">
-                                <label class="block text-sm font-medium text-gray-700" for="name">Folio</label>
-                                <input
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    type="text" id="persona" name="persona" placeholder="Escribe el nombre completo"
-                                    [(ngModel)]="movimientoBancario.folio" />
-                            </div>
-                            <div class="mb-3">
-                                <label class="block text-sm font-medium text-gray-700" for="name">Fecha de
-                                    autorización</label>
-                                <input
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    type="date" id="persona" name="persona" placeholder="Escribe el nombre completo"
-                                    [(ngModel)]="movimientoBancario.fechaAplicacion" />
-                            </div>
-                            <div class="mb-3">
-                                <label class="block text-sm font-medium text-gray-700" for="name">Fecha de
-                                    cobro</label>
-                                <input
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    type="date" id="persona" name="persona" placeholder="Escribe el nombre completo"
-                                    [(ngModel)]="movimientoBancario.fechaCobra" />
-                            </div>
-                            <div class="mb-3">
-                                <label class="block text-sm font-medium text-gray-700" for="almacen">Modalidad</label>
-                                <select class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500
-                             focus:border-indigo-500 sm:text-sm" [(ngModel)]="movimientoBancario.modalidad">
-                                    <option class="text-gray-700" value="" disabled selected hidden>Selecciona la
-                                        modalidad..
-                                    </option>
-                                    <option [ngValue]="1">Cheque</option>
-                                    <option [ngValue]="2">Transferencia</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="block text-sm font-medium text-gray-700" for="almacen">Tipo
-                                    deposito</label>
-                                <select class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500
-                             focus:border-indigo-500 sm:text-sm" [(ngModel)]="movimientoBancario.tipoDeposito">
-                                    <option class="text-gray-700" value="" disabled selected hidden>Selecciona el
-                                        tipo..
-                                    </option>
-                                    <option [ngValue]="1">Deposito</option>
-                                    <option [ngValue]="2">Retiro</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="w-full">
-                            <div class="mb-3">
-                                <label class="block text-sm font-medium text-gray-700" for="almacen">Tipo de
-                                    moneda</label>
-                                <select class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500
-                             focus:border-indigo-500 sm:text-sm" [(ngModel)]="movimientoBancario.moneda">
-                                    <option class="text-gray-700" value="" disabled selected hidden>Selecciona el
-                                        tipo..
-                                    </option>
-                                    <option [ngValue]="1">MXN</option>
-                                    <option [ngValue]="2">USD</option>
-                                    <option [ngValue]="3">EUR</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="block text-sm font-medium text-gray-700" for="name">Monto
-                                    total</label>
-                                <input
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    type="number" id="persona" name="persona"
-                                    [disabled]="movimientoBancario.esFactura || movimientoBancario.esOrdenCompra"
-                                    placeholder="Escribe el nombre completo"
-                                    [(ngModel)]="movimientoBancario.montoTotal" />
-                            </div>
-                            <div class="mb-3">
-                                <label class="block text-sm font-medium text-gray-700" for="almacen">Tipo de
-                                    cambio</label>
-                                <input
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    type="number" id="persona" name="persona" placeholder="Escribe el nombre completo"
-                                    [(ngModel)]="movimientoBancario.tipoCambio" />
-                            </div>
-                            <div class="mb-3">
-                                <label class="block text-sm font-medium text-gray-700" for="name">Concepto</label>
-                                <input
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    type="text" id="persona" name="persona" placeholder="Escribe el nombre completo"
-                                    [(ngModel)]="movimientoBancario.concepto" />
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            <div class="bg-gray-50 px-2 py-2 sm:flex sm:flex-row-reverse sm:px-6 sm:gap-4">
-                <button
-                    class="bg-[#51aec7] hover:bg-[#002B53] text-[#f2f2f2]  py-2 px-4 rounded-sm mr-2 mt-3  inline-flex w-full justify-center shadow-sm ring-1 ring-inset  sm:mt-0 sm:w-auto"
-                    (click)="guardarMovimientoBancario()">Aceptar</button>
-                <button
-                    class="mt-3 inline-flex w-full justify-center rounded-sm bg-[#51aec7] text-[#f2f2f2] px-3 py-2 text-sm shadow-sm ring-1 ring-inset  hover:bg-[#B05B5B] sm:mt-0 sm:w-auto  "
-                    (click)="cerrar()">Cancelar</button>
-            </div>
-
-        </div>
+<div class="px-2 py-2">
+  <button
+    type="button"
+    (click)="onCancelar()"
+    class="text-left text-sm hover:bg-gray-200 rounded-md transition-all delay-75 flex gap-2 items-center font-medium text-gray700 px-2 mb-3"
+  >
+    <img class="w-8" src="assets/go_back.svg" alt="Regresar" />
+    Regresar
+  </button>
+  <div class="bg-white rounded-lg shadow-sm p-4">
+    <div class="mb-3">
+      <label class="block text-sm font-medium text-gray-700" for="almacen"
+        >Tipo de beneficiario</label
+      >
+      <select
+        class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        [(ngModel)]="movimientoBancario.tipoBeneficiario"
+        (ngModelChange)="onTipoBeneficiarioChange($event)"
+      >
+        <option [ngValue]="0" class="text-gray-700" disabled hidden>Selecciona un tipo..</option>
+        <option [ngValue]="1">Proveedor</option>
+        <option [ngValue]="2">Cliente</option>
+        <option [ngValue]="3">Empresa</option>
+        <option [ngValue]="4">Persona externa</option>
+      </select>
     </div>
+    <div class="mb-3" *ngIf="!seleccionaOtros">
+      <label class="block text-sm font-medium text-gray-700" for="almacen">Beneficiario</label>
+      <select
+        class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        [(ngModel)]="movimientoBancario.idBeneficiario"
+        (ngModelChange)="onBeneficiarioChange($event)"
+      >
+        <option class="text-gray-700" [ngValue]="0" disabled hidden>
+          Selecciona un beneficiario..
+        </option>
+        <option [ngValue]="b.id" *ngFor="let b of beneficiario">{{ b.razonSocial }}</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="block text-sm font-medium text-gray-700" for="almacen">Cuenta bancaria</label>
+      <select
+        class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        [(ngModel)]="movimientoBancario.idCuentaBancaria"
+      >
+        <option class="text-gray-700" [ngValue]="0" disabled hidden>
+          Selecciona una cuenta bancaria..
+        </option>
+        <option [ngValue]="cb.id" *ngFor="let cb of cuentaB">
+          {{ cb.numeroCuenta + '(' + cb.nombreBanco + ')' }}
+        </option>
+      </select>
+    </div>
+    <div class="flex gap-3">
+      <div class="mb-3 flex gap-1" *ngIf="tipoBeneficiario == 1">
+        <input
+          type="checkbox"
+          name=""
+          id=""
+          [(ngModel)]="movimientoBancario.esFactura"
+          (change)="esFactura()"
+        />
+        <label class="block text-sm font-medium text-gray-700" for="almacen">Factura</label>
+      </div>
+      <div class="mb-3 flex gap-1" *ngIf="tipoBeneficiario == 1">
+        <input
+          type="checkbox"
+          name=""
+          id=""
+          [(ngModel)]="movimientoBancario.esOrdenCompra"
+          (change)="esOrdenCompra()"
+        />
+        <label class="block text-sm font-medium text-gray-700" for="almacen">Pedido</label>
+      </div>
+    </div>
+
+    <div class="mb-3" *ngIf="movimientoBancario.esOrdenCompra">
+      <div
+        style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px"
+      >
+        <table
+          class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos"
+        >
+          <thead>
+            <tr>
+              <th class="cabecera1" scope="col"></th>
+              <th class="cabecera1" scope="col">No. OC</th>
+              <th class="cabecera1" scope="col">Monto a pagar</th>
+              <th class="cabecera1" scope="col">Saldo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let oc of movimientoBancario.ordenCompras">
+              <th class="td-0" scope="col">
+                <input
+                  type="checkbox"
+                  name=""
+                  id=""
+                  [(ngModel)]="oc.esSeleccionado"
+                  (change)="recalculaTotalOrdenCompras()"
+                />
+              </th>
+              <td class="td-0" scope="col">{{ oc.noOrdenCompra }}</td>
+              <td class="td-0" scope="col">
+                <input
+                  type="number"
+                  name=""
+                  id=""
+                  [(ngModel)]="oc.montoAPagar"
+                  (keydown.enter)="recalculaTotalOrdenCompras()"
+                />
+              </td>
+              <td class="td-0" scope="col">{{ oc.saldo }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="mb-3" *ngIf="movimientoBancario.esFactura">
+      <div
+        style="overflow-x: auto; white-space: nowrap; width: 100%; margin: 0 auto; margin-top: 0px"
+      >
+        <table
+          class="table table-striped rounded table-hover orden tabla-detalle tabla-detalle-pagos"
+        >
+          <thead>
+            <tr>
+              <th class="cabecera1" scope="col"></th>
+              <th class="cabecera1" scope="col">Uuid</th>
+              <th class="cabecera1" scope="col">Monto a pagar</th>
+              <th class="cabecera1" scope="col">Saldo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let fxoc of movimientoBancario.facturasXOrdenCompra">
+              <th class="td-0" scope="col">
+                <input
+                  type="checkbox"
+                  name=""
+                  id=""
+                  [(ngModel)]="fxoc.esSeleccionado"
+                  (change)="recalculaTotalFacturas()"
+                />
+              </th>
+              <td class="td-0" scope="col">{{ fxoc.uuid }}</td>
+              <td class="td-0" scope="col">
+                <input
+                  type="number"
+                  name=""
+                  id=""
+                  [(ngModel)]="fxoc.montoAPagar"
+                  (keydown.enter)="recalculaTotalFacturas()"
+                />
+              </td>
+              <td class="td-0" scope="col">{{ fxoc.saldo }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="flex flex-row gap-2">
+      <div class="w-full">
+        <div class="mb-3">
+          <label class="block text-sm font-medium text-gray-700" for="name">Folio</label>
+          <input
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            type="text"
+            id="persona"
+            name="persona"
+            placeholder="Escribe el nombre completo"
+            [(ngModel)]="movimientoBancario.folio"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="block text-sm font-medium text-gray-700" for="name"
+            >Fecha de autorización</label
+          >
+          <input
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            type="date"
+            id="persona"
+            name="persona"
+            placeholder="Escribe el nombre completo"
+            [(ngModel)]="movimientoBancario.fechaAplicacion"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="block text-sm font-medium text-gray-700" for="name">Fecha de cobro</label>
+          <input
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            type="date"
+            id="persona"
+            name="persona"
+            placeholder="Escribe el nombre completo"
+            [(ngModel)]="movimientoBancario.fechaCobra"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="block text-sm font-medium text-gray-700" for="almacen">Modalidad</label>
+          <select
+            class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            [(ngModel)]="movimientoBancario.modalidad"
+          >
+            <option class="text-gray-700" value="0" disabled selected>
+              Selecciona la modalidad..
+            </option>
+            <option [ngValue]="1">Cheque</option>
+            <option [ngValue]="2">Transferencia</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="block text-sm font-medium text-gray-700" for="almacen">Tipo deposito</label>
+          <select
+            class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            [(ngModel)]="movimientoBancario.tipoDeposito"
+          >
+            <option class="text-gray-700" value="0" disabled selected hidden>
+              Selecciona el tipo..
+            </option>
+            <option [ngValue]="1">Deposito</option>
+            <option [ngValue]="2">Retiro</option>
+          </select>
+        </div>
+      </div>
+      <div class="w-full">
+        <div class="mb-3">
+          <label class="block text-sm font-medium text-gray-700" for="almacen"
+            >Tipo de moneda</label
+          >
+          <select
+            class="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            [(ngModel)]="movimientoBancario.moneda"
+          >
+            <option class="text-gray-700" value="0" disabled selected>Selecciona el tipo..</option>
+            <option [ngValue]="1">MXN</option>
+            <option [ngValue]="2">USD</option>
+            <option [ngValue]="3">EUR</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="block text-sm font-medium text-gray-700" for="name">Monto total</label>
+          <input
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            type="number"
+            id="persona"
+            name="persona"
+            [disabled]="movimientoBancario.esFactura || movimientoBancario.esOrdenCompra"
+            placeholder="Escribe el nombre completo"
+            [(ngModel)]="movimientoBancario.montoTotal"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="block text-sm font-medium text-gray-700" for="almacen"
+            >Tipo de cambio</label
+          >
+          <input
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            type="number"
+            id="persona"
+            name="persona"
+            placeholder="Escribe el nombre completo"
+            [(ngModel)]="movimientoBancario.tipoCambio"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="block text-sm font-medium text-gray-700" for="name">Concepto</label>
+          <input
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            type="text"
+            id="persona"
+            name="persona"
+            placeholder="Escribe el nombre completo"
+            [(ngModel)]="movimientoBancario.concepto"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="mt-6 flex justify-end gap-3">
+      <button
+        type="button"
+        class="rounded-lg border bg-white border-gray300 px-4 py-2 text-sm font-medium text-gray600 hover:bg-gray100 transition"
+        (click)="onCancelar()"
+      >
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="rounded-lg bg-colorButton px-4 py-2 text-sm font-semibold text-white hover:bg-hoverButton transition"
+        (click)="guardarMovimientoBancario()"
+      >
+        Guardar
+      </button>
+    </div>
+  </div>
 </div>

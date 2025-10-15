@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { ChartModule } from 'primeng/chart';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -162,17 +164,24 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ProductosServiciosComponent } from './gestion-ventas/productos-servicios/productos-servicios.component';
 import { ImprimirModalComponent } from './proyectos/precio-unitario/precio-unitario/imprimir-modal/imprimir-modal.component';
 import { FieldsetModule } from 'primeng/fieldset';
-import { A11yModule } from "@angular/cdk/a11y";
+import { A11yModule } from '@angular/cdk/a11y';
 import { UppercaseInputDirective } from './directiva/uppercase.directive';
 import { OnlyNumbersDirective } from './directiva/onlynumbers.directive';
 import { AuditoriaService } from './seguridad/auditorias/auditorias.service';
 import { AuditoriasComponent } from './seguridad/auditorias/auditorias.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { CountUpDirective } from './directiva/countup.directive';
+import { ProgressBarComponent } from './dashboard/components/progress-bar/progress-bar.component';
 
 import { GlosarioComponent } from './documentacion/glosario/glosario.component';
 import { ModalGlosarioComponent } from './documentacion/modal-glosario/modal-glosario.component';
 import { DocumentacionModule } from './documentacion/documentacion.module';
 import { CatalogoConceptoComponent } from './proyectos/precio-unitario/catalogo-concepto/catalogo-concepto.component';
 import { MatrizPrecioUnitarioComponent } from './proyectos/precio-unitario/matriz-precio-unitario/matriz-precio-unitario.component';
+import { ReportesSubcontratosComponent } from './proyectos/reportes-subcontratos/reportes-subcontratos/reportes-subcontratos.component';
+import { CuentasPorCobrarComponent } from './contabilidad/cuentas-por-cobrar/cuentas-por-cobrar.component';
+import { ImagenesComponent } from './seguridad/imagenes/imagenes.component';
+import { AlmacenTranspasoComponent } from './inventario/almacenTranspaso/almacen-transpaso.component';
 
 export function playerFactory() {
   return player;
@@ -330,6 +339,13 @@ export function playerFactory() {
     AuditoriasComponent,
     CatalogoConceptoComponent,
     MatrizPrecioUnitarioComponent,
+    ReportesSubcontratosComponent,
+    DashboardComponent,
+    CountUpDirective,
+    ProgressBarComponent,
+    CuentasPorCobrarComponent,
+    ImagenesComponent,
+    AlmacenTranspasoComponent,
   ],
 
   imports: [
@@ -353,7 +369,9 @@ export function playerFactory() {
     ScrollingModule,
     FieldsetModule,
     A11yModule,
-],
+    OverlayModule,
+    ChartModule,
+  ],
   exports: [LeftMenuComponent],
   providers: [
     SidenavService,

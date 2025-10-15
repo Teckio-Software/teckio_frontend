@@ -8,11 +8,11 @@
 
 <ng-template #treeTemplate let-nodes>
   <ng-container *ngFor="let item of nodes">
-    
+
       <ng-container
         *ngTemplateOutlet="nodeTemplate; context: { $implicit: item }"
       ></ng-container>
-    
+
     <ng-container
       *ngIf="item.hijos && item.hijos.length > 0 && item.expandido"
     >

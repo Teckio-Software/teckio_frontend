@@ -20,6 +20,7 @@ export interface ReporteDestajoDTO {
     porcentajeDestajoConFormato: string;
     importeDestajo: number;
     importeDestajoConFormato: string;
+    tipoContrato : boolean;
 }
 
 export interface ObjetoDestajoacumuladoDTO {

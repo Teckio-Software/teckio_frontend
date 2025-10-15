@@ -51,6 +51,13 @@ export interface contratoDTO {
     idContratista: number;
     fechaRegistro : Date;
     numeroDestajoDescripcion : string;
+    anticipo : number;
+    iva : number;
+    anticipoConFormato : string;
+    ivaConFormato : string;
+    importeTotalConFormato : string;
+    importeTotal : number;
+    importeAnticipo :  number;
 }
 
 export interface parametrosParaBuscarContratos {

@@ -4,16 +4,20 @@
     class="flex items-center mb-4 gap-2"
     *ngIf="proyectoSeleccionado"
   >
+  <div>
     <button
       (click)="openDialogWithoutRef()"
       class="flex items-center gap-2 rounded-md bg-colorButton transition-all duration-200 hover:bg-colorButtonHover text-white px-2 py-2 hover:shadow-md"
-      ngbTooltip="Nuevo almacén"
+      ngbTooltip="Nuevo almacén"    
+      triggers="mouseenter:mouseleave"
     >
       <!-- <span class="font-medium text-base tracking-wide xs:text-sm">
         Nuevo almacén
       </span> -->
       <img class="w-5 xs:w-4" src="assets/add.svg" alt="botón agregar" />
     </button>
+  </div>
+  <div>
     <select
           [(ngModel)]="filtroAlmacen"
           name=""
@@ -25,7 +29,7 @@
           <option value="1">Solo Centrales</option>
           <option value="2">Centrales y de Proyectos</option>
         </select>
-
+  </div>
     <!-- <div
       class="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-md hover:bg-gray-100 transition-colors duration-200"
     >

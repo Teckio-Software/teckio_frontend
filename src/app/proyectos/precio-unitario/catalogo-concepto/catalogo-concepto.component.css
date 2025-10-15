@@ -1,11 +1,77 @@
 .icon-display {
-  display: inline-flex;      /* permite centrar con flex */
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 12px;               /* material default */
-  height: 12px;
-  line-height: 24px;         /* evita que “suba” o “baje” */
+  line-height: 24px;
   font-size: 24px;
-  vertical-align: middle;    /* por si el <td> está en baseline */
+  vertical-align: middle;
   cursor: pointer;
+}
+
+.tabla-virtual {
+  height: 90vh;
+  display: block;
+  overflow-y: auto;
+}
+
+.tabla-virtual-plegada {
+  height: 50vh;
+  display: block;
+  overflow-y: auto;
+}
+
+.tabla-virtual .cdk-virtual-scroll-content-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+/* .tabla-virtual-plegada .cdk-virtual-scroll-content-wrapper {
+  width: 100%;
+  height: 100%;
+} */
+
+.menu-trigger {
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-opciones {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* Muestra el botón al pasar el mouse por la fila */
+tr:hover .btn-opciones {
+  opacity: 1;
+  visibility: visible;
+}
+
+::ng-deep
+  .first-custom-tab-group.mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs
+  > .mat-mdc-tab-header
+  .mat-mdc-tab {
+  flex-grow: 0 !important; /* Asegúrate de que solo el primer grupo de pestañas se vea afectado */
+  background-color: #ffffff !important; /* Cambia el color de fondo de las pestañas */
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+    /* 3. Estilo para la barra inferior (El subrayado) */
+    .first-custom-tab-group .mat-mdc-tab-header .mat-ink-bar {
+        /* Establecer en un color diferente o transparente para que no choque con el fondo blanco */
+        background-color: transparent !important;
+    }
+::ng-deep .first-custom-tab-group .mat-mdc-tab-labels {
+  gap: 2px !important; /* Asegúrate de que no haya espacio entre las pestañas */
+}
+::ng-deep .first-custom-tab-group .mat-mdc-tab:not(.mdc-tab--stacked) {
+  height: 25px !important; /* Cambia la altura de las pestañas */
+}
+::ng-deep .first-custom-tab-group .mdc-tab__text-label {
+  color: #00509b !important; /* Cambia el color del texto de las pestañas */
+}
+
+.cont-drill {
+  border-right: 1px solid #f2f2f2b2;
+  padding: 1px;
 }

@@ -39,11 +39,10 @@
               <select
                 [(ngModel)]="selectedPeriodo"
                 (ngModelChange)="cargarEstimaciones()"
+                class="border-none rounded-md px-4 py-[1.4px]"
                 style="
                   background-color: #4eaac138;
-                  border: none;
-                  border-radius: 5px;
-                  padding: 1.4px;
+                  /* padding: 1.4px; */
                   opacity: 2;
                 "
               >
@@ -61,8 +60,8 @@
                 placement="bottom"
                 ngbTooltip="Imprimir"
                 triggers="mouseenter:mouseleave"
-                placement="left"
-                (click)="imprimir()"
+                placement="bottom"
+                (click)="abrirModalImprimir()"
               >
                 <img
                   src="./assets/print.svg"
@@ -250,14 +249,7 @@
             </thead>
           </table>
           <div
-            style="
-              overflow-y: auto;
-              white-space: nowrap;
-              height: 60vh;
-              margin: 0 auto;
-            "
-            class="floating-window"
-            class="h-[100px] border-b-4 border-b-slate-800 overflow-hidden resize-y cursor-ns-resize relative mx-auto pb-[7px] bg-white/35 overflow-y-scroll"
+            class="h-[60vh] border-b-4 border-b-slate-800 overflow-hidden resize-y cursor-ns-resize relative mx-auto pb-[7px] bg-white/35 overflow-y-auto whitespace-nowrap m-[0 auto]"
           >
             <tree-view [treeData]="estimaciones">
               <ng-template let-estimacion>
@@ -278,7 +270,6 @@
                           <!-- si quieren titulo colocan esto si no no  -->
                           <!-- <div style="display: flex; justify-content: space-between;  align-items: baseline; color: #ffffff; font-weight: 700; letter-spacing: 2px;" >
                                   <p>Cantidad</p>
-
                               </div> -->
                           <table
                             class="w-[95%] h-[100px] border-b-4 border-b-slate-800 overflow-hidden resize-y cursor-ns-resize relative mx-auto pb-[7px] bg-white/35"
@@ -1268,3 +1259,128 @@
     </div>
   </mat-tab>
 </mat-tab-group>
+
+  <div
+    class="fixed inset-0 z-10 bg-black bg-opacity-50 w-screen overflow-y-auto"
+    *ngIf="isOpenModal"
+    (click)="cerrarModal()"
+  >
+    <div
+      class="content-center sm:flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0"
+    >
+      <div
+        class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl"
+        (click)="detenerCierre($event)"
+      >
+        <!-- Cabecera -->
+        <div
+        style="display: flex; justify-content: space-between;"
+          class="bg-white px-4 pb-2 pt-2 flex border-b-2"
+        >
+          <h2 class="font-semibold text-gray-800 tracking-wider text-lg mt-3">
+            Imprimir estimaciones
+          </h2>
+          <button
+            type="button"
+            class="leading-none text-2xl px-3 py-1 text-gray-500 hover:text-gray-700"
+            (click)="cerrarModal()"
+          >
+            &times;
+          </button>
+        </div>
+
+        <!-- contenido -->
+        <!-- <div class="bg-white px-4 pb-4 pt-2 sm:p-6 sm:pb-4"
+        >
+          <p class="font-normal text-red-500 text-base mb-1" *ngIf="isError1 && (tipoReporte == null || tipoReporte == '' || tipoReporte == undefined)">
+              *Seleccione una opción
+            </p>
+          <div>
+            <p class="font-medium text-gray-700 text-base mb-1">
+              Seleccione el tipo de reporte que desea imprimir.
+            </p>
+          </div>
+          <div 
+          style="display: flex; gap: 0.5rem;"
+          class="flex gap-2 items-center mb-2">
+          <input
+            type="radio"
+            id="reporteIVA"
+            name="tipoReporte"
+            value="reporteIVA"
+            [(ngModel)]="tipoReporte"
+          />
+          <label for="reporteIVA" class="text-gray-600 text-base">IVA</label>
+        </div>
+        <div 
+        style="display: flex; gap: 0.5rem;"
+        class="flex gap-2 items-center mb-2">
+          <input
+            type="radio"
+            id="reporteSinIVA"
+            name="tipoReporte"
+            value="reporteSinIVA"
+            [(ngModel)]="tipoReporte"
+          />
+          <label for="reporteSinIVA" class="text-gray-600 text-base"
+            >Sin IVA</label
+          >
+        </div>
+        <div 
+        style="display: flex; gap: 0.5rem;"
+        class="flex gap-2 items-center mb-2">
+          <input
+            type="radio"
+            id="reporteSinAnticipo"
+            name="tipoReporte"
+            value="reporteSinAnticipo"
+            [(ngModel)]="tipoReporte"
+          />
+          <label for="reporteSinAnticipo" class="text-gray-600 text-base"
+            >Sin Anticipo</label
+          >
+        </div>
+        </div> -->
+        <div class="card col-span-2 m-3" style="display: flex; justify-content: center;">
+            <fieldset class="p-2">
+              <legend class="text-base font-medium text-gray-800 tracking-wider">
+                Opciones
+              </legend>
+              <div style="display: flex; gap: 0.5rem;">
+                <input type="checkbox" id="opcion1" [(ngModel)]="isReporteIVA" />
+                <label for="opcion1" class="text-gray-600 text-base">Imprimir con IVA</label>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <input type="checkbox" id="opcion2" [(ngModel)]="isReporteAnticipo" />
+                <label for="opcion2" class="text-gray-600 text-base">Imprimir con anticipo</label>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <input type="checkbox" id="opcion3" [(ngModel)]="isReporteConLetras" />
+                <label for="opcion3" class="text-gray-600 text-base">Importe con letra</label>
+              </div>
+            </fieldset>
+          </div>
+        <div
+        style="display: flex;
+        justify-content: end;
+        gap: 10px;"
+        class="px-4 py-3 flex justify-end gap-4">
+          <button
+          style="display: flex; align-items: center; gap: 10px;"
+          class="flex items-center gap-3 text-white py-2 px-6 rounded-lg font-medium bg-colorButton hover:bg-colorButtonHover transition 200ms xs:text-xs"
+          (click)="imprimir()"
+        >
+          Descargar
+          <img class="w-8 h-8 xs:w-5 xs:h-5" src="./assets/pdf_icon.svg" alt="icono pdf" />
+        </button>
+          <button
+          style="display: flex; align-items: center;"
+            class="bg-colorButton hover:bg-colorButtonHover font-medium text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
+            (click)="cerrarModal()"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

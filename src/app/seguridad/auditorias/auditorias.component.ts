@@ -219,33 +219,7 @@ export class AuditoriasComponent implements OnInit {
   //   });
   // }
 
-  // selectedFile: File | null = null;
-
-  // onFileSelected(event: any) {
-  //   if (event.target.files.length > 0) {
-  //     this.selectedFile = event.target.files[0] as File;
-  //   }
-  // }
-
-  //  uploadImage() {
-  //   if (!this.selectedFile) {
-  //     console.error('No se ha seleccionado ninguna imagen.');
-  //     return;
-  //   }
-
-  //   // Crear un objeto FormData
-  //   const formData = new FormData();
-  //   // El primer argumento ('file') DEBE coincidir con el nombre 
-  //   // que esperas en el endpoint de .NET (ver más abajo).
-  //   formData.append('file', this.selectedFile, this.selectedFile.name); 
-
-  //   // Realizar la solicitud HTTP POST
-  //   this._imagenService.cargarImagen(this.selectedEmpresa, formData).subscribe(
-  //     (response) => {
-  //       console.log('Imagen cargada correctamente:', response);
-  //     }
-  //   );
-  // }
+  
 
   // /////////////////////////
 

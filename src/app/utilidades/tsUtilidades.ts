@@ -99,8 +99,15 @@ export const pages: Page[] = [
         //SeccionContrato
       },
       {
-        name: 'Reportes',
-        link: '/reportes',
+        name: 'Destajos',
+        link: '/destajos',
+        imageUrl: 'assets/facturas.svg',
+        permiso: [''],
+        //SeccionAvanceObra
+      },
+      {
+        name: 'Subcontratos',
+        link: '/subcontratos',
         imageUrl: 'assets/facturas.svg',
         permiso: [''],
         //SeccionAvanceObra
@@ -188,6 +195,11 @@ export const pages: Page[] = [
         link: '/almacensalida',
         imageUrl: 'assets/salida2.svg',
         permiso: ['SeccionSalidaAlmacen'],
+      },{
+        name: 'Traspaso almacén',
+        link: '/almacentranspaso',
+        imageUrl: 'assets/salida2.svg',
+        permiso: ['SeccionTranspasoAlmacen'],
       },
     ],
     expanded: false,
@@ -291,6 +303,12 @@ export const pages: Page[] = [
         permiso: ['SeccionCuentaBancaria'],
       },
       {
+        name: 'Cuentas por cobrar',
+        link: '/cuentas-por-cobrar',
+        imageUrl: 'assets/cuenta-bancaria.svg',
+        permiso: ['SeccionCuentaBancaria'],
+      },
+      {
         name: 'Movimiento bancario',
         link: '/movimientobancario',
         imageUrl: 'assets/movimiento-bancario.png',
@@ -357,6 +375,12 @@ export const pages: Page[] = [
         name: 'Auditorías',
         link: '/auditorias',
         imageUrl: 'assets/requisicion.svg',
+        permiso: ['Administrador'],
+      },
+      {
+        name: 'Imágenes',
+        link: '/imagenes',
+        imageUrl: 'assets/imagen.png',
         permiso: ['Administrador'],
       }
     ],

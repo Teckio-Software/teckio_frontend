@@ -38,7 +38,7 @@ export type importeProps = {
   // fechaFin : Date;
   // anio : number;
   // total : number;
-  
+
   }
 
 
@@ -89,7 +89,7 @@ export const TableBelow: React.FC<importeProps> = ({
   //     y: rect.top + rect.height + 10,  // Justo debajo del elemento (ajustar si es necesario)
   //   });
   // };
-  
+
   // // Maneja el evento de mouse al salir
   // const handleMouseLeave = () => {
   //   setTooltip(prevTooltip => ({
@@ -217,8 +217,8 @@ export const TableBelow: React.FC<importeProps> = ({
                   </th>
                 ))}
               </tr>
-            
-    
+
+
               <tr>
                 <th className="th01" style={{ position: 'sticky', left: 0, background: '#fff', zIndex: 1 }}>
                   <div className="titulo-total">
@@ -233,7 +233,7 @@ export const TableBelow: React.FC<importeProps> = ({
                   </th>
                 ))}
               </tr>
-                
+
               <tr>
                 <th className="th01" style={{ position: 'sticky', left: 0, background: '#fff', zIndex: 1 }}>
                   <div className="titulo-total">
@@ -286,10 +286,10 @@ export const TableBelow: React.FC<importeProps> = ({
                   <th className="th0" key={index}>
                     <div>
                       <div >
-                        
+
                         {importe.totalConFormato}</div>
-          
-                        
+
+
                     </div>
                   </th>
                 ))}
