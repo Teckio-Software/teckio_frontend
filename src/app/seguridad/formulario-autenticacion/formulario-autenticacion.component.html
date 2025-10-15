@@ -16,21 +16,15 @@
       class="w-full max-w-xl bg-white rounded-md shadow-sm p-6 sm:p-8 md:p-12 flex flex-col gap-7"
     >
       <div>
-        <p
-          class="text-gray-700 text-base sm:text-lg lg:text-2xl font-normal tracking-tighter"
-        >
+        <p class="text-gray-700 text-base sm:text-lg lg:text-2xl font-normal tracking-tighter">
           Bienvenido a
         </p>
-        <p
-          class="text-[#1d232a] text-3xl sm:text-4xl font-semibold tracking-tight"
-        >
+        <p class="text-[#1d232a] text-3xl sm:text-4xl font-semibold tracking-tight">
           Teckio Software
         </p>
       </div>
       <div>
-        <p class="text-gray-800 text-xs sm:text-sm font-normal">
-          Ingresa los siguientes datos
-        </p>
+        <p class="text-gray-800 text-xs sm:text-sm font-normal">Ingresa los siguientes datos</p>
         <form
           (submit)="onSubmit.emit(form.value)"
           [formGroup]="form"
@@ -38,14 +32,10 @@
         >
           <!-- Email -->
           <div class="space-y-4 sm:space-y-5">
-            <div
-              class="w-full bg-gray-200 rounded-lg py-2 px-3 flex items-center space-x-3"
-            >
+            <div class="w-full bg-gray-200 rounded-lg py-2 px-3 flex items-center space-x-3">
               <mat-icon class="text-gray-800">mail_lock</mat-icon>
               <div class="flex-1 flex flex-col">
-                <label class="text-xs text-gray-800 mb-1 font-normal"
-                  >Correo electrónico</label
-                >
+                <label class="text-xs text-gray-800 mb-1 font-normal">Correo electrónico</label>
                 <input
                   formControlName="Email"
                   type="email"
@@ -63,9 +53,7 @@
             >
               <mat-icon class="text-gray-800">key</mat-icon>
               <div class="flex-1 flex flex-col">
-                <label class="text-xs text-gray-800 mb-1 font-normal"
-                  >Contraseña</label
-                >
+                <label class="text-xs text-gray-800 mb-1 font-normal">Contraseña</label>
                 <input
                   [type]="showPassword ? 'text' : 'password'"
                   formControlName="Password"
@@ -76,7 +64,7 @@
               <button
                 type="button"
                 (click)="showPasswordField()"
-                class="absolute right-4 top-1/2 transform -translate-y-1/2"
+                class="flex items-center justify-center"
               >
                 <img
                   *ngIf="!showPassword"
@@ -136,9 +124,7 @@
       >
         <!-- Cabecera -->
         <div class="flex justify-between items-center border-b px-4 py-3">
-          <h2
-            class="font-semibold text-gray-800 tracking-wider text-base sm:text-lg"
-          >
+          <h2 class="font-semibold text-gray-800 tracking-wider text-base sm:text-lg">
             Restablecer contraseña
           </h2>
           <button
@@ -154,8 +140,8 @@
         <!-- Contenido -->
         <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
           <p class="text-gray-800 text-base sm:text-lg">
-            Para restablecer tu contraseña, contacta a nuestro equipo de soporte
-            y ellos se encargarán de restablecerla.
+            Para restablecer tu contraseña, contacta a nuestro equipo de soporte y ellos se
+            encargarán de restablecerla.
           </p>
         </div>
 
