@@ -266,7 +266,7 @@ export class AlmacenComponent implements OnInit {
         .subscribe((datos) => {
           if (datos.estatus) {
             this.limpiarFormulario();
-            this.traerInformacion();
+            this.cambiarSeleccion();
           } else {
             Swal.fire({
               title: 'Error',
@@ -277,12 +277,13 @@ export class AlmacenComponent implements OnInit {
         });
     } else {
       this.nuevoalmacen = this.form.getRawValue();
+      this.nuevoalmacen.idProyecto = this.idProyecto;
       this.almacenService
         .editar(this.nuevoalmacen, this.selectedEmpresa)
         .subscribe((datos) => {
           if (datos.estatus) {
             this.limpiarFormulario();
-            this.traerInformacion();
+            this.cambiarSeleccion();
           } else {
             Swal.fire({
               title: 'Error',

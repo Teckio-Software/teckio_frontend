@@ -420,7 +420,7 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'almacentranspaso',
+    path: 'almacentraspaso',
     loadChildren: () =>
       import(`./inventario/almacenTranspaso/almacen-transpaso.module`).then(
         (module) => module.AlmacenTranspasoModule

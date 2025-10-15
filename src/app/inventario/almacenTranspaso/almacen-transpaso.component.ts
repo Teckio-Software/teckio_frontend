@@ -433,7 +433,7 @@ export class AlmacenTranspasoComponent {
       /**
        * Servicio que se encarga de obtener todos los almacenes sin paginar
        */
-      this.almacenService.obtenerTodosSinPaginar(this.idEmpresaInput).subscribe({
+      this.almacenService.obtenerConNombreDelProyecto(this.idEmpresaInput).subscribe({
         /**
          * Callback que se ejecuta cuando se obtiene la lista de almacenes
          * @param datos lista de almacenes

@@ -46,7 +46,7 @@ export class AuditoriasComponent implements OnInit {
   /////////* PAGINATION */////////
     paginatedLogs: Logs[] = [];
     currentPage = 1;
-    pageSize = 32; // Number of items per page
+    pageSize = 28; // Number of items per page
     totalItems = 0;
     pages: number[] = [];
     visiblePages: number[] = [];
