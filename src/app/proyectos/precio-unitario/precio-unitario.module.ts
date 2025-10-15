@@ -6,7 +6,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
   declarations: [
-  
+
   ],
   imports: [CommonModule, PrecioUnitarioRoutingModule, ScrollingModule],
 })

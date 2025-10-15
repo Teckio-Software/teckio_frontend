@@ -34,6 +34,7 @@ import { ModalAlertComponent } from 'src/app/utilidades/modal-alert/modal-alert.
 export class CatalogoConceptoComponent implements OnInit {
   selectedProyecto = 0;
   selectedEmpresa = 0;
+  esImportacion = false;
   selectedPU = 0;
   totalSinIvaConFormato = '0.00';
   totalIvaConFormato = '0.00';
@@ -174,9 +175,9 @@ export class CatalogoConceptoComponent implements OnInit {
   }
 
   mostrarMatriz(precioUnitario: precioUnitarioDTO) {
-    this.matrizMostrada = false;
     this.selectedPU = precioUnitario.id;
     this.matrizMostrada = true;
+    this.appRecarga +=1;
   }
 
   trackByPrecioUnitario = (_: number, item: precioUnitarioDTO) => item.id;
@@ -532,6 +533,7 @@ export class CatalogoConceptoComponent implements OnInit {
   };
 
   openDialogFSR() {
+    this.matrizMostrada = false;
     this.contenedorFSR = true;
     this.contenedorPresupuesto = false;
     this.contenedorExplosionInsumo = false;
@@ -1458,6 +1460,8 @@ export class CatalogoConceptoComponent implements OnInit {
         });
         this.precioUnitarioPadreCreacion = this.precioUnitarioMenu;
       }
+      this.actualizarListaVisible();
+      this.ChangeDetectorRef.detectChanges();
       this.existeCaptura = true;
     }
   }
@@ -1580,6 +1584,7 @@ export class CatalogoConceptoComponent implements OnInit {
       }
     }
     this.existeCaptura = true;
+    this.actualizarListaVisible();
   }
 
   partirConcepto() {

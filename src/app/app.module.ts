@@ -182,6 +182,7 @@ import { ReportesSubcontratosComponent } from './proyectos/reportes-subcontratos
 import { CuentasPorCobrarComponent } from './contabilidad/cuentas-por-cobrar/cuentas-por-cobrar.component';
 import { ImagenesComponent } from './seguridad/imagenes/imagenes.component';
 import { AlmacenTranspasoComponent } from './inventario/almacenTranspaso/almacen-transpaso.component';
+import { ImportarProyectoComponent } from './proyectos/precio-unitario/importar-proyecto/importar-proyecto.component';
 
 export function playerFactory() {
   return player;
@@ -346,6 +347,7 @@ export function playerFactory() {
     CuentasPorCobrarComponent,
     ImagenesComponent,
     AlmacenTranspasoComponent,
+    ImportarProyectoComponent
   ],
 
   imports: [
