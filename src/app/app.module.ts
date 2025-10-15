@@ -360,6 +360,8 @@ export function playerFactory() {
     MatrizPrecioUnitarioCopiaComponent,
     VerCuentaComponent,
     CuentasPorPagarComponent,
+    CatalogoConceptoComponent,
+    MatrizPrecioUnitarioComponent
   ],
 
   imports: [
