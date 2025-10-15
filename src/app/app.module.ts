@@ -183,6 +183,7 @@ import { CuentasPorCobrarComponent } from './contabilidad/cuentas-por-cobrar/cue
 import { ImagenesComponent } from './seguridad/imagenes/imagenes.component';
 import { AlmacenTranspasoComponent } from './inventario/almacenTranspaso/almacen-transpaso.component';
 import { ImportarProyectoComponent } from './proyectos/precio-unitario/importar-proyecto/importar-proyecto.component';
+import { MatrizPrecioUnitarioCopiaComponent } from './proyectos/precio-unitario/matriz-precio-unitario-copia/matriz-precio-unitario-copia.component';
 
 export function playerFactory() {
   return player;
@@ -347,7 +348,8 @@ export function playerFactory() {
     CuentasPorCobrarComponent,
     ImagenesComponent,
     AlmacenTranspasoComponent,
-    ImportarProyectoComponent
+    ImportarProyectoComponent,
+    MatrizPrecioUnitarioCopiaComponent
   ],
 
   imports: [

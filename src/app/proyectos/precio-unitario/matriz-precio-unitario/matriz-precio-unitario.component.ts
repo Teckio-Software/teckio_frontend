@@ -5,7 +5,7 @@ import { tipoInsumoDTO } from 'src/app/catalogos/tipo-insumo/tsTipoInsumo';
 import { TipoInsumoService } from 'src/app/catalogos/tipo-insumo/tipo-insumo.service';
 import { FamiliaInsumoService } from 'src/app/catalogos/familia-insumo/familia-insumo.service';
 import { PrecioUnitarioDetalleService } from './../../precio-unitario-detalle/precio-unitario-detalle.service';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { PrecioUnitarioService } from '../precio-unitario.service';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import { Unidades } from '../unidades';
@@ -20,6 +20,7 @@ import { InsumoDTO } from 'src/app/catalogos/insumo/tsInsumo';
 })
 export class MatrizPrecioUnitarioComponent implements OnInit {
   @Input() selectedPU!: number;
+  @Output() detalleCreado = new EventEmitter<void>();
   selectedProyecto: number = 0;
   selectedEmpresa: number = 0;
   nivelDesglose: number = 0;
@@ -433,7 +434,7 @@ crearDetalle(detalle: precioUnitarioDetalleDTO) {
                 cantidad: 0,
                 cantidadExcedente: 0,
                 idPrecioUnitarioDetallePerteneciente:
-                  detalle.idPrecioUnitarioDetallePerteneciente,
+                detalle.idPrecioUnitarioDetallePerteneciente,
                 codigo: '',
                 descripcion: '',
                 unidad: '',
@@ -461,6 +462,7 @@ crearDetalle(detalle: precioUnitarioDetalleDTO) {
             });
           // this.cargarListaConceptos();
           this.actualizarDesgloce();
+          this.detalleCreado.emit();
         });
     } else {
       // if (
@@ -530,6 +532,7 @@ crearDetalle(detalle: precioUnitarioDetalleDTO) {
             });
           // this.cargarListaConceptos();
           this.actualizarDesgloce();
+          this.detalleCreado.emit();
         });
     }
   }
@@ -594,5 +597,61 @@ crearDetalle(detalle: precioUnitarioDetalleDTO) {
           });
       }
     });
+  }
+
+  actualizarCantidad(precioUnitario: precioUnitarioDetalleDTO, valor: string): void {
+    if (!precioUnitario.cantidadEditado) {
+      return;
+    }
+
+    const valorRecortado = valor.trim();
+    if (valorRecortado === '') {
+      return;
+    }
+
+    const cantidad = Number(valorRecortado);
+    if (!isNaN(cantidad)) {
+      precioUnitario.cantidad = cantidad;
+    }
+  }
+
+  actualizarCostoBase(precioUnitario: precioUnitarioDetalleDTO, valor: string): void {
+    if (!precioUnitario.cantidadEditado) {
+      return;
+    }
+
+    const valorRecortado = valor.trim();
+    if (valorRecortado === '') {
+      return;
+    }
+
+    const costoBase = Number(valorRecortado);
+    if (!isNaN(costoBase)) {
+      precioUnitario.costoBase = costoBase;
+    }
+  }
+
+  actualizarTipoInsumo(detalle: precioUnitarioDetalleDTO, valor: number | string | null): void {
+    const id = Number(valor ?? 0);
+    if (Number.isNaN(id)) {
+      return;
+    }
+    if (detalle.idTipoInsumo === id) {
+      return;
+    }
+    detalle.idTipoInsumo = id;
+    this.crearDetalle(detalle);
+  }
+
+  actualizarFamiliaInsumo(detalle: precioUnitarioDetalleDTO, valor: number | string | null): void {
+    const id = Number(valor ?? 0);
+    if (Number.isNaN(id)) {
+      return;
+    }
+    if (detalle.idFamiliaInsumo === id) {
+      return;
+    }
+    detalle.idFamiliaInsumo = id;
+    this.crearDetalle(detalle);
   }
 }

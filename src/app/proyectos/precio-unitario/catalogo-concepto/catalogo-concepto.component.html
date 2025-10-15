@@ -289,7 +289,7 @@
         </button>
         <button
           class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-          (click)="nuevaPartidaAdicional(); menu3PuntosEsDesplegado = false"
+          (click)="importar(); menu3PuntosEsDesplegado = false"
         >
           Importar
         </button>
@@ -451,7 +451,6 @@
                   type="text"
                   readonly
                   [(ngModel)]="precioUnitario.importeConFormato"
-                  (click)="mostrarMatriz(precioUnitario)"
                 />
               </td>
             </tr>
@@ -502,6 +501,7 @@
         <app-matriz-precio-unitario
           [selectedPU]="selectedPU"
           *appRecarga="appRecarga"
+          (detalleCreado)="onDetalleCreado()"
         ></app-matriz-precio-unitario>
       </div>
       <!-- <app-matriz-precio-unitario [selectedPU]="selectedPU" *ngIf="selectedIndex == 1"></app-matriz-precio-unitario> -->
@@ -509,7 +509,11 @@
   </div>
 
   <div *ngIf="esImportacion">
-    <app-importar-proyecto> </app-importar-proyecto>
+    <app-importar-proyecto
+    [precioUnitarioMenu]="precioUnitarioMenu"
+    [tipoImportacion]="tipoImportacion"
+    *appRecarga="appRecarga"
+    > </app-importar-proyecto>
   </div>
 </div>
 

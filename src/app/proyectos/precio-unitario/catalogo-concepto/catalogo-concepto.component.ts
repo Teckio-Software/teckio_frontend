@@ -1,5 +1,5 @@
 import { ProyectoService } from './../../proyecto/proyecto.service';
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { PrecioUnitarioService } from '../precio-unitario.service';
 import { SeguridadService } from 'src/app/seguridad/seguridad.service';
 import { Unidades } from '../unidades';
@@ -139,7 +139,7 @@ export class CatalogoConceptoComponent implements OnInit {
     this.precioUnitarioService
       .obtenerEstructurado(this.selectedProyecto, this.selectedEmpresa)
       .subscribe((preciosUnitarios) => {
-        console.log(preciosUnitarios);
+        console.log(preciosUnitarios,"ererer");
         this.preciosUnitarios = preciosUnitarios;
         this.actualizarListaVisible();
       });
@@ -180,18 +180,23 @@ export class CatalogoConceptoComponent implements OnInit {
     this.appRecarga +=1;
   }
 
+  onDetalleCreado(): void {
+    this.obtenerRegistros();
+  }
+
   trackByPrecioUnitario = (_: number, item: precioUnitarioDTO) => item.id;
 
   private actualizarListaVisible(): void {
     const resultado: precioUnitarioDTO[] = [];
     this.flattenPrecios(this.preciosUnitarios, resultado);
     this.listaVisible = resultado;
+    this.actualizarTotales();
     if(this.listaVisible.length <= 0){
       this.listaVisible.push({
         hijos: [],
         id: 0,
         idProyecto: 0,
-        cantidad: 0,
+        cantidad: 1,
         cantidadConFormato: '0.00',
         cantidadEditado: false,
         cantidadExcedente: 0,
@@ -319,7 +324,7 @@ export class CatalogoConceptoComponent implements OnInit {
         importe: 0,
         importeConFormato: '',
         idProyecto: 0,
-        cantidad: 0,
+        cantidad: 1,
         cantidadConFormato: '',
         cantidadEditado: false,
         cantidadExcedente: 0,
@@ -1153,7 +1158,7 @@ export class CatalogoConceptoComponent implements OnInit {
             if (!this.contenedorCatalogoGeneral) {
               this.preciosUnitariosRefresco = preciosUnitarios;
               this.refrescar();
-              this.cargarListaConceptos();
+              this.obtenerRegistros();
             }
 
             this.displayCarga = 'none';
@@ -1190,7 +1195,7 @@ export class CatalogoConceptoComponent implements OnInit {
             if (!this.contenedorCatalogoGeneral) {
               this.preciosUnitariosRefresco = precioUnitario;
               this.refrescar();
-              this.cargarListaConceptos();
+              this.obtenerRegistros();
             }
             this.displayCarga = 'none';
           });
@@ -1221,7 +1226,7 @@ export class CatalogoConceptoComponent implements OnInit {
           .subscribe((preciosUnitarios) => {
             this.preciosUnitariosRefresco = preciosUnitarios;
             this.refrescar();
-            this.cargarListaConceptos();
+            this.obtenerRegistros();
             this.displayCarga = 'none';
           });
       } else {
@@ -1248,7 +1253,7 @@ export class CatalogoConceptoComponent implements OnInit {
             if (!this.contenedorCatalogoGeneral) {
               this.preciosUnitariosRefresco = precioUnitario;
               this.refrescar();
-              this.cargarListaConceptos();
+              this.obtenerRegistros();
             }
             this.displayCarga = 'none';
           });
@@ -1288,61 +1293,61 @@ export class CatalogoConceptoComponent implements OnInit {
   conceptos: precioUnitarioDTO[] = [];
   conceptosReset: precioUnitarioDTO[] = [];
 
-  cargarListaConceptos() {
-    this.precioUnitarioService
-      .obtenerConceptos(this.selectedProyecto, this.selectedEmpresa)
-      .subscribe((datos) => {
-        this.conceptos = datos;
-        this.conceptosReset = datos;
-        this.precioUnitarioSeleccionado = {
-          hijos: [],
-          id: 0,
-          idProyecto: 0,
-          cantidad: 0,
-          cantidadExcedente: 0,
-          tipoPrecioUnitario: 0,
-          costoUnitario: 0,
-          nivel: 0,
-          noSerie: 0,
-          idPrecioUnitarioBase: 0,
-          esDetalle: false,
-          idConcepto: 0,
-          codigo: '',
-          descripcion: '',
-          unidad: '',
-          precioUnitario: 0,
-          importe: 0,
-          importeSeries: 0,
-          expandido: false,
-          cantidadConFormato: '',
-          cantidadExcedenteConFormato: '',
-          costoUnitarioConFormato: '',
-          precioUnitarioConFormato: '',
-          importeConFormato: '',
-          importeSeriesConFormato: '',
-          cantidadEditado: false,
-          costoUnitarioEditado: false,
-          precioUnitarioEditado: false,
-          porcentajeIndirecto: 0,
-          porcentajeIndirectoConFormato: '',
-          posicion: 0,
-          codigoPadre: '',
-          esCatalogoGeneral: false,
-          esAvanceObra: false,
-          esAdicional: false,
-          esSeleccionado: false,
-        };
-      });
-    this.preciosUnitarios.forEach((registro) => {
-      if (registro.id == this.precioUnitarioSeleccionado.id) {
-        registro.esDetalle = true;
-        this.precioUnitarioSeleccionado = registro;
-      }
-      if (registro.tipoPrecioUnitario == 0) {
-        this.buscarHijoParaSeleccionar(registro);
-      }
-    });
-  }
+  // cargarListaConceptos() {
+  //   this.precioUnitarioService
+  //     .obtenerConceptos(this.selectedProyecto, this.selectedEmpresa)
+  //     .subscribe((datos) => {
+  //       this.conceptos = datos;
+  //       this.conceptosReset = datos;
+  //       this.precioUnitarioSeleccionado = {
+  //         hijos: [],
+  //         id: 0,
+  //         idProyecto: 0,
+  //         cantidad: 1,
+  //         cantidadExcedente: 0,
+  //         tipoPrecioUnitario: 0,
+  //         costoUnitario: 0,
+  //         nivel: 0,
+  //         noSerie: 0,
+  //         idPrecioUnitarioBase: 0,
+  //         esDetalle: false,
+  //         idConcepto: 0,
+  //         codigo: '',
+  //         descripcion: '',
+  //         unidad: '',
+  //         precioUnitario: 0,
+  //         importe: 0,
+  //         importeSeries: 0,
+  //         expandido: false,
+  //         cantidadConFormato: '',
+  //         cantidadExcedenteConFormato: '',
+  //         costoUnitarioConFormato: '',
+  //         precioUnitarioConFormato: '',
+  //         importeConFormato: '',
+  //         importeSeriesConFormato: '',
+  //         cantidadEditado: false,
+  //         costoUnitarioEditado: false,
+  //         precioUnitarioEditado: false,
+  //         porcentajeIndirecto: 0,
+  //         porcentajeIndirectoConFormato: '',
+  //         posicion: 0,
+  //         codigoPadre: '',
+  //         esCatalogoGeneral: false,
+  //         esAvanceObra: false,
+  //         esAdicional: false,
+  //         esSeleccionado: false,
+  //       };
+  //     });
+  //   this.preciosUnitarios.forEach((registro) => {
+  //     if (registro.id == this.precioUnitarioSeleccionado.id) {
+  //       registro.esDetalle = true;
+  //       this.precioUnitarioSeleccionado = registro;
+  //     }
+  //     if (registro.tipoPrecioUnitario == 0) {
+  //       this.buscarHijoParaSeleccionar(registro);
+  //     }
+  //   });
+  // }
 
   buscarHijoParaSeleccionar(precioUnitario: precioUnitarioDTO) {
     precioUnitario.hijos.forEach((registro) => {
@@ -1594,7 +1599,7 @@ export class CatalogoConceptoComponent implements OnInit {
       .subscribe((datos) => {
         this.preciosUnitariosRefresco = datos;
         this.refrescar();
-        this.cargarListaConceptos();
+        this.obtenerRegistros();
         this.displayCarga = 'none';
       });
   }
@@ -1679,43 +1684,16 @@ export class CatalogoConceptoComponent implements OnInit {
           });
       }
 
-    importar() {
-    // if (this.detallesCopiaReset1.length > 0) {
-    //   this.detallesCopia = this.detallesCopiaReset1;
-    //   this.detallesCopiaReset = this.detallesCopiaReset1;
-    // }
-    // if (this.detallesCopia != undefined) {
-    //   if (this.detallesCopia.length > 0) {
-    //     this.seSeleccinaCopia = true;
-    //     this.esquemaArbol5 = true;
-    //     this.detallesCopiaReset.filter(
-    //       (registro) => (registro.seleccionado = false)
-    //     );
-    //     this.detallesCopia = this.detallesCopiaReset;
-    //   }
-    // }
-    // this.conceptoPadreParaImportar = precioUnitario;
-    // if (precioUnitario.tipoPrecioUnitario == 0) {
-    //   this.seEstaCopiando = true;
-    //   this.datosCopia.idPrecioUnitarioBase = precioUnitario.id;
-    //   this.isGrid = true;
-    //   this.contenedor2 = true;
-    //   this.seEstaCopiandoConcepto = true;
-    //   this.seEstaCopiandoArmado = true;
-    //   this.inicioCopia = 0;
-    //   this.terminoCopia = 10;
-    //   this.idTipoInsumoSelected = 0;
-    // } else {
-    //   this.seEstaCopiando = true;
-    //   this.datosCopiaArmado.idPrecioUnitarioBase = precioUnitario.id;
-    //   this.isGrid = true;
-    //   this.contenedor2 = true;
-    //   this.seEstaCopiandoArmado = true;
-    //   this.seEstaCopiandoConcepto = false;
-    //   this.inicioCopia = 0;
-    //   this.terminoCopia = 10;
-    //   this.idTipoInsumoSelected = 0;
-    // }
+
+  tipoImportacion = 0; //0 == Concepto, 1 == PU, == Concepto desde PU
+
+  importar() {
+    if(this.precioUnitarioMenu.tipoPrecioUnitario == 0){
+      this.tipoImportacion = 1;
+    }else{
+      this.tipoImportacion = 2;
+    }
+    this.esImportacion = true;
   }
 
   importarConceptoDesdeArmado() {
