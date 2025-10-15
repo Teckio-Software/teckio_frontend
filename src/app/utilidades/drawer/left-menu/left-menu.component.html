@@ -88,7 +88,7 @@
                 <div
                   class="text-gray400 flex w-full justify-between text-xs items-center"
                 >
-                  <div [@animateText]="linkText ? 'show' : 'hide'" class="pl-1">
+                  <div [@animateText]="linkText ? 'show' : 'hide'" class="pl-1" [ngClass]="page.expanded?'text-blue-600 font-bold':''">
                     {{ page.name }}
                   </div>
                   <div [@animateText]="linkText ? 'show' : 'hide'">
@@ -107,7 +107,9 @@
                 (click)="title(nestedPage)"
                 mat-list-item
                 *ngFor="let nestedPage of page.nestedPages"
+                [routerLinkActive]="'text-blue-100'"
                 [routerLink]="nestedPage.link"
+                #rla="routerLinkActive"
                 >
                 <div class="flex items-center">
                   <!-- <ng-container
@@ -134,7 +136,8 @@
                     >
                   </ng-template> -->
                   <span
-                    class="text-gray400 text-xs "
+                    class="text-gray-400 text-xs "
+                    [ngClass]="{ 'text-blue-600 font-bold': rla.isActive }"
                     [@animateText]="linkText ? 'show' : 'hide'"
                     >{{ nestedPage.name }}</span
                   >

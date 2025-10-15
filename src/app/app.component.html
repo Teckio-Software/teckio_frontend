@@ -19,7 +19,7 @@
                   src="assets/teckio.svg"
                   alt=""
                 />
-                <div class="sm:block hidden whitespace-nowrap">
+                <div class="sm:block hidden whitespace-nowrap select-none">
                 Teckio ERP
                 </div>
               </a>
@@ -47,7 +47,7 @@
             </a>
           </div>
           <!-- Icono menú hamburguesa -->
-           <div class="flex justify-center items-center h-full mt-2" [@onButtonClose]="hoverMenu" >
+           <div class="flex justify-center items-center h-full mt-2 select-none" [@onButtonClose]="hoverMenu" >
             <div *ngIf="!isOpen">
               <button (click)="onSinenavToggle()">
               <img class="w-6" src="./assets/right_panel_open.svg" alt="Abrir menú" />
