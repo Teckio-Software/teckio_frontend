@@ -96,7 +96,8 @@ export class OrdenesComprasComponent {
     saldo: 0,
     montoAPagar: 0,
     esSeleccionado: false,
-    nombreProyecto: ''
+    nombreProyecto: '',
+    importeTotal: 0
   };
   isContratista: contratistaDTO = {
     id: 0,

@@ -7,6 +7,7 @@ import { CuentaBancariaBaseDTO } from '../../cuentabancaria/cuentabancaria';
 import { CuentabancariaEmpresaService } from '../../cuentabancaria/cuentabancaria-empresa/cuentabancaria-empresa.service';
 import { formatDate } from '@angular/common';
 import { PolizaService } from 'src/app/contabilidad/poliza/poliza.service';
+import { AlertaTipo } from 'src/app/utilidades/alert/alert.component';
 
 @Component({
   selector: 'app-movimiento-bancario',
@@ -34,6 +35,11 @@ export class MovimientoBancarioComponent {
   fechaInicio!: Date | string;
   fechaFin!: Date | string;
   showLista = false;
+
+  alertaSuccess: boolean = false;
+      alertaMessage: string = '';
+      alertaTipo: AlertaTipo = AlertaTipo.none;
+      AlertaTipo = AlertaTipo;
 
   constructor(
     private _seguridadEmpresa: SeguridadService,
@@ -152,6 +158,9 @@ export class MovimientoBancarioComponent {
       .GenerarPolizaXIdMovimientoBancario(this.selectedEmpresa, idMovimientoBancario)
       .subscribe((datos) => {
         if (datos.estatus) this.CargarRegistros();
+        if(!datos.estatus){
+              this.alerta(AlertaTipo.save, datos.descripcion);
+        }
       });
   }
 
@@ -201,5 +210,26 @@ export class MovimientoBancarioComponent {
     const target = event.target as Node;
     const dentro = !!this.cuentaWrapper?.nativeElement.contains(target);
     if (!dentro) this.showLista = false;
+  }
+
+  alerta(tipo: AlertaTipo, mensaje: string = '') {
+        if (tipo === AlertaTipo.none) {
+          this.cerrarAlerta();
+          return;
+        }
+
+        this.alertaTipo = tipo;
+        this.alertaMessage = mensaje || 'Ocurrió un error';
+        this.alertaSuccess = true;
+
+        setTimeout(() => {
+          this.cerrarAlerta();
+        }, 2500);
+      }
+
+      cerrarAlerta() {
+    this.alertaSuccess = false;
+    this.alertaTipo = AlertaTipo.none;
+    this.alertaMessage = '';
   }
 }

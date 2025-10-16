@@ -354,7 +354,7 @@ const routes: Routes = [
     path: 'subcontratos',
     loadChildren: () =>
       import(`./proyectos/reportes-subcontratos/reportes-subcontratos.module`).then(
-        (module) => module.ReportesSubcontratosModule
+        (module) => module.ReportesSubcontratosModule,
       ),
   },
   {
@@ -384,17 +384,14 @@ const routes: Routes = [
   {
     path: 'productos-y-servicios',
     loadChildren: () =>
-      import(
-        `./gestion-ventas/productos-servicios/productos-servicios.module`
-      ).then((module) => module.ProductosServiciosModule),
+      import(`./gestion-ventas/productos-servicios/productos-servicios.module`).then(
+        (module) => module.ProductosServiciosModule,
+      ),
   },
   {
-
     path: 'auditorias',
     loadChildren: () =>
-      import(`./seguridad/auditorias/auditorias.module`).then(
-        (module) => module.AuditoriasModule
-      ),
+      import(`./seguridad/auditorias/auditorias.module`).then((module) => module.AuditoriasModule),
   },
   {
     path: 'auditorias',
@@ -413,17 +410,23 @@ const routes: Routes = [
         (module) => module.CuentasPorCobrarModule,
       ),
   },
-  {path: 'imagenes',
+  {
+    path: 'cuentas-por-pagar',
     loadChildren: () =>
-      import(`./seguridad/imagenes/imagenes.module`).then(
-        (module) => module.ImagenesModule
+      import(`./contabilidad/cuentas-por-pagar/cuentas-por-pagar/cuentas-por-pagar.module`).then(
+        (module) => module.CuentasPorPagarModule,
       ),
+  },
+  {
+    path: 'imagenes',
+    loadChildren: () =>
+      import(`./seguridad/imagenes/imagenes.module`).then((module) => module.ImagenesModule),
   },
   {
     path: 'almacentraspaso',
     loadChildren: () =>
       import(`./inventario/almacenTranspaso/almacen-transpaso.module`).then(
-        (module) => module.AlmacenTranspasoModule
+        (module) => module.AlmacenTranspasoModule,
       ),
   },
 

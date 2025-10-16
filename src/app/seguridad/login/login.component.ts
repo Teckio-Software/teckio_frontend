@@ -6,6 +6,7 @@ import { UsuarioEmpresaService } from '../Servicios/usuario-empresa.service';
 import { SeguridadMultiEmpresaService } from '../seguridad-multi-empresa/seguridad-multi-empresa.service';
 import { EmpresaDTO } from 'src/app/catalogos/empresas/empresa';
 import Swal from 'sweetalert2';
+import { AuthEventService } from 'src/app/utilidades/event-auth-service/auth-event.service';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +29,8 @@ export class LoginComponent {
     private seguridadMultiEmpresa: SeguridadMultiEmpresaService,
     private router: Router,
     public _UsuarioEmpresaService: SeguridadMultiEmpresaService,
-    public _UsuarioEmpresa: UsuarioEmpresaService
+    public _UsuarioEmpresa: UsuarioEmpresaService,
+    private authEventService: AuthEventService
   ) {}
 
   zfLogin(zCredenciales: CredencialesUsuarioDTO) {
@@ -76,6 +78,7 @@ export class LoginComponent {
           this.seguridadMultiEmpresa
             .respuestaFront(zCredenciales)
             .subscribe(() => {});
+            this.authEventService.notifyLoginSuccess();
           this.router.navigate(['/']);
         }
       },

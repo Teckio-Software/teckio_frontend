@@ -13,3 +13,37 @@
 .block {
   display: block !important;
 }
+
+.text-blue-600 {
+  --tw-text-opacity: 1;
+  color: rgb(29 84 151 / var(--tw-text-opacity));
+}
+
+/* Estado Focus (se queda después del click o al usar el teclado) */
+.mat-mdc-list-item:not(.active-button-class):not(.mat-list-item-disabled):focus::before {
+  /* Fondo diferente para el foco (un poco más oscuro que el hover) */
+  background-color: rgba(29, 84, 151, 0.2) !important; 
+  /* Si quieres que NO HAYA color de fondo al hacer click: */
+  /* background-color: transparent !important; */
+}
+
+/* Estado Active (mientras mantienes presionado el botón) */
+.mat-mdc-list-item:not(.active-button-class):not(.mat-list-item-disabled):active::before {
+  /* Fondo para el momento de presionar */
+  background-color: rgba(29, 84, 151, 0.3) !important;
+}
+
+.mat-mdc-list-item:not(.active-button-class):not(.mat-list-item-disabled):hover::before {
+  /* ¡CAMBIA ESTE COLOR! */
+  background-color: rgba(29, 84, 151, 0.1) !important; 
+  
+  /* Si quieres anular el color por completo, usa: */
+  /* background-color: transparent !important; */
+}
+
+/* También necesitamos anular el color del texto que Material pone en foco */
+.mat-mdc-list-item:focus {
+  /* Esto elimina cualquier cambio de color de texto/ícono que Material ponga */
+  background-color: rgba(29, 84, 151, 0.1) !important; 
+
+}

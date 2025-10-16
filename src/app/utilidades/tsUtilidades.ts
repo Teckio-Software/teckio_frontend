@@ -61,6 +61,7 @@ export interface Page {
   icon?: string;
   nestedPages?: Page[];
   imageUrl?: string;
+  imageUrlExpanded?: string;
   expanded?: boolean;
   permiso?: string[];
 }
@@ -69,7 +70,8 @@ export const pages: Page[] = [
   {
     name: 'Presupuestos',
     link: '',
-    imageUrl: 'assets/ordencompra.svg',
+    imageUrl: 'assets/business_center.svg',
+    imageUrlExpanded: 'assets/business_center_selected.svg',
     nestedPages: [
       {
         name: 'Proyectos',
@@ -125,7 +127,8 @@ export const pages: Page[] = [
   {
     name: 'Gestión de ventas',
     link: '',
-    imageUrl: 'assets/carsetting.png',
+    imageUrl: 'assets/shopping_cart.svg',
+    imageUrlExpanded: 'assets/shopping_cart_selected.svg',
     nestedPages: [
       {
         name: 'Ventas',
@@ -151,7 +154,8 @@ export const pages: Page[] = [
   {
     name: 'Gestión de compras',
     link: '',
-    imageUrl: 'assets/compras.svg',
+    imageUrl: 'assets/sync_saved.svg',
+    imageUrlExpanded: 'assets/sync_saved_selected.svg',
     nestedPages: [
       {
         name: 'Compras',
@@ -170,7 +174,8 @@ export const pages: Page[] = [
   {
     name: 'Inventario',
     link: '',
-    imageUrl: 'assets/conceptos.svg',
+    imageUrl: 'assets/warehouse_icon.svg',
+    imageUrlExpanded: 'assets/warehouse_selected.svg',
     nestedPages: [
       {
         name: 'Almacén',
@@ -195,7 +200,8 @@ export const pages: Page[] = [
         link: '/almacensalida',
         imageUrl: 'assets/salida2.svg',
         permiso: ['SeccionSalidaAlmacen'],
-      },{
+      },
+      {
         name: 'Traspaso almacén',
         link: '/almacentraspaso',
         imageUrl: 'assets/exchange.png',
@@ -207,7 +213,8 @@ export const pages: Page[] = [
   {
     name: 'Catálogos',
     link: '',
-    imageUrl: 'assets/polizas.svg',
+    imageUrl: 'assets/folder_copy.svg',
+    imageUrlExpanded: 'assets/folder_copy_selected.svg',
     nestedPages: [
       {
         name: 'Familia',
@@ -251,7 +258,8 @@ export const pages: Page[] = [
   {
     name: 'Contabilidad',
     link: '',
-    imageUrl: 'assets/cuentaContable.svg',
+    imageUrl: 'assets/calculate.svg',
+    imageUrlExpanded: 'assets/calculate_selected.svg',
     nestedPages: [
       {
         name: 'Rubro',
@@ -309,6 +317,12 @@ export const pages: Page[] = [
         permiso: ['SeccionCuentaBancaria'],
       },
       {
+        name: 'Cuentas por pagar',
+        link: '/cuentas-por-pagar',
+        imageUrl: 'assets/cuenta-bancaria.svg',
+        permiso: ['SeccionCuentaBancaria'],
+      },
+      {
         name: 'Movimiento bancario',
         link: '/movimientobancario',
         imageUrl: 'assets/movimiento-bancario.png',
@@ -326,8 +340,8 @@ export const pages: Page[] = [
   {
     name: 'Administración',
     link: '',
-    imageUrl: 'assets/users-s.svg',
-
+    imageUrl: 'assets/important_devices.svg',
+    imageUrlExpanded: 'assets/important_devices_selected.svg',
     nestedPages: [
       {
         name: 'Corporativo',
@@ -382,14 +396,15 @@ export const pages: Page[] = [
         link: '/imagenes',
         imageUrl: 'assets/imagen.png',
         permiso: ['Administrador'],
-      }
+      },
     ],
     expanded: false,
   },
   {
     name: 'Documentación',
     link: '',
-    imageUrl: 'assets/documentacion.svg',
+    imageUrl: 'assets/developer_guide.svg',
+    imageUrlExpanded: 'assets/developer_guide_selected.svg',
     expanded: false,
     nestedPages: [
       {

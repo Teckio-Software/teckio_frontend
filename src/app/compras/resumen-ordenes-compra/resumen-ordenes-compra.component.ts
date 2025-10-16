@@ -87,6 +87,7 @@ export class ResumenOrdenesCompraComponent {
     montoAPagar: 0,
     esSeleccionado: false,
     nombreProyecto: '',
+    importeTotal: 0
   };
 
   OrdenCompraSeleccionada: boolean = false;

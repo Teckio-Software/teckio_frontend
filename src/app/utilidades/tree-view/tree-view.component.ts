@@ -12,7 +12,7 @@ import {
     templateUrl: './tree-view.component.html',
     styleUrls: ['./tree-view.component.css'],
   })
-  export class TreeViewComponent<T extends TreeView> implements OnInit {
+  export class TreeViewComponent<T extends TreeView, Encabezado> implements OnInit {
     constructor() {}
   
     ngOnInit(): void {}

@@ -54,6 +54,9 @@ export class VentasComponent {
     detalleOrdenVenta: [],
     elaboro: '',
     razonSocialCliente: '',
+    saldo: 0,
+    montoAPagar: 0,
+    esSeleccionado: false
   };
 
   selectedIndexOrdenVenta: number = -1;
@@ -803,6 +806,9 @@ export class VentasComponent {
         detalleOrdenVenta: [],
         elaboro: '',
         razonSocialCliente: '',
+        saldo: 0,
+        montoAPagar: 0,
+        esSeleccionado: false,
       };
 
       // Llama al servicio de ordenes de venta para crear una orden

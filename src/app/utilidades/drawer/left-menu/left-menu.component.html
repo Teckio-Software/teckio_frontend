@@ -5,7 +5,18 @@
 >
   <div fxLayout="column" fxLayoutGap="10px" style="height: 100%">
     <div class="user_menu">
-      <mat-nav-list class="test">
+
+      <div
+              class="xs:text-center font-medium xs:mt-2 xs:text-xs sm:hidden md:hidden lg:hidden"
+            >
+              <p class="xs:font-bold text-gray700">Bienvenido</p>
+              <p class="text-gray500">
+                {{ zvSeguridadService.zfObtenerCampoJwt("email") }}
+              </p>
+            <mat-divider></mat-divider>
+
+            </div>
+      <!-- <mat-nav-list class="test">
         <div
           class="flex justify-center"
           fxLayout="row"
@@ -47,23 +58,24 @@
       </mat-nav-list>
 
       <mat-divider></mat-divider>
-    </div>
+    </div> -->
 
     <!-- Menú -->
-    <div>
+    <div class="select-none">
       <mat-nav-list>
         <div>
           <ng-container *ngFor="let page of pagesFiltradas">
             <button
               [disabled]="isLoading"
               mat-list-item
-              (click)="toggleNestedPages(page)"
+              (click)="toggleNestedPages(page); onSinenavToggleOpen.emit(); sideNavState = true; linkText = true;"
+              
             >
-              <div class="flex justify-between items-center">
+              <div class="flex justify-between items-center m-0 rounded-lg" >
                 <ng-container *ngIf="page.imageUrl; else iconTemplate">
                   <img
                     class="w-8 h-8"
-                    [src]="page.imageUrl"
+                    [src]="page.expanded?page.imageUrlExpanded:page.imageUrl"
                     alt="{{ page.name }}"
                     [ngbTooltip]="sideNavState ? '' : 'Menu ' + page?.name"
                     triggers="mouseenter:mouseleave"
@@ -77,11 +89,11 @@
                 <div
                   class="text-gray400 flex w-full justify-between text-xs items-center"
                 >
-                  <div [@animateText]="linkText ? 'show' : 'hide'" class="pl-1">
+                  <div [@animateText]="linkText ? 'show' : 'hide'" class="pl-1" [ngClass]="page.expanded?'text-blue-600 font-bold':''">
                     {{ page.name }}
                   </div>
                   <div [@animateText]="linkText ? 'show' : 'hide'">
-                    <mat-icon>
+                    <mat-icon [ngClass]="page.expanded?'text-blue-600':''">
                       {{ page.expanded ? "expand_less" : "expand_more" }}
                     </mat-icon>
                   </div>
@@ -89,16 +101,19 @@
               </div>
             </button>
             <!-- Lista anidada -->
-            <ng-container *ngIf="page.nestedPages && page.expanded">
-              <button
+          <ng-container *ngIf="page.nestedPages && page.expanded && sideNavState">
+              <div class="mt-2 mb-2 ml-6 border-l-2 border-gray-400">
+                 <button
                 [disabled]="isLoading"
                 (click)="title(nestedPage)"
                 mat-list-item
                 *ngFor="let nestedPage of page.nestedPages"
+                [routerLinkActive]="'text-blue-100'"
                 [routerLink]="nestedPage.link"
-              >
+                #rla="routerLinkActive"
+                >
                 <div class="flex items-center">
-                  <ng-container
+                  <!-- <ng-container
                     *ngIf="nestedPage.imageUrl; else nestedIconTemplate"
                   >
                     <img
@@ -120,14 +135,17 @@
                       placement="end"
                       >{{ nestedPage?.icon }}</mat-icon
                     >
-                  </ng-template>
+                  </ng-template> -->
                   <span
-                    class="text-gray400 text-xs pl-[5px]"
+                    class="text-gray-400 text-xs "
+                    [ngClass]="{ 'text-blue-600 font-bold': rla.isActive }"
                     [@animateText]="linkText ? 'show' : 'hide'"
                     >{{ nestedPage.name }}</span
                   >
                 </div>
               </button>
+              </div>
+             
             </ng-container>
             <!-- Lista anidada end -->
           </ng-container>

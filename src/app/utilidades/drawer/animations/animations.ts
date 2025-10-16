@@ -32,6 +32,24 @@ export const onMainContentChange = trigger('onMainContentChange', [
   transition('open => close', animate('30ms ease-in')),
 ]);
 
+export const onButtonClose = trigger('onButtonClose', [
+  state('close',
+    style({
+      'margin-left': '10px',
+      'opacity': 0,
+      'display': 'none'
+    })
+  ),
+  state('open',
+    style({
+      'margin-left': '0px',
+      'opacity': 100,
+      'display': 'flex'
+    })
+  ),
+  transition('close => open', animate('100ms ease-in')),
+  transition('open => close', animate('100ms ease-in')),
+]);
 
 export const animateText = trigger('animateText', [
   state('hide',

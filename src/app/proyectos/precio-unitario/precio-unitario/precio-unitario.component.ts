@@ -2043,7 +2043,7 @@ export class PrecioUnitarioComponent implements OnInit {
               this.detalles.forEach((element) => {
                 element.cantidadConFormato = new Intl.NumberFormat('es-MX', {
                   minimumFractionDigits: 4,
-                }).format(element.cantidad);
+                }).format(element.cantidad!);
               });
               this.detallesReset = detalles;
               this.detalles.push({
@@ -2290,12 +2290,12 @@ export class PrecioUnitarioComponent implements OnInit {
                 codigo: detalle.codigo,
                 descripcion: detalle.descripcion,
                 unidad: detalle.unidad,
-                cantidad: detalle.cantidad,
+                cantidad: detalle.cantidad!,
                 idDetallePerteneciente: detalle.id,
                 costo: detalle.costoUnitario,
                 cantidadConFormato: new Intl.NumberFormat('es-MX', {
                   minimumFractionDigits: 4,
-                }).format(detalle.cantidad),
+                }).format(detalle.cantidad!),
                 costoConFormato: new Intl.NumberFormat('es-MX', {
                   style: 'currency',
                   currency: 'MXN',
@@ -2327,13 +2327,13 @@ export class PrecioUnitarioComponent implements OnInit {
             codigo: detalle.codigo,
             descripcion: detalle.descripcion,
             unidad: detalle.unidad,
-            cantidad: detalle.cantidad,
+            cantidad: detalle.cantidad!,
             idDetallePerteneciente: detalle.id,
             costo: detalle.costoUnitario,
             cantidadConFormato: new Intl.NumberFormat('es-MX', {
               style: 'currency',
               currency: 'MXN',
-            }).format(detalle.cantidad),
+            }).format(detalle.cantidad!),
             costoConFormato: new Intl.NumberFormat('es-MX', {
               style: 'currency',
               currency: 'MXN',
@@ -4123,33 +4123,6 @@ export class PrecioUnitarioComponent implements OnInit {
       porcentajePrestaciones: this.porcentajePrestaciones,
       esAutorizado: this.esAutorizado,
     };
-    // const dialogOpen = this.dialog.open(DialogFSRComponent, {
-    //   data: {
-    //     diasConsideradosFsiNoTrabajados: this.diasConsideradosFsiNoTrabajados,
-    //     selectedEmpresa: this.selectedEmpresa,
-    //     diasConsideradosFsiPagados: this.diasConsideradosFsiPagados,
-    //     selectedProyecto: this.selectedProyecto,
-    //     diasNoLaborales: this.diasNoLaborales,
-    //     diasPagados: this.diasPagados,
-    //     fsrDetalles: this.fsrDetalles,
-    //     porcentajePrestaciones: this.porcentajePrestaciones,
-    //     esAutorizado: this.esAutorizado,
-    //   },
-    // });
-    // dialogOpen.afterClosed().subscribe((respuesta) => {
-    //   if (respuesta) {
-    //     this.recalcularPresupuesto();
-    //     this.precioUnitarioService
-    //       .obtenerEstructurado(this.selectedProyecto, this.selectedEmpresa)
-    //       .subscribe((precios) => {
-    //         this.preciosUnitarios = precios;
-    //         this.esquemaArbol2 = false;
-    //         this.esquemaArbol3 = false;
-    //         this.esquemaArbol4 = false;
-    //         this.pestanas = false;
-    //       });
-    //   }
-    // });
   }
 
   /**
@@ -4252,19 +4225,6 @@ export class PrecioUnitarioComponent implements OnInit {
   }
 
   openDialogExpInsumos() {
-    // const dialogOpen = this.dialog.open(DialogExplosionInsumosComponent, {
-    //     data: {
-    //         selectedProyecto: this.selectedProyecto,
-    //         selectedEmpresa: this.selectedEmpresa,
-    //         idTipoInsumoSelectedParaFiltroDeExplosion: this.idTipoInsumoSelectedParaFiltroDeExplosion
-
-    //     }
-    // })
-    // dialogOpen.afterClosed().subscribe((resultado: boolean) => {
-    //     if(resultado){
-    //         this.recalcularPresupuesto();
-    //     }
-    // });
     this.precioUnitarioParaExplosion.id = 0;
     this.appRecarga += 1;
     this.contenedorPresupuesto = false;
@@ -4631,7 +4591,7 @@ export class PrecioUnitarioComponent implements OnInit {
 
   guardarRegistro(detalle: precioUnitarioDetalleDTO) {
     this.detalleSeleccionado = detalle;
-    this.selectedCantidad = detalle.cantidad;
+    this.selectedCantidad = detalle.cantidad!;
     this.selectedCantidadConFormato = new Intl.NumberFormat('es-MX', {
       minimumFractionDigits: 4,
     }).format(this.selectedCantidad);

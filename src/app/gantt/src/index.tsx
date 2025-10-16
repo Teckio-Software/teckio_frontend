@@ -21,3 +21,4 @@ export * from "./types/public-types";
 export type {
   RelationMoveTarget,
 } from "./types/gantt-task-actions";
+export type { TimelineMetrics } from "./types/public-types";
