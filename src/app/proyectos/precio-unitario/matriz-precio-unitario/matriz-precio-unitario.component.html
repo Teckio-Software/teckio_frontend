@@ -1,103 +1,105 @@
 <div class="relative overflow-x-auto">
   <table class="w-full text-sm rtl:text-right text-center">
-      <thead class="text-center bg-[#f9fafb]">
-        <th class="w-6" scope="col"></th>
-        <th class="text-left pl-4" scope="col">Tipo</th>
-        <th class="text-left" scope="col">Codigo</th>
-        <th class="text-left" scope="col">Descripcion</th>
-        <th class="text-right" scope="col">Unidad</th>
-        <th class="text-right" scope="col">cantidad</th>
-        <th class="text-right" scope="col">Costo base</th>
-        <th class="text-right" scope="col">Costo Unitario</th>
-        <th class="text-right" scope="col">Importe</th>
-        <th class="text-left" scope="col">Familia</th>
+    <thead class="text-center bg-[#f9fafb]">
+      <th class="w-6" scope="col"></th>
+      <th class="text-left font-medium py-3" scope="col">Tipo</th>
+      <th class="text-left font-medium py-3" scope="col">Codigo</th>
+      <th class="text-left font-medium py-3" scope="col">Descripcion</th>
+      <th class="text-right font-medium py-3" scope="col">Unidad</th>
+      <th class="text-right font-medium py-3" scope="col">Cantidad</th>
+      <th class="text-right font-medium py-3" scope="col">Costo base</th>
+      <th class="text-right font-medium py-3" scope="col">Costo unitario</th>
+      <th class="text-right font-medium py-3" scope="col">Importe</th>
+      <th class="text-roght font-medium py-3" scope="col">Familia</th>
     </thead>
 
     <tbody class="divide-y divide-gray300">
-      <tr class="bg-white border-b" *ngFor="let detalle of detallesDesgloce" (click)="cargarRegistroDelDesglose(detalle)">
-        <td class="pe-1 py-[2px] w-6 text-center">
-        </td>
+      <tr
+        class="bg-white border-b"
+        *ngFor="let detalle of detallesDesgloce"
+        (click)="cargarRegistroDelDesglose(detalle)"
+      >
+        <td class="pe-1 py-[2px] w-6 text-center"></td>
         <td class="pe-1 pl-2 py-[2px] w-32">
-          <select name="" id="" class="block w-full focus:ring-blue-500 focus:border-blue-500
-          font-small"
-          [(ngModel)]="detalle.idTipoInsumo">
+          <select
+            name=""
+            id=""
+            class="block w-full focus:ring-blue-500 focus:border-blue-500 font-small"
+            [(ngModel)]="detalle.idTipoInsumo"
+          >
             <option value="0"></option>
-                  <option *ngFor="let tipo of tipoInsumo" [value]="tipo.id">
-                    {{ tipo.descripcion }}
-                  </option>
+            <option *ngFor="let tipo of tipoInsumo" [value]="tipo.id">
+              {{ tipo.descripcion }}
+            </option>
           </select>
         </td>
         <td class="pe-1 py-[2px] w-auto">
-          <input
-                class="w-full"
-                type="text"
-                [(ngModel)]="detalle.codigo"
-              />
+          <input class="w-full" type="text" [(ngModel)]="detalle.codigo" />
         </td>
         <td class="pe-1 py-[2px] w-auto">
-          <input
-                class="w-full"
-                type="text"
-                [(ngModel)]="detalle.descripcion"
-              />
+          <input class="w-full" type="text" [(ngModel)]="detalle.descripcion" />
         </td>
         <td class="pe-1 py-[2px] w-32">
-          <input
+          <!-- <input
                 class="w-full text-right"
                 type="text"
                 [(ngModel)]="detalle.unidad"
-              />
+              /> -->
         </td>
         <td class="pe-1 py-[2px] w-32">
           <input
-                class="w-full text-right focus:outline-none"
-                type="text"
-                [ngModel]="detalle.cantidadEditado ? detalle.cantidad : detalle.cantidadConFormato"
-              />
+            class="w-full text-right focus:outline-none"
+            type="text"
+            [ngModel]="detalle.cantidadEditado ? detalle.cantidad : detalle.cantidadConFormato"
+          />
         </td>
         <td class="pe-1 py-[2px] w-32">
           <input
-                class="w-full text-right focus:outline-none"
-                type="text"
-                [ngClass]="{
-                  'text-blue-700': detalle.esCompuesto,
-                  'text-green-600': detalle.idTipoInsumo == 10001,
-                  'text-black': !detalle.esCompuesto
-                }"
-                [(ngModel)]="detalle.costoBaseConFormato"
-                [ngModel]="detalle.costoUnitarioEditado ? detalle.costoBase : detalle.costoBaseConFormato"
-                [readOnly]="detalle.esCompuesto"
-              />
+            class="w-full text-right focus:outline-none"
+            type="text"
+            [ngClass]="{
+              'text-blue-700 cursor-pointer': detalle.esCompuesto,
+              'text-green-600': detalle.idTipoInsumo == 10001,
+              'text-black': !detalle.esCompuesto,
+            }"
+            [(ngModel)]="detalle.costoBaseConFormato"
+            [ngModel]="
+              detalle.costoUnitarioEditado ? detalle.costoBase : detalle.costoBaseConFormato
+            "
+            [readOnly]="detalle.esCompuesto"
+          />
         </td>
         <td class="pe-1 py-[2px] w-32">
           <input
-                class="w-full text-right focus:outline-none"
-                type="text"
-                [ngClass]="{
-                  'text-blue-700': detalle.esCompuesto,
-                  'text-green-600': detalle.idTipoInsumo == 10001,
-                  'text-black': !detalle.esCompuesto
-                }"
-                [(ngModel)]="detalle.costoUnitarioConFormato"
-              />
+            class="w-full text-right focus:outline-none"
+            type="text"
+            [ngClass]="{
+              'text-blue-700 cursor-pointer': detalle.esCompuesto,
+              'text-green-600': detalle.idTipoInsumo == 10001,
+              'text-black': !detalle.esCompuesto,
+            }"
+            [(ngModel)]="detalle.costoUnitarioConFormato"
+          />
         </td>
         <td class="pe-1 py-[2px] w-32">
           <input
-
-                class="w-full text-right focus:outline-none"
-                type="text"
-                [(ngModel)]="detalle.importeConFormato"
-              />
+            class="w-full text-right focus:outline-none"
+            type="text"
+            [(ngModel)]="detalle.importeConFormato"
+          />
         </td>
 
         <td class="pe-1 pl-2 py-[2px] w-32">
-          <select name="" id="" class="block w-full focus:ring-blue-500 focus:border-blue-500
-          font-small"
-          [(ngModel)]="detalle.idFamiliaInsumo">
+          <select
+            name=""
+            id=""
+            class="block w-full focus:ring-blue-500 focus:border-blue-500 font-small"
+            [(ngModel)]="detalle.idFamiliaInsumo"
+          >
             <option value="0"></option>
-                  <option *ngFor="let familia of familiaInsumo" [value]="familia.id">
-                    {{ familia.descripcion }}
-                  </option>
+            <option *ngFor="let familia of familiaInsumo" [value]="familia.id">
+              {{ familia.descripcion }}
+            </option>
           </select>
         </td>
       </tr>
@@ -107,7 +109,7 @@
             <div class="relative menu-trigger">
               <button class="btn-opciones icon-display cursor-pointer">
                 <svg
-                  class="w-3 h-3 "
+                  class="w-3 h-3"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
@@ -122,107 +124,118 @@
           </div>
         </td>
         <td class="pe-1 pl-2 py-[2px] w-32">
-          <select name="" id="" class="block w-full focus:ring-blue-500 focus:border-blue-500
-          font-small"
-          [(ngModel)]="detalle.idTipoInsumo"
-          (ngModelChange)="actualizarTipoInsumo(detalle, $event)">
+          <select
+            name=""
+            id=""
+            class="block w-full focus:ring-blue-500 focus:border-blue-500 font-small"
+            [(ngModel)]="detalle.idTipoInsumo"
+            (ngModelChange)="actualizarTipoInsumo(detalle, $event)"
+          >
             <option [ngValue]="0"></option>
-                  <option *ngFor="let tipo of tipoInsumo" [ngValue]="tipo.id">
-                    {{ tipo.descripcion }}
-                  </option>
+            <option *ngFor="let tipo of tipoInsumo" [ngValue]="tipo.id">
+              {{ tipo.descripcion }}
+            </option>
           </select>
         </td>
         <td class="pe-1 py-[2px] w-auto flex items-center">
-          <img src="/assets/arrow-turn-up-solid-full.svg" class="w-4 rotate-45" alt="" *ngIf="detallesDesgloce.length > 0">
+          <img
+            src="/assets/arrow-turn-up-solid-full.svg"
+            class="w-4 rotate-45"
+            alt=""
+            *ngIf="detallesDesgloce.length > 0"
+          />
           <input
-                class="w-auto pl-4"
-                type="text"
-                [(ngModel)]="detalle.codigo"
-                (click)="exponerNumeros(detalle)"
-                (keydown.enter)="crearDetalle(detalle)"
-              />
+            class="w-auto pl-4"
+            type="text"
+            [(ngModel)]="detalle.codigo"
+            (click)="exponerNumeros(detalle)"
+            (keydown.enter)="crearDetalle(detalle)"
+          />
         </td>
         <td class="pe-1 py-[2px] w-auto">
           <input
-                class="w-full"
-                type="text"
-                [(ngModel)]="detalle.descripcion"
-                (click)="exponerNumeros(detalle)"
-                (keydown.enter)="crearDetalle(detalle)"
-              />
+            class="w-full"
+            type="text"
+            [(ngModel)]="detalle.descripcion"
+            (click)="exponerNumeros(detalle)"
+            (keydown.enter)="crearDetalle(detalle)"
+          />
         </td>
         <td class="pe-1 py-[2px] w-32">
           <input
-                class="w-full text-right"
-                type="text"
-                [(ngModel)]="detalle.unidad"
-                (click)="exponerNumeros(detalle)"
-                (keydown.enter)="crearDetalle(detalle)"
-              />
+            class="w-full text-right"
+            type="text"
+            [(ngModel)]="detalle.unidad"
+            (click)="exponerNumeros(detalle)"
+            (keydown.enter)="crearDetalle(detalle)"
+          />
         </td>
         <td class="pe-1 py-[2px] w-32">
           <input
-                class="w-full text-right focus:outline-none"
-                type="text"
-                [ngModel]="detalle.cantidadEditado ? detalle.cantidad : detalle.cantidadConFormato"
-                (click)="detalle.esCompuesto ? cargarDetallesHijos(detalle) : exponerNumeros(detalle)"
-                (keydown.enter)="crearDetalle(detalle)"
-                (ngModelChange)="actualizarCantidad(detalle, $event)"
-              />
+            class="w-full text-right focus:outline-none"
+            type="text"
+            [ngModel]="detalle.cantidadEditado ? detalle.cantidad : detalle.cantidadConFormato"
+            (click)="detalle.esCompuesto ? cargarDetallesHijos(detalle) : exponerNumeros(detalle)"
+            (keydown.enter)="crearDetalle(detalle)"
+            (ngModelChange)="actualizarCantidad(detalle, $event)"
+          />
         </td>
         <td class="pe-1 py-[2px] w-32">
           <input
-                class="w-full text-right focus:outline-none"
-                type="text"
-                [ngClass]="{
-                  'text-blue-700': detalle.esCompuesto,
-                  'text-green-600': detalle.idTipoInsumo == 10001,
-                  'text-black': !detalle.esCompuesto
-                }"
-                [(ngModel)]="detalle.costoBaseConFormato"
-                [ngModel]="detalle.costoUnitarioEditado ? detalle.costoBase : detalle.costoBaseConFormato"
-                [readOnly]="detalle.esCompuesto"
-                (click)="detalle.esCompuesto ? cargarDetallesHijos(detalle) : exponerNumeros(detalle)"
-                (keydown.enter)="crearDetalle(detalle)"
-                (ngModelChange)="actualizarCostoBase(detalle, $event)"
-              />
+            class="w-full text-right focus:outline-none"
+            type="text"
+            [ngClass]="{
+              'text-blue-700': detalle.esCompuesto,
+              'text-green-600': detalle.idTipoInsumo == 10001,
+              'text-black': !detalle.esCompuesto,
+            }"
+            [(ngModel)]="detalle.costoBaseConFormato"
+            [ngModel]="
+              detalle.costoUnitarioEditado ? detalle.costoBase : detalle.costoBaseConFormato
+            "
+            [readOnly]="detalle.esCompuesto"
+            (click)="detalle.esCompuesto ? cargarDetallesHijos(detalle) : exponerNumeros(detalle)"
+            (keydown.enter)="crearDetalle(detalle)"
+            (ngModelChange)="actualizarCostoBase(detalle, $event)"
+          />
         </td>
         <td class="pe-1 py-[2px] w-32">
           <input
-                class="w-full text-right focus:outline-none"
-                type="text"
-                [ngClass]="{
-                  'text-blue-700': detalle.esCompuesto,
-                  'text-green-600': detalle.idTipoInsumo == 10001,
-                  'text-black': !detalle.esCompuesto
-                }"
-                [(ngModel)]="detalle.costoUnitarioConFormato"
-                [ngModel]="detalle.costoUnitarioConFormato"
-                readonly
-              />
+            class="w-full text-right focus:outline-none"
+            type="text"
+            [ngClass]="{
+              'text-blue-700': detalle.esCompuesto,
+              'text-green-600': detalle.idTipoInsumo == 10001,
+              'text-black': !detalle.esCompuesto,
+            }"
+            [(ngModel)]="detalle.costoUnitarioConFormato"
+            [ngModel]="detalle.costoUnitarioConFormato"
+            readonly
+          />
         </td>
         <td class="pe-1 py-[2px] w-32">
           <input
-
-                class="w-full text-right focus:outline-none"
-                type="text"
-                [(ngModel)]="detalle.importeConFormato"
-              />
+            class="w-full text-right focus:outline-none"
+            type="text"
+            [(ngModel)]="detalle.importeConFormato"
+          />
         </td>
 
         <td class="pe-1 pl-2 py-[2px] w-32">
-          <select name="" id="" class="block w-full focus:ring-blue-500 focus:border-blue-500
-          font-small"
-          [(ngModel)]="detalle.idFamiliaInsumo"
-          (ngModelChange)="actualizarFamiliaInsumo(detalle, $event)">
+          <select
+            name=""
+            id=""
+            class="block w-full focus:ring-blue-500 focus:border-blue-500 font-small"
+            [(ngModel)]="detalle.idFamiliaInsumo"
+            (ngModelChange)="actualizarFamiliaInsumo(detalle, $event)"
+          >
             <option [ngValue]="0"></option>
-                  <option *ngFor="let familia of familiaInsumo" [ngValue]="familia.id">
-                    {{ familia.descripcion }}
-                  </option>
+            <option *ngFor="let familia of familiaInsumo" [ngValue]="familia.id">
+              {{ familia.descripcion }}
+            </option>
           </select>
         </td>
       </tr>
     </tbody>
   </table>
 </div>
-
