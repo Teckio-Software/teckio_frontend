@@ -1,3 +1,5 @@
+import { FacturaDetalleDTO } from "src/app/facturacionTeckio/facturas";
+
 export interface OrdenVentaDTO {
   id: number;
   numeroOrdenVenta: string;
@@ -14,6 +16,9 @@ export interface OrdenVentaDTO {
   observaciones: string;
   detalleOrdenVenta: DetalleOrdenVentaDTO[];
   elaboro: string;
+  saldo : number;
+  montoAPagar : number;
+  esSeleccionado : boolean;
 }
 
 export interface DetalleOrdenVentaDTO {
@@ -47,4 +52,31 @@ export interface ImpuestoDetalleOrdenVentaDTO {
 export interface CancelarOrdenVentaDTO {
   idOrdenVenta: number;
   idAlmacenDestino: number;
+}
+
+
+export interface FacturaXOrdenVentaDTO{
+  id : number;
+idFactura : number;
+idOrdenVenta : number;
+estatus : number;
+totalSaldado : number;
+uuid : string;
+total : number;
+fechaEmision : Date;
+fechaCarga : Date;
+montoAPagar : number;
+saldo : number;
+esSeleccionado : boolean;
+detalleFactura: FacturaDetalleDTO[];
+
+}
+
+export interface OrdenVentaFacturasDTO
+{
+    idOrdenVenta : number;
+    montoTotalOrdenVenta : number;
+    montoTotalFactura : number;
+    estatusSaldado : number;
+    facturasXOrdenVenta : FacturaXOrdenVentaDTO[];
 }

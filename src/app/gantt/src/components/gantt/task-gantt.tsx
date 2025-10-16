@@ -57,16 +57,30 @@ const TaskGanttInner: React.FC<TaskGanttProps> = ({
     ganttFullHeight,
   ]);
 
-  const gridStyle = useMemo<CSSProperties>(() => ({
-    height: ganttFullHeight,
-    width: fullSvgWidth,
-    backgroundSize: `${columnWidth}px ${fullRowHeight * 2}px`,
-    backgroundPositionX: additionalLeftSpace || undefined,
-    backgroundImage: [
-      `linear-gradient(to right, #ebeff2 1px, transparent 2px)`,
-      `linear-gradient(to bottom, transparent ${fullRowHeight}px, #f5f5f5 ${fullRowHeight}px)`,
-    ].join(', '),
-  }), [
+  const gridStyle = useMemo<CSSProperties>(() => {
+    const offsetX = additionalLeftSpace || 0;
+
+    return {
+      height: ganttFullHeight,
+      width: fullSvgWidth,
+      backgroundColor: '#ffffff',
+      backgroundImage: [
+        `linear-gradient(to right, rgba(148, 163, 184, 0.35) 1px, transparent 1px)`,
+        `linear-gradient(to bottom, rgba(226, 232, 240, 0.9) 1px, transparent 1px)`,
+        `linear-gradient(to bottom, rgba(248, 250, 252, 0.65) 50%, transparent 50%)`,
+      ].join(', '),
+      backgroundSize: [
+        `${columnWidth}px ${fullRowHeight}px`,
+        `${columnWidth}px ${fullRowHeight}px`,
+        `100% ${fullRowHeight * 2}px`,
+      ].join(', '),
+      backgroundPosition: [
+        `${offsetX}px 0`,
+        `${offsetX}px 0`,
+        `0 0`,
+      ].join(', '),
+    };
+  }, [
     additionalLeftSpace,
     columnWidth,
     fullRowHeight,

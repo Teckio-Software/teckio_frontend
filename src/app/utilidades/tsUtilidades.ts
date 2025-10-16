@@ -200,7 +200,8 @@ export const pages: Page[] = [
         link: '/almacensalida',
         imageUrl: 'assets/salida2.svg',
         permiso: ['SeccionSalidaAlmacen'],
-      },{
+      },
+      {
         name: 'Traspaso almacén',
         link: '/almacentraspaso',
         imageUrl: 'assets/exchange.png',
@@ -316,6 +317,12 @@ export const pages: Page[] = [
         permiso: ['SeccionCuentaBancaria'],
       },
       {
+        name: 'Cuentas por pagar',
+        link: '/cuentas-por-pagar',
+        imageUrl: 'assets/cuenta-bancaria.svg',
+        permiso: ['SeccionCuentaBancaria'],
+      },
+      {
         name: 'Movimiento bancario',
         link: '/movimientobancario',
         imageUrl: 'assets/movimiento-bancario.png',
@@ -389,7 +396,7 @@ export const pages: Page[] = [
         link: '/imagenes',
         imageUrl: 'assets/imagen.png',
         permiso: ['Administrador'],
-      }
+      },
     ],
     expanded: false,
   },

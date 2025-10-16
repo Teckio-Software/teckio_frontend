@@ -21,6 +21,8 @@ export class FacturasTeckioComponent {
   isTableComplemento : boolean = false;
   idFactura : number = 0;
 
+  displayCarga: string = 'none';
+
   facturas !: FacturaDTO[];
   facturasRespaldo !: FacturaDTO[];
   factura : FacturaDTO = {
@@ -92,7 +94,10 @@ export class FacturasTeckioComponent {
   }
 
   ngOnInit(): void {
-    
+    this.obtenerFacturas();
+  }
+
+  obtenerFacturas() {
     this._fcaturasService.ObtenFacturas(this.selectedEmpresa).subscribe((datos) => {
       if (datos.length > 0) {
         this.facturas = datos;
@@ -132,13 +137,18 @@ export class FacturasTeckioComponent {
   }
 
   cargarFactura() {
+        this.limpiarCargarFactura();
+    this.displayCarga = 'flex';
     if (this.archivosCargarFacturas) {
       this._fcaturasService.CargaFactura(this.archivosCargarFacturas, this.selectedEmpresa).subscribe((datos) => {
         if (datos.estatus) {
           console.log(datos.descripcion);
+        this.obtenerFacturas();
         } else {
           console.log("Error", datos.descripcion)
         }
+          this.displayCarga = 'none';
+
       });
     } else {
       console.log("no hay facturas");
@@ -149,20 +159,16 @@ export class FacturasTeckioComponent {
     this.idFactura = factura.id;
     if(factura.tipo == 1){
       console.log("Ingreso");
-      this.appRecarga =+ 1;
-
+      this.appRecarga += 1;
       this.isTableDetalles = true;
       this.isTableComplemento = false;
     }
     if(factura.tipo == 5){
       console.log("Pago");
-      this.appRecarga =+ 1;
-      
+      this.appRecarga += 1;
       this.isTableDetalles = false;
       this.isTableComplemento = true;
     }
-    console.log("cambiandoIDFActura", this.idFactura);
-    
   }
 
   detallesFactura(factura: FacturaDTO) {
@@ -257,27 +263,27 @@ export class FacturasTeckioComponent {
       this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
       this.updateVisiblePages();
     }
-  
+
     updateVisiblePages() {
       const startPage = Math.max(1, this.currentPage - 2);
       const endPage = Math.min(this.totalPages, startPage + 4);
-  
+
       this.visiblePages = Array.from(
         { length: endPage - startPage + 1 },
         (_, i) => startPage + i
       );
-  
+
       if (this.totalPages < 5) {
         this.visiblePages = this.pages;
       }
     }
-  
+
     updatePaginatedData() {
       const startIndex = (this.currentPage - 1) * this.pageSize;
       const endIndex = startIndex + this.pageSize;
       this.paginatedFacturas = this.facturas.slice(startIndex, endIndex);
     }
-  
+
     previousPage() {
       if (this.currentPage > 1) {
         this.currentPage--;
@@ -285,7 +291,7 @@ export class FacturasTeckioComponent {
         this.updateVisiblePages();
       }
     }
-  
+
     nextPage() {
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
@@ -293,7 +299,7 @@ export class FacturasTeckioComponent {
         this.updateVisiblePages();
       }
     }
-  
+
     goToPage(page: number) {
       if (page >= 1 && page <= this.totalPages) {
         this.currentPage = page;
@@ -301,7 +307,7 @@ export class FacturasTeckioComponent {
         this.updateVisiblePages();
       }
     }
-  
+
     getPaginationInfo() {
       return `Página ${this.currentPage} de ${this.totalPages}`;
     }

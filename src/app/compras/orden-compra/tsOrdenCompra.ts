@@ -26,6 +26,7 @@ export interface ordenCompraDTO {
   estatusInsumosSurtidosDescripcion: string;
   isExpanded: boolean;
   estatusSaldado : number;
+  importeTotal : number;
   totalSaldado : number;
   saldo : number;
   montoAPagar : number;
