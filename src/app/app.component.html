@@ -13,13 +13,13 @@
           <div class="flex items-center h-full font-bold text-blue-950 text-2xl" [ngClass]="sideNavState?'w-56 xs:w-40':'w-28 xs:w-20'">
             <div *ngIf="sideNavState">
             <span [@animateText]="linkText ? 'show' : 'hide'">
-              <a href="" class="flex items-center">
+              <a href="" class="flex items-center select-none">
                 <img
                   class="object-contain h-12 p-[0.3rem]"
                   src="assets/teckio.svg"
                   alt=""
                 />
-                <div class="sm:block hidden whitespace-nowrap select-none">
+                <div class="sm:block hidden whitespace-nowrap">
                 Teckio ERP
                 </div>
               </a>
@@ -39,7 +39,7 @@
                 class="transition transform ease-in-out duration-500 p-[10px] rounded-full"
               >
                 <img
-                  class="object-contain xs:h-8 h-12 p-[0.3rem] resize-none"
+                  class="object-contain xs:h-8 h-12 p-[0.3rem] resize-none select-none"
                   src="assets/teckio.svg"
                   alt=""
                 />
@@ -73,7 +73,7 @@
 
                 <div>
                   <img
-                    class="w-8 xs:w-8"
+                    class="w-8 xs:w-8 select-none"
                     src="assets/apartment.svg"
                     alt="apartment"
                   />
@@ -96,7 +96,7 @@
 
               <!-- Input de proyecto -->
               <div class="flex justify-center h-7 item gap-1 xs:px-1">
-                <img class="w-9 xs:w-8" src="assets/resize.svg" alt="" />
+                <img class="w-9 xs:w-8 select-none" src="assets/resize.svg" alt="" />
                 <input
                   type="text"
                   placeholder="Selecciona un proyecto"
@@ -148,7 +148,7 @@
           </div>
           </div>
           
-          <img src="assets/logout.png" alt="" class="w-8">
+          <img src="assets/logout.png" alt="Cerrar sesión" class="w-8 select-none">
             <!-- <svg
               width="20"
               height="20"

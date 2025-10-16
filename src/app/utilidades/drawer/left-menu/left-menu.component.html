@@ -61,7 +61,7 @@
     </div> -->
 
     <!-- Menú -->
-    <div>
+    <div class="select-none">
       <mat-nav-list>
         <div>
           <ng-container *ngFor="let page of pagesFiltradas">
@@ -69,8 +69,9 @@
               [disabled]="isLoading"
               mat-list-item
               (click)="toggleNestedPages(page); onSinenavToggleOpen.emit(); sideNavState = true; linkText = true;"
+              
             >
-              <div class="flex justify-between items-center">
+              <div class="flex justify-between items-center m-0 rounded-lg" >
                 <ng-container *ngIf="page.imageUrl; else iconTemplate">
                   <img
                     class="w-8 h-8"
@@ -100,7 +101,7 @@
               </div>
             </button>
             <!-- Lista anidada -->
-            <ng-container *ngIf="page.nestedPages && page.expanded && sideNavState">
+          <ng-container *ngIf="page.nestedPages && page.expanded && sideNavState">
               <div class="mt-2 mb-2 ml-6 border-l-2 border-gray-400">
                  <button
                 [disabled]="isLoading"

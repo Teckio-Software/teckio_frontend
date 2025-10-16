@@ -19,29 +19,31 @@
   color: rgb(29 84 151 / var(--tw-text-opacity));
 }
 
-button[mat-list-item]:focus {
-  /* Anula el borde/resaltado que pone el navegador/Material */
-  outline: none !important; 
-  /* Asegúrate de que no se aplique ningún color de fondo persistente */
-  background-color: transparent !important; 
+/* Estado Focus (se queda después del click o al usar el teclado) */
+.mat-mdc-list-item:not(.active-button-class):not(.mat-list-item-disabled):focus::before {
+  /* Fondo diferente para el foco (un poco más oscuro que el hover) */
+  background-color: rgba(29, 84, 151, 0.2) !important; 
+  /* Si quieres que NO HAYA color de fondo al hacer click: */
+  /* background-color: transparent !important; */
 }
 
-/* Opcional: Esto evita que el botón mantenga el estado de "activo" (active/clicked) */
-button[mat-list-item]:active {
-  background-color: transparent !important; 
-}
-
-/* Anula el fondo del hover/focus que Material mantiene */
-.mat-mdc-list-item:not(.active-button-class):not(.mat-list-item-disabled):focus::before,
-.mat-mdc-list-item:not(.active-button-class):not(.mat-list-item-disabled):hover::before,
+/* Estado Active (mientras mantienes presionado el botón) */
 .mat-mdc-list-item:not(.active-button-class):not(.mat-list-item-disabled):active::before {
-  /* La clase 'mat-mdc-list-item' usa un pseudo-elemento ::before para el fondo de interacción.
-     Lo forzamos a ser transparente. */
-  background-color: transparent !important;
+  /* Fondo para el momento de presionar */
+  background-color: rgba(29, 84, 151, 0.3) !important;
+}
+
+.mat-mdc-list-item:not(.active-button-class):not(.mat-list-item-disabled):hover::before {
+  /* ¡CAMBIA ESTE COLOR! */
+  background-color: rgba(29, 84, 151, 0.1) !important; 
+  
+  /* Si quieres anular el color por completo, usa: */
+  /* background-color: transparent !important; */
 }
 
 /* También necesitamos anular el color del texto que Material pone en foco */
 .mat-mdc-list-item:focus {
   /* Esto elimina cualquier cambio de color de texto/ícono que Material ponga */
-  color: unset !important; 
+  background-color: rgba(29, 84, 151, 0.1) !important; 
+
 }

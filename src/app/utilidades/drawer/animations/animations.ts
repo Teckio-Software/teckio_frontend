@@ -51,7 +51,6 @@ export const onButtonClose = trigger('onButtonClose', [
   transition('open => close', animate('100ms ease-in')),
 ]);
 
-
 export const animateText = trigger('animateText', [
   state('hide',
     style({
