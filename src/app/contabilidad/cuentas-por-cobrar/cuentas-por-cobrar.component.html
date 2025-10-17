@@ -1,7 +1,30 @@
 <ng-container *ngIf="!mostrarFormularioMovimientoBancario; else nuevoMovimiento">
 <section class="p-2">
   <div class="bg-white rounded-md w-full" *ngIf="!crearCuenta && !verCuenta">
+    <div>
+      <div class="px-3 py-3 flex justify-end gap-3">
+        <button
+          (click)="nuevaCuenta()"
+          class="flex gap-2 items-center bg-colorButton hover:bg-colorButtonHover rounded-md text-white transition-colors px-3 py-2"
+          class="flex gap-2 items-center bg-primario hover:bg-primario rounded-md text-white transition-colors px-3 py-2"
+        >
+          <img src="./assets/plus-solid-full.svg" alt="" class="w-3" />
+          Nuevo
+        </button>
+        <select
+          id="countries"
+          class="bg-gris border border-[#929292] text-[#929292] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-3 py-2"
+        >
+          <option selected disabled>Exportar</option>
+          <option value="US">United States</option>
+          <option value="CA">Canada</option>
+          <option value="FR">France</option>
+          <option value="DE">Germany</option>
+        </select>
+      </div>
+    </div>
     <div class="flex items-center gap-3 px-3 py-2 ">
+
       <div class="relative">
         <img
           src="./assets/search.svg"

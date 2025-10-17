@@ -15,6 +15,7 @@ import { ModalNewRequisicionComponent } from '../modal-new-requisicion/modal-new
 import { esCotizacionFuncion } from 'src/app/safe.guard';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { AlertaTipo } from 'src/app/utilidades/alert/alert.component';
+import { RequisicionDTO } from 'src/app/dashboard/types/RequisicionDTO';
 
 @Component({
   selector: 'app-requisicion',
@@ -125,6 +126,22 @@ export class RequisicionComponent implements OnInit {
   visiblePages: number[] = [];
   totalPages = 0;
   /////////* PAGINATION */////////
+
+
+  requisicionSeleccionada : listaRequisicionDTO = {
+    id: 0,
+    idProyecto: 0,
+    noRequisicion: '',
+    personaSolicitante: '',
+    observaciones: '',
+    fechaRegistro: '',
+    estatusRequisicion: 0,
+    estatusInsumosComprados: 0,
+    estatusInsumosCompradosDescripcion: '',
+    estatusInsumosSurtIdos: 0,
+    estatusInsumosSurtIdosDescripcion: '',
+    residente: ''
+  }
 
   constructor(
     private proyectoService: ProyectoService,
@@ -311,6 +328,7 @@ export class RequisicionComponent implements OnInit {
     this.insumosEstado = true;
     this.noRequisicion = '';
     this.observacion = requisicion.observaciones;
+    this.requisicionSeleccionada = requisicion;
   }
 
 

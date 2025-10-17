@@ -1,66 +1,119 @@
+<app-alert
+  *ngIf="alertaTipo !== AlertaTipo.none"
+  [alertaTipo]="alertaTipo"
+  [alertaMessage]="alertaMessage"
+  (close)="cerrarAlerta()"
+>
+</app-alert>
+
 <section>
-  <div>
-    <div>
-      <app-alert
-        *ngIf="alertaTipo !== AlertaTipo.none"
-        [alertaTipo]="alertaTipo"
-        [alertaMessage]="alertaMessage"
-        (close)="cerrarAlerta()"
+  <!-- contenedor para volver a la lsita de requisiciones -->
+  <div class="bg-white w-full px-4 py-3 rounded-md mb-3" *ngIf="veiewInsumos">
+    <div class="flex justify-between items-center">
+      <button
+        (click)="regresarARequisiciones()"
+        class="text-left text-sm hover:bg-gray-200 rounded-md transition-all delay-75 flex gap-2 items-center font-medium text-gray-700 px-2"
       >
-      </app-alert>
-      <!-- Button cotainer -->
-      <div class="flex mt-1 mb-2" *ngIf="proyectoSeleccionado && !veiewInsumos">
-        <button
-          (click)="crearRequisicion()"
-          class="flex align-items-center rounded-md bg-colorButton transition-colors delay-75 hover:bg-colorButtonHover font-light text-white p-1"
-        >
-          <p
-            class="text-[#f2f2f2] titular bg-custom-bg w-52 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
-          >
-            Nueva requisición
-          </p>
-          <img class="xs:w-4" src="assets/add.svg" alt="botón agregar" />
-        </button>
-      </div>
-      <div class="flex mt-1 mb-2" *ngIf="veiewInsumos">
+        <img class="w-8" src="assets/go_back.svg" alt="Regresar" />
+        Regresar
+      </button>
+
+      <div class="flex justify-end gap-3 items-center">
         <button
           (click)="regresarARequisiciones()"
-          class="text-left text-sm hover:bg-gray-200 rounded-md transition-all delay-75 flex gap-2 items-center font-medium text-gray700 px-2"
+          class="flex gap-2 items-center bg-white hover:bg-gray-100 rounded-md text-gray-700 transition-colors px-3 py-2 font-medium border border-gray-300"
         >
-          <img class="w-8" src="assets/go_back.svg" alt="Regresar" />
-            Compras
+          <img src="./assets/xmark-solid-full.svg" alt="" class="w-4" />
+          Cancelar
+        </button>
+        <button
+          class="flex gap-2 items-center bg-primario rounded-md text-white transition-colors px-3 py-2"
+        >
+          <img src="./assets/floppy-disk-solid-full.svg" alt="" class="w-4" />
+          Guardar
         </button>
       </div>
-      <!-- Button cotainer  end -->
+    </div>
+  </div>
 
-      <p class="text-sm font-medium mb-2 text-gray700 xs:text-[10px]">
+  <!-- contenedor padre, engloba toda la informacion -->
+  <div class="bg-white w-full-3 rounded-md">
+    <div class="px-3 py-3">
+      <div *ngIf="proyectoSeleccionado && !veiewInsumos">
+        <div class="flex justify-end">
+          <button
+            (click)="crearRequisicion()"
+            class="flex gap-2 items-center bg-primario hover:bg-primario rounded-md text-white transition-colors px-3 py-2"
+          >
+            <img src="./assets/plus-solid-full.svg" alt="" class="w-3" />
+            Nuevo requisición
+          </button>
+        </div>
+      </div>
+      <p class="text-sm font-medium text-gray700 xs:text-[10px]">
         Campos obligatorios marcados con <span class="font-bold">*</span>
       </p>
     </div>
 
-    <!-- Table -->
-    <div class="overflow-x-auto shadow-md rounded-lg">
+    <!-- contenedor de la requisicion seleccionada -->
+    <div *ngIf="veiewInsumos" class="px-3 py-1">
+      <div class="flex justify-between gap-5">
+        <div class="flex gap-1 items-center">
+          <p class="font-medium text-md m-0 xs:text-xs text-[#C9C9C9]">No. Requisición:</p>
+          <p class="m-0 xs:text-xs">{{ requisicionSeleccionada.noRequisicion }}</p>
+        </div>
+        <div class="flex gap-1 items-center">
+          <p class="font-medium text-md m-0 xs:text-xs">Fecha:</p>
+          <p class="m-0 xs:text-xs">
+            {{ requisicionSeleccionada.fechaRegistro | date: 'dd/MM/yyyy' }}
+          </p>
+        </div>
+        <div class="flex gap-1 items-center">
+          <p class="font-medium text-md m-0 xs:text-xs text-[#C9C9C9]" >Estatus:</p>
+          <div
+            class="bg-blue100 rounded-lg w-28 h-5"
+            *ngIf="requisicionSeleccionada.estatusRequisicion === 1"
+          >
+            <p class="text-blue600 text-center">Capturada</p>
+          </div>
+          <div class="bg-amber100 rounded-lg w-28 h-5" *ngElse>
+            <p class="text-amber600 text-center">No disponible</p>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-between gap-5">
+        <div class="flex gap-1 items-center">
+          <p class="font-medium text-md m-0 xs:text-xs text-[#C9C9C9]">Elaboró</p>
+          <p class="m-0 xs:text-xs">{{ requisicionSeleccionada.residente }}</p>
+        </div>
+        <div class="flex gap-1 items-center">
+          <p class="font-medium text-md m-0 xs:text-xs text-[#C9C9C9]">Solicita:</p>
+          <p class="m-0 xs:text-xs">hbfivbrpeiufbpuerbfpiuerbfpiuberpiufbp</p>
+        </div>
+        <div class="flex gap-1 items-center">
+          <p class="font-medium text-md m-0 xs:text-xs text-[#C9C9C9]">Descipción:</p>
+          <p class="m-0 xs:text-xs">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga ipsa laudantium alias,
+            maiores exercitationem mollitia accusantium commodi illo ad quae. Laboriosam, beatae
+            maiores cum ut architecto neque repellendus dolorum illum?
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenedor de la lista de requisiciones -->
+    <div class="overflow-x-auto" *ngIf="!veiewInsumos">
       <!-- Table container -->
       <div>
-        <table class="w-full text-sm xs:table-fixed">
-          <thead class="bg-primario text-white">
-            <tr class="xs:text-[10px]">
-              <th scope="col" class="px-1 py-[2px] xs:w-[75px]">Requisición</th>
-              <th scope="col" class="px-[2px] py-[2px] xs:w-[70px]">Elaboró</th>
-              <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">
-                Registro
-              </th>
-              <th scope="col" class="px-[2px] py-[2px] text-center xs:hidden">
-                Estatus
-              </th>
-              <th scope="col" class="px-[2px] py-[2px] xs:hidden">*Solicita</th>
-              <th scope="col" class="px-[2px] py-[2px] xs:hidden">
-                *Descripción
-              </th>
-              <th scope="col" class="px-[2px] py-[2px] text-center xs:w-[75px]">
-                Acciones
-              </th>
-            </tr>
+        <table class="w-full text-center bg-white">
+          <thead class="text-center bg-[#f9fafb]">
+            <th class="py-3 font-medium xs:w-[75px]">Requisición</th>
+            <th class="py-3 font-medium xs:w-[70px]">Elaboró</th>
+            <th class="py-3 font-medium xs:w-[75px]">Registro</th>
+            <th class="py-3 font-medium text-center xs:hidden">Estatus</th>
+            <th class="py-3 font-medium xs:hidden">*Solicita</th>
+            <th class="py-3 font-medium xs:hidden">*Descripción</th>
+            <th class="py-3 font-medium text-center xs:w-[75px]">Acciones</th>
           </thead>
           <tbody class="divide-y divide-gray300">
             <ng-container *ngIf="isLoading">
@@ -68,57 +121,43 @@
                 <!-- Requisición -->
                 <td class="px-1" scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"></div>
                   </div>
                 </td>
                 <!-- Elaboró -->
                 <td scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"></div>
                   </div>
                 </td>
                 <!-- Registro -->
                 <td scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"></div>
                   </div>
                 </td>
                 <!-- Estatus -->
                 <td class="px-1 flex justify-center" scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-32 xs:w-16 xs:h-3 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-32 xs:w-16 xs:h-3 mt-1 mb-1"></div>
                   </div>
                 </td>
                 <!-- solicita -->
                 <td class="xs:hidden" scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-52 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-52 mt-1 mb-1"></div>
                   </div>
                 </td>
                 <!-- Descripción -->
                 <td class="xs:hidden" scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-52 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-52 mt-1 mb-1"></div>
                   </div>
                 </td>
                 <!-- Insumos -->
                 <td class="flex justify-center xs:hidden" scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-52 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-52 mt-1 mb-1"></div>
                   </div>
                 </td>
               </tr>
@@ -126,57 +165,43 @@
                 <!-- Requisición -->
                 <td class="px-1" scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"></div>
                   </div>
                 </td>
                 <!-- Elaboró -->
                 <td scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"></div>
                   </div>
                 </td>
                 <!-- Registro -->
                 <td scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"></div>
                   </div>
                 </td>
                 <!-- Estatus -->
                 <td class="px-1 flex justify-center" scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-32 xs:w-16 xs:h-3 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-32 xs:w-16 xs:h-3 mt-1 mb-1"></div>
                   </div>
                 </td>
                 <!-- solicita -->
                 <td class="xs:hidden" scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-52 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-52 mt-1 mb-1"></div>
                   </div>
                 </td>
                 <!-- Descripción -->
                 <td class="xs:hidden" scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-52 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-52 mt-1 mb-1"></div>
                   </div>
                 </td>
                 <!-- Insumos -->
                 <td class="flex justify-center xs:hidden" scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-52 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-52 mt-1 mb-1"></div>
                   </div>
                 </td>
               </tr>
@@ -184,102 +209,76 @@
                 <!-- Requisición -->
                 <td class="px-1" scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"></div>
                   </div>
                 </td>
                 <!-- Elaboró -->
                 <td scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"></div>
                   </div>
                 </td>
                 <!-- Registro -->
                 <td scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"></div>
                   </div>
                 </td>
                 <!-- Estatus -->
                 <td class="px-1 flex justify-center" scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-32 xs:w-16 xs:h-3 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-32 xs:w-16 xs:h-3 mt-1 mb-1"></div>
                   </div>
                 </td>
                 <!-- solicita -->
                 <td class="xs:hidden" scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-52 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-52 mt-1 mb-1"></div>
                   </div>
                 </td>
                 <!-- Descripción -->
                 <td class="xs:hidden" scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-52 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-52 mt-1 mb-1"></div>
                   </div>
                 </td>
                 <!-- Insumos -->
                 <td class="flex justify-center xs:hidden" scope="col">
                   <div role="status" class="max-w-sm animate-pulse">
-                    <div
-                      class="h-5 bg-gray300 rounded-full w-52 mt-1 mb-1"
-                    ></div>
+                    <div class="h-5 bg-gray300 rounded-full w-52 mt-1 mb-1"></div>
                   </div>
                 </td>
               </tr>
             </ng-container>
 
             <ng-container *ngIf="!isLoading">
-              <tr
-                *ngIf="paginatedRequisicion.length == 0"
-                class="lg:hidden md:hidden xl:hidden"
-              >
-                <td
-                  colspan="4"
-                  class="text-center text-gray-700 font-medium py-1 xs:text-xs"
-                >
+              <tr *ngIf="paginatedRequisicion.length == 0" class="lg:hidden md:hidden xl:hidden">
+                <td colspan="4" class="text-center text-gray-700 font-medium py-1 xs:text-xs">
                   No hay requisiciones creadas.
                 </td>
               </tr>
               <tr *ngIf="paginatedRequisicion.length == 0" class="xs:hidden">
-                <td
-                  colspan="6"
-                  class="text-center text-gray-700 font-medium py-1 xs:text-xs"
-                >
+                <td colspan="6" class="text-center text-gray-700 font-medium py-1 xs:text-xs">
                   No hay requisiciones creadas.
                 </td>
               </tr>
               <tr
-                class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+                class="font-medium text-gray700 hover:bg-gris animation duration-200 xs:text-[8px]"
                 *ngFor="let r of paginatedRequisicion"
                 [ngClass]="{ 'change-background-color': r.id === changeColor }"
               >
-                <td class="px-1 py-[2px]" scope="col">
+                <td class="py-4">
                   {{ r.noRequisicion }}
                 </td>
-                <td class="px-1 py-[2px]" scope="col">
+                <td class="py-4">
                   {{ r.personaSolicitante }}
                 </td>
-                <td class="px-1 py-[2px]" scope="col">
-                  {{ r.fechaRegistro | date : "dd-MM-yyyy" }}
+                <td class="py-4">
+                  {{ r.fechaRegistro | date: 'dd-MM-yyyy' }}
                 </td>
-                <td class="px-1 py-[2px] xs:hidden" scope="col">
+                <td class="py-4" scope="col">
                   <div class="flex justify-center h-full">
-                    <div
-                      class="bg-blue100 rounded-lg w-28 h-5"
-                      *ngIf="r.estatusRequisicion === 1"
-                    >
+                    <div class="bg-blue100 rounded-lg w-28 h-5" *ngIf="r.estatusRequisicion === 1">
                       <p class="text-blue600 text-center">Capturada</p>
                     </div>
                     <div class="bg-amber100 rounded-lg w-28 h-5" *ngElse>
@@ -287,7 +286,7 @@
                     </div>
                   </div>
                 </td>
-                <td scope="col" class="px-1 py-[2px] xs:hidden">
+                <td scope="col" class="py-4">
                   <input
                     placeholder="Solicita"
                     autocomplete="off"
@@ -310,39 +309,38 @@
                     (click)="editarObservacion(r); focus()"
                   />
                 </td>
-                <td
-                  class="px-1 py-[2px] min-w-2 flex gap-2 justify-center"
-                  scope="col"
-                >
-                  <div *ngIf="!insumosEstado">
-                    <img
-                      ngbTooltip="Ver insumos"
-                      triggers="mouseenter:mouseleave"
-                      class="cursor-pointer xs:w-4"
-                      src="./assets/northeast.png"
-                      alt="ver insumos"
-                      (click)="verInsumos(r)"
-                    />
-                  </div>
-                  <div *ngIf="insumosEstado">
-                    <img
-                      ngbTooltip="Cerrar insumos"
-                      triggers="mouseenter:mouseleave"
-                      class="cursor-pointer xs:w-4"
-                      src="./assets/visibility-off_btn.svg"
-                      alt="ver insumos"
-                      (click)="verInsumos(r); ocultarTextArea()"
-                    />
-                  </div>
+                <td class="px-1 py-[2px] min-w-2" scope="col">
+                  <div class="flex items-center justify-center gap-2">
+                    <div *ngIf="!insumosEstado">
+                      <img
+                        ngbTooltip="Ver insumos"
+                        triggers="mouseenter:mouseleave"
+                        class="cursor-pointer xs:w-4"
+                        src="./assets/northeast.png"
+                        alt="ver insumos"
+                        (click)="verInsumos(r)"
+                      />
+                    </div>
+                    <div *ngIf="insumosEstado">
+                      <img
+                        ngbTooltip="Cerrar insumos"
+                        triggers="mouseenter:mouseleave"
+                        class="cursor-pointer xs:w-4"
+                        src="./assets/visibility-off_btn.svg"
+                        alt="ver insumos"
+                        (click)="verInsumos(r); ocultarTextArea()"
+                      />
+                    </div>
 
-                  <img
-                    ngbTooltip="Eliminar"
-                    triggers="mouseenter:mouseleave"
-                    class="cursor-pointer xs:w-4"
-                    src="./assets/delete.svg"
-                    (click)="eliminarRequisicion(r.id)"
-                    alt="Delete icon"
-                  />
+                    <img
+                      ngbTooltip="Eliminar"
+                      triggers="mouseenter:mouseleave"
+                      class="cursor-pointer xs:w-4"
+                      src="./assets/delete.svg"
+                      (click)="eliminarRequisicion(r.id)"
+                      alt="Delete icon"
+                    />
+                  </div>
                 </td>
               </tr>
             </ng-container>
@@ -383,19 +381,16 @@
                 (click)="previousPage()"
                 aria-label="Previous"
               >
-                <span class="material-icons text-[10px]"
-                  >keyboard_arrow_left</span
-                >
+                <span class="material-icons text-[10px]">keyboard_arrow_left</span>
               </a>
             </li>
             <li *ngFor="let page of visiblePages" class="flex items-center">
               <a
                 class="mx-1 flex h-7 w-7 items-center justify-center rounded-full hover:bg-colorButtonHover cursor-pointer xs:text-[10px]"
                 [ngClass]="{
-                  'bg-colorButton text-[#ffffff] shadow-md':
-                    currentPage === page,
+                  'bg-colorButton text-[#ffffff] shadow-md': currentPage === page,
                   'border border-blue-gray-100 bg-transparent text-blue-gray-500 hover:bg-[#2d748d]':
-                    currentPage !== page
+                    currentPage !== page,
                 }"
                 [class.active]="page === currentPage"
                 (click)="goToPage(page)"
@@ -409,9 +404,7 @@
                 (click)="nextPage()"
                 aria-label="Next"
               >
-                <span class="material-icons text-[10px]"
-                  >keyboard_arrow_right</span
-                >
+                <span class="material-icons text-[10px]">keyboard_arrow_right</span>
               </a>
             </li>
           </ul>
@@ -419,80 +412,79 @@
       </div>
       <!-- Pagination end -->
     </div>
-  </div>
 
-  <!-- Sections -->
-  <div *ngIf="veiewInsumos">
-    <mat-tab-group
-      class="first-custom-tab-group mt-3 z-40"
-      animationDuration="1ms"
-      (selectedTabChange)="yourFn($event)"
-      [selectedIndex]="selectedIndex"
-    >
-      <mat-tab label="Insumos Requisición">
-        <div *ngIf="selectedIndex === 0">
-          <app-insumos-requicicion
-            *appRecarga="appRecarga"
-            [idEmpresaInput]="selectedEmpresa"
-            (enviarAlerta)="alerta($event.tipo, $event.mensaje)"
-            (recargar)="refresh($event)"
-            [idRequisicionInput]="selectedRequisicion"
-          ></app-insumos-requicicion>
-        </div>
-      </mat-tab>
-      <mat-tab label="Cotización">
-        <div *ngIf="selectedIndex === 1">
-          <app-cotizacion
-            *appRecarga="appRecarga"
-            (enviarAlerta)="alerta($event.tipo, $event.mensaje)"
-            [idRequisicionInput]="selectedRequisicion"
-          >
-          </app-cotizacion>
-        </div>
-      </mat-tab>
-      <mat-tab label="Resumen Cotizaciones">
-        <div *ngIf="selectedIndex === 2">
-          <app-cotizaciones
-            *appRecarga="appRecarga"
-            [idEmpresaInput]="selectedEmpresa"
-            [idRequisicionInput]="selectedRequisicion"
-            (enviarAlerta)="alerta($event.tipo, $event.mensaje)"
-            (valueChange)="insumosXcotizacion($event)"
-            (valueChangeOC)="ordenesCompras($event)"
-            (recargar)="recargar($event)"
-          ></app-cotizaciones>
-        </div>
-      </mat-tab>
-      <mat-tab label="Órdenes de Compra">
-        <div *ngIf="selectedIndex === 3">
-          <app-ordenes-compras
-            *appRecarga="appRecarga"
-            [idEmpresaInput]="selectedEmpresa"
-            [idRequisicionInput]="selectedRequisicion"
-            [idCotizacionInput]="idCotizacionparaOC"
-            (valueChangeIOC)="insumosOrdenesCompras($event)"
-            (valueChangeTodosOC)="removerValoresIdC($event)"
-            (valueChangeEA)="entradasAlmacen($event)"
-          >
-          </app-ordenes-compras>
-        </div>
-      </mat-tab>
-      <mat-tab label="Entradas de Almacen">
-        <div *ngIf="selectedIndex === 4">
-          <app-almacenes-entradas
-            *appRecarga="appRecarga"
-            [idEmpresaInput]="selectedEmpresa"
-            [idRequisicionInput]="selectedRequisicion"
-            [idCotizacionInput]="idCotizacionparaOC"
-            [idOrdenCompraInput]="idOrdenCompraParaEA"
-            [idProyectoInput]="idProyecto"
-            (valueChangeTodosEA)="removerValoresIdOCparaEA($event)"
-            (valueChangeInsumosEA)="insumosEntradaAlmacen($event)"
-          >
-          </app-almacenes-entradas>
-        </div>
-      </mat-tab>
-    </mat-tab-group>
+    <!-- Secciones de compras -->
+    <div *ngIf="veiewInsumos">
+      <mat-tab-group
+        class="first-custom-tab-group mt-3"
+        animationDuration="1ms"
+        (selectedTabChange)="yourFn($event)"
+        [selectedIndex]="selectedIndex"
+      >
+        <mat-tab label="Insumos">
+          <div *ngIf="selectedIndex === 0">
+            <app-insumos-requicicion
+              *appRecarga="appRecarga"
+              [idEmpresaInput]="selectedEmpresa"
+              (enviarAlerta)="alerta($event.tipo, $event.mensaje)"
+              (recargar)="refresh($event)"
+              [idRequisicionInput]="selectedRequisicion"
+            ></app-insumos-requicicion>
+          </div>
+        </mat-tab>
+        <mat-tab label="Cotización">
+          <div *ngIf="selectedIndex === 1">
+            <app-cotizacion
+              *appRecarga="appRecarga"
+              (enviarAlerta)="alerta($event.tipo, $event.mensaje)"
+              [idRequisicionInput]="selectedRequisicion"
+            >
+            </app-cotizacion>
+          </div>
+        </mat-tab>
+        <mat-tab label="Resumen">
+          <div *ngIf="selectedIndex === 2">
+            <app-cotizaciones
+              *appRecarga="appRecarga"
+              [idEmpresaInput]="selectedEmpresa"
+              [idRequisicionInput]="selectedRequisicion"
+              (enviarAlerta)="alerta($event.tipo, $event.mensaje)"
+              (valueChange)="insumosXcotizacion($event)"
+              (valueChangeOC)="ordenesCompras($event)"
+              (recargar)="recargar($event)"
+            ></app-cotizaciones>
+          </div>
+        </mat-tab>
+        <mat-tab label="Órdenes de compra">
+          <div *ngIf="selectedIndex === 3">
+            <app-ordenes-compras
+              *appRecarga="appRecarga"
+              [idEmpresaInput]="selectedEmpresa"
+              [idRequisicionInput]="selectedRequisicion"
+              [idCotizacionInput]="idCotizacionparaOC"
+              (valueChangeIOC)="insumosOrdenesCompras($event)"
+              (valueChangeTodosOC)="removerValoresIdC($event)"
+              (valueChangeEA)="entradasAlmacen($event)"
+            >
+            </app-ordenes-compras>
+          </div>
+        </mat-tab>
+        <mat-tab label="Entradas de almacén">
+          <div *ngIf="selectedIndex === 4">
+            <app-almacenes-entradas
+              *appRecarga="appRecarga"
+              [idEmpresaInput]="selectedEmpresa"
+              [idRequisicionInput]="selectedRequisicion"
+              [idCotizacionInput]="idCotizacionparaOC"
+              [idOrdenCompraInput]="idOrdenCompraParaEA"
+              [idProyectoInput]="idProyecto"
+              (valueChangeTodosEA)="removerValoresIdOCparaEA($event)"
+              (valueChangeInsumosEA)="insumosEntradaAlmacen($event)"
+            >
+            </app-almacenes-entradas>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
   </div>
-  <!-- Sections -->
 </section>

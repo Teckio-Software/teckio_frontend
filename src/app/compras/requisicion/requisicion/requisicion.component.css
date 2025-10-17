@@ -33,42 +33,70 @@
 }
 
 /* my-component.component.css */
-::ng-deep
-  .first-custom-tab-group.mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs
-  > .mat-mdc-tab-header
+:host {
+  /* Ajusta los colores a gusto */
+  --tab-bg: transparent;          /* no seleccionadas (antes "slate-50") */
+  --tab-bg-active: #C9C9C9;   /* seleccionada */
+  --tab-text: #C9C9C9;        /* texto normal (antes "blue-900") */
+  --tab-text-active: #1e3a8a; /* texto activo */
+  --tab-border: #e2e8f0;       /* borde normal (antes "slate-200") */
+  --tab-border-active: #C9C9C9; /* borde inferior */
+}
+
+/* Mantén tu wrapper en el template: <mat-tab-group class="first-custom-tab-group"> */
+:host ::ng-deep .first-custom-tab-group {
+  /* espaciado entre tabs */
+  .mat-mdc-tab-labels { gap: 2px !important; }
+
+  /* altura */
+  .mat-mdc-tab:not(.mdc-tab--stacked) { height: 45px !important; }
+
+  /* base: no seleccionadas */
   .mat-mdc-tab {
-  flex-grow: 0 !important; /* Asegúrate de que solo el primer grupo de pestañas se vea afectado */
-  background-color: #4eaac1 !important; /* Cambia el color de fondo de las pestañas */
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+    flex-grow: 0 !important;
+    background-color: var(--tab-bg) !important;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+
+  /* estado seleccionado */
+  .mat-mdc-tab.mdc-tab--active {
+    background-color: var(--tab-bg-active) !important;
+  }
+
+  /* color de texto */
+  .mdc-tab__text-label {
+    color: var(--tab-text) !important;
+    /* font-weight: 500; */
+  }
+  .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+    color: var(--tab-text-active) !important;
+    /* font-weight: 600; */
+  }
+
+  /* QUITAR la línea inferior (ink bar / indicator) */
+  .mdc-tab-indicator,
+  .mdc-tab-indicator__content--underline {
+    display: none !important;
+    border: 0 !important;
+  }
+
+  /* paginadores por si hay overflow */
+  .mat-mdc-tab-header-pagination { z-index: 0 !important; }
+  .mat-mdc-tab-header {
+  border-bottom: 1px solid var(--tab-border) !important;
+}
 }
 
-::ng-deep .first-custom-tab-group .mat-mdc-tab-labels {
-  gap: 2px !important; /* Asegúrate de que no haya espacio entre las pestañas */
-}
-::ng-deep .first-custom-tab-group .mat-mdc-tab:not(.mdc-tab--stacked) {
-  height: 30px !important;
-}
-::ng-deep .first-custom-tab-group .mdc-tab__text-label {
-  color: #f2f2f2 !important; /* Cambia el color del texto de las pestañas */
-}
-::ng-deep .tooltip {
-  --bs-tooltip-bg: #d6d3d3 !important;
-  --bs-tooltip-color: rgb(0, 0, 0) !important;
-}
-
+/* Responsive (igual que ya traías) */
 @media screen and (max-width: 639px) {
-  ::ng-deep .first-custom-tab-group .mdc-tab__text-label {
-    color: #f2f2f2 !important; /* Cambia el color del texto de las pestañas */
-    font-size: 10px !important;
+  :host ::ng-deep .first-custom-tab-group {
+    .mdc-tab__text-label {
+      color: #f2f2f2 !important;
+      font-size: 10px !important;
+    }
+    .mat-mdc-tab:not(.mdc-tab--stacked) { height: 25px !important; }
   }
-  ::ng-deep .first-custom-tab-group .mat-mdc-tab:not(.mdc-tab--stacked) {
-    height: 25px !important;
-  }
-}
-
-::ng-deep .mat-mdc-tab-header-pagination {
-  z-index: 0 !important;
 }
 
 .buttons {
@@ -98,4 +126,13 @@
 }
 .change-background-color td {
   background-color: inherit;
+}
+
+.stylesPestanas {
+  background-color: #4eaac1;
+  color: #f2f2f2;
+  padding: 2px 10px;
+  border-radius: 3px;
+  text-align: center;
+  margin: 0 10px;
 }
