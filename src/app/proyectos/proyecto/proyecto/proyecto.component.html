@@ -1,306 +1,262 @@
-<section>
-  <!-- <div class="flex justify-end">
-    <button class="bg-colorButton text-[#f2f2f2] rounded-sm hover:bg-hoverButton"   (click)="openDialogNewProyecto()"></button>
-  </div> -->
-  <div>
-    <div class="flex mt-1 mb-2">
-      <button
-        (click)="openDialogNewProyecto()"
-        class="flex align-items-center rounded-md bg-colorButton transition-colors delay-75 hover:bg-colorButtonHover font-light text-white p-1"
-      >
-        <p
-          class="text-[#f2f2f2] titular bg-custom-bg w-52 font-medium text-base tracking-wider m-0 text-center xs:text-[10px] xs:w-24"
-        >
-          Nuevo proyecto
-        </p>
-        <img src="assets/add.svg" alt="" />
-      </button>
-    </div>
+<section class="flex flex-col gap-3">
+  <div class="flex justify-end">
+    <button
+      (click)="openDialogNewProyecto()"
+      class="flex gap-2 items-center rounded-md bg-primario transition-colors delay-75 text-white px-3 py-2"
+    >
+      <img src="assets/plus-solid-full.svg" alt="Icono de agregar" class="w-4" />
+      <p class="text-white titular bg-custom-bg font-normal text-sm m-0 text-center">
+        Agregar nuevo registro
+      </p>
+    </button>
+  </div>
 
-    <div class="overflow-x-auto shadow-md rounded-lg">
-      <table class="w-full text-sm">
-        <thead class="bg-primario text-white">
+  <div class="overflow-x-auto rounded-md bg-white">
+    <table class="w-full text-sm rtl:text-right text-center">
+      <thead class="text-center bg-[#f9fafb]">
+        <tr>
+          <th scope="col" class="font-medium py-3 text-center">Nombre</th>
+          <th scope="col" class="font-medium py-3 text-center">Código</th>
+          <th scope="col" class="font-medium py-3 text-center">Series</th>
+          <th scope="col" class="font-medium py-3 text-center">Presupuesto total</th>
+          <th scope="col" class="font-medium py-3 text-center">Anticipo</th>
+          <th scope="col" class="font-medium py-3 text-center">IVA</th>
+          <th scope="col" class="font-medium py-3 text-center"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray300">
+        <tr *ngIf="paginatedProyectos.length == 0 && !isLoading">
+          <td colspan="6">
+            <app-empty-state [nombreArchivo]="'empty_state_v2'"></app-empty-state>
+          </td>
+        </tr>
+        <ng-container *ngIf="isLoading">
           <tr>
-            <th scope="col" class="px-1 py-[2px] xs:w-[75px]">Nombre</th>
-            <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">Código</th>
-            <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">Series</th>
-            <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">
-              Presupuesto total
-            </th>
-            <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">Anticipo</th>
-            <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]">IVA</th>
-            <th scope="col" class="px-[2px] py-[2px] xs:w-[75px]"></th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray300">
-          <tr *ngIf="paginatedProyectos.length == 0 && !isLoading">
-            <td class="text-center text-gray-700 font-medium py-1" colspan="6">
-              No hay proyectos creados.
+            <!-- Nombre -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"></div>
+              </div>
             </td>
-          </tr>
-          <ng-container *ngIf="isLoading">
-            <tr>
-              <!-- Nombre -->
-              <td class="px-1" scope="col">
-                <div role="status" class="max-w-sm animate-pulse">
-                  <div
-                    class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
-                  ></div>
-                </div>
-              </td>
-              <!-- Código -->
-              <td scope="col">
-                <div role="status" class="max-w-sm animate-pulse">
-                  <div
-                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
-                  ></div>
-                </div>
-              </td>
-              <!-- Series -->
-              <td scope="col">
-                <div role="status" class="max-w-sm animate-pulse">
-                  <div
-                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
-                  ></div>
-                </div>
-              </td>
-              <!-- Presupuesto Total -->
-              <td scope="col">
-                <div role="status" class="max-w-sm animate-pulse">
-                  <div
-                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
-                  ></div>
-                </div>
-              </td>
-              <!-- Anticipo -->
-              <td scope="col">
-                <div role="status" class="max-w-sm animate-pulse">
-                  <div class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"></div>
-                </div>
-              </td>
-              <!-- IVA -->
-              <td scope="col">
-                <div role="status" class="max-w-sm animate-pulse">
-                  <div class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"></div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <!-- Nombre -->
-              <td class="px-1" scope="col">
-                <div role="status" class="max-w-sm animate-pulse">
-                  <div
-                    class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
-                  ></div>
-                </div>
-              </td>
-              <!-- Código -->
-              <td scope="col">
-                <div role="status" class="max-w-sm animate-pulse">
-                  <div
-                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
-                  ></div>
-                </div>
-              </td>
-              <!-- Series -->
-              <td scope="col">
-                <div role="status" class="max-w-sm animate-pulse">
-                  <div
-                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
-                  ></div>
-                </div>
-              </td>
-              <!-- Presupuesto Total -->
-              <td scope="col">
-                <div role="status" class="max-w-sm animate-pulse">
-                  <div
-                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
-                  ></div>
-                </div>
-              </td>
-              <!-- Anticipo -->
-              <td scope="col">
-                <div role="status" class="max-w-sm animate-pulse">
-                  <div class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"></div>
-                </div>
-              </td>
-              <!-- IVA -->
-              <td scope="col">
-                <div role="status" class="max-w-sm animate-pulse">
-                  <div class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"></div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <!-- Nombre -->
-              <td class="px-1" scope="col">
-                <div role="status" class="max-w-sm animate-pulse">
-                  <div
-                    class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"
-                  ></div>
-                </div>
-              </td>
-              <!-- Código -->
-              <td scope="col">
-                <div role="status" class="max-w-sm animate-pulse">
-                  <div
-                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
-                  ></div>
-                </div>
-              </td>
-              <!-- Series -->
-              <td scope="col">
-                <div role="status" class="max-w-sm animate-pulse">
-                  <div
-                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
-                  ></div>
-                </div>
-              </td>
-              <!-- Presupuesto Total -->
-              <td scope="col">
-                <div role="status" class="max-w-sm animate-pulse">
-                  <div
-                    class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"
-                  ></div>
-                </div>
-              </td>
-              <!-- Anticipo -->
-              <td scope="col">
-                <div role="status" class="max-w-sm animate-pulse">
-                  <div class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"></div>
-                </div>
-              </td>
-              <!-- IVA -->
-              <td scope="col">
-                <div role="status" class="max-w-sm animate-pulse">
-                  <div class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"></div>
-                </div>
-              </td>
-            </tr>
-          </ng-container>
-          <tr
-            *ngFor="let proyecto of paginatedProyectos"
-            class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
-          >
-            <td class="px-1 py-[2px]">
-              <input
-                type="text"
-                class="bg-transparent w-full"
-                id="input-table"
-                [(ngModel)]="proyecto.nombre"
-                readonly
-                disabled
-              />
+            <!-- Código -->
+            <td scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"></div>
+              </div>
             </td>
-            <td class="px-1 py-[2px]">
-              <input
-                type="text"
-                class="bg-transparent w-full"
-                id="input-table"
-                [(ngModel)]="proyecto.codigoProyecto"
-                readonly
-                disabled
-              />
+            <!-- Series -->
+            <td scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"></div>
+              </div>
             </td>
-            <td class="px-1 py-[2px]">
-              <input
-                type="text"
-                class="bg-transparent w-full"
-                id="input-table"
-                [(ngModel)]="proyecto.noSerie"
-                readonly
-                disabled
-              />
+            <!-- Presupuesto Total -->
+            <td scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"></div>
+              </div>
             </td>
-            <td class="px-1 py-[2px]">
-              <input
-                type="text"
-                class="bg-transparent w-full text-end"
-                id="input-table"
-                [(ngModel)]="proyecto.presupuestoConIvaMonedaNacional"
-                readonly
-                disabled
-              />
+            <!-- Anticipo -->
+            <td scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"></div>
+              </div>
             </td>
-            <td class="px-1 py-[2px] text-end">{{ proyecto.anticipo }}%</td>
-            <td class="px-1 py-[2px] text-end">
-              {{ proyecto.porcentajeIva }}%
-            </td>
-            <td class="px-1 py-[2px]">
-              <div class="flex justify-center m-0.5">
-                <button
-                  ngbTooltip="Editar"
-                  placement="start"
-                  triggers="mouseenter:mouseleave"
-                  class="py-0 px-[5px] rounded-sm"
-                  (click)="editarProyecto(proyecto)"
-                >
-                  <img
-                    src="./assets/edit.svg"
-                    alt="Botón de editar"
-                    class="w-5"
-                  />
-                </button>
-                <button
-                  ngbTooltip="Eliminar"
-                  placement="start"
-                  triggers="mouseenter:mouseleave"
-                  class="py-0 px-[5px] rounded-sm"
-                  (click)="eliminarProyecto(proyecto)"
-                >
-                  <img
-                    src="../../../../assets/delete.svg"
-                    alt="Botón de eliminar"
-                    class="w-6"
-                  />
-                </button>
+            <!-- IVA -->
+            <td scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"></div>
               </div>
             </td>
           </tr>
-        </tbody>
-      </table>
-      <div class="flex bg-[#ffffff] justify-end rounded-b-[3px]">
-        <div class="flex items-center">
-          {{ getPaginationInfo() }}
-        </div>
-        <nav class="p-2">
-          <ul class="flex">
-            <li class="flex items-center">
-              <a
-                class="mx-1 flex h-7 w-7 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-[#2d748d] cursor-pointer"
-                (click)="previousPage()"
-                aria-label="Previous"
+          <tr>
+            <!-- Nombre -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"></div>
+              </div>
+            </td>
+            <!-- Código -->
+            <td scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"></div>
+              </div>
+            </td>
+            <!-- Series -->
+            <td scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"></div>
+              </div>
+            </td>
+            <!-- Presupuesto Total -->
+            <td scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"></div>
+              </div>
+            </td>
+            <!-- Anticipo -->
+            <td scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"></div>
+              </div>
+            </td>
+            <!-- IVA -->
+            <td scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <!-- Nombre -->
+            <td class="px-1" scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div class="h-5 bg-gray300 rounded-full w-40 xs:w-14 xs:h-3 mt-1 mb-1"></div>
+              </div>
+            </td>
+            <!-- Código -->
+            <td scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"></div>
+              </div>
+            </td>
+            <!-- Series -->
+            <td scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"></div>
+              </div>
+            </td>
+            <!-- Presupuesto Total -->
+            <td scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div class="h-5 bg-gray300 rounded-full w-28 xs:w-14 xs:h-3 mt-1 mb-1"></div>
+              </div>
+            </td>
+            <!-- Anticipo -->
+            <td scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"></div>
+              </div>
+            </td>
+            <!-- IVA -->
+            <td scope="col">
+              <div role="status" class="max-w-sm animate-pulse">
+                <div class="h-5 bg-gray300 rounded-full w-28 mt-1 mb-1"></div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        <tr
+          *ngFor="let proyecto of paginatedProyectos"
+          class="font-medium text-gray700 hover:bg-gray200 animation duration-200 xs:text-[8px]"
+        >
+          <td class="px-1 py-[2px]">
+            <input
+              type="text"
+              class="bg-transparent w-full"
+              id="input-table"
+              [(ngModel)]="proyecto.nombre"
+              readonly
+              disabled
+            />
+          </td>
+          <td class="px-1 py-[2px]">
+            <input
+              type="text"
+              class="bg-transparent w-full"
+              id="input-table"
+              [(ngModel)]="proyecto.codigoProyecto"
+              readonly
+              disabled
+            />
+          </td>
+          <td class="px-1 py-[2px]">
+            <input
+              type="text"
+              class="bg-transparent w-full"
+              id="input-table"
+              [(ngModel)]="proyecto.noSerie"
+              readonly
+              disabled
+            />
+          </td>
+          <td class="px-1 py-[2px]">
+            <input
+              type="text"
+              class="bg-transparent w-full text-end"
+              id="input-table"
+              [(ngModel)]="proyecto.presupuestoConIvaMonedaNacional"
+              readonly
+              disabled
+            />
+          </td>
+          <td class="px-1 py-[2px] text-end">{{ proyecto.anticipo }}%</td>
+          <td class="px-1 py-[2px] text-end">{{ proyecto.porcentajeIva }}%</td>
+          <td class="px-1 py-[2px]">
+            <div class="flex justify-center m-0.5">
+              <button
+                ngbTooltip="Editar"
+                placement="start"
+                triggers="mouseenter:mouseleave"
+                class="py-0 px-[5px] rounded-sm"
+                (click)="editarProyecto(proyecto)"
               >
-                <span class="material-icons text-sm">keyboard_arrow_left</span>
-              </a>
-            </li>
-            <li *ngFor="let page of visiblePages" class="flex items-center">
-              <a
-                class="mx-1 flex h-7 w-7 items-center justify-center rounded-full hover:bg-[#2d748d] cursor-pointer"
-                [ngClass]="{
-                  'bg-colorButton text-[#ffffff] shadow-md':
-                    currentPage === page,
-                  'border border-blue-gray-100 bg-transparent text-blue-gray-500 hover:bg-[#2d748d]':
-                    currentPage !== page,
-                }"
-                [class.active]="page === currentPage"
-                (click)="goToPage(page)"
+                <img src="./assets/edit.svg" alt="Botón de editar" class="w-5" />
+              </button>
+              <button
+                ngbTooltip="Eliminar"
+                placement="start"
+                triggers="mouseenter:mouseleave"
+                class="py-0 px-[5px] rounded-sm"
+                (click)="eliminarProyecto(proyecto)"
               >
-                {{ page }}
-              </a>
-            </li>
-            <li class="flex items-center">
-              <a
-                class="mx-1 flex h-7 w-7 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300 cursor-pointer"
-                (click)="nextPage()"
-                aria-label="Next"
-              >
-                <span class="material-icons text-sm">keyboard_arrow_right</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
+                <img src="../../../../assets/delete.svg" alt="Botón de eliminar" class="w-6" />
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="flex bg-[#ffffff] justify-end rounded-b-[3px]">
+      <div class="flex items-center">
+        {{ getPaginationInfo() }}
       </div>
+      <nav class="p-2">
+        <ul class="flex">
+          <li class="flex items-center">
+            <a
+              class="mx-1 flex h-7 w-7 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-[#2d748d] cursor-pointer"
+              (click)="previousPage()"
+              aria-label="Previous"
+            >
+              <span class="material-icons text-sm">keyboard_arrow_left</span>
+            </a>
+          </li>
+          <li *ngFor="let page of visiblePages" class="flex items-center">
+            <a
+              class="mx-1 flex h-7 w-7 items-center justify-center rounded-full hover:bg-[#2d748d] cursor-pointer"
+              [ngClass]="{
+                'bg-colorButton text-[#ffffff] shadow-md': currentPage === page,
+                'border border-blue-gray-100 bg-transparent text-blue-gray-500 hover:bg-[#2d748d]':
+                  currentPage !== page,
+              }"
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)"
+            >
+              {{ page }}
+            </a>
+          </li>
+          <li class="flex items-center">
+            <a
+              class="mx-1 flex h-7 w-7 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300 cursor-pointer"
+              (click)="nextPage()"
+              aria-label="Next"
+            >
+              <span class="material-icons text-sm">keyboard_arrow_right</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 </section>

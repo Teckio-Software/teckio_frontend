@@ -1,3 +1,5 @@
+import { RiveModule } from 'ng-rive';
+
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { OverlayModule } from '@angular/cdk/overlay';
@@ -189,6 +191,8 @@ import { ImportarProyectoComponent } from './proyectos/precio-unitario/importar-
 import { MatrizPrecioUnitarioCopiaComponent } from './proyectos/precio-unitario/matriz-precio-unitario-copia/matriz-precio-unitario-copia.component';
 import { VerCuentaComponent } from './contabilidad/cuentas-por-cobrar/components/ver-cuenta/ver-cuenta.component';
 import { CuentasPorPagarComponent } from './contabilidad/cuentas-por-pagar/cuentas-por-pagar/cuentas-por-pagar.component';
+import { LoadingComponent } from './utilidades/loading/loading.component';
+import { EmptyStateComponent } from './utilidades/empty-state/empty-state.component';
 
 export function playerFactory() {
   return player;
@@ -361,7 +365,9 @@ export function playerFactory() {
     VerCuentaComponent,
     CuentasPorPagarComponent,
     CatalogoConceptoComponent,
-    MatrizPrecioUnitarioComponent
+    MatrizPrecioUnitarioComponent,
+    LoadingComponent,
+    EmptyStateComponent,
   ],
 
   imports: [
@@ -387,6 +393,7 @@ export function playerFactory() {
     A11yModule,
     OverlayModule,
     ChartModule,
+    RiveModule,
   ],
   exports: [LeftMenuComponent],
   providers: [

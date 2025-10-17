@@ -15,11 +15,11 @@ import { timer } from 'rxjs';
   templateUrl: './dialog-new-proyecto.component.html',
   styleUrls: ['./dialog-new-proyecto.component.css'],
 })
-export class DialogNewProyectoComponent{
+export class DialogNewProyectoComponent {
   form!: FormGroup;
   menu1: boolean;
   dialogTitle = 'Nuevo proyecto';
-  primaryButtonLabel = 'Crear proyecto';
+  primaryButtonLabel = 'Guardar proyecto';
   isEditing = false;
   nuevoProyecto: proyectoDTO = {
     id: 0,
@@ -80,7 +80,7 @@ export class DialogNewProyectoComponent{
     this.selectedEmpresa = this.data.selectedEmpresa;
     this.isEditing = !!this.data.proyecto;
     this.dialogTitle = this.isEditing ? 'Editar proyecto' : 'Nuevo proyecto';
-    this.primaryButtonLabel = this.isEditing ? 'Guardar cambios' : 'Crear proyecto';
+    this.primaryButtonLabel = this.isEditing ? 'Guardar cambios' : 'Guardar proyecto';
   }
   ngOnInit(): void {
     this.dialogRef.updateSize('70%');
@@ -114,7 +114,7 @@ export class DialogNewProyectoComponent{
       let fechaInicio = this.data.proyecto.fechaInicio.split('T')[0];
       let fechaFin = this.data.proyecto.fechaFinal.split('T')[0];
       let cp = this.data.proyecto.codigoPostal.toString();
-      if(cp.length < 5){
+      if (cp.length < 5) {
         let ceros = '0'.repeat(5 - cp.length);
         cp = ceros + cp;
       }
@@ -155,7 +155,7 @@ export class DialogNewProyectoComponent{
     this.nuevoProyecto.nivel = 1;
     this.nuevoProyecto.idPadre = 0;
     this.nuevoProyecto.inicioSemana = 1;
-    if(this.nuevoProyecto.anticipo == null){
+    if (this.nuevoProyecto.anticipo == null) {
       this.nuevoProyecto.anticipo = 0;
     }
     // this.nuevoProyecto.anticipo = 0;
@@ -246,17 +246,17 @@ export class DialogNewProyectoComponent{
       icon: 'error',
     });
   }
-  
-  validarAnticipo(){
-    let anticipo = this.form.value.anticipo;    
-    if(anticipo > 100){
+
+  validarAnticipo() {
+    let anticipo = this.form.value.anticipo;
+    if (anticipo > 100) {
       this.form.get('anticipo')?.setValue(100);
       this.errorAnticipo = true;
       timer(3000).subscribe(() => {
         this.errorAnticipo = false;
       });
     }
-    if(anticipo < 0){
+    if (anticipo < 0) {
       this.form.get('anticipo')?.setValue(0);
       this.errorAnticipo = true;
       timer(3000).subscribe(() => {
@@ -265,12 +265,12 @@ export class DialogNewProyectoComponent{
     }
   }
 
-/**
- * Selecciona todo el contenido de un input
- * @param event Evento que se lanza cuando se selecciona todo el contenido de un input
- */
+  /**
+   * Selecciona todo el contenido de un input
+   * @param event Evento que se lanza cuando se selecciona todo el contenido de un input
+   */
   selectAll(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  input.select();
-}
+    const input = event.target as HTMLInputElement;
+    input.select();
+  }
 }

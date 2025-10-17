@@ -59,7 +59,7 @@ export class ProyectoComponent implements OnInit {
   visiblePages: number[] = [];
   totalPages = 0;
 
-  isLoading: boolean = true;
+  isLoading: boolean = false;
 
   /////////* PAGINATION */////////
 
@@ -103,13 +103,14 @@ export class ProyectoComponent implements OnInit {
   }
 
   cargarRegistros() {
+    this.isLoading = true;
     this.proyectoService.obtener(this.selectedEmpresa).subscribe((proyectos) => {
       this.proyectos = proyectos;
       this.totalItems = proyectos.length;
       this.updatePagination();
       this.updatePaginatedData();
-      this.isLoading = false;
     });
+    this.isLoading = false;
   }
 
   expansionDominio(proyecto: proyectoDTO): void {
@@ -259,7 +260,7 @@ export class ProyectoComponent implements OnInit {
 
   updateVisiblePages() {
     const startPage = Math.max(1, this.currentPage - 2);
-    
+
     const endPage = Math.min(this.totalPages, startPage + 4);
 
     this.visiblePages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);

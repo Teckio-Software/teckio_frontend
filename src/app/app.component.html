@@ -9,74 +9,63 @@
         *ngIf="esLogueado"
         class="bg-white flex justify-between items-center h-16 xs:flex border-b border-gray-300"
       >
-        <div class="flex items-center h-full" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
-          <div class="flex items-center h-full font-bold text-blue-950 text-2xl" [ngClass]="sideNavState?'w-56':'w-28'">
+        <div
+          class="flex items-center h-full"
+          (mouseenter)="onMouseEnter()"
+          (mouseleave)="onMouseLeave()"
+        >
+          <div
+            class="flex items-center h-full font-bold text-blue-950 text-2xl"
+            [ngClass]="sideNavState ? 'w-56' : 'w-28'"
+          >
             <div *ngIf="sideNavState">
-            <span [@animateText]="linkText ? 'show' : 'hide'">
-              <a href="" class="flex items-center">
-                <img
-                  class="object-contain h-12 p-[0.3rem]"
-                  src="assets/teckio.svg"
-                  alt=""
-                />
-                <div class="sm:block hidden">
-                Teckio ERP
-                </div>
+              <span [@animateText]="linkText ? 'show' : 'hide'">
+                <a href="" class="flex items-center">
+                  <img class="object-contain h-12 p-[0.3rem]" src="assets/teckio.svg" alt="" />
+                  <div class="sm:block hidden">Teckio ERP</div>
+                </a>
+              </span>
+              <div class="xs:text-center xs:mt-2 xs:text-xs sm:hidden md:hidden lg:hidden">
+                <p class="xs:font-bold text-gray700">Bienvenido</p>
+                <p class="text-gray700">
+                  {{ zvSeguridadService.zfObtenerCampoJwt('email') }}
+                </p>
+              </div>
+            </div>
+            <div class="flex justify-center items-center" *ngIf="!sideNavState">
+              <a href="">
+                <button class="transition transform ease-in-out duration-500 p-[10px] rounded-full">
+                  <img class="object-contain h-12 p-[0.3rem]" src="assets/teckio.svg" alt="" />
+                </button>
               </a>
-            </span>
-            <div
-              class="xs:text-center xs:mt-2 xs:text-xs sm:hidden md:hidden lg:hidden"
-            >
-              <p class="xs:font-bold text-gray700">Bienvenido</p>
-              <p class="text-gray700">
-                {{ zvSeguridadService.zfObtenerCampoJwt("email") }}
-              </p>
             </div>
-          </div>
-          <div class="flex justify-center items-center" *ngIf="!sideNavState">
-            <a href="">
-              <button
-                class="transition transform ease-in-out duration-500 p-[10px] rounded-full"
-              >
-                <img
-                  class="object-contain h-12 p-[0.3rem]"
-                  src="assets/teckio.svg"
-                  alt=""
-                />
-              </button>
-            </a>
-          </div>
-          <!-- Icono menú hamburguesa -->
-           <div class="flex justify-center items-center h-full mt-2" [@onButtonClose]="hoverMenu" >
-            <div *ngIf="!isOpen">
-              <button (click)="onSinenavToggle()">
-              <img class="w-6" src="./assets/right_panel_open.svg" alt="Abrir menú" />
-            </button>
+            <!-- Icono menú hamburguesa -->
+            <div class="flex justify-center items-center h-full mt-2" [@onButtonClose]="hoverMenu">
+              <div *ngIf="!isOpen">
+                <button (click)="onSinenavToggle()">
+                  <img class="w-6" src="./assets/right_panel_open.svg" alt="Abrir menú" />
+                </button>
+              </div>
+              <div *ngIf="isOpen">
+                <button (click)="onSinenavToggle()">
+                  <img class="w-6" src="./assets/left_panel_close.svg" alt="Cerrar menú" />
+                </button>
+              </div>
+              <!-- Icono menú hamburguesa end-->
             </div>
-            <div *ngIf="isOpen">
-              <button (click)="onSinenavToggle()">
-              <img class="w-6" src="./assets/left_panel_close.svg" alt="Cerrar menú" />
-            </button>
-          </div>
-          <!-- Icono menú hamburguesa end-->
-           </div>
           </div>
           <div class="flex gap-2 items-center justify-center xs:ml-3">
             <ng-container zvAutorizado>
               <!-- Input de coporativo -->
               <div class="flex justify-center h-7 items-center gap-1 xs:px-1">
                 <p
-                  class="text-gray-950 lg:text-2xl md:text-2xl sm:text-xl lg:ml-10 font-bold mt-2 xs:hidden"
+                  class="text-gray-800 lg:text-2xl md:text-2xl sm:text-xl lg:ml-10 font-bold mt-2 xs:hidden"
                 >
                   {{ tituloComponente }}
                 </p>
 
                 <div>
-                  <img
-                    class="w-8 xs:w-8"
-                    src="assets/apartment.svg"
-                    alt="apartment"
-                  />
+                  <img class="w-8 xs:w-8" src="assets/apartment.svg" alt="apartment" />
                 </div>
                 <select
                   class="rounded-lg bg-white text-gray-700 border-gray-500 border font-medium p-1 lg:w-52 md:w-36 xms:w-28 xs:w-24 xs:text-xs"
@@ -84,10 +73,7 @@
                   [(ngModel)]="selectedEmpresa"
                   (ngModelChange)="actualizar($event)"
                 >
-                  <option
-                    *ngFor="let empresa of empresasPertenecientes"
-                    [value]="empresa.id"
-                  >
+                  <option *ngFor="let empresa of empresasPertenecientes" [value]="empresa.id">
                     {{ empresa.nombreComercial }}
                   </option>
                 </select>
@@ -112,43 +98,38 @@
                 >
                   <mat-option
                     class="mat-option-css"
-                    style="
-                      font-weight: 500;
-                      font-size: 14px;
-                      border-radius: 7px;
-                    "
+                    style="font-weight: 500; font-size: 14px; border-radius: 7px"
                     *ngFor="let proyecto of filteredProyectos | async"
                     [value]="proyecto"
                     >{{ proyecto.nombre }}</mat-option
                   >
                 </mat-autocomplete>
               </div>
-              <div class="font-medium h-full text-sm" *ngIf="idProyecto<=0">
-                <div class="bg-blue-100 text-blue-600 h-[95%] text-center px-2 py-1 rounded-lg flex flex-row justify-center select-none border-2 border-blue-600 gap-2">
-                <img src="assets/info.svg" alt="" class="w-5">
-                Selecciona un proyecto.
+              <div class="font-medium h-full text-sm" *ngIf="idProyecto <= 0">
+                <div
+                  class="bg-blue-100 text-blue-600 h-[95%] text-center px-2 py-1 rounded-lg flex flex-row justify-center select-none border-2 border-blue-600 gap-2"
+                >
+                  <img src="assets/info.svg" alt="" class="w-5" />
+                  Selecciona un proyecto.
                 </div>
               </div>
+
               <!-- Input de proyecto end -->
             </ng-container>
           </div>
         </div>
         <div class="flex gap-2 justify-end mr-2">
-          
-          <button
-            class="flex gap-2 flex-row items-center text-white"
-            [matMenuTriggerFor]="menu"
-          >
-          <div class="flex-col justify-end align-baseline">
-            <div class="xs:hidden text-gray-700 font-medium">
-            {{ zvSeguridadService.zfObtenerCampoJwt("email") }}
-          </div>
-          <div class="text-right text-gray-500" >
-            {{ zvSeguridadService.zfObtenerCampoJwt("role") }}
-          </div>
-          </div>
-          
-          <img src="assets/logout.png" alt="" class="w-8">
+          <button class="flex gap-2 flex-row items-center text-white" [matMenuTriggerFor]="menu">
+            <div class="flex-col justify-end align-baseline">
+              <div class="xs:hidden text-gray-700 font-medium">
+                {{ zvSeguridadService.zfObtenerCampoJwt('email') }}
+              </div>
+              <div class="text-right text-gray-500">
+                {{ zvSeguridadService.zfObtenerCampoJwt('role') }}
+              </div>
+            </div>
+
+            <img src="assets/logout.png" alt="" class="w-8" />
             <!-- <svg
               width="20"
               height="20"
@@ -192,9 +173,7 @@
           >
           </app-left-menu>
         </mat-sidenav>
-        <mat-sidenav-content
-          [@onMainContentChange]="sideNavState ? 'open' : 'close'"
-        >
+        <mat-sidenav-content [@onMainContentChange]="sideNavState ? 'open' : 'close'">
           <!-- (scroll)="onScroll($event)" -->
           <div class="main_content" id="seccionMisGastos">
             <div style="padding: 15px; background-color: #f2f2f2">
@@ -210,26 +189,4 @@
   </div>
 </div>
 
-<div *ngIf="isLoading" class="contenedor-ventana">
-  <div class="ventana-bloque"></div>
-  <div class="contenedor-spinner">
-    <div
-      class="spinner-border spinner"
-      role="status"
-      style="color: #4eaac1"
-    ></div>
-    <p
-      style="
-        position: fixed;
-        margin-top: 60px;
-        font-size: 14px;
-        font-weight: 700;
-        letter-spacing: 3px;
-        color: #4eaac1;
-      "
-    >
-      Cargando...
-    </p>
-  </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+<app-loading *ngIf="isLoading"></app-loading>

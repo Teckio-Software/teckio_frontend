@@ -75,7 +75,6 @@
       </div>
     </div>
 
-    <!-- Botones intermedios (cuando contenedorCatalogoGeneral) -->
     <div class="flex gap-3 mb-2 min-w-0">
       <button
         *ngIf="contenedorCatalogoGeneral"
@@ -105,7 +104,6 @@
       </button>
     </div>
 
-    <!-- Menú alertas (posición absoluta no afecta el flujo) -->
     <div
       *ngIf="mostrarMenuAlertas"
       class="absolute right-96 top-14 z-50 mt-2 w-60 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
@@ -128,9 +126,8 @@
       </div>
     </div>
 
-    <!-- DERECHA: caja de acciones + total pegado a la derecha -->
     <div class="flex gap-6 items-center ml-auto" *ngIf="!contenedorCatalogoGeneral">
-      <div class="border border-gray-200 px-2 rounded-lg flex items-center gap-1 shrink-0">
+      <div class="border border-gray-200 rounded-lg flex items-center gap-1 shrink-0">
         <button
           *ngIf="!existeCensatia || !existeIndirectos"
           class="disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 rounded-md transition-all delay-75 py-2 px-2"
@@ -158,21 +155,21 @@
 
         <button
           class="disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 rounded-md transition-all delay-75 py-2 px-2 flex gap-2 items-center whitespace-nowrap"
-          [disabled]="displayCarga === 'flex'"
+          [disabled]="isLoading"
           (click)="recalcularPresupuesto()"
         >
           <img
             src="./assets/arrows-rotate-solid-full.svg"
             alt="Recalcular presupuesto"
             class="w-6"
-            [ngClass]="{ 'animate-spin': displayCarga === 'flex' }"
+            [ngClass]="{ 'animate-spin': isLoading }"
           />
           <p class="m-0 text-gray-500">Recalcular</p>
         </button>
 
         <button
           class="disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 rounded-md transition-all delay-75 py-2 px-2 flex gap-2 items-center whitespace-nowrap"
-          [disabled]="displayCarga === 'flex'"
+          [disabled]="isLoading"
           (click)="esAutorizado ? autorizarPresupuesto() : RemoverAutorizacionPresupuesto()"
         >
           <img
@@ -778,7 +775,7 @@
             <button
               class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex items-center shadow-sm ring-1 ring-inset transition-all relative"
               (click)="handleClick($event)"
-              [disabled]="displayCarga == 'flex'"
+              [disabled]="isLoading"
             >
               <span
                 class="mr-2 relative"
@@ -800,14 +797,14 @@
             <button
               class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
               (click)="cargarPresupuestoOpus()"
-              [disabled]="displayCarga == 'flex'"
+              [disabled]="isLoading"
             >
               Importar Opus
             </button>
             <button
               class="bg-colorButton hover:bg-colorButtonHover text-white py-2 px-4 rounded-md inline-flex justify-center shadow-sm ring-1 ring-inset transition-all"
               (click)="limpiarCargarExcel()"
-              [disabled]="displayCarga == 'flex'"
+              [disabled]="isLoading"
             >
               Cancelar
             </button>
@@ -817,3 +814,5 @@
     </div>
   </section>
 </ng-template>
+
+<app-loading *ngIf="isLoading"></app-loading>
